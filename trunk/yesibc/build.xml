@@ -1,0 +1,117 @@
+<!--?xml version="1.0" encoding="ISO-8859-1"?-->
+<!-- $Id: build.xml,v 1.3 2009/02/06 02:59:09 abel Exp $ -->
+<project name="Cetelem-Common" default="build" basedir=".">
+	<property file="build.properties" />
+
+	<property name="build.home" value="${BUILD.HOME}" />
+
+	<!-- project name-->
+	<property name="project.name" value="${PROJECT_NAME}" />
+	<property name="project.version" value="${PROJECT_VERSION}" />
+	<!-- web lib directory -->
+	<property name="dist" value="${build.home}/dist" />
+	<property name="src" value="${build.home}/src" />
+	<property name="lib" value="${build.home}/lib" />
+	<property name="javadoc.dir" value="${build.home}/doc" />
+	<property name="classes" value="${build.home}/classes" />
+	<!-- compliler args UTF-8-->
+	<property name="compiler.args" value="-encoding UTF-8" />
+	<!-- whether debug ,default true-->
+	<property name="debug" value="${DEBUG_MODE}" />
+	<!-- whether deprecation, default false-->
+	<property name="deprecation" value="false" />
+	<!-- whether optimize, default true-->
+	<property name="optimize" value="true" />
+	<!-- jar name-->
+	<property name="jar.name" value="${JAR_NAME}" />
+	<!-- env -->
+	<property environment="env" />
+	<tstamp>
+		<format property="DATE_IMPLEMENTATION" pattern="yyyy.MM.dd HH:mm" />
+	</tstamp>
+
+
+	<!-- classpath -->
+	<path id="myclasspath">
+		<fileset dir="${lib}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<!-- clean the build directories -->
+	<target name="clean">
+		<delete includeEmptyDirs="true" quiet="true">
+			<fileset dir="${src}" />
+			<fileset dir="${lib}" />
+			<fileset dir="${classes}" />
+			<fileset dir="${javadoc.dir}" />
+		</delete>
+	</target>
+
+	<!--
+       ===================================================================
+         Prepare the build
+       ===================================================================
+    -->
+	<target name="prepare" depends="clean">
+		<mkdir dir="${build.home}" />
+		<mkdir dir="${src}" />
+		<mkdir dir="${lib}" />
+		<mkdir dir="${classes}" />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${javadoc.dir}" />
+	</target>
+
+	<!-- copy lib to WEB-INF/lib -->
+	<import file="./copyLIB.xml" />
+
+	<target name="copySrc" depends="prepare,copyLIB">
+		<copy todir="${src}">
+			<fileset dir="src/core" />
+		</copy>
+	</target>
+
+	<!--
+      ===================================================================
+        Creates the API documentation
+      ===================================================================
+    -->
+	<target name="javadoc" depends="prepare" description="creates the documentation">
+		<javadoc packagenames="cn.cetelem.*" sourcepath="src/core" classpathref="myclasspath" defaultexcludes="yes" destdir="${javadoc.dir}" author="true" version="true" use="true" doctitle="${project.name}&lt;br&gt;${DATE_IMPLEMENTATION}" header="&lt;b&gt;${project.name}  ${project.version}&lt;/b&gt;" windowtitle="${project.name} (${project.version})">
+			<bottom>
+				<![CDATA[<i>${project.name}</i>]]>
+			</bottom>
+	</javadoc>
+</target>
+
+<!--
+          ===================================================================
+            Compile the code
+          ===================================================================
+      -->
+<!-- compile les sources de mon projet -->
+<target name="compile" depends="copySrc" description="compiles the source code ...">
+	<javac srcdir="${src}" destdir="${classes}" debug="${debug}" deprecation="${deprecation}" optimize="${optimize}">
+		<compilerarg line="${compiler.args}" />
+		<classpath refid="myclasspath" />
+	</javac>
+</target>
+
+<!--
+          ===================================================
+            Build the web-application
+          ===================================================
+-->
+
+<!-- build -->
+<target name="build" depends="compile" description="build jar">
+	<jar destfile="${dist}/${jar.name}" basedir="${classes}" />
+</target>
+
+	<!-- copyLib2CetelemCommon -->
+	<target name="copyLib2CetelemCommon" description="copy Lib to CetelemCommon">
+		<copy file="${dist}/${jar.name}" tofile="${CETELEM_COMMON_HOME}/Components/projects/common/lib/${jar.name}" />
+	</target>
+
+</project>
+
