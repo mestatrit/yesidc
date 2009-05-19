@@ -1,0 +1,211 @@
+/**
+ * $Id: JbpmUtils.java,v 1.4 2008/12/04 07:53:46 abel Exp $
+ */
+package cn.cetelem.core.workflow.jbpm;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Session;
+import org.jbpm.JbpmConfiguration;
+import org.jbpm.JbpmContext;
+import org.jbpm.context.def.VariableAccess;
+import org.jbpm.context.exe.ContextInstance;
+import org.jbpm.db.TaskMgmtSession;
+import org.jbpm.graph.action.Script;
+import org.jbpm.graph.def.ProcessDefinition;
+import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.graph.node.Fork;
+import org.jbpm.taskmgmt.exe.TaskInstance;
+
+import cn.cetelem.core.spring.SpringContext;
+
+/**
+ * @author abel.ye
+ * 
+ */
+public class JbpmUtils {
+
+	/**
+	 * Get variable from ExecutionContext according to name.
+	 * 
+	 * @param executionContext
+	 * @param name
+	 * @return
+	 */
+	public static Object getVariableOfProcess(ExecutionContext executionContext, String name) {
+
+		ContextInstance ci = executionContext.getContextInstance();
+		if (ci != null) {
+			return (Object) ci.getVariable(name);
+		}
+		return null;
+	}
+
+	public static JbpmContext getJbpmContext() {
+		JbpmConfiguration config = (JbpmConfiguration) SpringContext.getBean("jbpmConfiguration");
+		return config.createJbpmContext();
+	}
+
+	/**
+	 * new ProcessInstance
+	 * 
+	 * @param name
+	 * @return ProcessInstance
+	 */
+	public static ProcessInstance newProcessInstance(String name) {
+		ProcessDefinition pd = getJbpmContext().getGraphSession().findLatestProcessDefinition(name);
+		return new ProcessInstance(pd);
+	}
+
+	/**
+	 * new ProcessInstance
+	 * 
+	 * @param name
+	 * @return ProcessInstance
+	 */
+	public static void saveProcessInstance(ProcessInstance pi) {
+		getJbpmContext().save(pi);
+	}
+	
+	/**
+	 * According to taskId, get pi
+	 * 
+	 * @param taskId
+	 * @return
+	 */
+	public static ProcessInstance getProcessInstanceByTaskId(String taskId) {
+		TaskInstance ti = getTaskInstance(taskId);
+		return ti.getTaskMgmtInstance().getProcessInstance();
+	}
+
+	public static ProcessInstance getProcessInstanceByTaskId(Long taskId) {
+		TaskInstance ti = getTaskInstance(taskId);
+		return ti.getTaskMgmtInstance().getProcessInstance();
+	}
+
+	public static ContextInstance getContextInstance(String name) {
+		return newProcessInstance(name).getContextInstance();
+	}
+
+	public static ContextInstance getContextInstanceByTaskId(String taskId) {
+		TaskInstance ti = getTaskInstance(taskId);
+		if (ti == null)
+			return null;
+
+		return ti.getTaskMgmtInstance().getProcessInstance().getContextInstance();
+	}
+
+	public static ContextInstance getContextInstanceByTaskId(Long taskId) {
+		TaskInstance ti = getTaskInstance(taskId);
+		if (ti == null)
+			return null;
+		return ti.getTaskMgmtInstance().getProcessInstance().getContextInstance();
+	}
+
+	public static TaskInstance createStartTaskInstance(ProcessInstance pi) {
+		return pi.getTaskMgmtInstance().createStartTaskInstance();
+	}
+
+	public static Session getSession() {
+		return getJbpmContext().getSessionFactory().openSession();
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List getQueryList(String hql) {
+		return getSession().createQuery(hql).list();
+	}
+
+	public static TaskMgmtSession getTaskMgmt() {
+		return getJbpmContext().getTaskMgmtSession();
+	}
+
+	public static TaskInstance loadTaskInstance(long taskId) {
+		return getTaskMgmt().loadTaskInstance(taskId);
+	}
+
+	public static TaskInstance getTaskInstance(String taskId) {
+		if (StringUtils.isEmpty(taskId))
+			return null;
+		return getJbpmContext().getTaskInstance(Long.parseLong(taskId));
+	}
+
+	public static TaskInstance getTaskInstance(long taskId) {
+		return getJbpmContext().getTaskInstance(taskId);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<TaskInstance> findTaskInstances(String actorId) {
+		return getTaskMgmt().findTaskInstances(actorId);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<TaskInstance> findPooledTaskInstances(String actorId) {
+		return getTaskMgmt().findPooledTaskInstances(actorId);
+	}
+
+	public static void saveTaskInstance(TaskInstance ti) {
+		getJbpmContext().save(ti);
+	}
+
+	/**
+	 * Run fork by transition name
+	 * 
+	 * @param taskInstanceId
+	 * 
+	 * @param forkName
+	 * 
+	 * @param transitionNames
+	 */
+	@SuppressWarnings("unchecked")
+	public static void distributeForkNode(long taskInstanceId, String forkName, String[] transitionNames,
+			Map taskVariables) {
+		JbpmContext jbpmContext = getJbpmContext();
+
+		TaskInstance taskInstance = jbpmContext.getTaskInstance(taskInstanceId);
+		ProcessInstance processInstance = taskInstance.getTaskMgmtInstance().getProcessInstance();
+
+		// create the script
+		Script script = new Script();
+		script.addVariableAccess(new VariableAccess("transitionNames", "write", null));
+
+		StringBuffer tn = new StringBuffer(300);
+		for (String s : transitionNames) {
+			tn.append("  transitionNames.add(\"").append(s).append("\");");
+		}
+
+		script.setExpression("transitionNames = new ArrayList();" + tn.toString());
+
+		// put the script in the forkName handler
+		Fork fork = (Fork) processInstance.getProcessDefinition().getNode(forkName);
+		fork.setScript(script);
+
+		if (taskVariables != null && !taskVariables.isEmpty()) {
+			taskInstance.addVariables(taskVariables);
+		}
+
+		taskInstance.end();
+
+	}
+
+	/**
+	 * Run fork by transition name.
+	 * 
+	 * @param executionContext
+	 * @param transitionNames
+	 */
+	public static void runFork(ExecutionContext executionContext, String[] transitionNames) {
+		Script script = new Script();
+		script.addVariableAccess(new VariableAccess("transitionNames", "write", null));
+		StringBuffer tn = new StringBuffer(300);
+		for (String s : transitionNames) {
+			tn.append("  transitionNames.add(\"").append(s).append("\");");
+		}
+		script.setExpression("transitionNames = new ArrayList();" + tn.toString());
+		Fork fork = (Fork) executionContext.getProcessDefinition().getNode("fork1");
+		fork.setScript(script);
+	}
+
+}
