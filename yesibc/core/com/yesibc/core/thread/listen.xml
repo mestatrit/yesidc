@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+　　
+<config>
+	　　
+	<ConsumeThreadPool>
+		　　
+		<minPools>10</minPools>　　　<!--线程池最小线程-->
+		　　
+		<maxPools>100</maxPools>　　　　<!--线程池最大线程-->
+		　　
+		<checkThreadPeriod>5</checkThreadPeriod>　<!--检查线程池中线程的周期5分钟-->
+		　　
+	</ConsumeThreadPool>
+	　　
+</config>

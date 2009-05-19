@@ -1,0 +1,123 @@
+<!--?xml version="1.0" encoding="ISO-8859-1"?-->
+<!-- $Id: copyLIB.xml,v 1.1 2009/02/05 10:03:43 abel Exp $ -->
+<project name="copyLIB" default="copyLIB" basedir=".">
+	<!--
+       ===================================================================
+         Prepare the build
+       ===================================================================
+    -->
+	<target name="copyLIB">
+		<!-- prepare the lib files -->
+		<copy todir="${lib}">
+			<fileset dir="${CETELEM_COMMON_HOME}/Components/orm/hibernate/lib/">
+				<include name="hibernate-3.2.0.ga.jar" />
+				<include name="jta-1.0.1B.jar" />
+				<include name="ehcache-1.2.3.jar" />
+			</fileset>
+
+			<fileset dir="${CETELEM_COMMON_HOME}/Components/web/extremetable/lib/">
+				<include name="extremecomponents-1.0.1.jar" />
+				<include name="poi-2.5.1.jar" />
+			</fileset>
+
+			<fileset dir="${CETELEM_COMMON_HOME}/Components/main/lib/">
+				<include name="activation-1.1.jar" />
+				<include name="antlr-2.7.6.jar" />
+				<include name="log4j-1.2.13.jar" />
+				<include name="ojdbc14.jar" />
+				<include name="dom4j-1.6.1.jar" />
+				<include name="spring-2.0.jar" />
+				<include name="standard-1.1.2.jar" />
+				<include name="oro-2.0.8.jar" />
+				<include name="struts-1.2.9.jar" />
+				<include name="xalan-2.7.0.jar" />
+
+				<include name="commons-attributes-api-2.1.jar" />
+				<include name="commons-beanutils-1.7.1-20061106.jar" />
+				<include name="commons-codec-1.3.jar" />
+				<include name="commons-collections-3.2.jar" />
+				<include name="commons-configuration-1.2.jar" />
+				<include name="commons-digester-1.7.jar" />
+				<include name="commons-dbcp-1.2.1.jar" />
+				<include name="commons-discovery-0.2.jar" />
+				<include name="commons-fileupload-1.1.1.jar" />
+				<include name="commons-httpclient-3.0.jar" />
+				<include name="commons-io-1.2.jar" />
+				<include name="commons-lang-2.1.jar" />
+				<include name="commons-logging-1.0.4.jar" />
+				<include name="commons-validator-1.3.0.jar" />
+
+				<include name="mail-1.4.jar" />
+				<include name="freemarker-2.3.8.jar" />
+				<include name="jxl.jar" />
+
+				<include name="quartz-1.6.0.jar" />
+
+				<include name="jstl-1.1.2.jar" />
+
+				<include name="jsp-api-2.0.jar" />
+				<include name="servlet-api-2.4.jar" />
+				<include name="aspectjrt-1.5.2a.jar" />
+				<include name="aspectjweaver-1.5.2a.jar" />
+			</fileset>
+
+			<fileset dir="${CETELEM_COMMON_HOME}/Components/webservice/xfire/lib/">
+				<include name="jaxb-api-2.0.jar" />
+				<include name="jaxb-impl-2.0.1.jar" />
+				<include name="jaxb-impl-1.0.5.jar" />
+				<include name="jaxb-xjc-2.0.1.jar" />
+				<include name="jaxws-api-2.0.jar" />
+				<include name="saaj-api-1.3.jar" />
+				<include name="saaj-impl-1.3.jar" />
+				<include name="jsr173_api-1.0.jar" />
+				<include name="jaxen-1.1-beta-9.jar" />
+				<include name="jdom-1.0.jar" />
+				<include name="opensaml-1.0.1.jar" />
+				<include name="wsdl4j-1.6.1.jar" />
+				<include name="wss4j-1.5.1.jar" />
+				<include name="wstx-asl-3.2.0.jar" />
+				<include name="xbean-2.2.0.jar" />
+				<include name="xbean-spring-2.8.jar" />
+				<include name="xfire-aegis-1.2.6.jar" />
+				<include name="xfire-annotations-1.2.6.jar" />
+				<include name="xfire-core-1.2.6.jar" />
+				<include name="xfire-generator-1.2.6.jar" />
+				<include name="xfire-java5-1.2.6.jar" />
+				<include name="xfire-jaxb2-1.2.6.jar" />
+				<include name="xfire-jaxws-1.2.6.jar" />
+				<include name="xfire-jsr181-api-1.0-M1.jar" />
+				<include name="xfire-spring-1.2.6.jar" />
+				<include name="xfire-ws-security-1.2.6.jar" />
+				<include name="xfire-xmlbeans-1.2.6.jar" />
+				<include name="xmlsec-1.3.0.jar" />
+				<include name="XmlSchema-1.1.jar" />
+			</fileset>
+
+			<fileset dir="${CETELEM_COMMON_HOME}/Components/webservice/vmx/lib/">
+				<include name="jaxb1-impl.jar" />
+			</fileset>
+
+			<fileset dir="${CETELEM_COMMON_HOME}/Components/test/lib/">
+				<include name="selenium-java-client-driver-0.9.0.jar" />
+				<include name="selenium-server-0.9.0.jar" />
+				<include name="spring-mock-2.0.jar" />
+				<include name="junit-3.8.1.jar" />
+			</fileset>
+
+			<fileset dir="${CETELEM_COMMON_HOME}/Components/workflow/jbpm/lib/">
+				<include name="jbpm-identity.jar" />
+				<include name="jbpm-jpdl.jar" />
+				<include name="spring-modules-jbpm31.jar" />
+			</fileset>
+
+			<fileset dir="${CETELEM_COMMON_HOME}/Components/webservice/axis/lib/">
+				<include name="axis.jar" />
+				<include name="axis-ant.jar" />
+				<include name="jaxrpc.jar" />
+				<include name="wsdl4j-1.5.1.jar" />
+			</fileset>
+		</copy>
+	</target>
+
+</project>
+
