@@ -1,0 +1,2392 @@
+/* CSS Document */
+#media li
+{
+	font-size: 12px;
+	list-style-type: none;
+	background-image: url(http://images.51job.com/jobsearch/images/arrow.gif);
+	background-repeat: no-repeat;
+	background-position: 0px 5px;
+	text-indent: 22px;
+	line-height: 20px;
+}
+
+.lawdiv
+{
+	font-size: 12px;
+	list-style-type: none;
+	background-image: url(../../im/pic/point.gif);
+	background-repeat: no-repeat;
+	background-position: 7px 10px;
+	text-indent: 18px;
+	line-height: 20px;
+	margin:0px;
+	padding:5px;
+}
+
+#law li
+{
+	font-size: 12px;
+	list-style-type: none;
+	background-image: url(../../im/pic/point.gif);
+	background-repeat: no-repeat;
+	background-position: 0px 5px;
+	text-indent: 22px;
+	line-height: 20px;
+	margin:0px;
+	padding:0px;
+}
+
+#help li
+{
+	font-size: 12px;
+	margin:2px;
+	padding:2px;
+	line-height:16px;
+	list-style-type:decimal;
+	color:#333333;
+}
+#help_1 li
+{
+	font-size: 12px;
+	margin:2px;
+	padding:2px;
+	line-height:16px;
+	list-style-type:disc;
+	color:#333333;
+}
+
+#centerleft
+{
+	border-width: 3px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-color: #dcdcdc;	
+	height:100%;
+	width:205px;
+	margin:0px;
+}
+
+
+
+#cvr li
+{
+	font-size: 12px;
+	margin:2px;
+	padding-left:2px;
+	line-height:16px;
+	list-style-type:square;
+	color:#333333;
+	padding-top: 2px;
+	padding-right: 15px;
+	padding-bottom: 2px;
+}
+
+#leftcv
+{
+	top:0px;
+	float:left;
+	margin-left:25px;
+	margin-top:5px;
+}
+
+#rightcv
+{
+	float:left;
+	top:0px;
+	padding:25px;
+}
+
+.po
+{
+	padding:5px;
+}
+
+#centerleft_11
+{
+	border-width: 3px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-color: #ff7300;
+	height:100%;
+	width:235px;
+	margin:0px;
+	padding:0px;
+	background-color: #ffefde;
+}
+
+#centerleft_1
+{	margin:0px;
+	background-image: url(http://images.51job.com/jobsearch/images/leftbg.gif);
+	background-repeat: repeat-y;
+}
+
+#sy
+{	font-size: 14px;
+	margin-left:16px;
+	width:200px;
+}
+
+#rightcv_1
+{
+	float:left;
+	top:0px;
+	margin:0px;
+	padding-top:2px;
+	padding-bottom:25px;
+	padding-left:15px;
+	padding-right:5px;
+}
+
+/*样式调整*/
+.buttonstyle_up {
+	BORDER-RIGHT: #ffffff 0px solid;
+	BORDER-TOP: #ffffff 0px solid;
+	BACKGROUND-IMAGE: url(http://images.51job.com/jobsearch/images/select_up.gif);
+	BORDER-LEFT: #ffffff 0px solid;
+	WIDTH: 94px;
+	COLOR: #333333;
+	BORDER-BOTTOM: #ffffff 0px solid;
+	HEIGHT: 26px;
+	BACKGROUND-COLOR: #e7e7e7;
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+}
+
+.buttonstyle_down {
+	BORDER-RIGHT: #ffffff 0px solid;
+	BORDER-TOP: #ffffff 0px solid;
+	BACKGROUND-IMAGE: url(http://images.51job.com/jobsearch/images/select_down.gif);
+	BORDER-LEFT: #ffffff 0px solid;
+	WIDTH: 94px;
+	COLOR: #333333;
+	BORDER-BOTTOM: #ffffff 0px solid;
+	HEIGHT: 26px;
+	BACKGROUND-COLOR: #e7e7e7;
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+}
+
+.btn_ad {
+	BORDER: #ffffff 0px solid;
+	BACKGROUND-IMAGE:url(http://images.51job.com/jobsearch/images/work_place.gif);
+	WIDTH: 91px;
+	HEIGHT: 24px;
+	cursor:pointer;
+}
+
+/*样式调整*/
+.buttonstyle1 {
+	BORDER-RIGHT: #ffffff 0px solid;
+	BORDER-TOP: #ffffff 0px solid;
+	BACKGROUND-IMAGE: url(http://images.51job.com/jobsearch/images/button.gif);
+	BORDER-LEFT: #ffffff 0px solid;
+	WIDTH: 195px;
+	COLOR: #333333;
+	BORDER-BOTTOM: #ffffff 0px solid;
+	HEIGHT: 20px;
+	BACKGROUND-COLOR: #e7e7e7;
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	cursor:pointer;
+}
+.btn_ad1{
+	BORDER: #ffffff 0px solid;
+	BACKGROUND-IMAGE:url(http://images.51job.com/jobsearch/images/choice.gif);
+	WIDTH: 210px;
+	HEIGHT: 24px;
+	cursor:pointer;
+}
+.save_agent{
+	BORDER: #ffffff 0px solid;
+	BACKGROUND-IMAGE:url(http://images.51job.com/jobsearch/images/save_agent.gif);
+	WIDTH: 46px;
+	HEIGHT: 18px;
+	cursor:pointer;
+}
+
+/* CSS Document */
+.area {
+	LINE-HEIGHT: 10pt
+}
+A.td {
+	FONT-SIZE: 12px; 
+	COLOR: #333333
+}
+TR {
+	FONT-SIZE: 12px; 
+	COLOR: #333333
+}
+FORM {
+	FONT-SIZE: 12px; 
+	COLOR: #333333
+}
+SELECT {
+	FONT-SIZE: 12px; 
+	COLOR: #333333
+}
+INPUT {
+	FONT-SIZE: 12px; 
+	COLOR: #333333
+}
+TABLE {
+	FONT-SIZE: 12px; 
+	COLOR: #333333
+}
+.font {
+	FONT-SIZE: 12px; 
+	COLOR: #333333
+}
+TD.etitle {
+	FONT-SIZE: 12px
+}
+TABLE.etitle {
+	FONT-SIZE: 12px
+}
+.font {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #333333;
+}
+.title {
+	FONT-SIZE: 14px
+}
+.fwhite {
+	FONT-SIZE: 12px; 
+	COLOR: #ffffff
+}
+.f1 {
+	FONT-SIZE: 12px; 
+	COLOR: #465f87
+}
+.title02 {
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: 14px; 
+	COLOR: #333333
+}
+A:link {
+	FONT-SIZE: 12px; 
+	COLOR: #333333; 
+	TEXT-DECORATION: none
+}
+A:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #7e817e; 
+	TEXT-DECORATION: none
+}
+A:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7300; 
+	TEXT-DECORATION: none
+}
+A.nov:link {
+	FONT-SIZE: 12px; 
+	COLOR: #333333; 
+	TEXT-DECORATION: none
+}
+A.nov:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #333333; 
+	TEXT-DECORATION: none
+}
+A.nov:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7f2c; 
+	TEXT-DECORATION: none
+}
+A.white:link {
+	FONT-SIZE: 12px; 
+	COLOR: #ffffff; 
+	TEXT-DECORATION: underline
+}
+A.white:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #ffffff; 
+	TEXT-DECORATION: underline
+}
+A.white:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #ffffff; 
+	TEXT-DECORATION: none
+}
+A.white1:link {
+	FONT-SIZE: 12px; 
+	COLOR: #ffffff; 
+	TEXT-DECORATION: none
+}
+A.white1:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #ffffff; 
+	TEXT-DECORATION: none
+}
+A.white1:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #ffffff; 
+	TEXT-DECORATION: none
+}
+A.orange:link {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7300; 
+	TEXT-DECORATION: none
+}
+A.orange:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7300; 
+	TEXT-DECORATION: none
+}
+A.orange:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7300; 
+	TEXT-DECORATION: underline
+}
+A.orange1:link {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7300; 
+	TEXT-DECORATION: underline
+}
+A.orange1:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7300; 
+	TEXT-DECORATION: underline
+}
+A.orange1:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7300; 
+	TEXT-DECORATION: none
+}
+A.black:link {
+	FONT-SIZE: 12px; 
+	COLOR: #333333; 
+	TEXT-DECORATION: underline
+}
+A.black:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #333333; 
+	TEXT-DECORATION: underline
+}
+A.black:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7300; 
+	TEXT-DECORATION: none
+}
+A.blue:link {
+	FONT-SIZE: 12px; 
+	COLOR: #266eba; 
+	TEXT-DECORATION: none
+}
+A.blue:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #266eba; 
+	TEXT-DECORATION: none
+}
+A.blue:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #266eba; 
+	TEXT-DECORATION: underline
+}
+A.blue1:link {
+	FONT-SIZE: 12px; 
+	COLOR: #1381a3; 
+	TEXT-DECORATION: none
+}
+A.blue1:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #1381a3; 
+	TEXT-DECORATION: none
+}
+A.blue1:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #1381a3; 
+	TEXT-DECORATION: underline
+}
+A.green:link {
+	FONT-SIZE: 12px; 
+	COLOR: #007236; 
+	TEXT-DECORATION: none
+}
+A.green:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #007236; 
+	TEXT-DECORATION: none
+}
+A.green:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #007236; 
+	TEXT-DECORATION: underline
+}
+A.green1:link {
+	FONT-SIZE: 12px; 
+	COLOR: #005825; 
+	TEXT-DECORATION: none
+}
+A.green1:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #005825; 
+	TEXT-DECORATION: none
+}
+A.green1:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #005825; 
+	TEXT-DECORATION: underline
+}
+A.green2:link {
+	FONT-SIZE: 14px; 
+	COLOR: #5cb018; 
+	TEXT-DECORATION: none
+}
+A.green2:visited {
+	FONT-SIZE: 14px; 
+	COLOR: #5cb018; 
+	TEXT-DECORATION: none
+}
+A.green2:hover {
+	FONT-SIZE: 14px; 
+	COLOR: #5cb018; 
+	TEXT-DECORATION: underline
+}
+A.con:link {
+	FONT-SIZE: 12px; 
+	COLOR: #465f87; 
+	TEXT-DECORATION: none
+}
+A.con:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #993300; 
+	TEXT-DECORATION: none
+}
+A.con:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7f2c; 
+	TEXT-DECORATION: none
+}
+A.cc:link {
+	FONT-SIZE: 12px; 
+	COLOR: #465f87; 
+	TEXT-DECORATION: none
+}
+A.cc:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #465f87; 
+	TEXT-DECORATION: none
+}
+A.cc:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7f2c; 
+	TEXT-DECORATION: none
+}
+A.gn:link {
+	COLOR: #465f87; 
+	TEXT-DECORATION: underline
+}
+A.gn:visited {
+	COLOR: #465f87; 
+	TEXT-DECORATION: underline
+}
+A.gn:hover {
+	COLOR: #ff7f2c; 
+	TEXT-DECORATION: none
+}
+A.sitemap1:link {
+	FONT-SIZE: 14px; 
+	COLOR: #5cb018; 
+	TEXT-DECORATION: none
+}
+A.sitemap1:visited {
+	FONT-SIZE: 14px; 
+	COLOR: #5cb018; 
+	TEXT-DECORATION: none
+}
+A.sitemap1:hover {
+	FONT-SIZE: 14px; 
+	COLOR: #5cb018; 
+	TEXT-DECORATION: underline
+}
+A.sitemap2:link {
+	FONT-SIZE: 14px; 
+	COLOR: #ff9437; 
+	TEXT-DECORATION: none
+}
+A.sitemap2:visited {
+	FONT-SIZE: 14px; 
+	COLOR: #ff9437; 
+	TEXT-DECORATION: none
+}
+A.sitemap2:hover {
+	FONT-SIZE: 14px; 
+	COLOR: #ff9437; 
+	TEXT-DECORATION: underline
+}
+A.sitemap3:link {
+	FONT-SIZE: 14px; 
+	COLOR: #4196cd; 
+	TEXT-DECORATION: none
+}
+A.sitemap3:visited {
+	FONT-SIZE: 14px; 
+	COLOR: #4196cd; 
+	TEXT-DECORATION: none
+}
+A.sitemap3:hover {
+	FONT-SIZE: 14px; 
+	COLOR: #4196cd; 
+	TEXT-DECORATION: underline
+}
+A.title:link {
+	FONT-SIZE: 12px; 
+	COLOR: #465f87; 
+	TEXT-DECORATION: none
+}
+A.title:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #465f87; 
+	TEXT-DECORATION: none
+}
+A.title:hover {
+	COLOR: #ff7f2c; 
+	TEXT-DECORATION: none
+}
+A.title4:link {
+	COLOR: #cf3000; 
+	TEXT-DECORATION: none
+}
+A.title4:visited {
+	COLOR: #cf3000; 
+	TEXT-DECORATION: none
+}
+A.title4:hover {
+	COLOR: #cf3000; 
+	TEXT-DECORATION: none
+}
+A.title2:link {
+	COLOR: #465f87; 
+	TEXT-DECORATION: none
+}
+A.title2:visited {
+	COLOR: #465f87; 
+	TEXT-DECORATION: none
+}
+A.titleqz:link {
+	COLOR: #ffffff; 
+	TEXT-DECORATION: none
+}
+A.titleqz:visited {
+	COLOR: #ffffff; 
+	TEXT-DECORATION: none
+}
+A.menu1:link {
+	COLOR: #465f87; 
+	TEXT-DECORATION: none
+}
+A.menu1:visited {
+	COLOR: #465f87; 
+	TEXT-DECORATION: none
+}
+A.title5:link {
+	COLOR: #465f87; 
+	TEXT-DECORATION: none
+}
+A.title5:visited {
+	COLOR: #465f87; 
+	TEXT-DECORATION: none
+}
+A.title5:hover {
+	COLOR: #ff7f2c; 
+	TEXT-DECORATION: none
+}
+A.detail:link {
+	COLOR: #8f2b01
+}
+A.detail:visited {
+	COLOR: #8f2b01
+}
+A.it_class_name:link {
+	COLOR: #0033cc; 
+	TEXT-DECORATION: underline
+}
+A.it_class_name:visited {
+	COLOR: #0033cc; 
+	TEXT-DECORATION: underline
+}
+A.it_class_name:hover {
+	COLOR: #0033cc; 
+	TEXT-DECORATION: none
+}
+.f {
+	LINE-HEIGHT: 16px
+}
+.formfix {
+	MARGIN: 0px
+}
+.bc {
+	BACKGROUND-COLOR: #eeeeee
+}
+
+/*LI {
+	LIST-STYLE-TYPE: square
+}*/
+
+LI.two {
+	LIST-STYLE-TYPE: circle
+}
+LI.three {
+	LIST-STYLE-TYPE: decimal
+}
+A.title3:link {
+	COLOR: #465f87; 
+	TEXT-DECORATION: none
+}
+A.title3:visited {
+	COLOR: #465f87; 
+	TEXT-DECORATION: none
+}
+A.title3:hover {
+	COLOR: #ff7f2c; 
+	TEXT-DECORATION: none
+}
+TD {
+	LINE-HEIGHT: 14pt
+}
+.f2 {
+	FONT-SIZE: 12px
+}
+.font {
+	FONT-FAMILY: "宋体"
+}
+.campl {
+	FONT-SIZE: 12px; 
+	COLOR: #666666; 
+	LINE-HEIGHT: 16px
+}
+.f7 {
+	FONT-SIZE: 7px;
+}
+#memberlogin {
+	Z-INDEX: 1;
+	LEFT: 20px;
+	VISIBILITY: hidden;
+	WIDTH: 296px;
+	POSITION: absolute;
+	TOP: 84px;
+	HEIGHT: 204px;
+}
+#hrlogin {
+	Z-INDEX: 1;
+	LEFT: 20px;
+	VISIBILITY: hidden;
+	WIDTH: 296px;
+	POSITION: absolute;
+	TOP: 84px;
+	HEIGHT: 204px;
+}
+.select {
+	BORDER-RIGHT: buttonface 0px inset;
+	BORDER-TOP: buttonface 0px inset;
+	FONT: icon;
+	BORDER-LEFT: buttonface 0px inset;
+	WIDTH: 100px;
+	CURSOR: default;
+	LINE-HEIGHT: 10pt;
+	BORDER-BOTTOM: buttonface 0px inset;
+}
+.selected {
+	BORDER-RIGHT: buttonface 0px inset;
+	PADDING-RIGHT: 0px;
+	BORDER-TOP: buttonface 0px inset;
+	PADDING-LEFT: 0px;
+	PADDING-BOTTOM: 0px;
+	FONT: icon;
+	BORDER-LEFT: buttonface 0px inset;
+	LINE-HEIGHT: 10pt;
+	PADDING-TOP: 0px;
+	BORDER-BOTTOM: buttonface 0px inset;
+	background-color: window;
+}
+.selectTable {
+	BORDER-RIGHT: buttonhighlight 2px inset;
+	BORDER-TOP: buttonhighlight 2px inset;
+	BACKGROUND: buttonface;
+	BORDER-LEFT: buttonhighlight 2px inset;
+	WIDTH: 100%;
+	LINE-HEIGHT: 10pt;
+	BORDER-BOTTOM: buttonhighlight 2px inset;
+	HEIGHT: 100%;
+}
+.option {
+	PADDING-RIGHT: 3px;
+	PADDING-LEFT: 3px;
+	PADDING-BOTTOM: 1px;
+	WIDTH: 100%;
+	PADDING-TOP: 1px;
+}
+.dropDown {
+	BORDER-RIGHT: windowtext 1px solid;
+	PADDING-RIGHT: 0px;
+	BORDER-TOP: windowtext 1px solid;
+	PADDING-LEFT: 0px;
+	BACKGROUND: window;
+	VISIBILITY: hidden;
+	PADDING-BOTTOM: 0px;
+	BORDER-LEFT: windowtext 1px solid;
+	WIDTH: 100%;
+	LINE-HEIGHT: 10pt;
+	PADDING-TOP: 0px;
+	BORDER-BOTTOM: windowtext 1px solid;
+	POSITION: absolute;
+}
+.select .button {
+	BORDER-RIGHT: buttonhighlight 2px outset;
+	PADDING-RIGHT: 0px;
+	BORDER-TOP: buttonhighlight 2px outset;
+	PADDING-LEFT: 0px;
+	FONT-SIZE: 11px;
+	PADDING-BOTTOM: 0px;
+	BORDER-LEFT: buttonhighlight 2px outset;
+	WIDTH: 16px;
+	LINE-HEIGHT: 10pt;
+	PADDING-TOP: 0px;
+	BORDER-BOTTOM: buttonhighlight 2px outset;
+	FONT-FAMILY: webdings;
+	HEIGHT: 5px;
+}
+.hctitle {
+	FONT-SIZE: 14px;
+}
+.ttt {
+	VISIBILITY: hidden;
+	POSITION: absolute;
+	HEIGHT: 0px;
+}
+.4letter {
+	BORDER-RIGHT: #003359 0px double;
+	BORDER-TOP: #003359 0px double;
+	FONT-SIZE: 12px;
+	/*BACKGROUND-IMAGE: url(http://im/images.51job.com/im/hrblog/ht/4letterbg.gif);*/
+	BORDER-LEFT: #003359 0px double;
+	BORDER-BOTTOM: #003359 0px double;
+	HEIGHT: 24px;
+	BACKGROUND-COLOR: #01609f;
+	TEXT-DECORATION: none;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+}
+.textad2_menu_body {
+	FLOAT: left;
+	/*BACKGROUND-IMAGE: url(http://im/images.51job.com/im/city1/menub.gif);*/
+	OVERFLOW: visible;
+	MARGIN-RIGHT: 10px;
+	BACKGROUND-REPEAT: repeat-x;
+	WHITE-SPACE: nowrap;
+	HEIGHT: 25px;
+	WORD-WRAP: normal;
+}
+.textad2_menu_body_text {
+	PADDING-RIGHT: 11px;
+	BACKGROUND-POSITION: right top;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 12px;
+	FLOAT: left;
+	/*BACKGROUND-IMAGE: url(http://im/images.51job.com/im/city1/menur.gif);*/
+	WIDTH: 167px;
+	COLOR: #333333;
+	LINE-HEIGHT: 18px;
+	BACKGROUND-REPEAT: no-repeat;
+	HEIGHT: 25px;
+}
+.textad2_menu_body_text SPAN {
+	PADDING-LEFT: 22px;
+	FLOAT: left;
+	/*BACKGROUND-IMAGE: url(http://im/images.51job.com/im/city1/menul.gif);*/
+	PADDING-TOP: 3px;
+	BACKGROUND-REPEAT: no-repeat;
+	LETTER-SPACING: -1px;
+	HEIGHT: 25px;
+}
+.textad2_menu_body_text A:link {
+	FONT-SIZE: 12px;
+	COLOR: #333333;
+	TEXT-DECORATION: none;
+}
+.textad2_menu_body_text A:visited {
+	FONT-SIZE: 12px;
+	COLOR: #333333;
+	TEXT-DECORATION: none;
+}
+.textad2_menu_body_text A:hover {
+	FONT-SIZE: 12px;
+	COLOR: #ff7101;
+	TEXT-DECORATION: underline;
+}
+.textad2_menu_body_text A:active {
+	FONT-SIZE: 12px;
+	COLOR: #333333;
+	TEXT-DECORATION: underline;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+}
+.textstyle {
+	BORDER-RIGHT: #a5a6a5 1px solid;
+	BORDER-TOP: #a5a6a5 1px solid;
+	BORDER-LEFT: #a5a6a5 1px solid;
+	COLOR: #333333;
+	BORDER-BOTTOM: #a5a6a5 1px solid;
+	HEIGHT: 18px;
+	BACKGROUND-COLOR: #ffffff;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+}
+.buttonstyle {
+	BORDER-RIGHT: #ffffff 0px solid;
+	BORDER-TOP: #ffffff 0px solid;
+	BACKGROUND-IMAGE: url(../../im/cv_cresume/select.gif);
+	BORDER-LEFT: #ffffff 0px solid;
+	WIDTH: 123px;
+	COLOR: #333333;
+	BORDER-BOTTOM: #ffffff 0px solid;
+	HEIGHT: 22px;
+	BACKGROUND-COLOR: #e7e7e7;
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+}
+.table {
+	BORDER-RIGHT: #2aaa55 1px solid;
+	BORDER-TOP: #2aaa55 1px solid;
+	BORDER-LEFT: #2aaa55 1px solid;
+	BORDER-BOTTOM: #2aaa55 1px solid;
+}
+
+.htr {
+	border-top: 1px dashed #cccccc;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+	.line3 {
+	border-right: 1px dotted #cccccc;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+	border-top-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+
+/* CSS Document */
+
+#top_main
+{
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	height: 66px !important; 
+	height /**/: 84px;               
+}
+
+#bannertop
+{
+	top:0px;
+	margin-top:22px;
+	margin-left: 390px;
+	position:absolute;
+	padding:0px;
+	width:600PX;	
+}
+
+#bannertop li
+{
+	float:left;
+	padding:5px;
+		
+}
+
+#content
+{
+	width:1002px;
+	margin:0px;
+	padding:0px;
+	
+}
+#content1
+{
+	width:1000px;
+	margin:0px;
+	padding:0px;
+	
+}
+
+#banner_left
+{
+	float:left;
+	top:0px;
+	margin-top: 22px;
+	margin-left:10px;			
+}
+
+.bannerleft
+{
+	padding-top:5px;
+	padding-right: 0px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+
+}
+
+#login
+{
+	top:0px;
+	margin-top: 20px;
+	margin-left: 3px;
+	padding:0px;
+	background-image: url(../../im/mainimg/jobseekers_bg.gif);
+	background-repeat: no-repeat;
+	height: 428px;
+	width: 406px;
+	float:left;
+}
+
+#banner_right
+{
+	margin-top: 21px;
+	margin-left: 4px;
+	padding:0px;
+	float:left;
+	width:298px;
+}
+
+#banner_right div{
+	margin:1px;
+	float:left;
+	padding:1px;
+	width:137px;	
+	height:80px;
+	overflow:hidden;
+}
+#banner_right img{
+	float:left;
+}
+
+#bannera
+{
+	margin-left:15px;
+	width:972px;
+}
+
+#bannera div
+{
+	margin:2px;
+	float:left;
+	padding:1px;
+	overflow:hidden;
+}
+
+#bannera img
+{
+	float:left;
+}
+
+#bannerb
+{
+	margin-left:15px;
+	width:968px;
+	margin-bottom:10px;
+}
+
+#bannerb div
+{
+	margin:2px;
+	float:left;
+	padding:1px;
+	overflow:hidden;
+}
+
+#bannerb img
+{
+	float:left;
+}
+
+.marginleft
+{
+margin-left:18px;
+top:0px;
+padding:0px;
+clear:both;
+margin-top:10px;
+}
+
+.marginleft_1
+{
+margin-left:18px;
+top:0px;
+padding:0px;
+clear:both;
+margin-bottom:10px;
+}
+
+#linebt
+{
+	width: 954px;
+	margin-left:20px;
+	border-right-width: 3px;
+	border-left-width: 3px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-right-color: #2f85ec;
+	border-left-color: #2f85ec;
+}
+
+.bgcolorl
+{
+background-color:#f4f4f4;
+}
+
+a.blues:link
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+	color: #0056c2;
+	text-decoration: none;
+}
+
+a.blues:visited
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+	color: #0056c2;
+	text-decoration: none;
+}
+
+a.blues:hover
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+	color: #0056c2;
+	text-decoration: underline;
+}
+
+#toplabel
+{
+	padding:0px;
+	margin-left:933px;
+	margin-top:3px;	
+}
+
+
+
+#ideashversion
+{
+	top:0px;
+	margin-top:35px;
+	margin-left: 200px;
+	position:absolute;
+	padding:0px;
+	width:100px;	
+}
+
+#version_1
+{
+	top:0px;
+	margin-top:35px;
+	margin-left: 280px;
+	position:absolute;
+	padding:0px;
+	line-height: 16px;
+	list-style-type: none;
+	width:300px;
+}
+
+#version_1 li a:link
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-decoration: none;
+	color: #ff7300;
+	list-style-type: none;
+}
+
+#version_1 li a:hover
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-decoration: underline;
+	color: #ff7300;
+	list-style-type: none;
+}
+
+#version_1 li a:visited
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-decoration: none;
+	color: #ff7300;
+	list-style-type: none;
+}
+
+.loginfont
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+	color: #FFFFFF;
+}
+
+#loginform {
+	top:0px;
+	margin-top:102px;
+	margin-left:0px;
+	padding:0px;
+	height:33px;
+	position:absolute;
+	color: #FFFFFF;
+}
+
+.textstyle_1 {
+	BORDER-RIGHT: #a5a6a5 1px solid;
+	BORDER-TOP: #a5a6a5 1px solid;
+	BORDER-LEFT: #a5a6a5 1px solid;
+	COLOR: #333333;
+	BORDER-BOTTOM: #a5a6a5 1px solid;
+	BACKGROUND-COLOR: #ffffff;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+}
+
+#banner_right_1
+{
+	margin-top: 16px;
+	margin-left: 5px;
+	padding:0px;
+	float:left;
+	width:298px;
+}
+
+#banner_right_1 div{
+	margin:1px;
+	float:left;
+	padding:2px;
+	width:130px;	
+	height:90px;
+	overflow:hidden;
+}
+#banner_right_1 img{
+	float:left;
+}
+
+#banner_left_1
+{
+	float:left;
+	top:0px;
+	margin-top: 17px;
+	margin-left:5px;
+			
+}
+
+.bannerleft_1
+{
+	padding-top:3px;
+	padding-right: 0px;
+	padding-bottom: 3px;
+	padding-left: 10px;
+}
+
+#login_1
+{
+	float:left;
+	top:0px;
+	margin-top: 20px;
+	margin-left: 8px;
+	padding:0px;
+	
+	height: 224px;
+	width: 216px;
+}
+
+#login_2
+{
+	float:left;
+	top:0px;
+	margin-top: 20px;
+	margin-left: 8px;
+	padding:0px;
+}
+#login_3
+{
+	float:left;
+	top:0px;
+	margin-top: 17px;
+	margin-left: 8px;
+	padding:0px;
+}
+
+#login_4
+{
+	float:left;
+	top:0px;
+	margin-top: 20px;
+	margin-left: 8px;
+	padding:0px;
+	
+	height: 291px;
+	width: 222px;
+}
+
+.gift
+{
+	border-right-width: 3px;
+	border-left-width: 3px;
+	border-right-style: solid;
+	border-left-style: solid;
+	border-right-color: #dddddd;
+	border-left-color: #dddddd;
+	
+	border-top-style: none;
+	border-bottom-style: none;
+}
+
+#login_5
+{
+	float:left;
+	top:0px;
+	margin-top: 17px;
+	margin-left: 6px;
+	margin-right: 0px;
+	padding:0px;
+}
+
+.lineidea
+{
+	padding:0px;
+	margin-left:4px;
+}
+
+#fidea
+{
+	margin-left:20px;
+	padding:0px;
+	margin-top:0px;
+	margin-bottom:10px;
+}
+
+.fidea
+{
+	margin:5px;
+	padding:12px;
+}
+
+#dataidea_1
+{
+	margin-top: 16px;
+	margin-left: 0px;
+	padding:0px;
+	width:900px;
+}
+
+#dataidea_1 li{
+	margin-left:0px;
+	float:left;
+	padding-left:18px;
+	padding-right:13px;
+	padding-top:4px;
+	padding-bottom:4px;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+	background-image: url(../../im/mainimg/bgidea.gif);
+	background-repeat: no-repeat;
+	background-position: 10px 8px;
+	text-indent: 0px;
+}
+
+#lin
+{
+margin-left:16px;
+}
+
+#jobsline
+{
+	border-width: 3px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-color: #ff7300;
+	width:956px;
+	margin:0px;
+	padding:0px;
+}
+
+#anbu li{
+	float:left;
+	padding-left:2px;
+	padding-right:1px;
+	padding-top:6px;
+	padding-bottom:4px;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+	background-image: url(../../im/mainimg/btn_bg.gif);
+	background-repeat: no-repeat;
+	text-indent: 36px;
+	height: 27px;
+	width: 225px;
+}
+
+.h1bt
+{
+	margin-left:20px;
+	margin-bottom:8px;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333333;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+}
+
+#center_1
+{
+	border-width: 3px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-color: #dddddd;
+	width:958px;
+	margin:0px;
+	padding:0px;
+}
+
+#pleft
+{
+	margin-left:40px;
+}
+
+#pleft li
+{
+	float:left;
+	padding-right:10px;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+
+}
+
+
+#center_2
+{
+	border-width: 3px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-color: #dddddd;
+	width:958px;
+	margin:0px;
+	padding:0px;
+}
+
+
+#lilink li{
+	margin-left:0px;
+	float:left;
+	padding-left:2px;
+	padding-right:110px;
+	padding-top:6px;
+	padding-bottom:4px;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+
+}
+
+#linebt_1
+{
+	width: 956px;
+	margin-left:18px;
+	border-right-width: 3px;
+	border-left-width: 3px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-right-color: #ff7300;
+	border-left-color: #ff7300;
+}
+
+#jobsline_1
+{
+	border-width: 3px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-color: #ffe3bb;
+	width: 958px;
+	margin:0px;
+	padding:0px;
+	
+}
+
+.l_key{width:20px;height:24px;text-align:center;vertical-align:middle;color:#ff7300;}
+.sch_key {background: #FFFFFF 5px center;border: 1px solid rgb(165, 165, 167); width: 364px; height: 25px;
+background-image: url(http://images.51job.com/jobsearch/images/key_search.gif); background-repeat: no-repeat; line-height: 21px; padding-left: 24px;}
+div {font-size:12px;}
+table.tbl{text-align:left;border:0;margin:0;border-collapse:collapse;} 
+table.tbl td{padding:0;}
+.main_div{width:976px;margin:0px; top:0px; padding:0px;text-align:left;margin-left:15px;clear:both;}
+#row_1{text-align:center;width:976px;}
+#row_1_l{margin:0px; top:0px; padding:0px;text-align:left;float:left;}
+#row_1_l_1{width:706px;height:26px;background-image:url(http://images.51job.com/jobsearch/images/key_border_03.gif);background-repeat: no-repeat;}
+#row_1_l_2{width:706px;background-image:url(http://images.51job.com/jobsearch/images/key_border_06.gif);background-repeat: repeat-y;}
+#row_1_l_3{width:706px;height:17px;;background-image:url(http://images.51job.com/jobsearch/images/key_border_08.gif);background-repeat: no-repeat;}
+
+#row_1_r{margin:0px; top:0px; padding:0px;text-align:left;margin-left:14px;float:left;display:inline;}
+#row_1_r_1{margin-top:0px;width:256px;height:44px;background-image:url(http://images.51job.com/jobsearch/images/used_search_05.gif);background-repeat: no-repeat;}
+#row_1_r_2{margin-top:0px;width:256px;height:60px !important;height:63px;background-image:url(http://images.51job.com/jobsearch/images/used_search_09.gif);background-repeat: repeat-y;padding-top:5px;overflow-y:hidden;overflow-x:hidden;white-space:nowrap;}
+#row_1_r_2 ul {margin-top:0px;margin-bottom:0px;}
+#row_1_r_2 ul li {height:19px;font-size: 12px;list-style-image:url(http://images.51job.com/jobsearch/images/apoint_org2.gif);text-align:left;}
+#row_1_r_3{margin-top:0px;width:256px;height:17px;background-image:url(http://images.51job.com/jobsearch/images/used_search_14.gif);background-repeat: no-repeat;}
+
+#row_2{text-align:center;}
+#row_2 table {margin:0px auto;}
+#row_3{width:961px !important;width:976px;height:26px;line-height:26px;padding-left:15px;color:#374977;background-image:url(http://images.51job.com/jobsearch/images/res_bg.gif);background-repeat: repeat-x;}
+#row_30{width:961px !important;width:976px;height:26px;line-height:26px;padding-left:15px;background-image:url(http://images.51job.com/jobsearch/images/res_bg.gif);background-repeat: repeat-x;}
+#row_4{width:961px !important;width:976px;height:27px;line-height:27px;padding-left:15px;background-image:url(http://images.51job.com/jobsearch/images/con_bg.gif);background-repeat: repeat-x;}
+
+#row_5{}
+/*left*/
+#row_5_l{margin:0px; top:0px; padding:0px;text-align:left;margin-top:10px;float:left;display:inline;}
+
+#row_5_l_1{width:153px;height:30px;margin:0px; top:0px; padding:0px;background-image:url(http://images.51job.com/jobsearch/images/sch_in_res_top.gif);background-repeat: no-repeat;}
+
+#row_5_l_2{width:150px !important;width:153px;margin:0px; top:0px; padding:0px;background-image:url(http://images.51job.com/jobsearch/images/sch_in_res_mid.gif);background-repeat: repeat-y;padding-left:3px;}
+
+.sch_res_1{background: url(http://images.51job.com/jobsearch/images/apt_arrow_b.gif) no-repeat left center;width:50px !important;width:72px;height:29px;line-height:29px;padding-left:22px;}
+.sch_res_2{margin:0px; top:0px; padding:0px;text-align:left;}
+.sch_res_2 ul {width:140px;margin:0px;margin-left:3px; top:0px; padding:0px;text-align:left;}
+.sch_res_2 ul li{cursor:pointer;height:21px;padding-top:5px;color:#8B8B8B;BORDER: #ffffff 1px solid;BACKGROUND: #ffffff;}
+
+#row_5_l_3{width:153px;height:12px;margin:0px; top:0px; padding:0px;background-image:url(http://images.51job.com/jobsearch/images/sch_in_res_down.gif);background-repeat: no-repeat;}
+#row_5_l_4{margin:0px; top:0px; padding:0px;text-align:center;margin-top:3px;}
+#row_5_l_5{margin:0px; top:0px; padding:0px;text-align:center;margin-top:2px;}
+
+/*right*/
+#row_5_r{width:180px;margin:0px; padding:0px;text-align:left;margin-top:10px;margin-left:5px;float:left;display:inline;overflow-x:auto;}
+
+
+/*职能行业层样式 start*/
+table.fun{border:0;margin:0;border-collapse:collapse;background-color:#ffffff;}
+.topN{text-align:left;vertical-align:middle;font-weight:bold;color:#ff7400;font-size: 12px;font-family: "宋体";}
+
+.tbl56 {border:0;margin:0;border-collapse:collapse;}
+.tbl56 td{padding:0px;}
+
+.td33 {width:100%;background-color:#ff7400; height:4px;}
+.sch_line{width:100%;text-align:center;vertical-align:middle;padding-top:6px !important;padding-top:0px}
+/*职能行业层样式 end*/
+
+.sinTip{ height:20px;margin:0px; clear:both; padding:0px;}
+.sinTipTitle{float:left; height:20px; line-height:20px; vertical-align:middle; overflow:hidden; width:95px;}
+.sinTipTxt{color: #ff7300;float:left; height:20px; line-height:20px; vertical-align:middle; overflow:hidden;}
+.sinTipTxt1{color: #ff7300;float:left; line-height:22px; vertical-align:middle; }
+.sinTip ul,li{ margin:0px; padding:0px; list-style:none;}
+.sinTipTxt a{ margin:0 5px;}
+
+#h_new1{position:absolute;z-index:2;top:177px;left:99px;}/*ff*/
+*html #h_new1{position:absolute;z-index:2;top:167px;left:99px;}/* IE6 */
+*+html #h_new1{position:absolute;z-index:2;top:167px;left:99px;}/* IE7 */
+
+#h_new2{position:absolute;z-index:2;top:174px;left:19px;}/*ff*/
+*html #h_new2{position:absolute;z-index:2;top:165px;left:19px;}/* IE6 */
+*+html #h_new2{position:absolute;z-index:2;top:165px;left:19px;}/* IE7 */
+
+#h_new3{position:absolute;z-index:2;top:180px;left:35px;}/*ff*/
+*html #h_new3{position:absolute;z-index:2;top:173px;left:35px;}/* IE6 */
+*+html #h_new3{position:absolute;z-index:2;top:173px;left:35px;}/* IE7 */
+
+.title_bigcategory1{font-weight:bold;color:#ff7400;font-size: 12px;font-family: "宋体";}
+.rel_sch {width:100%;height:50px;vertical-align:middle;background-color:#FEEDDF;border:0px;margin:0px;padding:0px;}
+.rel_sch td {height:20px;font-weight:800;}
+.rel_sch a:link { color: #ff7400; text-decoration: none; }
+.rel_sch a:visited { color: #7E817E; text-decoration: none; }
+.rel_sch a:hover { color: #ff7400; text-decoration: underline; }
+
+.pagenav td { font-weight:800;font-size:14px;height:45px;padding-top:3px;}
+.pagenav a:link { padding-left:5px;padding-right:5px;font-weight:800;font-size:14px; color: #261DDC;text-decoration: underline;border:1px solid #ffffff;}
+.pagenav a:visited { padding-left:5px;padding-right:5px;font-weight:800;font-size:14px; color: #261DDC;text-decoration: underline;border:1px solid #ffffff;}
+.pagenav a:hover { padding-left:5px;padding-right:5px;font-weight:800;font-size:14px; color: #261DDC;text-decoration: none;border:1px solid #ff7400;}
+.pagenav_h{padding-left:5px;padding-right:5px;color: #ff7400;}
+
+.condtbl { width:100%; text-align:left; border: solid 1px #FEAB67;margin:0;border-collapse:collapse;background-color:#FFEDDF;}
+.condtbl td {height:30px;}
+.condtbl_1{padding-left:10px;padding-top:2px !important;padding-top:6px;}
+.condtbl_2{}
+.condtbl_3{}
+.condtbl_4{}
+.condtbl_5{}
+
+A.orange3:link {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7300; 
+	TEXT-DECORATION: underline;
+}
+A.orange3:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7300; 
+	TEXT-DECORATION: underline;
+}
+A.orange3:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #ffffff; 
+	TEXT-DECORATION: none;
+	font-weight:800;
+}
+
+.bwka { word-wrap:break-word;word-break:keep-all;}
+
+/*MY频道iframe调用*/
+.list_30			{ width:24px;}
+.list_31			{ width:215px;}
+.list_32			{ width:215px;padding-left:5px;}
+.list_33			{ width:80px;padding-left:5px;}
+.list_34			{ width:85px;padding-left:5px;}
+.list_35			{ width:15px;}
+
+A.district:link,A.district:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #333333; 
+	TEXT-DECORATION: underline
+}
+A.district:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7300; 
+	TEXT-DECORATION: none
+}
+
+/* CSS Document */
+
+.grayline {
+	border-top: 1px solid #DFDFDF;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+
+.gary13 {
+	font:14px/20px demo;
+	color: #808080;
+	text-decoration: none;
+}
+.red {
+	color: #FF0000;
+	text-decoration: none;
+}
+.gary {
+	color: #8B8B8B;
+	text-decoration: none;
+}
+.or {
+	color: #FF7700;
+}
+A.black:hover {
+	FONT-SIZE: 12px; COLOR: #ff7300; TEXT-DECORATION: none
+}
+A.blue:link {
+	FONT-SIZE: 12px; COLOR: #266eba; TEXT-DECORATION: none
+}
+A.blue:visited {
+	FONT-SIZE: 12px; COLOR: #266eba; TEXT-DECORATION: none
+}
+A.blue:hover {
+	FONT-SIZE: 12px; COLOR: #266eba; TEXT-DECORATION: underline
+}
+.font {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #333333;
+}
+.blue2 {
+	color: #0055cc;
+	text-decoration: none;
+}
+
+.title01 {
+	font-size: 14px;
+	line-height: 20px;
+	font-weight: bold;
+	color: #FF6600;
+}
+A.title011:link {
+	FONT-SIZE: 14px; COLOR: #FF6600; TEXT-DECORATION: none
+}
+A.title011:visited {
+	FONT-SIZE: 14px; COLOR: #FF6600; TEXT-DECORATION: none
+}
+A.title011:hover {
+	FONT-SIZE: 14px; COLOR: #FF6600; TEXT-DECORATION: none
+}
+.title03 {
+	color: #3d991c;
+	font-size: 14px;
+	line-height: 30px;
+	font-weight: bold;
+	text-decoration: none;
+}
+.green2 {
+	color: 379912;
+	text-decoration: none;
+	font-size: 12px;
+	line-height: 28px;
+}
+.green3 {
+	color: 1382A3;
+	text-decoration: none;
+	font-size: 12px;
+}
+.td2 {
+	text-decoration: none;
+	background: f4f4f4 25px center;
+	height: 25px;
+	line-height: 25px;
+	vertical-align: middle;
+}
+.green4 {
+	line-height: 22px;
+	color: 007236;
+	text-decoration: none;
+}
+.search {
+	background: #FFFFFF 5px center;border: 1px solid rgb(165, 165, 167); width: 168px; height: 25px;line-height:23px;background-image:  url(http://images.51job.com/jobsearch/images/key_search.gif); background-repeat: no-repeat; padding-left: 25px;
+	margin-top:5px;
+}
+.sch_submit{ margin-top:5px;}
+
+/* CSS Document */
+html,body {
+	margin:0px;
+	padding:0px;
+}
+
+
+.jie_margin_left
+{
+	margin-left:80px;
+}
+
+.jie_margin_left_1
+{
+	margin-left:160px;
+}
+
+.marginleft_2{width:1000px;}
+
+.marginleft_3
+{
+	margin-left:75px;
+}
+
+.marginleft_4
+{
+	margin-left:105px;
+}
+
+li
+{
+	list-style-type: none;
+}
+
+img
+{
+	border:0px;
+}
+
+/* top顶部位置的 */
+#top
+{
+	margin: 0px;
+	padding: 0px;
+	width:100%;
+	height:120px;
+}
+
+/* 51joblogo的位置 */
+#logo
+{
+	/*normal version*/
+	top:0px;
+	margin-top:10px;
+	margin-left: 42px;
+	width:143px;
+	height:60px;
+	/*special version*/
+	/*
+	top:0px;
+	margin-top:5px;
+	margin-left: 13px;
+	width:100px;
+	*/
+	
+}
+
+/* 语言版本 */
+#version
+{
+	/*normal version*/
+	top:0px;
+	margin-top:25px;
+	margin-left: 210px;
+	position:absolute;
+	padding:0px;
+	line-height: 16px;
+	list-style-type: none;
+	width:300px;
+	/*special version*/
+	/*
+	top:0px;
+	margin-top:25px;
+	margin-left: 322px;
+	position:absolute;
+	padding:0px;
+	line-height: 16px;
+	list-style-type: none;
+	width:300px;
+	*/
+}
+
+/* 左侧导航的位置 */
+#left{
+	width:178px;
+	top:0px;
+	padding:25px;
+	float: left; 
+
+	
+}
+/* 右侧内容导航的位置 */
+#right
+{
+	top:0px;
+	FLOAT: left; 
+	padding:25px;
+}
+/* 底部的位置 */
+#bottom
+{
+	margin-top:30px;
+	width:100%;
+	height:97px;
+	clear:left;
+
+}
+
+#nav1 {	
+	top:6px;
+	left: 622px;
+	position:absolute;
+	width:340px;	
+}
+
+#nav1 li{
+	float:left;
+	font-size: 12px;
+	list-style-type: none;
+	background-image: url(http://images.51job.com/jobsearch/images/dot_yellow.gif);
+	background-repeat: no-repeat;
+	background-position: 0px 3px;
+	margin:5px;
+	padding-left: 10px;
+}
+
+#nav2 {	
+		top:0px;
+	left: 346px;
+	position:absolute;
+	margin-top:57px;
+	width:617px;
+
+}
+
+#nav2 li{
+	float:left;
+	font-size: 12px;
+	list-style-type: none;
+	
+}
+
+#line_2
+{
+	background-image:url(http://images.51job.com/jobsearch/images/top_bg2.gif);
+	width:485px;
+	height:2px;
+	margin-left:0px;
+	padding:0px;
+	margin-top:88px;
+	position:absolute;
+	top:0px;
+}
+
+#nav3 {
+	top:0px;
+	background-image:url(http://images.51job.com/jobsearch/images/top_bg1.gif);
+	width:1003px;
+	margin-top:90px;
+	margin-left:0px;
+	padding:0px;
+	height:33px;
+	position:absolute;
+	color: #FFFFFF;
+}
+#nav3 li{
+	float:left;
+	font-size: 12px;
+	list-style-type: none;
+	margin-left:18px;
+	margin-top:5px;
+	padding:0px;
+	line-height: 15px;	
+	
+}
+
+#nav3 li a:link
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-decoration: none;
+	color: #ffffff;	
+}
+
+#nav3 li a:visited
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-decoration: none;
+	color: #ffffff;	
+}
+
+#bott {	
+	background-image:url(http://images.51job.com/jobsearch/images/top_bg.gif);
+	position:relative;
+	width:1002px;
+	height:35px;	
+}
+
+#navbott {
+	background-image:url(http://images.51job.com/jobsearch/images/top_bg.gif);
+	position:absolute;
+	width:776px;
+	margin-left:185px;
+	padding:0px;
+	top:0px;
+	margin-top:0px;
+	height:35px;
+	color: #FFFFFF;
+	left:40px;
+}
+
+#navbott li
+{
+	list-style-type: none;
+	float:left;
+	margin-left:-5px;
+	margin-top:2px;
+	line-height: 16px;
+}
+
+#navbott li a
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+#navbott li a:visited
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+#loveidea
+{
+	margin:0px auto;
+	padding:0px;
+	width:620px;
+}
+
+#bott li{
+	float:left;
+	font-size: 12px;
+	list-style-type: none;
+	padding: 6px;
+	color: #ffffff;
+
+}
+
+#bott li a:link
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-decoration: none;
+	color: #ffffff;	
+}
+
+#bott li a:visited
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-decoration: none;
+	color: #ffffff;	
+}
+
+#copyright
+{
+	margin-top:3px;
+	width:1002px;
+}
+
+.fontright
+{
+	top:0px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #333333;
+	text-align: center;
+	line-height: 16px;
+}
+
+#version li a:link
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-decoration: none;
+	color: #ff7300;
+	list-style-type: none;
+}
+
+#version li a:hover
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-decoration: underline;
+	color: #ff7300;
+	list-style-type: none;
+}
+
+#version li a:visited
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-decoration: none;
+	color: #ff7300;
+	list-style-type: none;
+}
+
+#tool li
+{	
+	font-size: 12px;
+	list-style-type: none;
+}
+
+#code li
+{
+	
+	font-size: 12px;
+	list-style-type: none;
+
+
+}
+
+.f
+{
+	font-size: 12px;
+	list-style-type: none;
+	margin:5px;
+	font-weight: bold;
+	clear:both;
+}
+
+
+#leftdown
+{
+	padding:0px;
+	margin:0px;
+	position:absolute;	
+}
+
+.leftdown1
+{
+	padding:0px;
+	margin:0px;
+	position:absolute;	
+}
+
+#leftcenter
+{
+	border-width: 3px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-color: #ff7300;	
+	height:100%;
+	width:184px;
+	margin:0px;
+}
+
+#line2
+{
+	margin-top:-8px;
+}
+
+#sele
+{
+	margin-top: 6px;
+	margin-right: 12px;
+	margin-bottom: 1px;
+	margin-left: 1px;
+	
+}
+
+#bgbtn
+{
+	background-image: url(http://images.51job.com/jobsearch/images/place_bg.gif);
+	background-repeat: no-repeat;
+	width:129px;
+	height:33px;
+}
+
+.lableidea
+{
+	top:0px;
+	padding:3px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	text-align:center;
+}
+
+.hill
+{
+height:10px;
+}
+
+.or
+{
+COLOR: #ff7300;
+}
+
+#rsume
+{
+  margin-left:8px;
+  margin-top:5px;
+  
+}
+
+#rsume div{
+	margin:2px;
+	float:left;
+	padding:1px;
+	width:77px;	
+	height:22px;
+	overflow:hidden;
+}
+#rsume img{
+	float:left;
+}
+
+.gary {
+	color: #8B8B8B;
+	text-decoration: none;
+}
+.kt_bg{width:44px;height:24px;text-align:center;vertical-align:middle;BACKGROUND-IMAGE:url(http://images.51job.com/jobsearch/images/sbtn_bg.gif);color:#FFFFFF;cursor:pointer;}
+.kt_bg0{width:44px;height:24px;text-align:center;vertical-align:middle;color:#000000;cursor:pointer;}
+.apt_arrow_a{
+	background-image: url(http://images.51job.com/jobsearch/images/apt_arrow_a.gif);
+}
+.apt_arrow_b{
+	background-image: url(http://images.51job.com/jobsearch/images/apt_arrow_b.gif);
+}
+.arrow_a{
+	background-image: url(http://images.51job.com/jobsearch/images/arrow_a.gif);
+	background-repeat: no-repeat;
+}
+.arrow_b{
+	background-image: url(http://images.51job.com/jobsearch/images/arrow_b.gif);
+	background-repeat: no-repeat;
+}
+.m_over{
+	COLOR:#ff7300;BORDER: #FB760A 1px solid;BACKGROUND: #FEEFE1;
+}
+.m_out{
+	color:#8B8B8B;BORDER: #ffffff 1px solid;BACKGROUND: #ffffff;
+}
+
+A.orange2:link {
+	FONT-SIZE: 12px; 
+	TEXT-DECORATION: none
+}
+A.orange2:visited {
+	FONT-SIZE: 12px;
+	COLOR: #7E817E;
+	TEXT-DECORATION: none
+}
+A.orange2:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7300; 
+}
+a.jobname:link {  color: #0059E1;  font-size: 14px; font-weight:bold;text-decoration: underline}
+a.jobname:visited {  color: #7E817E; font-size: 14px;font-weight:bold;text-decoration: underline}
+a.jobname:hover {  color: #0059E1;  font-size: 14px;font-weight:bold;text-decoration: none}
+
+a.coname:link { font-size: 13px;font-weight:bold; color: #993366; }
+a.coname:visited {  font-size: 13px;font-weight:bold;color: #7E817E;}
+a.coname:hover {  font-size: 13px;font-weight:bold;color: #993366; text-decoration: underline}
+
+a.jobname_hot:link {  color: #FF7300;  font-size: 14px; font-weight:bold;text-decoration:none;}
+a.jobname_hot:visited {  color: #FF7300; font-size: 14px;font-weight:bold;text-decoration:none;}
+a.jobname_hot:hover {  color: #FF7300;  font-size: 14px;font-weight:bold;text-decoration:underline;}
+a.jobname_hot:active {  color: #FF7300;  font-size: 14px;font-weight:bold;text-decoration:underline;}
+
+a.company_hot:link { font-size: 13px;font-weight:bold; color: #666; text-decoration:none;}
+a.company_hot:visited {  font-size: 13px;font-weight:bold;color: #666;text-decoration:none;}
+a.company_hot:hover {  font-size: 13px;font-weight:bold;color: #ff7300; text-decoration: underline}
+a.company_hot:active {  font-size: 13px;font-weight:bold;color: #ff7300; text-decoration: underline}
+
+A:link {FONT-SIZE: 12px;TEXT-DECORATION: none }
+A:visited {FONT-SIZE: 12px;COLOR: #7E817E;TEXT-DECORATION: none }
+A:hover {FONT-SIZE: 12px;COLOR: #ff7300; }
+
+.d_line {background-repeat: repeat-x; }
+a.blue8:link {  color: #333333;  font-size: 12px;text-decoration: underline}
+a.blue8:visited {  color: #333333; font-size: 12px;text-decoration: underline}
+a.blue8:hover {  color: #ff7300; text-decoration:none; font-size: 12px}
+
+a.com:link {  color: #666666;  font-size: 12px;text-decoration: none}
+a.com:visited {  color: #333333; font-size: 12px;text-decoration: none}
+a.com:hover {  color: #ff7300; font-size: 12px;text-decoration: none}
+.f21 {	color: #666666;  font-size: 12px;font-weight:bold}
+
+a.pagelink:link {  color: #261DDC;text-decoration: underline}
+a.pagelink:visited {  color: #261DDC;text-decoration: underline}
+
+a.blue2:link {  color: #ff7300;  font-size: 12px;text-decoration: none}
+a.blue2:visited {  color: #ff7300;  font-size: 12px;text-decoration: none}
+a.blue2:hover {  color: #ff7300; text-decoration:none; font-size: 12px}
+
+A.help_:link {
+	FONT-SIZE: 12px;
+	COLOR: #ff7300; 
+	TEXT-DECORATION: underline
+}
+A.help_:visited {
+	FONT-SIZE: 12px; 
+	COLOR: #ff7300;
+	TEXT-DECORATION: underline
+}
+A.help_:hover {
+	FONT-SIZE: 12px; 
+	COLOR: #333333; 
+	TEXT-DECORATION: underline
+}
+TD#title_bg {background:url(http://images.51job.com/jobsearch/images/title_bg.gif) repeat-x;height:27px;}
+TD#sesrch_bg {background:url(http://images.51job.com/jobsearch/images/search_bg.gif) no-repeat center;height:47px;}
+TD#bottom_bg {background:url(http://images.51job.com/jobsearch/images/bottom_bg.gif) repeat-x;height:27px;}
+
+.title_div {
+	font-weight:bold;
+	color:#ff7400;
+	font-size: 12px;
+	font-family: "宋体";
+}
+
+.content_div {
+	height:20px;
+	text-align:left;
+	color:#333;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-decoration: none;
+	font-size: 12px;
+	font-family: "宋体";
+}
+
+.css1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #333333;
+	line-height: normal;
+}
+a.layer:link {
+	font-family: "宋体";
+	font-size: 12px;
+	color: #333333;
+	text-decoration: none;
+}
+a.layer:visited {
+	font-family: "宋体";
+	font-size: 12px;
+	color: #333333;
+	text-decoration: none;
+}
+a.layer:hover {
+	font-family: "宋体";
+	font-size: 12px;
+	color: #ff7400;
+	text-decoration: underline;
+}
+a.layer:active {
+	font-family: "宋体";
+	font-size: 12px;
+	color: #744A01;
+	text-decoration: none;
+}
+
+
+.css223{
+	text-align:left;
+	vertical-align:top;
+	padding-left:20px;
+	padding-top:5px; 
+	background:url(http://images.51job.com/jobsearch/images/title_bg.gif) top left repeat-x;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #FFFFFF;
+	line-height: 18px;
+	font-weight: normal;
+}
+
+/*mapbar start*/
+.mapbar_orange { color:#FF5A00; font-weight:bold; padding-left:5px;}
+a.mapbar_black:link{
+	color: #313234;
+	font-size: 12px;
+	text-decoration: none;
+	padding-left:5px;
+	padding-right:8px;
+}
+
+a.mapbar_black:visited{
+	color: #313234;
+	font-size: 12px;
+	text-decoration: none;
+	padding-left:5px;
+	padding-right:8px;
+}
+
+a.mapbar_black:hover{
+	color: #FF5A00;
+	text-decoration: underline;
+	font-size: 12px;
+	padding-left:5px;
+	padding-right:8px;
+}
+
+.mapbar_bg
+{
+	background-image: url(http://images.51job.com/jobsearch/images/mapbar/map.jpg);
+	background-repeat: no-repeat;
+	height:217px;
+	width:414px;
+	background-position: right;
+}
+
+#sel_dibaio , #sel_dibaio_narrow {
+	height: 25px;
+	background-repeat: no-repeat;
+	text-align: left;
+	vertical-align: middle;
+	margin: 0px;
+	padding: 0px;
+	padding-left: 2px;
+	border: 0px;
+}
+
+/*地标部分公共样式*/
+#dibiao_td {
+	margin-top: 0px;
+	width: 43px;
+	height: 24px;
+	border: 0px solid red;
+}
+#sel_dibaio table, #sel_dibaio_narrow table {
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	border-collapse: collapse;
+}
+
+#sel_dibaio table td, #sel_dibaio_narrow table td {
+	padding: 0px;
+	margin-top: 0px;
+}
+
+#sel_dibaio input, #sel_dibaio_narrow input {
+	padding-top:4px;
+	height: 22px;
+	border: 0px;
+	border: 0px solid red;
+}
+
+/**宽的样式**/
+#sel_dibaio { 
+	width: 250px;
+	background-image: url(http://images.51job.com/jobsearch/images/mapbar/dibiao.gif);
+}
+
+#sel_dibaio input
+{
+	width: 173px;
+}
+
+/**窄的样式**/
+#sel_dibaio_narrow { 
+	width: 148px;
+	background-image: url(http://images.51job.com/jobsearch/images/mapbar/dibiao_narrow.gif);
+}
+#sel_dibaio_narrow input
+{
+	padding-top: 2px;
+	width: 101px;
+}
+
+.map_condtbl { width:100%; text-align:left; border: solid 1px #FEAB67;margin:0;border-collapse:collapse;background-color:#FFEDDF;}
+
+.map_condtbl_1{padding-left:10px;padding-top:2px !important;padding-top:6px;}
+
+.map_condtbl .map_button,.map_button_narrow {
+	BORDER-RIGHT: #ffffff 0px solid;
+	BORDER-TOP: #ffffff 0px solid;
+	BORDER-LEFT: #ffffff 0px solid;
+	COLOR: #333333;
+	BORDER-BOTTOM: #ffffff 0px solid;
+	HEIGHT: 20px;
+	BACKGROUND-COLOR: #e7e7e7;
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	cursor:pointer;
+}
+
+.map_button {
+	WIDTH: 140px;
+	BACKGROUND-IMAGE: url(http://images.51job.com/jobsearch/images/mapbar/map_button.gif);
+}
+
+.map_button_narrow {
+	BORDER-RIGHT: #ffffff 0px solid;
+	BORDER-TOP: #ffffff 0px solid;
+	BORDER-LEFT: #ffffff 0px solid;
+	COLOR: #333333;
+	BORDER-BOTTOM: #ffffff 0px solid;
+	HEIGHT: 20px;
+	BACKGROUND-COLOR: #e7e7e7;
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif, "宋体";
+	cursor:pointer;
+	WIDTH: 97px;
+	BACKGROUND-IMAGE: url(http://images.51job.com/jobsearch/images/mapbar/map_button_narrow.gif);
+}
+
+/*mapbar end*/
