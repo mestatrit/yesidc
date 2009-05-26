@@ -4409,6 +4409,7 @@ function openSubLayer( e , layerId , id ) {
 	//document.onmousedown = function( event ) {isColseSubLayer( event );};
 
 	curSubLayerId = subLayerId;
+	alert(sobj);
 }
 
 function buildSubLayer( layerId , id ) {
