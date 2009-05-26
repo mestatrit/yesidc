@@ -4299,6 +4299,7 @@ function openLayer( layerId ) {
 			centerLayer( obj );
 			obj.style.visibility = 'visible';
 		}
+		//alert(obj.outerHTML);
 		recordDocEvent();//记录全局事件
 		document.body.onmousemove = function( event ) { drag( event , obj );};
 		document.body.onmouseup = function() { objX = 0; objY=0;};
