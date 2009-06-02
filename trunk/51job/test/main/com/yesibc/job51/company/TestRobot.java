@@ -4,8 +4,6 @@ import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,9 +15,8 @@ import com.webrenderer.swing.dom.IElement;
 import com.webrenderer.swing.dom.IElementCollection;
 import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
-import com.yesibc.core.utils.StringUtils;
 
-public class Test {
+public class TestRobot {
 
 	public final static String URL_SEARCH = "http://search.51job.com/jobsearch/advance_search.php";
 	public final static String URL_SEARCH_BAK = "file:///D:/yesibc/51job/51JOB/jobsearch/advance_search.html";
@@ -27,13 +24,9 @@ public class Test {
 	static boolean FINISH = false;
 	static String funTag = "popupFuntype";
 	static String indTag = "popupIndustry";
-	private static String[] funArray = { "2400", "0100" };
-	private static String[] indArray = { "01", "37" };
-	static int funIndex = 0;
-	static int indIndex = 0;
-	
+	private static Robot robot;
 
-	public static void onDocumentComplete(final IBrowserCanvas browser) {
+	private static void onDocumentComplete(final IBrowserCanvas browser) {
 		browser.addNetworkListener(new NetworkAdapter() {
 			public void onDocumentComplete(NetworkEvent e) {
 				FINISH = true;
@@ -45,6 +38,11 @@ public class Test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		try {
+			robot = new Robot();
+		} catch (AWTException ex) {
+			ex.printStackTrace();
+		}
 		BrowserFactory.setLicenseData("30dtrial", "6KR60ASK2KG378HCEBB128NP");
 		browser = BrowserFactory.spawnMozilla();
 		onDocumentComplete(browser);
@@ -56,23 +54,7 @@ public class Test {
 
 		IElement[] ies = locateButton();
 
-		for (int i = 0; i < funArray.length; i++) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			doFunClick(ies, i);
-		}
-
-		for (int i = 0; i < indArray.length; i++) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			doIndClick(ies, i);
-		}
+		doClick(ies);
 
 		System.out.println("onDocumentComplete2 getInnerHTML");
 	}
@@ -82,89 +64,63 @@ public class Test {
 	 * 
 	 * @param ies
 	 */
-	private static void doFunClick(IElement[] ies, int i) {
+	private static void doClick(IElement[] ies) {
 		ies[0].click();
 		IDocument doc = browser.getDocument();
 		IElement funDIV = doc.getElementById(funTag);
 		System.out.println("Fun funDIV1=" + funDIV.getOuterHTML());
 
-		// sfchx || cancel selected
-		IElementCollection checkBoxOKs = doc.getAll().tags("INPUT");
-		if (checkBoxOKs != null && checkBoxOKs.length() > 0) {
-			IElement checkBoxOK = getElement(checkBoxOKs, "id", "sfchx");
-			if (checkBoxOK != null) {
-				System.out.println("Fun checkBoxOK=" + checkBoxOK.getOuterHTML());
-				checkBoxOK.click();
-			}
-		}
+		// IElementCollection divs = doc.getAll().tags("DIV");
+		// IElement funDIV = getElement(divs, "id", funTag);
 
-		// locate to td
+		elementByLoop = null;
 		IElementCollection children = funDIV.getChildElements();
-		elementByLoop = null;
-		IElement tdLocation = getElementByLoop(children, "TD", "pcode", funArray[i]);
-		tdLocation.click();
+		
+		//cancel selected
+		
+		
+		//mouse over to first
+		System.out.println("children=" + children.length());
+		IElement first = getElementByLoop(children, "TD", "layerid", "popupFuntype");
+		String tempId = first.getId();
+		System.out.println("tempId=" + tempId);
+		System.out.println("first=" + first.getOuterHTML());
+		String id = "td" + tempId + System.currentTimeMillis();
+		first.putId(id);
+		System.out.println("id=" + first.getId());
+		System.out.println("first1=" + first.getOuterHTML());
 
-		// afchx ||
-		elementByLoop = null;
-		IElementCollection checkBoxs = doc.getAll().tags("INPUT");
-		IElement checkBox = getElement(checkBoxs, "id", "afchx" + funArray[i]);
-		checkBox.click();
-		// (children, "INPUT", "id", "afchx");
-		System.out.println("Fun checkBox=" + checkBox.getOuterHTML());
+		IElement ieTemp = first;
+		long left = first.getOffsetLeft();
+		long top = first.getOffsetTop();
+		while (ieTemp != null) {
+			left = left + ieTemp.getOffsetLeft();
+			top = top + ieTemp.getOffsetTop();
+			System.out.println("ie=" + ieTemp.getAttribute("id", 0)
+					+ ",name=" + ieTemp.getAttribute("name", 0));
+			ieTemp = ieTemp.getOffsetParent();
+		}
+		System.out.println("left=" + left);
+		System.out.println("top=" + top);
 
-		// click confirm
+		int x = Integer.parseInt(String.valueOf(left)) + 18;
+		int y = Integer.parseInt(String.valueOf(top)) + 28;
+		robot.mouseMove(x,y);
+		robot.mousePress(InputEvent.BUTTON1_MASK);
+		robot.mouseRelease(InputEvent.BUTTON1_MASK);
+		
+		//mouse click sub layer.
+		robot.mouseMove((x+8), (y+8));
+		robot.mousePress(InputEvent.BUTTON1_MASK);
+		robot.mouseRelease(InputEvent.BUTTON1_MASK);
+		robot.mouseMove((x+260), (y-40));
+		System.out.println("Fun funDIV2=" + funDIV.getOuterHTML());
+
+		//click confirm
 		elementByLoop = null;
 		IElement cofirm = getElementByLoop(children, "SPAN", "onclick", "confirmLayer");
 		System.out.println("Fun cofirm=" + cofirm.getOuterHTML());
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		cofirm.click();
-	}
-
-	/**
-	 * (popupFuntype.innerHTML); (popupIndustry.innerHTML);
-	 * 
-	 * @param ies
-	 */
-	private static void doIndClick(IElement[] ies, int i) {
-		ies[1].click();
-		IDocument doc = browser.getDocument();
-		IElement funDIV = doc.getElementById(indTag);
-		System.out.println("Ind indDIV1=" + funDIV.getOuterHTML());
-
-		// sichx || cancel selected
-		IElementCollection allInputs = doc.getAll().tags("INPUT");
-		if (allInputs != null && allInputs.length() > 0) {
-			List<IElement> checkBoxOKs = getElements(allInputs, "INPUT", "id", "sichxs");
-			for (IElement e : checkBoxOKs) {
-				System.out.println("Fun checkBoxOK=" + e.getOuterHTML());
-				e.click();
-			}
-		}
-
-		// aichx ||
-		elementByLoop = null;
-		IElementCollection checkBoxs = doc.getAll().tags("INPUT");
-		IElement checkBox = getElement(checkBoxs, "id", "aichx" + indArray[i]);
-		checkBox.click();
-		System.out.println("Ind checkBox=" + checkBox.getOuterHTML());
-
-		// click confirm
-		elementByLoop = null;
-		IElement cofirm = getElementByLoop(funDIV.getChildElements(), "SPAN", "onclick", "confirmLayer");
-		System.out.println("Ind cofirm=" + cofirm.getOuterHTML());
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		cofirm.click();
-		System.out.println("Ind indDIV2=" + funDIV.getOuterHTML());
 	}
 
 	static IElement elementByLoop = null;
@@ -198,40 +154,11 @@ public class Test {
 		return elementByLoop;
 	}
 
-	private static List<IElement> getElements(IElementCollection ies, String tag, String attribute, String attrVal) {
-		if (ies == null || ies.length() < 1) {
-			return null;
-		}
-
-		attrVal = StringUtils.trim2Empty(attrVal);
-		List<IElement> elements = new ArrayList<IElement>();
-		for (int i = 0; i < ies.length(); i++) {
-			IElement current = ies.item(i);
-			if (!tag.equals(current.getTagName())) {
-				continue;
-			}
-			String name = StringUtils.trim2Empty(current.getAttribute(attribute, 0));
-			if ("".equals(name)) {
-				continue;
-			}
-
-			if ("".equals(attrVal)) {
-				elements.add(current);
-				continue;
-			}
-
-			if (name.indexOf(attrVal) > -1) {
-				elements.add(current);
-			}
-		}
-		return elements;
-	}
-
 	private static IElement getElement(IElementCollection ies, String attribute, String attrVal) {
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);
 			String name = current.getAttribute(attribute, 0);
-			if (name.indexOf(attrVal) > -1) {
+			if (attrVal.equals(name)) {
 				System.out.println("Find name=" + name);
 				return current;
 			}
