@@ -29,7 +29,7 @@ public class SelectInd {
 		IElement checkBox = null;
 		for (int i = 0; i < JobMain.SELECT_TIMES; i++) {
 			index = times * JobMain.SELECT_TIMES + i;
-			if (index >= JobMain.FUN_ARRAY.length) {
+			if (index >= JobMain.IND_ARRAY.length) {
 				break;
 			}
 
