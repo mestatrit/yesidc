@@ -3,42 +3,22 @@ package com.yesibc.job51.company;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.webrenderer.swing.IBrowserCanvas;
-import com.webrenderer.swing.dom.IDocument;
 import com.webrenderer.swing.dom.IElement;
 import com.webrenderer.swing.dom.IElementCollection;
 import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
+import com.webrenderer.swing.event.PromptEvent;
+import com.webrenderer.swing.event.PromptListener;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerUtils;
 
 public class JobSupport {
 
-	public static IElement[] locateButton() {
-		IDocument doc = JobMain.BROWSER.getDocument();
-		IElementCollection inputs = doc.getAll().tags("INPUT");
-		IElement funBT = null;
-		IElement indBT = null;
-		IElement[] ie = new IElement[2];
-		for (int i = 0; i < inputs.length(); i++) {
-			IElement current = inputs.item(i);
-			String buttonStr = current.getOuterHTML();
-			if (buttonStr.indexOf(JobMain.FUNTAG) > -1) {
-				funBT = current;
-				ie[0] = funBT;
-			} else if (buttonStr.indexOf(JobMain.INDTAG) > -1) {
-				indBT = current;
-				ie[1] = indBT;
-				break;
-			}
-		}
-		return ie;
-	}
-
 	public static IElement getElement(IElementCollection ies, String attribute, String attrVal) {
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);
-			String name = current.getAttribute(attribute, 0);
+			String name = ClawerUtils.removeSpace(current.getAttribute(attribute, 0));
+			//LogHandler.info("name=" + name);
 			if (name.indexOf(attrVal) > -1) {
 				return current;
 			}
@@ -73,14 +53,6 @@ public class JobSupport {
 			}
 		}
 		return elements;
-	}
-
-	public static void onDocumentComplete(final IBrowserCanvas browser) {
-		browser.addNetworkListener(new NetworkAdapter() {
-			public void onDocumentComplete(NetworkEvent e) {
-				JobMain.FINISH = true;
-			}
-		});
 	}
 
 	public static IElement elementByLoop = null;
@@ -118,4 +90,28 @@ public class JobSupport {
 			ErrorHandler.error("Waiting failure!", e);
 		}
 	}
+
+	public static void addListener() {
+		JobMain.BROWSER.addPromptListener(new PromptListener() {
+			// The onPromptDialog method is fired whenever the browser
+			// wants to show a dialog. Here we have the option
+			// of stopping the dialog from showing.
+			public void onPromptDialog(PromptEvent e) {
+				// Print out some info about the event we got
+				System.out.println("We got a Dialog with type:" + e.getDialogType());
+				System.out.println("Title: " + e.getDialogTitle());
+				System.out.println("Text: " + e.getDialogText());
+
+				e.setButtonResult(PromptEvent.BUTTON_OK);
+				e.setButtonResult(PromptEvent.BUTTON_YES);
+			}
+		});
+
+		JobMain.BROWSER.addNetworkListener(new NetworkAdapter() {
+			public void onDocumentComplete(NetworkEvent e) {
+				JobMain.FINISH = true;
+			}
+		});
+	}
+
 }
