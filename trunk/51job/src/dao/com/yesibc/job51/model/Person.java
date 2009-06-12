@@ -70,11 +70,11 @@ public class Person implements java.io.Serializable {
 	private Date updateDate;
 	private String createUser;
 	private String updateUser;
-	private List<Skill> skills;
-	private List<Append> appends;
-	private List<Language> languages;
-	private List<Email> emails;
-	private List<Edu> edus;
+	private List<PersonSkill> skills;
+	private List<PersonAppend> appends;
+	private List<PersonLanguage> languages;
+	private List<PersonEmail> emails;
+	private List<PersonEdu> edus;
 
 	public String getPersonId() {
 		return personId;
@@ -87,43 +87,43 @@ public class Person implements java.io.Serializable {
 
 	// Constructors
 
-	public List<Edu> getEdus() {
+	public List<PersonEdu> getEdus() {
 		return edus;
 	}
 
-	public void setEdus(List<Edu> edus) {
+	public void setEdus(List<PersonEdu> edus) {
 		this.edus = edus;
 	}
 
-	public List<Email> getEmails() {
+	public List<PersonEmail> getEmails() {
 		return emails;
 	}
 
-	public List<Append> getAppends() {
+	public List<PersonAppend> getAppends() {
 		return appends;
 	}
 
-	public void setAppends(List<Append> appends) {
+	public void setAppends(List<PersonAppend> appends) {
 		this.appends = appends;
 	}
 
-	public void setEmails(List<Email> emails) {
+	public void setEmails(List<PersonEmail> emails) {
 		this.emails = emails;
 	}
 
-	public List<Skill> getSkills() {
+	public List<PersonSkill> getSkills() {
 		return skills;
 	}
 
-	public void setSkills(List<Skill> skills) {
+	public void setSkills(List<PersonSkill> skills) {
 		this.skills = skills;
 	}
 
-	public List<Language> getLanguages() {
+	public List<PersonLanguage> getLanguages() {
 		return languages;
 	}
 
-	public void setLanguages(List<Language> languages) {
+	public void setLanguages(List<PersonLanguage> languages) {
 		this.languages = languages;
 	}
 
