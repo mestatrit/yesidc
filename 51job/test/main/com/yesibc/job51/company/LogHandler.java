@@ -7,11 +7,11 @@ public class LogHandler {
 	private static Log log = LogFactory.getLog(LogHandler.class);
 
 	public static void info(String errMsg) {
-		if (log.isDebugEnabled())
-			log.debug(errMsg);
+		log.info(errMsg);
 	}
 
 	public static void debug(String errMsg) {
-		log.info(errMsg);
+		if (log.isDebugEnabled())
+			log.debug(errMsg);
 	}
 }

@@ -1,14 +1,11 @@
 package com.yesibc.job51.company;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
 import com.webrenderer.swing.BrowserFactory;
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IDocument;
 import com.webrenderer.swing.dom.IElement;
+import com.webrenderer.swing.event.NetworkAdapter;
+import com.webrenderer.swing.event.NetworkEvent;
 
 public class JobMain {
 
@@ -16,10 +13,10 @@ public class JobMain {
 	public final static String URL_SEARCH_BAK = "file:///D:/yesibc/51job/51JOB/jobsearch/advance_search.html";
 	public static String FUNTAG = "popupFuntype";
 	public static String INDTAG = "popupIndustry";
-	public static int SELECT_TIMES = 1;
+	public static int SELECT_TIMES = 2;
 	public static long WAITING = 1000;
 
-	public static String[] FUN_ARRAY = { "2400", "0100" ,"2500"};
+	public static String[] FUN_ARRAY = { "2400", "0100", "2500" };
 	public static String[] IND_ARRAY = { "01", "37", "38" };
 	public static String FUN_ID_NAME = "pcode";
 	public static String FUNSUB_ID_NAME = "id";
@@ -30,24 +27,34 @@ public class JobMain {
 	public static String IND_ID_VAL_CANCEL = "sichx";
 	public static String IND_ID_VAL_NULL = "aichx";
 
-	public static IBrowserCanvas BROWSER;
+	private static IBrowserCanvas BROWSER;
 	public static boolean FINISH = false;
 
-	private static int funTimes = FUN_ARRAY.length % SELECT_TIMES == 0 ? FUN_ARRAY.length / SELECT_TIMES : (FUN_ARRAY.length / SELECT_TIMES + 1);
-	private static int indTimes = IND_ARRAY.length % SELECT_TIMES == 0 ? IND_ARRAY.length / SELECT_TIMES : (IND_ARRAY.length / SELECT_TIMES + 1);
+	private static int funTimes = FUN_ARRAY.length % SELECT_TIMES == 0 ? FUN_ARRAY.length / SELECT_TIMES
+			: (FUN_ARRAY.length / SELECT_TIMES + 1);
+	private static int indTimes = IND_ARRAY.length % SELECT_TIMES == 0 ? IND_ARRAY.length / SELECT_TIMES
+			: (IND_ARRAY.length / SELECT_TIMES + 1);
+
+	static {
+		BrowserFactory.setLicenseData("30dtrial", "6KR60ASK2KG378HCEBB128NP");
+	}
+
+	public static IBrowserCanvas getBrowser() {
+		return BrowserFactory.spawnMozilla();
+	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		BrowserFactory.setLicenseData("30dtrial", "6KR60ASK2KG378HCEBB128NP");
-		BROWSER = BrowserFactory.spawnMozilla();
+		BROWSER = getBrowser();
+		JobSupport.addListener(BROWSER);
 
-		JobSupport.addListener();
+		onDocumnetComplete();
 
 		BROWSER.loadURL(URL_SEARCH);
 
-		showFrame();
+		JobSupport.showFrame(BROWSER, "Search first page!");
 
 		waitingLoading();
 
@@ -67,39 +74,56 @@ public class JobMain {
 				"jobsearch/images/btn_search");
 		searchBtn.click();
 		waitingLoading();
+		// parse companies
+		ParseCompanyList.parseCompanies();
+		// paging
+		Paging.doPaging();
 
+		// result page.
 		funIE = JobSupport.getElement(getDoc().getAll().tags("INPUT"), "onClick", "openLayer('popupFuntype')");
 		indIE = JobSupport.getElement(getDoc().getAll().tags("INPUT"), "onClick", "openLayer('popupIndustry')");
-		// result page.
-		for (int i = 1; i < funTimes; i++) {
+		for (int i = 0; i < funTimes; i++) {
 			SelectFun.doFunClick(funIE, i);
 			JobSupport.waiting();
-			for (int j = 1; j < indTimes; j++) {
+			for (int j = 0; j < indTimes; j++) {
+				if (i == 0 && j == 0) {
+					continue;
+				}
 				SelectInd.doIndClick(indIE, j);
+				// click search button
+				FINISH = false;
+				searchBtn = JobSupport
+						.getElement(getDoc().getAll().tags("INPUT"), "src", "jobsearch/images/qs_sch.gif");
+				searchBtn.click();
+				waitingLoading();
+				JobSupport.waiting();
+
+				// parse companies
+				ParseCompanyList.parseCompanies();
+				// paging
+				Paging.doPaging();
+
+				funIE = JobSupport.getElement(getDoc().getAll().tags("INPUT"), "onClick", "openLayer('popupFuntype')");
+				indIE = JobSupport.getElement(getDoc().getAll().tags("INPUT"), "onClick", "openLayer('popupIndustry')");
 			}
-			JobSupport.waiting();
-			// click search button
-			FINISH = false;
-			searchBtn = JobSupport.getElement(getDoc().getAll().tags("INPUT"), "src",
-					"jobsearch/images/qs_sch.gif");
-			searchBtn.click();
-			waitingLoading();
 		}
 
 		System.out.println("onDocumentComplete2 getInnerHTML");
 	}
 
-	private static void showFrame() {
-		JFrame frame = new JFrame("Advanced DOM Example");
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(BorderLayout.CENTER, BROWSER.getComponent());
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setContentPane(panel);
-		frame.setSize(640, 480);
-		frame.setVisible(true);
+	private static void onDocumnetComplete() {
+		BROWSER.addNetworkListener(new NetworkAdapter() {
+			public void onDocumentComplete(NetworkEvent e) {
+				FINISH = true;
+			}
+		});
 	}
 
-	private static void waitingLoading() {
+	public static IDocument getDoc() {
+		return BROWSER.getDocument();
+	}
+
+	public static void waitingLoading() {
 		int i = 0;
 		while (!FINISH) {
 			i++;
@@ -108,12 +132,8 @@ public class JobMain {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			System.out.println("waiting loading¡­¡­[" + i * 0.5 + "]s");
+			System.out.println("Job Main waiting loading¡­¡­[" + i * 0.5 + "]s");
 		}
-	}
-
-	public static IDocument getDoc() {
-		return BROWSER.getDocument();
 	}
 
 }
