@@ -14,61 +14,65 @@ import java.io.PrintWriter;
  * 
  * <pre>
  * 
- *  
+ * 
  *      try {
  *          ...
  *      } catch (Exception e) {
  *          throw new NestedRuntimeException(e);
  *      }
- *   
- *  
+ * 
+ * 
  * </pre>
  */
 
 public class NestedRuntimeException extends RuntimeException {
 
-    /**
-     * Comment for <code>serialVersionUID</code>
-     */
-    private static final long serialVersionUID = 3257853177364689970L;
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 3257853177364689970L;
 
-    private Exception nestedException;
+	private Exception nestedException;
 
-    // -------------------------------------------------------------------------
-    public NestedRuntimeException(Exception nestedException) {
-        super(nestedException.getMessage());
-        this.nestedException = nestedException;
-    }
+	// -------------------------------------------------------------------------
+	public NestedRuntimeException(Exception nestedException) {
+		super(nestedException.getMessage());
+		this.nestedException = nestedException;
+	}
 
-    public NestedRuntimeException(String message, Exception nestedException) {
-        super(message);
-        this.nestedException = nestedException;
-    }
+	public NestedRuntimeException(String message, Exception nestedException) {
+		super(message);
+		this.nestedException = nestedException;
+	}
 
-    public void printStackTrace(PrintStream s) {
-        nestedException.printStackTrace(s);
-    }
+	public NestedRuntimeException(String message) {
+		super(message);
+	}
 
-    public void printStackTrace(PrintWriter w) {
-        nestedException.printStackTrace(w);
-    }
+	public void printStackTrace(PrintStream s) {
+		nestedException.printStackTrace(s);
+	}
 
-    public void printStackTrace() {
-        nestedException.printStackTrace();
-    }
+	public void printStackTrace(PrintWriter w) {
+		nestedException.printStackTrace(w);
+	}
 
-    public Throwable fillInStackTrace() {
-        if (nestedException == null) {
-            return super.fillInStackTrace();
-        } else {
-            return nestedException.fillInStackTrace();
-        }
-    }
+	public void printStackTrace() {
+		nestedException.printStackTrace();
+	}
 
-    // Properties
-    // -------------------------------------------------------------------------
-    public Exception getNestedException() {
-        return nestedException;
-    }
+	public Throwable fillInStackTrace() {
+		if (nestedException == null) {
+			return super.fillInStackTrace();
+		} else {
+			return nestedException.fillInStackTrace();
+		}
+	}
+
+	// Properties
+	// -------------------------------------------------------------------------
+	public Exception getNestedException() {
+		return nestedException;
+	}
 
 }
