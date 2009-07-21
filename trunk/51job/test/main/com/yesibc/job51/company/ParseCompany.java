@@ -11,7 +11,6 @@ public class ParseCompany {
 
 	private static IBrowserCanvas browser;
 	private static boolean finish = false;
-	private static String preUrl = "http://search.51job.com";
 	static{
 		browser = JobMain.getBrowser();
 		onDocumnetComplete();
@@ -21,7 +20,7 @@ public class ParseCompany {
 	public static void toDetailCompany(List<Company> companies) {
 		for (Company company : companies) {
 			finish = false;
-			browser.loadURL(preUrl+company.getUrl());
+			browser.loadURL(company.getUrl());
 			waitingLoading();
 			parseToCompany(company);
 		}
@@ -29,7 +28,7 @@ public class ParseCompany {
 	}
 
 	private static void parseToCompany(Company company) {
-		LogHandler.info("company:" + company.getCompanyName() + "," + company.getJobId());
+		LogHandler.info("company:" + company.getCompanyName() + "," + company.getCompanyId());
 		// TODO Auto-generated method stub
 
 	}

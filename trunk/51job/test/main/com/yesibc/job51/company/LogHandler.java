@@ -7,7 +7,8 @@ public class LogHandler {
 	private static Log log = LogFactory.getLog(LogHandler.class);
 
 	public static void info(String errMsg) {
-		log.info(errMsg);
+		if (log.isInfoEnabled())
+			log.info(errMsg);
 	}
 
 	public static void debug(String errMsg) {

@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.webrenderer.swing.dom.IElement;
+import com.yesibc.job51.company.search1.IndustryDIV;
 
 public class SelectInd {
 
@@ -14,12 +15,11 @@ public class SelectInd {
 	public static void doIndClick(IElement iElement, int times) {
 		log.info("doIndClick~!" + iElement.getOuterHTML() + "!");
 		iElement.click();
-		IElement indDIV = JobMain.getDoc().getElementById(JobMain.INDTAG);
+		IElement indDIV = IndustryDIV.getIndDIV();
 		LogHandler.debug("Ind DIV=" + indDIV.getOuterHTML());
 
-		// sichx || cancel selected
-		List<IElement> ies = JobSupport.getElements(JobMain.getDoc().getAll(), "INPUT", JobMain.IND_ID_NAME,
-				JobMain.IND_ID_VAL_CANCEL);
+		// cancel selected
+		List<IElement> ies = IndustryDIV.getSelectedIndTR(indDIV);
 		for (IElement ie : ies) {
 			JobSupport.waiting();
 			ie.click();
@@ -27,23 +27,20 @@ public class SelectInd {
 
 		int index = 0;
 		IElement checkBox = null;
-		for (int i = 0; i < JobMain.SELECT_TIMES; i++) {
-			index = times * JobMain.SELECT_TIMES + i;
-			if (index >= JobMain.IND_ARRAY.length) {
+		for (int i = 0; i < IndustryDIV.SELECT_PER_TIMES; i++) {
+			index = times * IndustryDIV.SELECT_PER_TIMES + i;
+			if (index >= IndustryDIV.IND_ARRAY.length) {
 				break;
 			}
 
-			checkBox = JobSupport.getElement(JobMain.getDoc().getAll(), JobMain.IND_ID_NAME, JobMain.IND_ID_VAL_NULL
-					+ JobMain.IND_ARRAY[index]);
-			ErrorHandler.errorIElement(checkBox, "doIndClick~!" + JobMain.IND_ID_NAME + "," + JobMain.IND_ID_VAL_NULL
-					+ JobMain.IND_ARRAY[index]);
+			String[] temp = { IndustryDIV.IND_ARRAY[index][0], IndustryDIV.IND_ARRAY[index][1], "input" };
+			checkBox = IndustryDIV.getIndCHKElement(temp);
 			LogHandler.debug("IND CK=" + checkBox.getOuterHTML());
 			checkBox.click();
 		}
 
 		// click confirm
-		JobSupport.elementByLoop = null;
-		IElement cofirm = JobSupport.getElementByLoop(indDIV.getChildElements(), "SPAN", "onclick", "confirmLayer('popupIndustry')");
+		IElement cofirm = IndustryDIV.getFunCFMElement();
 		ErrorHandler.errorIElement(cofirm, "Ind confirm~!" + "SPAN,onclick,confirmLayer");
 		LogHandler.debug("Ind confirm=" + cofirm.getOuterHTML());
 		cofirm.click();

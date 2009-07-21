@@ -1,32 +1,30 @@
 package com.yesibc.job51.company;
 
-import java.util.List;
-
 import com.webrenderer.swing.dom.IElement;
-import com.yesibc.job51.common.ClawerConstants;
+import com.yesibc.job51.company.search1.LocateMainElements;
 
 public class Paging {
 
+	public static int pageSize = 1;
 	public static void doPaging() {
-		List<IElement> elements = JobSupport.getElements(JobMain.getDoc().getAll(), "A", "href", "javascript:jump",
-				ClawerConstants.NEXTPAGE);
-		LogHandler.info("Paging is end!");
-		pagingAndParseCompany(elements);
-	}
-
-	private static void pagingAndParseCompany(List<IElement> elements) {
-		if (elements == null || elements.size() < 1) {
+		IElement element = LocateMainElements.locatePaging();
+		if(element == null){
 			return;
 		}
-		IElement ie = elements.get(0);
-		LogHandler.info("Paging:"+ie.getOuterHTML());
+		pageSize++;
+		LogHandler.info("Paging:"+pageSize);
+		pagingAndParseCompany(element);
+	}
+
+	private static void pagingAndParseCompany(IElement element) {
+		if(JobMain.TEST && pageSize > 3){
+			return;
+		}
 		JobMain.FINISH = false;
-		ie.click();
+		element.click();
 		JobMain.waitingLoading();
 		ParseCompanyList.parseCompanies();
-		elements = JobSupport.getElements(JobMain.getDoc().getAll(), "A", "href", "javascript:jump",
-				ClawerConstants.NEXTPAGE);
-		pagingAndParseCompany(elements);
+		doPaging();
 	}
 
 }
