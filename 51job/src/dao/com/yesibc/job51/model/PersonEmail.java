@@ -14,16 +14,14 @@ public class PersonEmail implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = -8194296996528149627L;
 	private Long id;
-	private Person person;
-	private Code code;
+	private Code city;
 	private String email;
 	private String nameDefault;
 	
-	/**
-	 * 1 private; 2 company
-	 */
+
 	private String mailType;
-	private Long companyId;
+	private Person person;
+	private Long personId;
 	private String createDate;
 	private String updateDate;
 	private String createUser;
@@ -73,21 +71,6 @@ public class PersonEmail implements java.io.Serializable {
 		this.person = person;
 	}
 
-	public Code getCode() {
-		return code;
-	}
-
-	public void setCode(Code code) {
-		this.code = code;
-	}
-
-	public Long getCompanyId() {
-		return companyId;
-	}
-
-	public void setCompanyId(Long companyId) {
-		this.companyId = companyId;
-	}
 
 	public String getCreateDate() {
 		return this.createDate;
@@ -119,6 +102,22 @@ public class PersonEmail implements java.io.Serializable {
 
 	public void setUpdateUser(String updateUser) {
 		this.updateUser = updateUser;
+	}
+
+	public Code getCity() {
+		return city;
+	}
+
+	public void setCity(Code city) {
+		this.city = city;
+	}
+
+	public Long getPersonId() {
+		return personId;
+	}
+
+	public void setPersonId(Long personId) {
+		this.personId = personId;
 	}
 
 }

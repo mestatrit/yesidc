@@ -14,8 +14,8 @@
         <many-to-one name="person" class="Person" fetch="select">
             <column name="PERSON_ID" scale="0" />
         </many-to-one>
-        <many-to-one name="code" class="Code" fetch="select">
-            <column name="LINK_ADDR" scale="0" />
+        <many-to-one name="city" class="Code" fetch="select">
+            <column name="CITY" scale="0" />
         </many-to-one>
         <property name="email" type="java.lang.String">
             <column name="EMAIL" length="100" not-null="true" />

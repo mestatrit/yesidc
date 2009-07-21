@@ -7,6 +7,8 @@ import com.webrenderer.swing.dom.IElement;
 
 public class ErrorHandler {
 	private static Log log = LogFactory.getLog(ErrorHandler.class);
+	public final static String ERROR_PREFIX = "Fatal error!";
+	public final static String WARN_PREFIX = "Warning error!";
 
 	public static void error(String errMsg) {
 		log.error(errMsg);

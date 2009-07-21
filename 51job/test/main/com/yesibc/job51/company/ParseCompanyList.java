@@ -6,78 +6,84 @@ import java.util.List;
 import java.util.Map;
 
 import com.webrenderer.swing.dom.IElement;
+import com.yesibc.core.exception.NestedRuntimeException;
 import com.yesibc.job51.common.ClawerUtils;
+import com.yesibc.job51.company.search1.LocateCompanyInfo;
 import com.yesibc.job51.model.Company;
 
 public class ParseCompanyList {
 
-	public static final String COMPANY_TAG = "/jobsearch/co_all_job.php?coid=(";
-
 	public static void parseCompanies() {
 		// Add code to judge this page is OK?
-
-		// get by companyId or compayName
-		List<Company> companies = getValidateCompanies();
-		if (companies == null) {
+		int i = LocateCompanyInfo.checkValidation();
+		if(i<1){
 			return;
+		}
+		
+		// get by companyId or compayName
+		List<Company> companies = getSimpleCompanies();
+		if (companies == null) {
+			ErrorHandler.error("getSimpleCompanies error 1!");
+			throw new NestedRuntimeException("getSimpleCompanies error 1!");
 		}
 		
 		//multi-thread to run job detail.
 		ParseCompany.toDetailCompany(companies);
 	}
 
-	private static List<Company> getValidateCompanies() {
-		Map<String, Company> companies = getSimpleCompanies();
-		List<Company> list = new ArrayList<Company>();
-		for(String str : companies.keySet()){
-			Company company = companies.get(str);
-			if(filterCompany(company)){
-				continue;
-			}
-			list.add(company);
-		}
-		return list;
-	}
 
-	private static boolean filterCompany(Company company) {
-		// TODO Auto-generated method stub
+	private static boolean filterCompany(Map<String,String> map,String url) {
+		if(map.containsKey(url)){
+			return true;
+		}
+		
+		//TODO: DB
+		
+		map.put(url, url);
 		return false;
 	}
 
-	private static Map<String, Company> getSimpleCompanies() {
-		List<IElement> elements = JobSupport.getElements(JobMain.getDoc().getAll(), "A", "href", COMPANY_TAG);
-		//TODO: Judge elements
-		
-		Map<String, Company> map = new HashMap<String, Company>();
+	private static List<Company> getSimpleCompanies() {
+		List<IElement> elements = JobSupport.getElements(JobMain.getDoc().getAll(), "A", "href", LocateCompanyInfo.COMPANY_URL);	
+		List<Company> list = new ArrayList<Company>();
 		String name = "";
-		String jobid = "";
+		String companyId = "";
 		String url = "";
+		Map<String,String> map = new HashMap<String,String>();
 		for (IElement ie : elements) {
 			url = ClawerUtils.removeSpace(ie.getAttribute("href", 0));
 			if (url.equals("")) {
 				continue;
 			}
+			if(filterCompany(map,url)){
+				continue;
+			}			
 			name = ClawerUtils.removeSpace(ie.getInnerHTML());
 			if (name.equals("")) {
 				continue;
 			}
-			jobid = getJobid(url);
+			companyId = getCompanyId(url);
 			Company com = new Company();
 			com.setCompanyName(name);
 			com.setUrl(url);
-			com.setJobId(jobid);
-			map.put(name, com);
+			com.setCompanyId(companyId);
+			list.add(com);
 		}
-		return map;
+		map.clear();
+		map = null;
+		return list;
 	}
 
-	private static String getJobid(String url) {
-		return url.substring(url.indexOf("(") + 1, url.length() - 1);
+	private static String getCompanyId(String url) {
+		int i = 34;
+		int j = url.indexOf(",", i);
+		LogHandler.debug(i+","+j);
+		return url.substring(i, j);
 	}
 	
 	public static void main(String[] args){
-		String url = "/jobsearch/co_all_job.php?coid=(676835)";
-		LogHandler.info(getJobid(url));
+		String url = "http://search.51job.com/list/co,c,872424,0000,10,1.html";
+		LogHandler.info(getCompanyId(url));
 	}
 
 }
