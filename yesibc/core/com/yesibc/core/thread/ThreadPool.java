@@ -56,7 +56,6 @@ public class ThreadPool {
 		try {
 			consumeThreadPoolPara = ParseConfig.getConsumeThreadPoolPara();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (consumeThreadPoolPara != null) {

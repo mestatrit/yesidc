@@ -507,7 +507,6 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 		try {
 			System.out.println(getPropertyType(BeanUtils.class, "logger"));
 		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

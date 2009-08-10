@@ -39,7 +39,6 @@ public class FileBASE64 {
 			String result = encoder.encode(buf.toString().getBytes());
 			return result;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

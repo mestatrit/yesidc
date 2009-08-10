@@ -26,7 +26,6 @@ public class ParseConfig {
 		try {
 			getConsumeThreadPoolPara();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} // 得到消费的线程池的参数
 	}
