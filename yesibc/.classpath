@@ -83,6 +83,9 @@
 	<classpathentry kind="var" path="CETELEM_COMMON_HOME/Components/orm/hibernate/lib/persistence-api-1.0.jar"/>
 	<classpathentry kind="var" path="CETELEM_COMMON_HOME/Components/web/extremetable/lib/extremecomponents-1.0.1.jar"/>
 	<classpathentry kind="var" path="CETELEM_COMMON_HOME/Components/web/extremetable/lib/poi-2.5.1.jar"/>
+	<classpathentry kind="var" path="CETELEM_COMMON_HOME/Components/web/webrender/webrenderer-swing.jar"/>
+	<classpathentry kind="var" path="CETELEM_COMMON_HOME/Components/web/webrender/webrenderer-swing-win.jar"/>
+	<classpathentry kind="var" path="CETELEM_COMMON_HOME/Components/web/webrender/corecomponents-swing-win.jar"/>
 	<classpathentry kind="var" path="CETELEM_COMMON_HOME/Components/test/lib/junit-3.8.1.jar"/>
 	<classpathentry kind="var" path="CETELEM_COMMON_HOME/Components/test/lib/spring-mock-2.0.jar"/>
 	<classpathentry kind="var" path="CETELEM_COMMON_HOME/Components/test/lib/dbunit-2.1.jar"/>

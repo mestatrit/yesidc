@@ -88,7 +88,6 @@ public class ThreeThread {
 				System.out.println("wait()");
 				wait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {

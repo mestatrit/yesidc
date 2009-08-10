@@ -85,7 +85,7 @@ public class EclipsePlugin {
 	}
 
 	public static void main(String[] args) {
-		new EclipsePlugin("D:/Java/eclipse-plugin/Jadclipse").print();
+		new EclipsePlugin("D:/Java/eclipse-plugin/common4e").print();
 		//new EclipsePlugin("D:/Java/eclipse-plugin/svn/eclipse/plugins").print();
 	}
 }
