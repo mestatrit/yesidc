@@ -1,0 +1,34 @@
+/*
+===============================
+文件名称：logo.css
+创建时间：2009-03-03
+创 建 者：junjie Zhang
+版    本：www.51job.com_V1.0
+功能描述：头部logo样式
+===============================
+修 改 者：
+修改时间：
+修 改 点：
+===============================
+*/
+/*51joblogo的位置*/
+/*normal*/
+#indexlogo,#arealogo
+{
+	margin-top:10px;
+	margin-left: 10px;
+}
+/*flashlogo*/
+/*#indexlogo
+{
+	margin-top:0px;
+	margin-left: 0px;
+}*/
+
+/*flashlogo*/
+/*#arealogo
+{
+	margin-top:0px;
+	margin-left: 0px;
+}*/
+
