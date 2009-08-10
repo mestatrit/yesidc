@@ -12,7 +12,7 @@ import org.htmlparser.tags.TableTag;
 import com.yesibc.core.utils.CollectionUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.common.ClawerUtils;
-import com.yesibc.job51.model.Language;
+import com.yesibc.job51.model.PersonLanguage;
 import com.yesibc.job51.model.Person;
 import com.yesibc.job51.service.impl.ResumeHandlerServiceImpl;
 
@@ -25,9 +25,9 @@ public class ParseResumeLanguage {
 		}
 		TableRow[] rows = basicTag.getRows();
 		String temp = "";
-		List<Language> languages = p.getLanguages();
+		List<PersonLanguage> languages = p.getLanguages();
 		if (CollectionUtils.isEmpty(languages)) {
-			languages = new ArrayList<Language>();
+			languages = new ArrayList<PersonLanguage>();
 			p.setLanguages(languages);
 		}
 		for (int i = 0; i < rows.length; i++) {
@@ -37,7 +37,7 @@ public class ParseResumeLanguage {
 				continue;
 
 			int tag = 0;
-			Language language = new Language();
+			PersonLanguage language = new PersonLanguage();
 			for (int j = 0; j < td.length; j++) {
 				temp = ClawerUtils.getOrignText(td[j].toPlainTextString());
 				if ("".equals(temp) && j == 0) {

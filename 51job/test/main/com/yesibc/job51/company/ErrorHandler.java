@@ -14,6 +14,10 @@ public class ErrorHandler {
 		log.error(errMsg);
 	}
 
+	public static void errorLogAndMail(String errMsg) {
+		log.error(errMsg);
+	}
+
 	public static void errorIElement(IElement ie, String errmsg) {
 		if (ie == null)
 			error(errmsg + "==null object!");

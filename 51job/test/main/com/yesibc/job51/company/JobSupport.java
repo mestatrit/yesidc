@@ -181,7 +181,7 @@ public class JobSupport {
 				}
 			} else {
 				String value = current.getOuterHTML();
-				LogHandler.info(value);
+				LogHandler.debug(value);
 				if (value.indexOf(txt) > -1) {
 					elementByLoop = current;
 					return current;

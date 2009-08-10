@@ -13,7 +13,7 @@ import org.htmlparser.tags.TableTag;
 import com.yesibc.core.utils.CollectionUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.common.ClawerUtils;
-import com.yesibc.job51.model.Append;
+import com.yesibc.job51.model.PersonAppend;
 import com.yesibc.job51.model.Person;
 import com.yesibc.job51.service.impl.ResumeHandlerServiceImpl;
 
@@ -26,9 +26,9 @@ public class ParseResumeAppendix {
 		}
 		TableRow[] rows = basicTag.getRows();
 		String temp = "";
-		List<Append> appends = p.getAppends();
+		List<PersonAppend> appends = p.getAppends();
 		if (CollectionUtils.isEmpty(appends)) {
-			appends = new ArrayList<Append>();
+			appends = new ArrayList<PersonAppend>();
 			p.setAppends(appends);
 		}
 		for (int i = 0; i < rows.length; i++) {
@@ -37,7 +37,7 @@ public class ParseResumeAppendix {
 			if (td == null)
 				continue;
 
-			Append append = new Append();
+			PersonAppend append = new PersonAppend();
 			for (int j = 0; j < td.length; j++) {
 				temp = ClawerUtils.getOrignText(td[j].toPlainTextString());
 
@@ -53,7 +53,7 @@ public class ParseResumeAppendix {
 		}
 	}
 
-	private static void pushAppend(List<Append> appends, Append append, TableColumn[] td) {
+	private static void pushAppend(List<PersonAppend> appends, PersonAppend append, TableColumn[] td) {
 		String temp = ClawerUtils.getOrignText(td[0].toPlainTextString());
 
 		if (ArrayUtils.indexOf(ClawerConstants.APPENDIX_ALL, temp) > -1) {
