@@ -1,6 +1,8 @@
 package com.yesibc.job51.common;
 
 public class ClawerConstants {
+	
+	public final static String FROM_WHERE_51JOB = "51job"; 
 
 	/**
 	 * <pre>
@@ -28,27 +30,17 @@ public class ClawerConstants {
 	 * attachment=\u9644\u52A0\u4FE1\u606F
 	 * </pre>
 	 */
-	public final static String BASIC_INFO = ClawerUtils
-			.getValByKey("basic.info");
-	public final static String SELF_EVALUATION = ClawerUtils
-			.getValByKey("self.evaluation");
-	public final static String JOB_INTENT = ClawerUtils
-			.getValByKey("job.intent");
-	public final static String JOB_EXPERIENCE = ClawerUtils
-			.getValByKey("job.experience");
-	public final static String PROJECT_EXPERIENCE = ClawerUtils
-			.getValByKey("project.experience");
-	public final static String EDU_EXPERIENCE = ClawerUtils
-			.getValByKey("edu.experience");
-	public final static String TRAINING_EXPERIENCE = ClawerUtils
-			.getValByKey("training.experience");
-	public final static String CERTIFICATION = ClawerUtils
-			.getValByKey("certification");
-	public final static String LANGUAGE_LEVEL = ClawerUtils
-			.getValByKey("language.level");
+	public final static String BASIC_INFO = ClawerUtils.getValByKey("basic.info");
+	public final static String SELF_EVALUATION = ClawerUtils.getValByKey("self.evaluation");
+	public final static String JOB_INTENT = ClawerUtils.getValByKey("job.intent");
+	public final static String JOB_EXPERIENCE = ClawerUtils.getValByKey("job.experience");
+	public final static String PROJECT_EXPERIENCE = ClawerUtils.getValByKey("project.experience");
+	public final static String EDU_EXPERIENCE = ClawerUtils.getValByKey("edu.experience");
+	public final static String TRAINING_EXPERIENCE = ClawerUtils.getValByKey("training.experience");
+	public final static String CERTIFICATION = ClawerUtils.getValByKey("certification");
+	public final static String LANGUAGE_LEVEL = ClawerUtils.getValByKey("language.level");
 	public final static String IT_SKILLS = ClawerUtils.getValByKey("IT.skills");
-	public final static String ATTACHMENT = ClawerUtils
-			.getValByKey("attachment");
+	public final static String ATTACHMENT = ClawerUtils.getValByKey("attachment");
 	public final static String VAL = "_val";
 
 	/**
@@ -70,53 +62,31 @@ public class ClawerConstants {
 	 * basic.info.stock=\u80A1\u7968
 	 *</pre>
 	 */
-	public final static String BASIC_INFO_NAME = ClawerUtils
-			.getValByKey("basic.info.name");
-	public final static String BASIC_INFO_SEX = ClawerUtils
-			.getValByKey("basic.info.sex");
-	public final static String BASIC_INFO_BIR = ClawerUtils
-			.getValByKey("basic.info.birthday");
-	public final static String BASIC_INFO_ADDR_LIVE = ClawerUtils
-			.getValByKey("basic.info.live.addr");
-	public final static String BASIC_INFO_ADDR_HK = ClawerUtils
-			.getValByKey("basic.info.domicile");
-	public final static String BASIC_INFO_WORK_YEAR = ClawerUtils
-			.getValByKey("basic.info.work.year");
-	public final static String BASIC_INFO_ADDR_DETAIL = ClawerUtils
-			.getValByKey("basic.info.addr.detail");
-	public final static String BASIC_INFO_ADDR_ZIP = ClawerUtils
-			.getValByKey("basic.info.addr.zip");
+	public final static String BASIC_INFO_NAME = ClawerUtils.getValByKey("basic.info.name");
+	public final static String BASIC_INFO_SEX = ClawerUtils.getValByKey("basic.info.sex");
+	public final static String BASIC_INFO_BIR = ClawerUtils.getValByKey("basic.info.birthday");
+	public final static String BASIC_INFO_ADDR_LIVE = ClawerUtils.getValByKey("basic.info.live.addr");
+	public final static String BASIC_INFO_ADDR_HK = ClawerUtils.getValByKey("basic.info.domicile");
+	public final static String BASIC_INFO_WORK_YEAR = ClawerUtils.getValByKey("basic.info.work.year");
+	public final static String BASIC_INFO_ADDR_DETAIL = ClawerUtils.getValByKey("basic.info.addr.detail");
+	public final static String BASIC_INFO_ADDR_ZIP = ClawerUtils.getValByKey("basic.info.addr.zip");
 	public final static String BASIC_INFO_CRR_SALARY_YEARLY = ClawerUtils
 			.getValByKey("basic.info.current.salary.yearly");
-	public final static String BASIC_INFO_TEL_HOME = ClawerUtils
-			.getValByKey("basic.info.tel.home");
-	public final static String BASIC_INFO_TEL_MOBILE = ClawerUtils
-			.getValByKey("basic.info.tel.mobile");
-	public final static String BASIC_INFO_TEL_COMPANY = ClawerUtils
-			.getValByKey("basic.info.tel.company");
-	public final static String BASIC_INFO_TEL_BP = ClawerUtils
-			.getValByKey("basic.info.tel.bp");
-	public final static String BASIC_INFO_SELF_HP = ClawerUtils
-			.getValByKey("basic.info.self.homepage");
-	public final static String BASIC_INFO_ONLINE = ClawerUtils
-			.getValByKey("basic.info.online.contact");
-	public final static String BASIC_INFO_BASIC_SALARY = ClawerUtils
-			.getValByKey("basic.info.basic.salary.yearly");
-	public final static String BASIC_INFO_SUBSIDY = ClawerUtils
-			.getValByKey("basic.info.subsidy");
-	public final static String BASIC_INFO_BONUS = ClawerUtils
-			.getValByKey("basic.info.bonus");
-	public final static String BASIC_INFO_STOCK = ClawerUtils
-			.getValByKey("basic.info.stock");
+	public final static String BASIC_INFO_TEL_HOME = ClawerUtils.getValByKey("basic.info.tel.home");
+	public final static String BASIC_INFO_TEL_MOBILE = ClawerUtils.getValByKey("basic.info.tel.mobile");
+	public final static String BASIC_INFO_TEL_COMPANY = ClawerUtils.getValByKey("basic.info.tel.company");
+	public final static String BASIC_INFO_TEL_BP = ClawerUtils.getValByKey("basic.info.tel.bp");
+	public final static String BASIC_INFO_SELF_HP = ClawerUtils.getValByKey("basic.info.self.homepage");
+	public final static String BASIC_INFO_ONLINE = ClawerUtils.getValByKey("basic.info.online.contact");
+	public final static String BASIC_INFO_BASIC_SALARY = ClawerUtils.getValByKey("basic.info.basic.salary.yearly");
+	public final static String BASIC_INFO_SUBSIDY = ClawerUtils.getValByKey("basic.info.subsidy");
+	public final static String BASIC_INFO_BONUS = ClawerUtils.getValByKey("basic.info.bonus");
+	public final static String BASIC_INFO_STOCK = ClawerUtils.getValByKey("basic.info.stock");
 
-	public final static String FILTER_SALARY1 = ClawerUtils
-			.getValByKey("filter.salary1");
-	public final static String FILTER_SALARY2 = ClawerUtils
-			.getValByKey("filter.salary2");
-	public final static String FILTER_SALARY3 = ClawerUtils
-			.getValByKey("filter.salary3");
-	public final static String FILTER_SPACE = ClawerUtils
-			.getValByKey("filter.space1");
+	public final static String FILTER_SALARY1 = ClawerUtils.getValByKey("filter.salary1");
+	public final static String FILTER_SALARY2 = ClawerUtils.getValByKey("filter.salary2");
+	public final static String FILTER_SALARY3 = ClawerUtils.getValByKey("filter.salary3");
+	public final static String FILTER_SPACE = ClawerUtils.getValByKey("filter.space1");
 
 	/**
 	 * <pre>
@@ -127,30 +97,22 @@ public class ClawerConstants {
 	 * job.intent.fun=\u76EE\u6807\u804C\u80FD
 	 * </pre>
 	 */
-	public final static String JOB_INTENT_NATURE = ClawerUtils
-			.getValByKey("job.intent.nature");
-	public final static String JOB_INTENT_INDUSTRY = ClawerUtils
-			.getValByKey("job.intent.industry");
-	public final static String JOB_INTENT_ADDR = ClawerUtils
-			.getValByKey("job.intent.addr");
-	public final static String JOB_INTENT_SALARY = ClawerUtils
-			.getValByKey("job.intent.salary");
-	public final static String JOB_INTENT_FUN = ClawerUtils
-			.getValByKey("job.intent.fun");
+	public final static String JOB_INTENT_NATURE = ClawerUtils.getValByKey("job.intent.nature");
+	public final static String JOB_INTENT_INDUSTRY = ClawerUtils.getValByKey("job.intent.industry");
+	public final static String JOB_INTENT_ADDR = ClawerUtils.getValByKey("job.intent.addr");
+	public final static String JOB_INTENT_SALARY = ClawerUtils.getValByKey("job.intent.salary");
+	public final static String JOB_INTENT_FUN = ClawerUtils.getValByKey("job.intent.fun");
 
-	public final static String SPLIT_CHAR = ClawerUtils
-			.getValByKey("split.char.comma");
+	public final static String SPLIT_CHAR = ClawerUtils.getValByKey("split.char.comma");
 	public final static String DEFAULT_USER = "bibiye";
 	// "--"
 	public final static String TIME_TAG_LINE = ClawerUtils.getValByKey("time.tag.two.horizontal.line");
 	// "/"
 	public final static String TIME_TAG_DIAGONAL = ClawerUtils.getValByKey("time.tag.diagonal");
-	
-	public final static String CHAR_COLON = ClawerUtils.getValByKey("common.char.colon");
-	
 
-	public final static String SKILL_NAME = ClawerUtils
-			.getValByKey("skill.name");
+	public final static String CHAR_COLON = ClawerUtils.getValByKey("common.char.colon");
+
+	public final static String SKILL_NAME = ClawerUtils.getValByKey("skill.name");
 
 	/**
 	 * <pre>
@@ -172,28 +134,19 @@ public class ClawerConstants {
 	 * appendix.recommendation=\u63A8\u8350\u4FE1
 	 * </pre>
 	 */
-	public final static String APPENDIX_INSTERESTING = ClawerUtils
-			.getValByKey("appendix.interesting");
-	public final static String APPENDIX_SPECIALITY = ClawerUtils
-			.getValByKey("appendix.specialty");
-	public final static String APPENDIX_CAREER_GOAL = ClawerUtils
-			.getValByKey("appendix.career.goal");
-	public final static String APPENDIX_SKILLS = ClawerUtils
-			.getValByKey("appendix.skills");
-	public final static String APPENDIX_ACTIVITIES = ClawerUtils
-			.getValByKey("appendix.activities");
-	public final static String APPENDIX_GLORY = ClawerUtils
-			.getValByKey("appendix.glory");
-	public final static String APPENDIX_BELIEF = ClawerUtils
-			.getValByKey("appendix.belief");
-	public final static String APPENDIX_RECOMMENDATION = ClawerUtils
-			.getValByKey("appendix.recommendation");
-	public final static String APPENDIX_OTHERS = ClawerUtils
-			.getValByKey("appendix.others");
+	public final static String APPENDIX_INSTERESTING = ClawerUtils.getValByKey("appendix.interesting");
+	public final static String APPENDIX_SPECIALITY = ClawerUtils.getValByKey("appendix.specialty");
+	public final static String APPENDIX_CAREER_GOAL = ClawerUtils.getValByKey("appendix.career.goal");
+	public final static String APPENDIX_SKILLS = ClawerUtils.getValByKey("appendix.skills");
+	public final static String APPENDIX_ACTIVITIES = ClawerUtils.getValByKey("appendix.activities");
+	public final static String APPENDIX_GLORY = ClawerUtils.getValByKey("appendix.glory");
+	public final static String APPENDIX_BELIEF = ClawerUtils.getValByKey("appendix.belief");
+	public final static String APPENDIX_RECOMMENDATION = ClawerUtils.getValByKey("appendix.recommendation");
+	public final static String APPENDIX_OTHERS = ClawerUtils.getValByKey("appendix.others");
 
-	public final static String[] APPENDIX_ALL = { APPENDIX_INSTERESTING,
-			APPENDIX_SPECIALITY, APPENDIX_CAREER_GOAL, APPENDIX_SKILLS,
-			APPENDIX_ACTIVITIES, APPENDIX_GLORY, APPENDIX_BELIEF,
-			APPENDIX_RECOMMENDATION };
+	public final static String[] APPENDIX_ALL = { APPENDIX_INSTERESTING, APPENDIX_SPECIALITY, APPENDIX_CAREER_GOAL,
+			APPENDIX_SKILLS, APPENDIX_ACTIVITIES, APPENDIX_GLORY, APPENDIX_BELIEF, APPENDIX_RECOMMENDATION };
+
+	public final static String NEXTPAGE = ClawerUtils.getValByKey("nextpage");
 
 }

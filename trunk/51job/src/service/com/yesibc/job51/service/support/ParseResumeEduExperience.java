@@ -17,7 +17,7 @@ import com.yesibc.core.utils.DateUtils;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.common.ClawerUtils;
-import com.yesibc.job51.model.Edu;
+import com.yesibc.job51.model.PersonEdu;
 import com.yesibc.job51.model.Person;
 import com.yesibc.job51.service.impl.ResumeHandlerServiceImpl;
 
@@ -32,9 +32,9 @@ public class ParseResumeEduExperience {
 		TableRow[] rows = basicTag.getRows();
 		String temp = "";
 		String[] filters = { ClawerConstants.TIME_TAG_LINE, ClawerConstants.TIME_TAG_DIAGONAL };
-		List<Edu> edus = p.getEdus();
+		List<PersonEdu> edus = p.getEdus();
 		if(CollectionUtils.isEmpty(edus)){
-			edus = new ArrayList<Edu>();
+			edus = new ArrayList<PersonEdu>();
 			p.setEdus(edus);
 		}
 		int ok = 0;
@@ -45,7 +45,7 @@ public class ParseResumeEduExperience {
 				continue;
 
 			String temp1 = "";
-			Edu edu = new Edu();
+			PersonEdu edu = new PersonEdu();
 			int tag = 0;
 			for (int j = 0; j < td.length; j++) {
 				temp = ClawerUtils.getOrignText(td[j].toPlainTextString());
@@ -54,7 +54,7 @@ public class ParseResumeEduExperience {
 					temp1 = ClawerUtils.filter(temp, filters);
 					if (!"".equals(temp) && StringUtils.isNumberString(temp1)) {
 						ok++;
-						edu.setEduType(Edu.EDU_TYPE_SCHOOL);
+						edu.setEduType(PersonEdu.EDU_TYPE_SCHOOL);
 						edus.add(edu);
 						try {
 							parseEduTime(edu, temp);
@@ -65,7 +65,7 @@ public class ParseResumeEduExperience {
 						tag = 1;
 					} else if (!"".equals(temp)) {
 						if (ok > 0) {
-							Edu edu1 = edus.get((ok - 1));
+							PersonEdu edu1 = edus.get((ok - 1));
 							edu1.setMemo(temp);
 						}
 						edu = null;
@@ -96,7 +96,7 @@ public class ParseResumeEduExperience {
 
 	}
 
-	public static void parseEduTime(Edu edu, String timeTxt) throws ParseException {
+	public static void parseEduTime(PersonEdu edu, String timeTxt) throws ParseException {
 		if (timeTxt.indexOf(ClawerConstants.TIME_TAG_LINE) < 0 || timeTxt.indexOf(ClawerConstants.TIME_TAG_DIAGONAL) < 0) {
 			return;
 		}

@@ -7,12 +7,20 @@ import java.util.Map;
 
 import com.webrenderer.swing.dom.IElement;
 import com.yesibc.core.exception.NestedRuntimeException;
+import com.yesibc.core.spring.SpringContext;
 import com.yesibc.job51.common.ClawerUtils;
 import com.yesibc.job51.company.search1.LocateCompanyInfo;
+import com.yesibc.job51.dao.CompanyDao;
 import com.yesibc.job51.model.Company;
 
 public class ParseCompanyList {
 
+	public static Map<String,Company> map = new HashMap<String,Company>();
+	
+	static{
+		initMap();
+	}
+	
 	public static void parseCompanies() {
 		// Add code to judge this page is OK?
 		int i = LocateCompanyInfo.checkValidation();
@@ -27,19 +35,25 @@ public class ParseCompanyList {
 			throw new NestedRuntimeException("getSimpleCompanies error 1!");
 		}
 		
-		//multi-thread to run job detail.
+		//TODO:multi-thread to run job detail.
 		ParseCompany.toDetailCompany(companies);
 	}
 
 
-	private static boolean filterCompany(Map<String,String> map,String url) {
-		if(map.containsKey(url)){
+	private static void initMap() {
+		CompanyDao companyDao = (CompanyDao)SpringContext.getBean("companyDao");
+		List<Company> companies = companyDao.findAll(Company.class);
+		for(Company company : companies){
+			map.put(company.getCompanyId(), company);
+		}
+	}
+
+
+	private static boolean filterCompany(String companyId,Company com) {
+		if(map.containsKey(companyId)){
 			return true;
 		}
-		
-		//TODO: DB
-		
-		map.put(url, url);
+		map.put(companyId, com);
 		return false;
 	}
 
@@ -49,15 +63,11 @@ public class ParseCompanyList {
 		String name = "";
 		String companyId = "";
 		String url = "";
-		Map<String,String> map = new HashMap<String,String>();
 		for (IElement ie : elements) {
 			url = ClawerUtils.removeSpace(ie.getAttribute("href", 0));
 			if (url.equals("")) {
 				continue;
 			}
-			if(filterCompany(map,url)){
-				continue;
-			}			
 			name = ClawerUtils.removeSpace(ie.getInnerHTML());
 			if (name.equals("")) {
 				continue;
@@ -67,10 +77,14 @@ public class ParseCompanyList {
 			com.setCompanyName(name);
 			com.setUrl(url);
 			com.setCompanyId(companyId);
+
+			if(filterCompany(companyId,com)){
+				com = null;
+				continue;
+			}
+			
 			list.add(com);
 		}
-		map.clear();
-		map = null;
 		return list;
 	}
 
@@ -84,6 +98,8 @@ public class ParseCompanyList {
 	public static void main(String[] args){
 		String url = "http://search.51job.com/list/co,c,872424,0000,10,1.html";
 		LogHandler.info(getCompanyId(url));
+		
+
 	}
 
 }

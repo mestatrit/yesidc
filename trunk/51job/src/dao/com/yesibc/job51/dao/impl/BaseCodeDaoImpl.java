@@ -1,10 +1,12 @@
 package com.yesibc.job51.dao.impl;
 
+import com.yesibc.core.dao.HibernateEntityDao;
 import com.yesibc.job51.common.BaseCode;
 import com.yesibc.job51.dao.BaseCodeDao;
 import com.yesibc.job51.model.Code;
 
-public class BaseCodeDaoImpl implements BaseCodeDao {
+public class BaseCodeDaoImpl extends HibernateEntityDao<Code> implements
+		BaseCodeDao {
 
 	public Code queryByCode(String code, String type) {
 		Code c = new Code();

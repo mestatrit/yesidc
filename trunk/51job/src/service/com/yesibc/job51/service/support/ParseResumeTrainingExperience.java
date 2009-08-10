@@ -15,7 +15,7 @@ import com.yesibc.core.utils.CollectionUtils;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.common.ClawerUtils;
-import com.yesibc.job51.model.Edu;
+import com.yesibc.job51.model.PersonEdu;
 import com.yesibc.job51.model.Person;
 
 public class ParseResumeTrainingExperience {
@@ -30,9 +30,9 @@ public class ParseResumeTrainingExperience {
 		TableRow[] rows = basicTag.getRows();
 		String temp = "";
 		String[] filters = { ClawerConstants.TIME_TAG_LINE, ClawerConstants.TIME_TAG_DIAGONAL };
-		List<Edu> edus = p.getEdus();
+		List<PersonEdu> edus = p.getEdus();
 		if(CollectionUtils.isEmpty(edus)){
-			edus = new ArrayList<Edu>();
+			edus = new ArrayList<PersonEdu>();
 			p.setEdus(edus);
 		}
 		int ok = 0;
@@ -43,7 +43,7 @@ public class ParseResumeTrainingExperience {
 				continue;
 
 			String temp1 = "";
-			Edu edu = new Edu();
+			PersonEdu edu = new PersonEdu();
 			int tag = 0;
 			for (int j = 0; j < td.length; j++) {
 				temp = ClawerUtils.getOrignText(td[j].toPlainTextString());
@@ -52,7 +52,7 @@ public class ParseResumeTrainingExperience {
 					temp1 = ClawerUtils.filter(temp, filters);
 					if (!"".equals(temp) && StringUtils.isNumberString(temp1)) {
 						ok++;
-						edu.setEduType(Edu.EDU_TYPE_TRAINING);
+						edu.setEduType(PersonEdu.EDU_TYPE_TRAINING);
 						edus.add(edu);
 						try {
 							ParseResumeEduExperience.parseEduTime(edu, temp);
@@ -63,7 +63,7 @@ public class ParseResumeTrainingExperience {
 						tag = 1;
 					} else if (!"".equals(temp)) {
 						if (ok > 0) {
-							Edu edu1 = edus.get((ok - 1));
+							PersonEdu edu1 = edus.get((ok - 1));
 							edu1.setMemo(temp);
 						}
 						edu = null;

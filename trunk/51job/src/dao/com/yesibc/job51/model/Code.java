@@ -1,5 +1,7 @@
 package com.yesibc.job51.model;
 
+import java.util.List;
+
 /**
  * TeCode entity. @author MyEclipse Persistence Tools
  */
@@ -13,11 +15,18 @@ public class Code implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = -4231312582019918823L;
 	private Long id;
-	private Code codeType;
+	private Code parent;
 	private String code;
 	private String ename;
 	private String cname;
 	private String cname1;
+	private Long sortList;
+	private String createDate;
+	private String updateDate;
+	private Long codeLevel;
+	private String createUser;
+	private String updateUser;
+	private List<Code> children;
 
 	public String getCname1() {
 		return cname1;
@@ -26,13 +35,6 @@ public class Code implements java.io.Serializable {
 	public void setCname1(String cname1) {
 		this.cname1 = cname1;
 	}
-
-	private Long sortList;
-	private String createDate;
-	private String updateDate;
-	private Long codeLevel;
-	private String createUser;
-	private String updateUser;
 
 	// Constructors
 
@@ -122,12 +124,20 @@ public class Code implements java.io.Serializable {
 		this.updateUser = updateUser;
 	}
 
-	public Code getCodeType() {
-		return codeType;
+	public Code getParent() {
+		return parent;
 	}
 
-	public void setCodeType(Code codeType) {
-		this.codeType = codeType;
+	public void setParent(Code parent) {
+		this.parent = parent;
+	}
+
+	public List<Code> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<Code> children) {
+		this.children = children;
 	}
 
 }

@@ -15,7 +15,7 @@ import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.common.ClawerUtils;
 import com.yesibc.job51.model.Person;
-import com.yesibc.job51.model.Skill;
+import com.yesibc.job51.model.PersonSkill;
 import com.yesibc.job51.service.impl.ResumeHandlerServiceImpl;
 
 public class ParseResumeSkill {
@@ -27,9 +27,9 @@ public class ParseResumeSkill {
 		}
 		TableRow[] rows = basicTag.getRows();
 		String temp = "";
-		List<Skill> skills = p.getSkills();
+		List<PersonSkill> skills = p.getSkills();
 		if (CollectionUtils.isEmpty(skills)) {
-			skills = new ArrayList<Skill>();
+			skills = new ArrayList<PersonSkill>();
 			p.setSkills(skills);
 		}
 		for (int i = 0; i < rows.length; i++) {
@@ -38,7 +38,7 @@ public class ParseResumeSkill {
 			if (td == null)
 				continue;
 
-			Skill skill = new Skill();
+			PersonSkill skill = new PersonSkill();
 			int tag = 0;
 			for (int j = 0; j < td.length; j++) {
 				temp = ClawerUtils.getOrignText(td[j].toPlainTextString());

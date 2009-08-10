@@ -17,7 +17,7 @@ public class JobMain {
 
 	public static long WAITING = 100;
 
-	private static IBrowserCanvas BROWSER;
+	public static IBrowserCanvas BROWSER;
 	public static boolean FINISH = false;
 	public final static boolean TEST = true;
 
@@ -25,7 +25,7 @@ public class JobMain {
 	static {
 		// BrowserFactory.setLicenseData("SHOCK2K7" ,
 		// "0000EOLVVUB6UTML75EEEBM7");
-		BrowserFactory.setLicenseData("30dtrial", "D1034UOG91IN362E33EGGCG1");
+		BrowserFactory.setLicenseData("30dtrial", "IH3HMLI0P324N68356TK6L70");
 	}
 
 	public static IBrowserCanvas getBrowser() {
@@ -75,6 +75,9 @@ public class JobMain {
 			SelectFun.doFunClick(funIE, i);
 			JobSupport.waiting();
 			for (int j = 0; j < IndustryDIV.SELECT_TIMES; j++) {
+				LogHandler.info(funIE.getOuterHTML());
+				LogHandler.info(indIE.getOuterHTML());
+				
 				if (i == 0 && j == 0) {
 					continue;
 				}
@@ -92,15 +95,12 @@ public class JobMain {
 				Paging.pageSize = 1;
 				Paging.doPaging();
 
-				LogHandler.info(funIE.getOuterHTML());
-				LogHandler.info(indIE.getOuterHTML());
-				
 				funIE = LocateMainElements.locateFunBtn2();
 				indIE = LocateMainElements.locateIndBtn2();
 			}
 		}
 
-		System.out.println("Complete all!");
+		LogHandler.info("Complete all!");
 	}
 
 	private static void onDocumnetComplete() {
@@ -124,7 +124,7 @@ public class JobMain {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			System.out.println("Job Main waiting loading¡­¡­[" + i * 0.5 + "]s");
+			LogHandler.debug("Job Main waiting loading¡­¡­[" + i * 0.5 + "]s");
 		}
 	}
 

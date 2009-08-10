@@ -11,7 +11,7 @@
 				<param name="sequence">SEQ_CODE</param>
 			</generator>
 		</id>
-		<many-to-one class="Code" fetch="select" name="codeType">
+		<many-to-one class="Code" fetch="select" name="parent">
 			<column name="CODE_TYPE" not-null="true" scale="0" />
 		</many-to-one>
 		<property generated="never" lazy="false" name="code"
@@ -54,6 +54,10 @@
 			type="java.lang.String">
 			<column length="50" name="UPDATE_USER" />
 		</property>
+ 		<bag lazy="false" name="children" table="TE_CODE">
+			<key column="id" />
+			<one-to-many class="Code" />
+		</bag>
 
 	</class>
 </hibernate-mapping>

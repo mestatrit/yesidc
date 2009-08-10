@@ -9,7 +9,7 @@ import org.htmlparser.tags.TableTag;
 
 import com.yesibc.core.utils.CollectionUtils;
 import com.yesibc.job51.common.ClawerConstants;
-import com.yesibc.job51.model.Append;
+import com.yesibc.job51.model.PersonAppend;
 import com.yesibc.job51.model.Person;
 import com.yesibc.job51.service.impl.ResumeHandlerServiceImpl;
 
@@ -21,12 +21,12 @@ public class ParseResumeProjectExperience {
 		if (basicTag == null) {
 			return;
 		}
-		List<Append> appends = p.getAppends();
+		List<PersonAppend> appends = p.getAppends();
 		if (CollectionUtils.isEmpty(appends)) {
-			appends = new ArrayList<Append>();
+			appends = new ArrayList<PersonAppend>();
 			p.setAppends(appends);
 		}
-		Append append = new Append();
+		PersonAppend append = new PersonAppend();
 		append.setAppendType(ResumeHandlerServiceImpl.baseCode
 				.queryAppendixByName(ClawerConstants.PROJECT_EXPERIENCE));
 		append.setAppendTypeName(ClawerConstants.PROJECT_EXPERIENCE);
