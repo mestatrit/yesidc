@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<project name="Export Schema from *.xml" default="schema"
+	basedir=".">
+	<!-- Set up properties containing important project directories -->
+	<property name="class.root" value="E:/hibernate-3.0/" />
+	<property name="lib.dir" value="${class.root}/lib/" />
+	<!-- Set up the class path for compilation and execution -->
+	<path id="class.path">
+		<!-- Include our own classes, of course -->
+		<!--pathelement location="${class.root}" /-->
+		<!-- Include jars in the project library directory -->
+		<!--fileset dir="${class.root}/hibernate3/org/hibernate/tool/hbm2ddl"-->
+		<fileset dir="${class.root}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	<!-- Generate the schemas for all mapping files in our class tree -->
+	<target name="schema" description="Generate DB schema from the O/R mapping files">
+		<!-- Teach Ant how to use Hibernate's schema generation tool -->
+		<taskdef name="schemaexport" classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask"
+			classpathref="class.path" />
+		<schemaexport properties="hibernate.properties" quiet="no"
+			text="no" drop="no" out_put="/schema.sql" verbose="true">
+			<fileset dir="../src">
+				<include name="*.hbm.xml" />
+			</fileset>
+		</schemaexport>
+	</target>
+</project>
