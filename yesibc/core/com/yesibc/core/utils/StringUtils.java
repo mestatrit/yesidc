@@ -26,21 +26,25 @@ import org.apache.commons.lang.ArrayUtils;
 @SuppressWarnings("unchecked")
 public final class StringUtils {
 
-	public static String[] SPECIAL_CHAR_ARRAY = { ".", "*", "+", "|", "(", ")", "[" };
+	public static String[] SPECIAL_CHAR_ARRAY = { ".", "*", "+", "|", "(", ")",
+			"[" };
 
 	/**
 	 * The constants is used to number change.
 	 */
-	public static String[] STANDARD_STR = { "分", "角", "", "", "拾", "佰", "仟", "萬", "拾", "佰", "仟", "億", "拾", "佰", "仟",
-			"萬", "拾", "佰", "仟", "億", "拾", "佰" };
+	public static String[] STANDARD_STR = { "分", "角", "", "", "拾", "佰", "仟",
+			"萬", "拾", "佰", "仟", "億", "拾", "佰", "仟", "萬", "拾", "佰", "仟", "億",
+			"拾", "佰" };
 
-	public static String[] NUMBER_STR = { "元", "零", "壹", "貳", "叁", "肆", "伍", "陆", "柒", "捌", "玖" };
+	public static String[] NUMBER_STR = { "元", "零", "壹", "貳", "叁", "肆", "伍",
+			"陆", "柒", "捌", "玖" };
 
-	public static String[] KEY_STR = { "零拾", "零佰", "零仟", "零零零", "零零", "零角零分", "零分", "零角", "零億零萬零元", "億零萬零元", "零億零萬",
-			"零萬零元", "萬零元", "零億", "零萬", "零元", "零零" };
+	public static String[] KEY_STR = { "零拾", "零佰", "零仟", "零零零", "零零", "零角零分",
+			"零分", "零角", "零億零萬零元", "億零萬零元", "零億零萬", "零萬零元", "萬零元", "零億", "零萬",
+			"零元", "零零" };
 
-	public static String[] MAP_STR = { "零", "零", "零", "零", "零", "正", "正", "零", "億元", "億元", "億", "萬元", "萬元", "億", "萬",
-			"元", "零" };
+	public static String[] MAP_STR = { "零", "零", "零", "零", "零", "正", "正", "零",
+			"億元", "億元", "億", "萬元", "萬元", "億", "萬", "元", "零" };
 
 	public static double MAX_VALUE = Long.MAX_VALUE / 100.0;
 
@@ -66,9 +70,12 @@ public final class StringUtils {
 		for (int i = 0; i < C.length(); i++) {
 			temp = C.charAt(i);
 			if (cStr.indexOf(String.valueOf(temp)) >= 0) {
-				result = result + String.valueOf(nStr.charAt(cStr.indexOf(String.valueOf(temp))));
+				result = result
+						+ String.valueOf(nStr.charAt(cStr.indexOf(String
+								.valueOf(temp))));
 			} else if (String.valueOf(temp).equals("十")) {
-				if (i >= C.length() - 1 || cStr.indexOf(String.valueOf(C.charAt(i + 1))) < 0) {
+				if (i >= C.length() - 1
+						|| cStr.indexOf(String.valueOf(C.charAt(i + 1))) < 0) {
 					result += "0";
 				}
 				if (i == 0 || cStr.indexOf(String.valueOf(C.charAt(i - 1))) < 0) {
@@ -99,7 +106,9 @@ public final class StringUtils {
 		for (int i = 0; i < N.length(); i++) {
 			temp = N.charAt(i);
 			if (nStr.indexOf(String.valueOf(temp)) >= 0) {
-				result = result + String.valueOf(cStr.charAt(nStr.indexOf(String.valueOf(temp))));
+				result = result
+						+ String.valueOf(cStr.charAt(nStr.indexOf(String
+								.valueOf(temp))));
 			} else {
 				result += temp;
 			}
@@ -176,6 +185,22 @@ public final class StringUtils {
 			s1 = s1.trim();
 		}
 		return s1;
+	}
+
+	/**
+	 * If input string is null or space,return blank.
+	 * 
+	 * @param s1
+	 *            input string
+	 * @return "" or input string.
+	 */
+	public static boolean isEmpty(String s1) {
+
+		if (s1 == null || "".equals(s1.trim())) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -447,7 +472,8 @@ public final class StringUtils {
 	 * @return int
 	 */
 	public static int getCharNum(String sList, String splitChar) {
-		if (sList == null || sList.equals("") || splitChar == null || splitChar.equals("")) {
+		if (sList == null || sList.equals("") || splitChar == null
+				|| splitChar.equals("")) {
 			return -1;
 		}
 		int StringAtLocal = sList.indexOf(splitChar);
@@ -486,7 +512,8 @@ public final class StringUtils {
 	 *                返回"-1"
 	 * @return 则返回字符串，否则返回-1
 	 */
-	public static String getChangeFormatString(String str1, int length, int increase) {
+	public static String getChangeFormatString(String str1, int length,
+			int increase) {
 		try {
 			if (length < 1) {
 				return str1;
@@ -592,7 +619,8 @@ public final class StringUtils {
 	 * @param ObjCharset
 	 * @return String
 	 */
-	public static String charsetChange(String str, String srcCharset, String ObjCharset) {
+	public static String charsetChange(String str, String srcCharset,
+			String ObjCharset) {
 		try {
 			if (str != null) {
 				str = new String(str.getBytes(srcCharset), ObjCharset);
@@ -630,8 +658,10 @@ public final class StringUtils {
 							break;
 						case (char) 32:
 							if (i < length) {
-								if (str.charAt(i + 1) == ((char) 32) || str.charAt(i + 1) == ((char) 9)
-										|| str.charAt(i - 1) == ((char) 32) || str.charAt(i - 1) == ((char) 9)) {
+								if (str.charAt(i + 1) == ((char) 32)
+										|| str.charAt(i + 1) == ((char) 9)
+										|| str.charAt(i - 1) == ((char) 32)
+										|| str.charAt(i - 1) == ((char) 9)) {
 									temp = temp + "&nbsp;";
 								} else {
 									temp = temp + " ";
@@ -862,7 +892,8 @@ public final class StringUtils {
 		try {
 			Class clzObj = clz.newInstance().getClass();
 			String strClassName = clzObj.getName();
-			String strClassFileName = strClassName.substring(strClassName.lastIndexOf(".") + 1, strClassName.length());
+			String strClassFileName = strClassName.substring(strClassName
+					.lastIndexOf(".") + 1, strClassName.length());
 			URL url = null;
 			url = clzObj.getResource(strClassFileName + ".class");
 			String strURL = url.toString();
@@ -870,7 +901,8 @@ public final class StringUtils {
 			if (StringUtils.getOSName().indexOf("Windows") > -1) {
 				strURL = strURL.substring(strURL.indexOf("/") + 1);
 			} else {
-				strURL = strURL.substring(strURL.indexOf(java.io.File.separatorChar));
+				strURL = strURL.substring(strURL
+						.indexOf(java.io.File.separatorChar));
 			}
 
 			strURL = strURL.substring(0, strURL.lastIndexOf(cutPath));
@@ -895,7 +927,8 @@ public final class StringUtils {
 	 * @return String
 	 */
 	public static String addFlagsToStr(String data, int intervals, String flag) {
-		if (data == null || data.length() <= intervals || intervals < 1 || flag == null || "".equals(flag)) {
+		if (data == null || data.length() <= intervals || intervals < 1
+				|| flag == null || "".equals(flag)) {
 			return data;
 		}
 		String result = "";
@@ -905,12 +938,16 @@ public final class StringUtils {
 		if (prix > 0) {
 			result = data.substring(0, prix);
 			for (; len > i * intervals; i++) {
-				result = result + flag + data.substring((i - 1) * intervals + prix, i * intervals + prix);
+				result = result
+						+ flag
+						+ data.substring((i - 1) * intervals + prix, i
+								* intervals + prix);
 			}
 		} else {
 			result = data.substring(0, intervals);
 			for (; len > i * intervals; i++) {
-				result = result + flag + data.substring(i * intervals, (i + 1) * intervals);
+				result = result + flag
+						+ data.substring(i * intervals, (i + 1) * intervals);
 			}
 		}
 		return result;
@@ -920,12 +957,15 @@ public final class StringUtils {
 	 * 函数名称： 数字金额转换成中外大写金额
 	 * 
 	 */
-	public static String addCommasToDecimalStr(String data, int intervals, String flag) {
+	public static String addCommasToDecimalStr(String data, int intervals,
+			String flag) {
 		if (data.indexOf(".") < 0) {
 			return addFlagsToStr(data, intervals, flag);
 		}
 		StringBuffer buff = new StringBuffer();
-		buff.append(addFlagsToStr(data.substring(0, data.indexOf(".")), intervals, flag)).append(".").append(
+		buff.append(
+				addFlagsToStr(data.substring(0, data.indexOf(".")), intervals,
+						flag)).append(".").append(
 				data.substring(data.indexOf(".") + 1, data.length()));
 		return buff.toString();
 	}
@@ -955,14 +995,16 @@ public final class StringUtils {
 			sb.append("0/00".substring(0, 5 - length)).append(str).toString();
 			length = 4;
 		} else {
-			sb.append(str.substring(0, length - 3)).append("/").append(str.substring(length - 3)).toString();
+			sb.append(str.substring(0, length - 3)).append("/").append(
+					str.substring(length - 3)).toString();
 		}
 
 		StringBuffer resultBuffer = new StringBuffer(64);
 		char a;
 		for (int i = 0; i < length; i++) {
 			a = sb.charAt(i);
-			resultBuffer.append(NUMBER_STR[a - '/']).append(STANDARD_STR[length - i - 1]);
+			resultBuffer.append(NUMBER_STR[a - '/']).append(
+					STANDARD_STR[length - i - 1]);
 		}
 
 		result = resultBuffer.toString();
@@ -1138,7 +1180,8 @@ public final class StringUtils {
 
 		Pattern p = Pattern.compile("[.,\"\\?!:']");// 增加对应的标点
 
-		Matcher m = p.matcher("I am a, I am \"Hello\" I. ok? hello! hello: ok.");
+		Matcher m = p
+				.matcher("I am a, I am \"Hello\" I. ok? hello! hello: ok.");
 
 		String first = m.replaceAll(" ");
 
@@ -1167,7 +1210,8 @@ public final class StringUtils {
 	 * @return sub string
 	 * 
 	 */
-	public static String subStringByByte(String str, int byteBeginIndex, int byteEndIndex) {
+	public static String subStringByByte(String str, int byteBeginIndex,
+			int byteEndIndex) {
 
 		if (str == null || "".equals(str) || byteBeginIndex > byteEndIndex) {
 			return "";
@@ -1196,7 +1240,8 @@ public final class StringUtils {
 				}
 			}
 
-			charEndIndex = charEndIndex == -1 ? (charBeginIndex == -1 ? 0 : str.length()) : charEndIndex;
+			charEndIndex = charEndIndex == -1 ? (charBeginIndex == -1 ? 0 : str
+					.length()) : charEndIndex;
 			charBeginIndex = charBeginIndex == -1 ? 0 : charBeginIndex;
 			result = str.substring(charBeginIndex, charEndIndex);
 		}
@@ -1375,7 +1420,7 @@ public final class StringUtils {
 		// String s = m.replaceAll("");
 		// System.out.print(s);
 		// testReg();
-		
+
 		System.out.println(isNums("a-43.342"));
 		String s = "ab度度";
 		String s1 = subStringByByte(s, 0, 0);
