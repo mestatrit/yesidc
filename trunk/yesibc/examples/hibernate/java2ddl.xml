@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project name="HibernateS"  default="schemaexport"  basedir=".">
+
+  <property name="base.dir" value="." />
+  <property name="src.dir" value="./src" />
+  <property name="lib.dir" value="./lib/" />
+  <property name="classes.dir" value="./classes/" />
+  <property name="build.dir" value="." />
+
+  <path id="myclasspath">
+      <fileset dir="${lib.dir}">
+          <include name="**/*.jar" />
+      </fileset>
+  </path>
+ 
+  <target name="schemaexport">
+    <taskdef name="schemaexport"
+        classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask"
+        classpathref="myclasspath"/>
+
+    <schemaexport
+        properties="hibernate.properties"
+        quiet="no"
+        text="true"
+        drop="no"
+        delimiter=";"
+        output="${build.dir}/schema-export.sql">
+        <fileset dir="${classes.dir}">
+            <include name="**/ParentChild.hbm.xml"/>
+        </fileset>
+    </schemaexport>
+  </target>
+ 
+</project>
