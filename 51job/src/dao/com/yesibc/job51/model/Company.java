@@ -1,6 +1,8 @@
 package com.yesibc.job51.model;
 
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 
@@ -17,7 +19,7 @@ public class Company implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 8426374065705778688L;
 	private Long id;
-	private String companyId;
+	private String companyCode;
 	private String url;
 	private String companyName;
 	private String companyNameEn;
@@ -27,6 +29,7 @@ public class Company implements java.io.Serializable {
 	private Long companyScale;
 	private Long companyIndustry1;
 	private Long companyIndustry2;
+	
 	private String homepage1;
 	private String homepage2;
 	private String homepage3;
@@ -35,16 +38,17 @@ public class Company implements java.io.Serializable {
 	private String companyDomain1;
 	private String companyDomain2;
 	private String companyMemo;
-	private String fromWhere;
-	private String createDate;
-	private String updateDate;
+	private Code fromWhere;
+	private String fromWhereName;
+	private Date createDate;
+	private Date updateDate;
 	private String createUser;
 	private String updateUser;
 	private Long companyIndustry3;
 	private String introduction1;
 	private String introduction2;
-	private Long registeredCapitalAmount;
-	private Long registeredCapitalUnit;
+	private BigDecimal registeredCapitalAmount;
+	private String registeredCapitalUnit;
 	private Long businessOperation;
 	private String mainBusinessAddress;
 	private String mainProducts;
@@ -82,8 +86,10 @@ public class Company implements java.io.Serializable {
 	private Long importsAmount;
 	private String exportsAmountName;
 	private Long exportsAmount;
-	private List<ComAddr> comAddrs;
-
+	
+	private Company parent;
+	private List<Company> children;
+	private List<ComContactHeader> comContactHeaders;
 	// Constructors
 
 	public Long getId() {
@@ -92,14 +98,6 @@ public class Company implements java.io.Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getCompanyId() {
-		return this.companyId;
-	}
-
-	public void setCompanyId(String companyId) {
-		this.companyId = companyId;
 	}
 
 	public String getUrl() {
@@ -238,27 +236,19 @@ public class Company implements java.io.Serializable {
 		this.companyMemo = companyMemo;
 	}
 
-	public String getFromWhere() {
-		return this.fromWhere;
-	}
-
-	public void setFromWhere(String fromWhere) {
-		this.fromWhere = fromWhere;
-	}
-
-	public String getCreateDate() {
+	public Date getCreateDate() {
 		return this.createDate;
 	}
 
-	public void setCreateDate(String createDate) {
+	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
 
-	public String getUpdateDate() {
+	public Date getUpdateDate() {
 		return this.updateDate;
 	}
 
-	public void setUpdateDate(String updateDate) {
+	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
 
@@ -302,19 +292,19 @@ public class Company implements java.io.Serializable {
 		this.introduction2 = introduction2;
 	}
 
-	public Long getRegisteredCapitalAmount() {
+	public BigDecimal getRegisteredCapitalAmount() {
 		return this.registeredCapitalAmount;
 	}
 
-	public void setRegisteredCapitalAmount(Long registeredCapitalAmount) {
+	public void setRegisteredCapitalAmount(BigDecimal registeredCapitalAmount) {
 		this.registeredCapitalAmount = registeredCapitalAmount;
 	}
 
-	public Long getRegisteredCapitalUnit() {
+	public String getRegisteredCapitalUnit() {
 		return this.registeredCapitalUnit;
 	}
 
-	public void setRegisteredCapitalUnit(Long registeredCapitalUnit) {
+	public void setRegisteredCapitalUnit(String registeredCapitalUnit) {
 		this.registeredCapitalUnit = registeredCapitalUnit;
 	}
 
@@ -614,13 +604,55 @@ public class Company implements java.io.Serializable {
 		this.exportsAmount = exportsAmount;
 	}
 
-	public List<ComAddr> getComAddrs() {
-		return comAddrs;
+
+	public Company getParent() {
+		return parent;
 	}
 
-	public void setComAddrs(List<ComAddr> comAddrs) {
-		this.comAddrs = comAddrs;
+	public void setParent(Company parent) {
+		this.parent = parent;
 	}
+
+	public List<Company> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<Company> children) {
+		this.children = children;
+	}
+
+	public List<ComContactHeader> getComContactHeaders() {
+		return comContactHeaders;
+	}
+
+	public void setComContactHeaders(List<ComContactHeader> comContactHeaders) {
+		this.comContactHeaders = comContactHeaders;
+	}
+
+	public Code getFromWhere() {
+		return fromWhere;
+	}
+
+	public void setFromWhere(Code fromWhere) {
+		this.fromWhere = fromWhere;
+	}
+
+	public String getFromWhereName() {
+		return fromWhereName;
+	}
+
+	public void setFromWhereName(String fromWhereName) {
+		this.fromWhereName = fromWhereName;
+	}
+
+	public String getCompanyCode() {
+		return companyCode;
+	}
+
+	public void setCompanyCode(String companyCode) {
+		this.companyCode = companyCode;
+	}
+
 
 
 }

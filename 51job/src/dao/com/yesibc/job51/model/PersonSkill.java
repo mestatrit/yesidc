@@ -16,15 +16,22 @@ public class PersonSkill implements java.io.Serializable {
 
 	private Long id;
 	private Person person;
-	private Code skill;
-	private Long useMonths;
-	private Code useLevel;
+	private Code fromWhere;
+	private String fromWhereName;
+
 	private String useLevelName;
+	private Code useLevel;
+
+	private Code skill;
+	private String skillName;
+
+	private Double useMonths;
+	
+	
 	private Date createDate;
 	private Date updateDate;
 	private String createUser;
 	private String updateUser;
-	private String skillName;
 
 	// Constructors
 
@@ -79,28 +86,15 @@ public class PersonSkill implements java.io.Serializable {
 	}
 
 
-	public Long getUseMonths() {
+	public Double getUseMonths() {
 		return useMonths;
 	}
 
 
 
-	public void setUseMonths(Long useMonths) {
+	public void setUseMonths(Double useMonths) {
 		this.useMonths = useMonths;
 	}
-
-
-
-	public Code getUseLevel() {
-		return useLevel;
-	}
-
-
-
-	public void setUseLevel(Code useLevel) {
-		this.useLevel = useLevel;
-	}
-
 
 
 	public Date getCreateDate() {
@@ -137,6 +131,30 @@ public class PersonSkill implements java.io.Serializable {
 
 
 
+	public Code getFromWhere() {
+		return fromWhere;
+	}
+
+
+
+	public void setFromWhere(Code fromWhere) {
+		this.fromWhere = fromWhere;
+	}
+
+
+
+	public String getFromWhereName() {
+		return fromWhereName;
+	}
+
+
+
+	public void setFromWhereName(String fromWhereName) {
+		this.fromWhereName = fromWhereName;
+	}
+
+
+
 	public String getUseLevelName() {
 		return useLevelName;
 	}
@@ -146,5 +164,19 @@ public class PersonSkill implements java.io.Serializable {
 	public void setUseLevelName(String useLevelName) {
 		this.useLevelName = useLevelName;
 	}
+
+
+
+	public Code getUseLevel() {
+		return useLevel;
+	}
+
+
+
+	public void setUseLevel(Code useLevel) {
+		this.useLevel = useLevel;
+	}
+
+
 
 }

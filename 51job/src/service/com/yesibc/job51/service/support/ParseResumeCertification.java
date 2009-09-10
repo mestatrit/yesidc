@@ -32,10 +32,10 @@ public class ParseResumeCertification {
 		TableRow[] rows = basicTag.getRows();
 		String temp = "";
 		String[] filters = { ClawerConstants.TIME_TAG_LINE, ClawerConstants.TIME_TAG_DIAGONAL };
-		List<PersonEdu> edus = p.getEdus();
+		List<PersonEdu> edus = p.getPersonEdus();
 		if (CollectionUtils.isEmpty(edus)) {
 			edus = new ArrayList<PersonEdu>();
-			p.setEdus(edus);
+			p.setPersonEdus(edus);
 		}
 		int ok = 0;
 		for (int i = 0; i < rows.length; i++) {
@@ -76,13 +76,13 @@ public class ParseResumeCertification {
 				} else {
 					if (j == 1 && !temp.equals("")) {
 						tag++;
-						edu.setEduSpeciality(temp);
+						edu.setEduSpecialityName(temp);
 					} else if (j == 2 && !temp.equals("") && tag == 2) {
 						tag++;
-						edu.setEduLevel(temp);
+						edu.setEduLevelName(temp);
 					} else if (j == 3 && !temp.equals("") && tag == 2) {
 						tag++;
-						edu.setEduLevel(temp);
+						edu.setEduLevelName(temp);
 					}
 				}
 			}

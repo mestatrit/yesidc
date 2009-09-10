@@ -27,10 +27,10 @@ public class ParseResumeSkill {
 		}
 		TableRow[] rows = basicTag.getRows();
 		String temp = "";
-		List<PersonSkill> skills = p.getSkills();
+		List<PersonSkill> skills = p.getPersonSkills();
 		if (CollectionUtils.isEmpty(skills)) {
 			skills = new ArrayList<PersonSkill>();
-			p.setSkills(skills);
+			p.setPersonSkills(skills);
 		}
 		for (int i = 0; i < rows.length; i++) {
 			TableRow tr = (TableRow) rows[i];
@@ -71,7 +71,7 @@ public class ParseResumeSkill {
 						String[] filters = { CoreUtils.getValByKey("month") };
 						temp = ClawerUtils.filter(temp, filters);
 						if (StringUtils.isNumberString(temp)) {
-							skill.setUseMonths(new Long(temp));
+							skill.setUseMonths(new Double(temp));
 						}
 					}
 				}

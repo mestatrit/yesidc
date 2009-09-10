@@ -13,41 +13,28 @@ public class PersonLanguage implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 5092936477192462770L;
 
-	/**
-	 * 未知/�?�?/良好/熟练/精�??
-	 * 
-	 */
-	public static final String LEVEL_UNKNOWN = "0";
-	public static final String LEVEL_COMMON = "1";
-	public static final String LEVEL_GOOD = "2";
-	public static final String LEVEL_BETTER = "3";
-	public static final String LEVEL_BEST = "4";
-
 	private Long id;
 	private Person person;
+	private Code fromWhere;
+	private String fromWhereName;
+	
 	private String useLevelName;
+	private Code useLevel;
+
+	private String languageName;
+	private Code languageCode;
+
 	private Date createDate;
 	private Date updateDate;
 	private String createUser;
 	private String updateUser;
-	private String languageName;
-	private Code language;
-	private Code useLevel;
-
-	public String getUseLevelName() {
-		return useLevelName;
+	
+	public Code getLanguageCode() {
+		return languageCode;
 	}
 
-	public void setUseLevelName(String useLevelName) {
-		this.useLevelName = useLevelName;
-	}
-
-	public Code getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(Code language) {
-		this.language = language;
+	public void setLanguageCode(Code languageCode) {
+		this.languageCode = languageCode;
 	}
 
 	public String getLanguageName() {
@@ -72,14 +59,6 @@ public class PersonLanguage implements java.io.Serializable {
 
 	public void setPerson(Person person) {
 		this.person = person;
-	}
-
-	public Code getUseLevel() {
-		return useLevel;
-	}
-
-	public void setUseLevel(Code useLevel) {
-		this.useLevel = useLevel;
 	}
 
 	public Date getCreateDate() {
@@ -112,6 +91,38 @@ public class PersonLanguage implements java.io.Serializable {
 
 	public void setUpdateUser(String updateUser) {
 		this.updateUser = updateUser;
+	}
+
+	public Code getFromWhere() {
+		return fromWhere;
+	}
+
+	public void setFromWhere(Code fromWhere) {
+		this.fromWhere = fromWhere;
+	}
+
+	public String getFromWhereName() {
+		return fromWhereName;
+	}
+
+	public void setFromWhereName(String fromWhereName) {
+		this.fromWhereName = fromWhereName;
+	}
+
+	public String getUseLevelName() {
+		return useLevelName;
+	}
+
+	public void setUseLevelName(String useLevelName) {
+		this.useLevelName = useLevelName;
+	}
+
+	public Code getUseLevel() {
+		return useLevel;
+	}
+
+	public void setUseLevel(Code useLevel) {
+		this.useLevel = useLevel;
 	}
 
 }

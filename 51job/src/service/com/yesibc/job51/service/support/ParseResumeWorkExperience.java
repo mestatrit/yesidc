@@ -19,10 +19,10 @@ public class ParseResumeWorkExperience {
 		if (basicTag == null) {
 			return;
 		}
-		List<PersonAppend> appends = p.getAppends();
+		List<PersonAppend> appends = p.getPersonAppends();
 		if (CollectionUtils.isEmpty(appends)) {
 			appends = new ArrayList<PersonAppend>();
-			p.setAppends(appends);
+			p.setPersonAppends(appends);
 		}
 		PersonAppend append = new PersonAppend();
 		append.setAppendType(ResumeHandlerServiceImpl.baseCode

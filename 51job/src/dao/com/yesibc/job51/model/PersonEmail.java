@@ -1,5 +1,6 @@
 package com.yesibc.job51.model;
 
+import java.util.Date;
 
 /**
  * TeEmail entity. @author MyEclipse Persistence Tools
@@ -14,46 +15,21 @@ public class PersonEmail implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = -8194296996528149627L;
 	private Long id;
-	private Code city;
-	private String email;
-	private String nameDefault;
-	
-
-	private String mailType;
 	private Person person;
-	private Long personId;
-	private String createDate;
-	private String updateDate;
+	private Code fromWhere;
+	private String fromWhereName;
+	
+	private String email;
+	private String mailType;
+
+	private String nameDefault;
+	private String name1;
+	private String name2;
+
+	private Date createDate;
+	private Date updateDate;
 	private String createUser;
 	private String updateUser;
-
-	// Constructors
-
-
-	public String getEmail() {
-		return this.email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getNameDefault() {
-		return this.nameDefault;
-	}
-
-	public void setNameDefault(String nameDefault) {
-		this.nameDefault = nameDefault;
-	}
-
-	public String getMailType() {
-		return this.mailType;
-	}
-
-	public void setMailType(String mailType) {
-		this.mailType = mailType;
-	}
-
 
 	public Long getId() {
 		return id;
@@ -61,6 +37,22 @@ public class PersonEmail implements java.io.Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Code getFromWhere() {
+		return fromWhere;
+	}
+
+	public void setFromWhere(Code fromWhere) {
+		this.fromWhere = fromWhere;
+	}
+
+	public String getFromWhereName() {
+		return fromWhereName;
+	}
+
+	public void setFromWhereName(String fromWhereName) {
+		this.fromWhereName = fromWhereName;
 	}
 
 	public Person getPerson() {
@@ -71,25 +63,48 @@ public class PersonEmail implements java.io.Serializable {
 		this.person = person;
 	}
 
-
-	public String getCreateDate() {
-		return this.createDate;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setCreateDate(String createDate) {
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getMailType() {
+		return mailType;
+	}
+
+	public void setMailType(String mailType) {
+		this.mailType = mailType;
+	}
+
+	public String getNameDefault() {
+		return nameDefault;
+	}
+
+	public void setNameDefault(String nameDefault) {
+		this.nameDefault = nameDefault;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
 
-	public String getUpdateDate() {
-		return this.updateDate;
+	public Date getUpdateDate() {
+		return updateDate;
 	}
 
-	public void setUpdateDate(String updateDate) {
+	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
 
 	public String getCreateUser() {
-		return this.createUser;
+		return createUser;
 	}
 
 	public void setCreateUser(String createUser) {
@@ -97,27 +112,27 @@ public class PersonEmail implements java.io.Serializable {
 	}
 
 	public String getUpdateUser() {
-		return this.updateUser;
+		return updateUser;
 	}
 
 	public void setUpdateUser(String updateUser) {
 		this.updateUser = updateUser;
 	}
 
-	public Code getCity() {
-		return city;
+	public String getName1() {
+		return name1;
 	}
 
-	public void setCity(Code city) {
-		this.city = city;
+	public void setName1(String name1) {
+		this.name1 = name1;
 	}
 
-	public Long getPersonId() {
-		return personId;
+	public String getName2() {
+		return name2;
 	}
 
-	public void setPersonId(Long personId) {
-		this.personId = personId;
+	public void setName2(String name2) {
+		this.name2 = name2;
 	}
 
 }

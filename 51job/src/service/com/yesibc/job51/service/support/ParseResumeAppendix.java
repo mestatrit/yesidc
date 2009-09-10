@@ -26,10 +26,10 @@ public class ParseResumeAppendix {
 		}
 		TableRow[] rows = basicTag.getRows();
 		String temp = "";
-		List<PersonAppend> appends = p.getAppends();
+		List<PersonAppend> appends = p.getPersonAppends();
 		if (CollectionUtils.isEmpty(appends)) {
 			appends = new ArrayList<PersonAppend>();
-			p.setAppends(appends);
+			p.setPersonAppends(appends);
 		}
 		for (int i = 0; i < rows.length; i++) {
 			TableRow tr = (TableRow) rows[i];
