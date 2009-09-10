@@ -33,7 +33,8 @@ public class ParseResumeBasic {
 	 * @param p
 	 */
 	public static void parseBasic(Person p, Map<String, TableTag> mapVal) {
-		TableTag basicTag = mapVal.get(ClawerConstants.BASIC_INFO + ClawerConstants.VAL);
+		TableTag basicTag = mapVal.get(ClawerConstants.BASIC_INFO
+				+ ClawerConstants.VAL);
 		if (basicTag == null) {
 			return;
 		}
@@ -58,9 +59,11 @@ public class ParseResumeBasic {
 				} else if (ClawerConstants.BASIC_INFO_BIR.equals(temp)) {
 					++j;
 					try {
-						temp = ClawerUtils.removeSpace(td[j].toPlainTextString());
+						temp = ClawerUtils.removeSpace(td[j]
+								.toPlainTextString());
 						if (!"".equals(temp))
-							p.setBirthday(DateUtils.stringToDate(temp, DateUtils.YMD_CN));
+							p.setBirthday(DateUtils.stringToDate(temp,
+									DateUtils.YMD_CN));
 					} catch (ParseException e) {
 						log.error("birthday error:", e);
 					}
@@ -78,12 +81,15 @@ public class ParseResumeBasic {
 					++j;
 					temp = ClawerUtils.removeSpace(td[j].toPlainTextString());
 					if (!"".equals(temp))
-						p.setWorkYears(baseCode.queryByName(temp, BaseCode.WORK_YEAR, 0));
-				} else if (ClawerConstants.BASIC_INFO_CRR_SALARY_YEARLY.equals(temp)) {
+						p.setWorkYears(baseCode.queryByName(temp,
+								BaseCode.WORK_YEAR, 0));
+				} else if (ClawerConstants.BASIC_INFO_CRR_SALARY_YEARLY
+						.equals(temp)) {
 					++j;
 					temp = ClawerUtils.removeSpace(td[j].toPlainTextString());
 					if (!"".equals(temp))
-						p.setWorkSaralyYear(baseCode.queryByName(temp, BaseCode.SALARY_YEARLY, 0));
+						p.setSaralyYear(baseCode.queryByName(temp,
+								BaseCode.SALARY_YEARLY, 0));
 				} else if (ClawerConstants.BASIC_INFO_ADDR_DETAIL.equals(temp)) {
 					++j;
 					temp = ClawerUtils.removeSpace(td[j].toPlainTextString());
@@ -112,7 +118,7 @@ public class ParseResumeBasic {
 				} else if (ClawerConstants.BASIC_INFO_SELF_HP.equals(temp)) {
 					++j;
 					temp = ClawerUtils.removeSpace(td[j].toPlainTextString());
-					p.setHomepageSelf(temp);
+					p.setHomepageSelf1(temp);
 				} else if (ClawerConstants.BASIC_INFO_ONLINE.equals(temp)) {
 					++j;
 					temp = ClawerUtils.removeSpace(td[j].toHtml());
@@ -122,22 +128,26 @@ public class ParseResumeBasic {
 					}
 				} else if (ClawerConstants.BASIC_INFO_BASIC_SALARY.equals(temp)) {
 					++j;
-					temp = ClawerUtils.removeSpaceAndFilter(td[j].toPlainTextString());
+					temp = ClawerUtils.removeSpaceAndFilter(td[j]
+							.toPlainTextString());
 					if (!"".equals(temp))
 						p.setWorkSaralyBasic(new BigDecimal(temp));
 				} else if (ClawerConstants.BASIC_INFO_SUBSIDY.equals(temp)) {
 					++j;
-					temp = ClawerUtils.removeSpaceAndFilter(td[j].toPlainTextString());
+					temp = ClawerUtils.removeSpaceAndFilter(td[j]
+							.toPlainTextString());
 					if (!"".equals(temp))
 						p.setWorkSubsidy(new BigDecimal(temp));
 				} else if (ClawerConstants.BASIC_INFO_BONUS.equals(temp)) {
 					++j;
-					temp = ClawerUtils.removeSpaceAndFilter(td[j].toPlainTextString());
+					temp = ClawerUtils.removeSpaceAndFilter(td[j]
+							.toPlainTextString());
 					if (!"".equals(temp))
 						p.setWorkBonus(new BigDecimal(temp));
 				} else if (ClawerConstants.BASIC_INFO_STOCK.equals(temp)) {
 					++j;
-					temp = ClawerUtils.removeSpaceAndFilter(td[j].toPlainTextString());
+					temp = ClawerUtils.removeSpaceAndFilter(td[j]
+							.toPlainTextString());
 					if (!"".equals(temp))
 						p.setWorkStock(new BigDecimal(temp));
 				}

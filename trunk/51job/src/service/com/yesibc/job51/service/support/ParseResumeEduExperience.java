@@ -25,17 +25,19 @@ public class ParseResumeEduExperience {
 	private static Log log = LogFactory.getLog(ParseResumeEduExperience.class);
 
 	public static void parseEduExperience(Person p, Map<String, TableTag> mapVal) {
-		TableTag basicTag = mapVal.get(ClawerConstants.EDU_EXPERIENCE + ClawerConstants.VAL);
+		TableTag basicTag = mapVal.get(ClawerConstants.EDU_EXPERIENCE
+				+ ClawerConstants.VAL);
 		if (basicTag == null) {
 			return;
 		}
 		TableRow[] rows = basicTag.getRows();
 		String temp = "";
-		String[] filters = { ClawerConstants.TIME_TAG_LINE, ClawerConstants.TIME_TAG_DIAGONAL };
-		List<PersonEdu> edus = p.getEdus();
-		if(CollectionUtils.isEmpty(edus)){
+		String[] filters = { ClawerConstants.TIME_TAG_LINE,
+				ClawerConstants.TIME_TAG_DIAGONAL };
+		List<PersonEdu> edus = p.getPersonEdus();
+		if (CollectionUtils.isEmpty(edus)) {
 			edus = new ArrayList<PersonEdu>();
-			p.setEdus(edus);
+			p.setPersonEdus(edus);
 		}
 		int ok = 0;
 		for (int i = 0; i < rows.length; i++) {
@@ -60,7 +62,8 @@ public class ParseResumeEduExperience {
 							parseEduTime(edu, temp);
 						} catch (ParseException e) {
 							e.printStackTrace();
-							log.error("parse time error:" + temp + ",name=" + p.getNameDefault());
+							log.error("parse time error:" + temp + ",name="
+									+ p.getNameDefault());
 						}
 						tag = 1;
 					} else if (!"".equals(temp)) {
@@ -79,16 +82,19 @@ public class ParseResumeEduExperience {
 						edu.setEduName(temp);
 					} else if (j == 2 && !temp.equals("")) {
 						tag++;
-						edu.setEduSpeciality(temp);
-						edu.setEduSpecialityFK(ResumeHandlerServiceImpl.baseCode.querySpeciality2ByName(temp));
+						edu.setEduSpecialityName(temp);
+						edu.setEduSpeciality(ResumeHandlerServiceImpl.baseCode
+								.querySpeciality2ByName(temp));
 					} else if (j == 3 && !temp.equals("") && tag == 2) {
 						tag++;
-						edu.setEduSpeciality(temp);
-						edu.setEduSpecialityFK(ResumeHandlerServiceImpl.baseCode.querySpeciality2ByName(temp));
+						edu.setEduSpecialityName(temp);
+						edu.setEduSpeciality(ResumeHandlerServiceImpl.baseCode
+								.querySpeciality2ByName(temp));
 					} else if (j > 3 && !temp.equals("") && tag == 3) {
 						tag++;
-						edu.setEduLevel(temp);
-						edu.setEduLevelFK(ResumeHandlerServiceImpl.baseCode.querySpeciality2ByName(temp));
+						edu.setEduLevelName(temp);
+						edu.setEduLevel(ResumeHandlerServiceImpl.baseCode
+								.querySpeciality2ByName(temp));
 					}
 				}
 			}
@@ -96,8 +102,10 @@ public class ParseResumeEduExperience {
 
 	}
 
-	public static void parseEduTime(PersonEdu edu, String timeTxt) throws ParseException {
-		if (timeTxt.indexOf(ClawerConstants.TIME_TAG_LINE) < 0 || timeTxt.indexOf(ClawerConstants.TIME_TAG_DIAGONAL) < 0) {
+	public static void parseEduTime(PersonEdu edu, String timeTxt)
+			throws ParseException {
+		if (timeTxt.indexOf(ClawerConstants.TIME_TAG_LINE) < 0
+				|| timeTxt.indexOf(ClawerConstants.TIME_TAG_DIAGONAL) < 0) {
 			return;
 		}
 		String[] str = timeTxt.split(ClawerConstants.TIME_TAG_LINE);
@@ -109,10 +117,10 @@ public class ParseResumeEduExperience {
 		if (StringUtils.isNumberString(temp)) {
 			edu.setEduDateTo(DateUtils.stringToDate(str[1], format));
 		}
-		 edu.setCreateDate(new Date());
-		 edu.setUpdateDate(new Date());
-		 edu.setCreateUser(ClawerConstants.DEFAULT_USER);
-		 edu.setUpdateUser(ClawerConstants.DEFAULT_USER);
+		edu.setCreateDate(new Date());
+		edu.setUpdateDate(new Date());
+		edu.setCreateUser(ClawerConstants.DEFAULT_USER);
+		edu.setUpdateUser(ClawerConstants.DEFAULT_USER);
 	}
 
 }

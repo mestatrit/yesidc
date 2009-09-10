@@ -14,9 +14,10 @@ import com.yesibc.job51.model.Person;
 import com.yesibc.job51.service.impl.ResumeHandlerServiceImpl;
 
 public class ParseResumeJobIntent {
-	
+
 	public static void parseJobIntent(Person p, Map<String, TableTag> mapVal) {
-		TableTag basicTag = mapVal.get(ClawerConstants.JOB_INTENT + ClawerConstants.VAL);
+		TableTag basicTag = mapVal.get(ClawerConstants.JOB_INTENT
+				+ ClawerConstants.VAL);
 		if (basicTag == null) {
 			return;
 		}
@@ -34,14 +35,17 @@ public class ParseResumeJobIntent {
 					break;
 				} else if (ClawerConstants.JOB_INTENT_SALARY.equals(temp)) {
 					++j;
-					temp = ClawerUtils.removeSpaceAndFilter(td[j].toPlainTextString());
+					temp = ClawerUtils.removeSpaceAndFilter(td[j]
+							.toPlainTextString());
 					if (!"".equals(temp)) {
-						p.setJobIntentSalary(ResumeHandlerServiceImpl.baseCode.queryByName(temp, BaseCode.SALARY_MONTHLY, 0));
+						p.setJobIntentSalary(ResumeHandlerServiceImpl.baseCode
+								.queryByName(temp, BaseCode.SALARY_MONTHLY, 0));
 					}
 					break;
 				} else if (ClawerConstants.JOB_INTENT_ADDR.equals(temp)) {
 					++j;
-					temp = ClawerUtils.removeSpaceAndFilter(td[j].toPlainTextString());
+					temp = ClawerUtils.removeSpaceAndFilter(td[j]
+							.toPlainTextString());
 					if (!"".equals(temp)) {
 						String[] addrs = temp.split(ClawerConstants.SPLIT_CHAR);
 						ParseSupport.setJobIntentAddr(p, addrs);
@@ -49,7 +53,8 @@ public class ParseResumeJobIntent {
 					break;
 				} else if (ClawerConstants.JOB_INTENT_FUN.equals(temp)) {
 					++j;
-					temp = ClawerUtils.removeSpaceAndFilter(td[j].toPlainTextString());
+					temp = ClawerUtils.removeSpaceAndFilter(td[j]
+							.toPlainTextString());
 					if (!"".equals(temp)) {
 						String[] funs = temp.split(ClawerConstants.SPLIT_CHAR);
 						ParseSupport.setJobIntentFun(p, funs);
@@ -57,17 +62,22 @@ public class ParseResumeJobIntent {
 					break;
 				} else if (ClawerConstants.JOB_INTENT_INDUSTRY.equals(temp)) {
 					++j;
-					temp = ClawerUtils.removeSpaceAndFilter(td[j].toPlainTextString());
+					temp = ClawerUtils.removeSpaceAndFilter(td[j]
+							.toPlainTextString());
 					if (!"".equals(temp)) {
-						String[] indutries = temp.split(ClawerConstants.SPLIT_CHAR);
+						String[] indutries = temp
+								.split(ClawerConstants.SPLIT_CHAR);
 						ParseSupport.setJobIntentIndutry(p, indutries);
 					}
 					break;
 				} else if (ClawerConstants.JOB_INTENT_NATURE.equals(temp)) {
 					++j;
-					temp = ClawerUtils.removeSpaceAndFilter(td[j].toPlainTextString());
+					temp = ClawerUtils.removeSpaceAndFilter(td[j]
+							.toPlainTextString());
 					if (!"".equals(temp)) {
-						p.setJobNature(ResumeHandlerServiceImpl.baseCode.queryByName(temp, BaseCode.JOB_NATURE, 0));
+						// p.setJobNature(ResumeHandlerServiceImpl.baseCode.queryByName(temp,
+						// BaseCode.JOB_NATURE, 0));
+						p.setJobNature(temp);
 					}
 					break;
 				}

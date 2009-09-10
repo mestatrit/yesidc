@@ -25,10 +25,10 @@ public class ParseResumeLanguage {
 		}
 		TableRow[] rows = basicTag.getRows();
 		String temp = "";
-		List<PersonLanguage> languages = p.getLanguages();
+		List<PersonLanguage> languages = p.getPersonLanguages();
 		if (CollectionUtils.isEmpty(languages)) {
 			languages = new ArrayList<PersonLanguage>();
-			p.setLanguages(languages);
+			p.setPersonLanguages(languages);
 		}
 		for (int i = 0; i < rows.length; i++) {
 			TableRow tr = (TableRow) rows[i];
@@ -52,7 +52,7 @@ public class ParseResumeLanguage {
 					language.setCreateUser(ClawerConstants.DEFAULT_USER);
 					language.setUpdateUser(ClawerConstants.DEFAULT_USER);
 					language.setLanguageName(temp);
-					language.setLanguage(ResumeHandlerServiceImpl.baseCode.queryLanguageByName(temp));
+					language.setLanguageCode(ResumeHandlerServiceImpl.baseCode.queryLanguageByName(temp));
 				} else if (j == 1 && !temp.equals("") && tag == 1) {
 					tag++;
 					language.setUseLevelName(temp);

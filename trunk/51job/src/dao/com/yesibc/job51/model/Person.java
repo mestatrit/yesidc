@@ -18,6 +18,8 @@ public class Person implements java.io.Serializable {
 	private static final long serialVersionUID = 2215862580319408444L;
 	private Long id;
 	private String personId;
+	private Code idType;
+	private Code idTypeName;
 	private String nameDefault;
 	private String nameFirst;
 	private String nameMiddle;
@@ -28,16 +30,21 @@ public class Person implements java.io.Serializable {
 	private String sex;
 	private Date birthday;
 	private Code addrLive;
+	private String addrLiveName;
 	private Code workYears;
+	private String workYearsName;
 	private Code addrDomicile;
+	private String addrDomicileName;
 	private String addrLiveDetail;
 	private String addrLiveZip;
-	private Code workSaralyYear;
+	private Code saralyYear;
+	private String saralyYearName;
 	private String telMobile;
 	private String telCompany;
 	private String telBp;
 	private String telFamily;
-	private String homepageSelf;
+	private String homepageSelf1;
+	private String homepageSelf2;
 	private String linkWangwang;
 	private String linkQq;
 	private String linkMsn;
@@ -49,32 +56,52 @@ public class Person implements java.io.Serializable {
 	private BigDecimal workSubsidy;
 	private BigDecimal workStock;
 	private String selfAdjust;
-	private Code jobNature;
+	private String jobNature;
 	private Code jobIntentIndustry1;
-	private Code jobIntentAddr1;
-	private Code jobIntentFun1;
-	private Code jobIntentSalary;
 	private Code jobIntentIndustry2;
+	private Code jobIntentIndustry3;
+	private Code jobIntentIndustry4;
+	private Code jobIntentIndustry5;
+	private String jobIntentIndustryName1;
+	private String jobIntentIndustryName2;
+	private String jobIntentIndustryName3;
+	private String jobIntentIndustryName4;
+	private String jobIntentIndustryName5;
+	private Code jobIntentAddr1;
 	private Code jobIntentAddr2;
+	private Code jobIntentAddr3;
+	private Code jobIntentAddr4;
+	private Code jobIntentAddr5;
+	private String jobIntentAddrName1;
+	private String jobIntentAddrName2;
+	private String jobIntentAddrName3;
+	private String jobIntentAddrName4;
+	private String jobIntentAddrName5;
+	private Code jobIntentFun1;
 	private Code jobIntentFun2;
 	private Code jobIntentFun3;
 	private Code jobIntentFun4;
 	private Code jobIntentFun5;
-	private Code jobIntentAddr3;
-	private Code jobIntentAddr4;
-	private Code jobIntentAddr5;
-	private Code jobIntentIndustry3;
-	private Code jobIntentIndustry4;
-	private Code jobIntentIndustry5;
+	private String jobIntentFunName1;
+	private String jobIntentFunName2;
+	private String jobIntentFunName3;
+	private String jobIntentFunName4;
+	private String jobIntentFunName5;
+	private Code jobIntentSalary;
+	private String jobIntentSalaryName;
+	private Code fromWhere;
+	private String fromWhereName;
 	private Date createDate;
 	private Date updateDate;
 	private String createUser;
 	private String updateUser;
-	private List<PersonSkill> skills;
-	private List<PersonAppend> appends;
-	private List<PersonLanguage> languages;
-	private List<PersonEmail> emails;
-	private List<PersonEdu> edus;
+	
+	private List<PersonSkill> personSkills;
+	private List<PersonAppend> personAppends;
+	private List<PersonLanguage> personLanguages;
+	private List<PersonEmail> personEmails;
+	private List<PersonEdu> personEdus;
+	private List<PersonEdu> personAddresses;
 
 	public String getPersonId() {
 		return personId;
@@ -82,49 +109,6 @@ public class Person implements java.io.Serializable {
 
 	public void setPersonId(String personId) {
 		this.personId = personId;
-	}
-
-
-	// Constructors
-
-	public List<PersonEdu> getEdus() {
-		return edus;
-	}
-
-	public void setEdus(List<PersonEdu> edus) {
-		this.edus = edus;
-	}
-
-	public List<PersonEmail> getEmails() {
-		return emails;
-	}
-
-	public List<PersonAppend> getAppends() {
-		return appends;
-	}
-
-	public void setAppends(List<PersonAppend> appends) {
-		this.appends = appends;
-	}
-
-	public void setEmails(List<PersonEmail> emails) {
-		this.emails = emails;
-	}
-
-	public List<PersonSkill> getSkills() {
-		return skills;
-	}
-
-	public void setSkills(List<PersonSkill> skills) {
-		this.skills = skills;
-	}
-
-	public List<PersonLanguage> getLanguages() {
-		return languages;
-	}
-
-	public void setLanguages(List<PersonLanguage> languages) {
-		this.languages = languages;
 	}
 
 	/** default constructor */
@@ -253,14 +237,6 @@ public class Person implements java.io.Serializable {
 		this.addrLiveZip = addrLiveZip;
 	}
 
-	public Code getWorkSaralyYear() {
-		return this.workSaralyYear;
-	}
-
-	public void setWorkSaralyYear(Code workSaralyYear) {
-		this.workSaralyYear = workSaralyYear;
-	}
-
 	public String getTelMobile() {
 		return this.telMobile;
 	}
@@ -293,12 +269,12 @@ public class Person implements java.io.Serializable {
 		this.telFamily = telFamily;
 	}
 
-	public String getHomepageSelf() {
-		return this.homepageSelf;
+	public String getHomepageSelf1() {
+		return this.homepageSelf1;
 	}
 
-	public void setHomepageSelf(String homepageSelf) {
-		this.homepageSelf = homepageSelf;
+	public void setHomepageSelf1(String homepageSelf1) {
+		this.homepageSelf1 = homepageSelf1;
 	}
 
 	public String getLinkWangwang() {
@@ -389,11 +365,11 @@ public class Person implements java.io.Serializable {
 		this.selfAdjust = selfAdjust;
 	}
 
-	public Code getJobNature() {
+	public String getJobNature() {
 		return this.jobNature;
 	}
 
-	public void setJobNature(Code jobNature) {
+	public void setJobNature(String jobNature) {
 		this.jobNature = jobNature;
 	}
 
@@ -557,223 +533,261 @@ public class Person implements java.io.Serializable {
 		this.updateUser = updateUser;
 	}
 
-	public String toString() {
-		StringBuffer buffer = new StringBuffer(500);
-		buffer.append("serialVersionUID = ");
-		buffer.append(",\nid = ");
-		if (this.id != null)
-			buffer.append(this.id.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\nnameDefault = ");
-		buffer.append(this.nameDefault);
-		buffer.append(",\nnameFirst = ");
-		buffer.append(this.nameFirst);
-		buffer.append(",\nnameMiddle = ");
-		buffer.append(this.nameMiddle);
-		buffer.append(",\nnameLast = ");
-		buffer.append(this.nameLast);
-		buffer.append(",\nnameNick1 = ");
-		buffer.append(this.nameNick1);
-		buffer.append(",\nnameNick2 = ");
-		buffer.append(this.nameNick2);
-		buffer.append(",\nnameNick3 = ");
-		buffer.append(this.nameNick3);
-		buffer.append(",\nsex = ");
-		buffer.append(this.sex);
-		buffer.append(",\nbirthday = ");
-		if (this.birthday != null)
-			buffer.append(this.birthday.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\naddrLive = ");
-		if (this.addrLive != null)
-			buffer.append(this.addrLive.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\nworkYears = ");
-		if (this.workYears != null)
-			buffer.append(this.workYears.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\naddrDomicile = ");
-		if (this.addrDomicile != null)
-			buffer.append(this.addrDomicile.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\naddrLiveDetail = ");
-		buffer.append(this.addrLiveDetail);
-		buffer.append(",\naddrLiveZip = ");
-		buffer.append(this.addrLiveZip);
-		buffer.append(",\nworkSaralyYear = ");
-		if (this.workSaralyYear != null)
-			buffer.append(this.workSaralyYear.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\ntelMobile = ");
-		buffer.append(this.telMobile);
-		buffer.append(",\ntelCompany = ");
-		buffer.append(this.telCompany);
-		buffer.append(",\ntelBp = ");
-		buffer.append(this.telBp);
-		buffer.append(",\ntelFamily = ");
-		buffer.append(this.telFamily);
-		buffer.append(",\nhomepageSelf = ");
-		buffer.append(this.homepageSelf);
-		buffer.append(",\nlinkWangwang = ");
-		buffer.append(this.linkWangwang);
-		buffer.append(",\nlinkQq = ");
-		buffer.append(this.linkQq);
-		buffer.append(",\nlinkMsn = ");
-		buffer.append(this.linkMsn);
-		buffer.append(",\nlinkSkype = ");
-		buffer.append(this.linkSkype);
-		buffer.append(",\nlinkGtalk = ");
-		buffer.append(this.linkGtalk);
-		buffer.append(",\nlinkFetion = ");
-		buffer.append(this.linkFetion);
-		buffer.append(",\nworkSaralyBasic = ");
-		if (this.workSaralyBasic != null)
-			buffer.append(this.workSaralyBasic.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\nworkBonus = ");
-		if (this.workBonus != null)
-			buffer.append(this.workBonus.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\nworkSubsidy = ");
-		if (this.workSubsidy != null)
-			buffer.append(this.workSubsidy.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\nworkStock = ");
-		if (this.workStock != null)
-			buffer.append(this.workStock.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\nselfAdjust = ");
-		buffer.append(this.selfAdjust);
-		buffer.append(",\njobNature = ");
-		if (this.jobNature != null)
-			buffer.append(this.jobNature.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentIndustry1 = ");
-		if (this.jobIntentIndustry1 != null)
-			buffer.append(this.jobIntentIndustry1.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentAddr1 = ");
-		if (this.jobIntentAddr1 != null)
-			buffer.append(this.jobIntentAddr1.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentFun1 = ");
-		if (this.jobIntentFun1 != null)
-			buffer.append(this.jobIntentFun1.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentSalary = ");
-		if (this.jobIntentSalary != null)
-			buffer.append(this.jobIntentSalary.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentIndustry2 = ");
-		if (this.jobIntentIndustry2 != null)
-			buffer.append(this.jobIntentIndustry2.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentAddr2 = ");
-		if (this.jobIntentAddr2 != null)
-			buffer.append(this.jobIntentAddr2.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentFun2 = ");
-		if (this.jobIntentFun2 != null)
-			buffer.append(this.jobIntentFun2.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentFun3 = ");
-		if (this.jobIntentFun3 != null)
-			buffer.append(this.jobIntentFun3.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentFun4 = ");
-		if (this.jobIntentFun4 != null)
-			buffer.append(this.jobIntentFun4.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentFun5 = ");
-		if (this.jobIntentFun5 != null)
-			buffer.append(this.jobIntentFun5.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentAddr3 = ");
-		if (this.jobIntentAddr3 != null)
-			buffer.append(this.jobIntentAddr3.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentAddr4 = ");
-		if (this.jobIntentAddr4 != null)
-			buffer.append(this.jobIntentAddr4.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentAddr5 = ");
-		if (this.jobIntentAddr5 != null)
-			buffer.append(this.jobIntentAddr5.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentIndustry3 = ");
-		if (this.jobIntentIndustry3 != null)
-			buffer.append(this.jobIntentIndustry3.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentIndustry4 = ");
-		if (this.jobIntentIndustry4 != null)
-			buffer.append(this.jobIntentIndustry4.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\njobIntentIndustry5 = ");
-		if (this.jobIntentIndustry5 != null)
-			buffer.append(this.jobIntentIndustry5.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\ncreateDate = ");
-		if (this.createDate != null)
-			buffer.append(this.createDate.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\nupdateDate = ");
-		if (this.updateDate != null)
-			buffer.append(this.updateDate.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\ncreateUser = ");
-		buffer.append(this.createUser);
-		buffer.append(",\nupdateUser = ");
-		buffer.append(this.updateUser);
-		buffer.append(",\nskills = ");
-		if (this.skills != null)
-			buffer.append(this.skills.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\nappends = ");
-		if (this.appends != null)
-			buffer.append(this.appends.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\nlanguages = ");
-		if (this.languages != null)
-			buffer.append(this.languages.toString());
-		else
-			buffer.append("value is null");
-		buffer.append(",\nemails = ");
-		if (this.emails != null)
-			buffer.append(this.emails.toString());
-		else
-			buffer.append("value is null");
-		return buffer.toString();
-
+	public Code getIdType() {
+		return idType;
 	}
+
+	public void setIdType(Code idType) {
+		this.idType = idType;
+	}
+
+	public Code getIdTypeName() {
+		return idTypeName;
+	}
+
+	public void setIdTypeName(Code idTypeName) {
+		this.idTypeName = idTypeName;
+	}
+
+	public String getAddrLiveName() {
+		return addrLiveName;
+	}
+
+	public void setAddrLiveName(String addrLiveName) {
+		this.addrLiveName = addrLiveName;
+	}
+
+	public String getWorkYearsName() {
+		return workYearsName;
+	}
+
+	public void setWorkYearsName(String workYearsName) {
+		this.workYearsName = workYearsName;
+	}
+
+	public String getAddrDomicileName() {
+		return addrDomicileName;
+	}
+
+	public void setAddrDomicileName(String addrDomicileName) {
+		this.addrDomicileName = addrDomicileName;
+	}
+
+	public Code getSaralyYear() {
+		return saralyYear;
+	}
+
+	public void setSaralyYear(Code saralyYear) {
+		this.saralyYear = saralyYear;
+	}
+
+	public String getSaralyYearName() {
+		return saralyYearName;
+	}
+
+	public void setSaralyYearName(String saralyYearName) {
+		this.saralyYearName = saralyYearName;
+	}
+
+	public String getHomepageSelf2() {
+		return homepageSelf2;
+	}
+
+	public void setHomepageSelf2(String homepageSelf2) {
+		this.homepageSelf2 = homepageSelf2;
+	}
+
+	public String getJobIntentIndustryName1() {
+		return jobIntentIndustryName1;
+	}
+
+	public void setJobIntentIndustryName1(String jobIntentIndustryName1) {
+		this.jobIntentIndustryName1 = jobIntentIndustryName1;
+	}
+
+	public String getJobIntentIndustryName2() {
+		return jobIntentIndustryName2;
+	}
+
+	public void setJobIntentIndustryName2(String jobIntentIndustryName2) {
+		this.jobIntentIndustryName2 = jobIntentIndustryName2;
+	}
+
+	public String getJobIntentIndustryName3() {
+		return jobIntentIndustryName3;
+	}
+
+	public void setJobIntentIndustryName3(String jobIntentIndustryName3) {
+		this.jobIntentIndustryName3 = jobIntentIndustryName3;
+	}
+
+	public String getJobIntentIndustryName4() {
+		return jobIntentIndustryName4;
+	}
+
+	public void setJobIntentIndustryName4(String jobIntentIndustryName4) {
+		this.jobIntentIndustryName4 = jobIntentIndustryName4;
+	}
+
+	public String getJobIntentIndustryName5() {
+		return jobIntentIndustryName5;
+	}
+
+	public void setJobIntentIndustryName5(String jobIntentIndustryName5) {
+		this.jobIntentIndustryName5 = jobIntentIndustryName5;
+	}
+
+	public String getJobIntentAddrName1() {
+		return jobIntentAddrName1;
+	}
+
+	public void setJobIntentAddrName1(String jobIntentAddrName1) {
+		this.jobIntentAddrName1 = jobIntentAddrName1;
+	}
+
+	public String getJobIntentAddrName2() {
+		return jobIntentAddrName2;
+	}
+
+	public void setJobIntentAddrName2(String jobIntentAddrName2) {
+		this.jobIntentAddrName2 = jobIntentAddrName2;
+	}
+
+	public String getJobIntentAddrName3() {
+		return jobIntentAddrName3;
+	}
+
+	public void setJobIntentAddrName3(String jobIntentAddrName3) {
+		this.jobIntentAddrName3 = jobIntentAddrName3;
+	}
+
+	public String getJobIntentAddrName4() {
+		return jobIntentAddrName4;
+	}
+
+	public void setJobIntentAddrName4(String jobIntentAddrName4) {
+		this.jobIntentAddrName4 = jobIntentAddrName4;
+	}
+
+	public String getJobIntentAddrName5() {
+		return jobIntentAddrName5;
+	}
+
+	public void setJobIntentAddrName5(String jobIntentAddrName5) {
+		this.jobIntentAddrName5 = jobIntentAddrName5;
+	}
+
+	public String getJobIntentFunName1() {
+		return jobIntentFunName1;
+	}
+
+	public void setJobIntentFunName1(String jobIntentFunName1) {
+		this.jobIntentFunName1 = jobIntentFunName1;
+	}
+
+	public String getJobIntentFunName2() {
+		return jobIntentFunName2;
+	}
+
+	public void setJobIntentFunName2(String jobIntentFunName2) {
+		this.jobIntentFunName2 = jobIntentFunName2;
+	}
+
+	public String getJobIntentFunName3() {
+		return jobIntentFunName3;
+	}
+
+	public void setJobIntentFunName3(String jobIntentFunName3) {
+		this.jobIntentFunName3 = jobIntentFunName3;
+	}
+
+	public String getJobIntentFunName4() {
+		return jobIntentFunName4;
+	}
+
+	public void setJobIntentFunName4(String jobIntentFunName4) {
+		this.jobIntentFunName4 = jobIntentFunName4;
+	}
+
+	public String getJobIntentFunName5() {
+		return jobIntentFunName5;
+	}
+
+	public void setJobIntentFunName5(String jobIntentFunName5) {
+		this.jobIntentFunName5 = jobIntentFunName5;
+	}
+
+	public String getJobIntentSalaryName() {
+		return jobIntentSalaryName;
+	}
+
+	public void setJobIntentSalaryName(String jobIntentSalaryName) {
+		this.jobIntentSalaryName = jobIntentSalaryName;
+	}
+
+	public Code getFromWhere() {
+		return fromWhere;
+	}
+
+	public void setFromWhere(Code fromWhere) {
+		this.fromWhere = fromWhere;
+	}
+
+	public String getFromWhereName() {
+		return fromWhereName;
+	}
+
+	public void setFromWhereName(String fromWhereName) {
+		this.fromWhereName = fromWhereName;
+	}
+
+	public List<PersonSkill> getPersonSkills() {
+		return personSkills;
+	}
+
+	public void setPersonSkills(List<PersonSkill> personSkills) {
+		this.personSkills = personSkills;
+	}
+
+	public List<PersonAppend> getPersonAppends() {
+		return personAppends;
+	}
+
+	public void setPersonAppends(List<PersonAppend> personAppends) {
+		this.personAppends = personAppends;
+	}
+
+	public List<PersonLanguage> getPersonLanguages() {
+		return personLanguages;
+	}
+
+	public void setPersonLanguages(List<PersonLanguage> personLanguages) {
+		this.personLanguages = personLanguages;
+	}
+
+	public List<PersonEmail> getPersonEmails() {
+		return personEmails;
+	}
+
+	public void setPersonEmails(List<PersonEmail> personEmails) {
+		this.personEmails = personEmails;
+	}
+
+	public List<PersonEdu> getPersonEdus() {
+		return personEdus;
+	}
+
+	public void setPersonEdus(List<PersonEdu> personEdus) {
+		this.personEdus = personEdus;
+	}
+
+	public List<PersonEdu> getPersonAddresses() {
+		return personAddresses;
+	}
+
+	public void setPersonAddresses(List<PersonEdu> personAddresses) {
+		this.personAddresses = personAddresses;
+	}
+
+
 }

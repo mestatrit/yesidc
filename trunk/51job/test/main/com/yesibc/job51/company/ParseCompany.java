@@ -2,14 +2,18 @@ package com.yesibc.job51.company;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IDocument;
 import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
 import com.yesibc.core.utils.StringUtils;
+import com.yesibc.job51.common.BaseCode;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.company.search1.LocateCompanyInfo;
+import com.yesibc.job51.model.Code;
+import com.yesibc.job51.model.ComEmail;
 import com.yesibc.job51.model.Company;
 
 public class ParseCompany {
@@ -39,9 +43,9 @@ public class ParseCompany {
 
 	private static void parseToCompany(Company company) {
 		LogHandler.info("company:" + company.getCompanyName() + ","
-				+ company.getCompanyId());
+				+ company.getCompanyCode());
 		// TODO Auto-generated method stub
-		company.setFromWhere(ClawerConstants.FROM_WHERE_51JOB);
+		company.setFromWhereName(ClawerConstants.FROM_WHERE_51JOB);
 		String[] industryTypeScale = LocateCompanyInfo.getComIndustryTypeScale(
 				getDoc(), company.getUrl());
 		company.setCompanyIndustry1Name(industryTypeScale[0]);
@@ -63,17 +67,49 @@ public class ParseCompany {
 
 		String website = LocateCompanyInfo.getWebsite(getDoc(), company
 				.getUrl());
+		company.setHomepage1(website);
 
 		String address = LocateCompanyInfo.getAddress(getDoc(), company
 				.getUrl());
-
 		String zip = LocateCompanyInfo.getZip(getDoc(), company.getUrl());
+		setAddress(company, address);
+
 		String fax = LocateCompanyInfo.getFax(getDoc(), company.getUrl());
 		String linkman = LocateCompanyInfo.getLinkman(getDoc(), company
 				.getUrl());
 		String tel = LocateCompanyInfo.getTel(getDoc(), company.getUrl());
 		String email = LocateCompanyInfo.getEmail(getDoc(), company.getUrl());
 
+	}
+
+	private static void setAddress(Company company, String address) {
+		if (StringUtils.isEmpty(address)) {
+			return;
+		}
+		List<ComEmail> comAddrs = new ArrayList<ComEmail>();
+		ComEmail ca = new ComEmail();
+		comAddrs.add(ca);
+		//ca.setAddress(address);
+		//ca.setCompany(company);
+		
+		Map<Long, Code> map = BaseCode.getAddress(address);
+		Code code = map.get(BaseCode.CODE_LEVEL_FIRST);
+		if (code != null) {
+			//ca.setCountry(code);
+			//ca.setCountryName(code.getCname());
+		}
+
+		code = map.get(BaseCode.CODE_LEVEL_SECOND);
+		if (code != null) {
+			//ca.setProvince(code);
+			//ca.setProvinceName(code.getCname());
+		}
+
+		code = map.get(BaseCode.CODE_LEVEL_THIRD);
+		if (code != null) {
+			//ca.setCity(code);
+			//ca.setCityName(code.getCname());
+		}
 	}
 
 	private static void onDocumnetComplete() {

@@ -17,12 +17,17 @@ public class PersonAppend implements java.io.Serializable {
 
 	private Long id;
 	private Person person;
-	private Date createDate;
-	private Date updateDate;
+	private Code fromWhere;
+	private String fromWhereName;
+
 	private Code appendType;
 	private String appendTypeName;
 
 	private String content;
+	private String content1;
+
+	private Date createDate;
+	private Date updateDate;
 	private String createUser;
 	private String updateUser;
 
@@ -104,6 +109,30 @@ public class PersonAppend implements java.io.Serializable {
 
 	public void setUpdateUser(String updateUser) {
 		this.updateUser = updateUser;
+	}
+
+	public String getContent1() {
+		return content1;
+	}
+
+	public void setContent1(String content1) {
+		this.content1 = content1;
+	}
+
+	public Code getFromWhere() {
+		return fromWhere;
+	}
+
+	public void setFromWhere(Code fromWhere) {
+		this.fromWhere = fromWhere;
+	}
+
+	public String getFromWhereName() {
+		return fromWhereName;
+	}
+
+	public void setFromWhereName(String fromWhereName) {
+		this.fromWhereName = fromWhereName;
 	}
 
 }

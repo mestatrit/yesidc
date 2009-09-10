@@ -1,5 +1,6 @@
 package com.yesibc.job51.model;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,8 +22,8 @@ public class Code implements java.io.Serializable {
 	private String cname;
 	private String cname1;
 	private Long sortList;
-	private String createDate;
-	private String updateDate;
+	private Date createDate;
+	private Date updateDate;
 	private Long codeLevel;
 	private String createUser;
 	private String updateUser;
@@ -84,19 +85,19 @@ public class Code implements java.io.Serializable {
 		this.sortList = sortList;
 	}
 
-	public String getCreateDate() {
+	public Date getCreateDate() {
 		return this.createDate;
 	}
 
-	public void setCreateDate(String createDate) {
+	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
 
-	public String getUpdateDate() {
+	public Date getUpdateDate() {
 		return this.updateDate;
 	}
 
-	public void setUpdateDate(String updateDate) {
+	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
 
