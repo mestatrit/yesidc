@@ -51,6 +51,7 @@ public class XMLFileUtil {
 			doc = reader.read(new URL(urlString));
 		} catch (Exception ex) {
 			logger.info("Can not load " + filePath);
+			ex.printStackTrace();
 			logger.debug(ex.getMessage(), ex);
 		}
 		// return Document object
