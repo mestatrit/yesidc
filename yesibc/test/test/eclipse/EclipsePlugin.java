@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * 执行完之后，将控制台中打印出的执行结果，直接复制到下面这个文件中： MyEclipse
  * 7.0\configuration\org.eclipse.equinox.simpleconfigurator\bundles.info
@@ -13,6 +16,7 @@ import java.util.List;
  */
 
 public class EclipsePlugin {
+	private static final Log log = LogFactory.getLog(EclipsePlugin.class);
 	private String path;
 
 	public EclipsePlugin(String path) {
@@ -40,6 +44,7 @@ public class EclipsePlugin {
 				String filename2 = filenames[1];
 				result = filename1 + "," + filename2 + ",file:/" + path + "\\" + fileName + "\\,4,false";
 				System.out.println(result);
+				log.info(result);
 			} else if (file.isFile()) {
 				String fileName = file.getName();
 				if (fileName.indexOf("_") < 0) {
@@ -50,6 +55,7 @@ public class EclipsePlugin {
 				String filename2 = fileName.substring(last + 1, fileName.length() - 4);
 				result = filename1 + "," + filename2 + ",file:/" + path + "\\" + fileName + ",4,false";
 				System.out.println(result);
+				log.info(result);
 			}
 		}
 	}
@@ -85,7 +91,9 @@ public class EclipsePlugin {
 	}
 
 	public static void main(String[] args) {
-		new EclipsePlugin("D:/Java/eclipse-plugin/common4e").print();
+		new EclipsePlugin("D:/Java/eclipse-plugin/jad3.3/").print();
+		new EclipsePlugin("D:/Java/eclipse-plugin/toString").print();
+		new EclipsePlugin("D:/Java/eclipse-plugin/Implementors").print();
 		//new EclipsePlugin("D:/Java/eclipse-plugin/svn/eclipse/plugins").print();
 	}
 }

@@ -1,0 +1,212 @@
+<%@ page language="java"
+	import="java.util.*,java.lang.management.*,java.io.*,java.text.DecimalFormat"
+	pageEncoding="UTF-8"%>
+
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+%>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<base href="<%=basePath%>">
+
+		<title>System monitor</title>
+
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="cache-control" content="no-cache">
+		<meta http-equiv="expires" content="0">
+		<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+		<meta http-equiv="description" content="This is my page">
+		<!--
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	-->
+
+	</head>
+
+	<body>
+		<br/>
+		<div align="center"><B>System monitor</B></div>
+		<br><br/>
+
+<%!
+	public static String getNum(String str) {
+		try {
+			if (str == null || (str.trim()).length() < 1) {
+				return "";
+			}
+			String temp = "0123456789";
+			String tempString = "";
+			String string = "";
+			for (int i = 0; i < str.length(); i++) {
+				tempString = str.substring(i, i + 1);
+				if (temp.indexOf(tempString) > -1) {
+					string += tempString;
+				}
+			}
+			return string;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return "";
+		}
+	}
+
+	public static String getNewNum(String str1) {
+		try {
+		
+		double d1 = Double.parseDouble(str1);
+	
+		DecimalFormat df = new DecimalFormat("###.00");  
+		
+		return df.format(d1/1024); 
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return "";
+		}
+	}
+	
+%>
+		<%
+	try{
+
+
+		  //	String requestID = request.getRequestedSessionId();
+		  //  Integer access = (Integer) session.getAttribute(requestID + "_ACCESS");
+			//if(access!=null && access > 0){
+		   //	 	++access;
+		    //}else{
+		   // 	access = 1;
+		   // }
+
+		  //session.setAttribute(requestID + "_ACCESS",access);
+
+			//System.out.println("Session Id[" + requestID + "] Access Times["+access+"]<BR>");
+			//out.println("Session Id[" + requestID + "] Access Times["+access+"]<BR>");
+
+		  /**
+		  Integer access = (Integer) session.getAttribute("_ACCESS");
+			if(access!=null && access > 0){
+		   	 	++access;
+		   	 	if(access%1000==0){
+		   	 		long l = System.currentTimeMillis();
+						System.gc();
+						System.out.println("System GC OK. Time is " + (System.currentTimeMillis() - l) + ".");
+		   	 	}
+		    }else{
+		    	access = 1;
+		  }
+			session.setAttribute("_ACCESS",access);
+			**/
+
+
+			String pathStr = request.getRealPath("/");
+			out.println("Currnet path:" + pathStr + "<BR>");
+			RuntimeMXBean mxbean;
+			ClassLoadingMXBean aClassLoadingMXBean = null;
+			MemoryMXBean aMemoryMXBean = null;
+			MemoryUsage aMemoryUsage = null;
+			mxbean = ManagementFactory.getRuntimeMXBean();
+			// 以下是取得虚拟机的属性
+			out.println("虚拟机的属性1:" + mxbean.getVmVendor() + "<BR>");
+			out.println("虚拟机的属性2:" + mxbean.getVmName() + "<BR>");
+			out.println("虚拟机的属性3:" + mxbean.getClassPath() + "<BR>");
+			// 类管理接口
+			aClassLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
+			out.println("类管理接口4:" + aClassLoadingMXBean.getLoadedClassCount() + "<BR>");
+			// 内存管理接口
+			aMemoryMXBean = ManagementFactory.getMemoryMXBean();
+			out.println("返回其终止被挂起的对象的近似数目:" + aMemoryMXBean.getObjectPendingFinalizationCount() + "<BR><BR>");// 返回其终止被挂起的对象的近似数目
+			// 返回 Java 虚拟机使用的非堆内存的当前使用量
+			aMemoryUsage = aMemoryMXBean.getNonHeapMemoryUsage(); // 虚拟机启动时从系统得到的内存（以字节为单位?
+			out.println("虚拟机启动时从系统得到的内存:" + aMemoryUsage.getInit() + "<BR>"); // 表示当前已经使用的内存量（以字节为单位）
+			out.println("当前已经使用的内存量:" + aMemoryUsage.getUsed() + "<BR>"); // 表示保证可以由
+			System.out.println("["+System.currentTimeMillis() + "]当前已经使用的内存量:" + aMemoryUsage.getUsed() + "<BR>"); // 表示保证可以由
+			// Java
+			// 虚拟机使用的内存量（以字节为单位）
+			out.println("保证可以由 Java 虚拟机使用的内存量:" + aMemoryUsage.getCommitted() + "<BR>"); // 表示可以用于内存管理的最大内存量（以字节为单位）
+			out.println("内存管理的最大内存量:" + aMemoryUsage.getMax() + "<BR><BR>");
+			out.println("总体描述:" + aMemoryUsage.toString() + "<BR><BR>");
+
+ 			//ProcessBuilder pb = new ProcessBuilder("top");
+			//Process process = pb.start();
+
+
+ 			ProcessBuilder pb = new ProcessBuilder("/bin/sh",
+                         "-c",
+                         "top -n 1");
+			Process process = pb.start();
+			
+			Thread.sleep(1000);
+
+			InputStreamReader isr = null;
+			String str = "";
+			char[] buffer = new char[1024];
+			BufferedInputStream bis = null;
+			
+			try{
+				bis = new BufferedInputStream(process.getInputStream());
+				isr = new InputStreamReader(bis);
+	
+				while (isr.read(buffer) != -1) {
+					for (char c : buffer) {
+						str = str+c;
+					}
+				}
+			}finally{
+				if(isr!=null)
+					isr.close();
+				if(bis!=null)
+					bis.close();
+			}
+			System.out.println("<br><b>System message by top:</b><br><br>"  + str + "<BR><p/>");
+			out.println("<br><b>System message by top:</b><br><br>"  + str + "<BR><p/>");
+
+
+			int i = 0;
+			int j = 0;
+			String total = "";
+			String free = "";
+			String[] strArray = new String[4];
+	        if(str.indexOf("Memory:")>-1){
+	        	i = str.indexOf("Memory:");
+	        	j = str.indexOf("swap free");
+	        	strArray = (str.substring(i+7,j)).split(",");
+		        total = getNum(strArray[0]);
+		        free = getNum(strArray[1]);
+	        }else{
+	        	i = str.indexOf("Mem:");
+	        	j = str.indexOf("k buffers");
+	        	strArray = (str.substring(i+4,j)).split(",");
+		        total = getNewNum(getNum(strArray[0]));
+		        free = getNewNum(getNum(strArray[2]));
+	        }
+
+			out.println("System Total Memory:" + total + "MB<BR>");
+			out.println("System Free Memory:" + free + "MB<BR>");
+
+			out.println("<br><b>System message by top:</b><br><br>"  + str + "<BR><p/>");
+
+			mxbean = null;
+			aClassLoadingMXBean = null;
+			aMemoryMXBean = null;
+			aMemoryUsage = null;
+			pathStr = null;
+			pb = null;
+			process = null;
+			total = null;
+			free = null;
+			strArray = null;
+			buffer = null;
+			str = null;
+			bis = null;
+			isr = null;
+		}catch(Exception e){
+			e.printStackTrace();
+			out.println("Exception message:\n" + e.getMessage());
+		}
+  %>
+   <jsp:include page="status" />
+	</body>
+</html>

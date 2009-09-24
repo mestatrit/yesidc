@@ -5,6 +5,7 @@
 package com.yesibc.core.utils;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -261,5 +262,10 @@ public class NumberUtils {
 
 		System.out.println(addByLong(l1, l2));
 		System.out.println(divide(1000, 11, 5));
+		
+		DecimalFormat df = new DecimalFormat("###.00");  
+		System.out.println(df.format((double)294554848.0/1024)); 
+		System.out.println(df.format(294554848/1024)); 
+		
 	}
 }
