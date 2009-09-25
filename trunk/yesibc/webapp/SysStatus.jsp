@@ -114,6 +114,14 @@
 			};
 
 			
+			String[] titles1 ={"run in queue(r)", "blocked for IO(b)",// 1 procs
+				"memory used(swpd)", "free", "buff", "cache", // 5 Memory 
+				"memory swapped in from disk(si)","memory swapped to disk(so)", //7 swap
+				"blocks write to(bi)","blocks received from(bo)", //9 io
+				"device interrupts(in)", "CPU context switches(cs)", //11  faults
+				"user time(us)", "system time(sy)", "idle time(id)","wait IO(wa)" //15 cpu
+			};
+
 		try{
 
 			os = (String)application.getAttribute("sys_version_uat");
@@ -170,6 +178,15 @@
 					}
 					i++;
 				}						
+			}else{
+				for (Iterator<String> it = ls.iterator(); it.hasNext();) {
+					str = it.next();
+					if(i==0){
+						it.remove();
+						//out.println("move===:</b>"  + str + "<BR>");
+					}
+					i++;
+				}						
 			}
 			
 			out.println("<br><b>System message by t:sa===:</b>"  + ls.toString() + "<BR>");
@@ -186,7 +203,20 @@
 					if (s0 == null || "".equals(s0.trim())) {
 						continue;
 					}
-					out.print(titles[i] + "[" + s0 + "],");
+					
+					if("SunOS".equals(os)){		
+						if(i==3 || i==4){			
+							out.print(titles[i]+ i + "[" + getNewNum(s0) + "MB],");
+						}else{
+							out.print(titles[i]+ i + "[" + s0 + "],");
+						}
+					}else{
+						if(i==2 || i==3 || i==4 || i==5){			
+							out.print(titles1[i]+ i + "[" + getNewNum(s0) + "MB],");
+						}else{
+							out.print(titles1[i]+ i + "[" + s0 + "],");
+						}
+					}
 					i++;
 				}
 				out.print("<br>");
