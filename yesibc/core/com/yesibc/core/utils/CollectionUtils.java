@@ -4,7 +4,12 @@
 
 package com.yesibc.core.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * CollectionUtils.
@@ -17,13 +22,34 @@ public class CollectionUtils {
 	private CollectionUtils() {
 	}
 
-
 	/**
 	 * Judge collection's empty.
+	 * 
 	 * @param collection
 	 * @return boolean
 	 */
 	public static boolean isEmpty(Collection collection) {
 		return collection == null || collection.isEmpty();
 	}
+
+	/** List order not maintained **/
+	public void removeDuplicate(List<Integer> arlList) {
+		HashSet<Integer> h = new HashSet<Integer>(arlList);
+		arlList.clear();
+		arlList.addAll(h);
+	}
+
+	/** List order maintained **/
+	public void removeDuplicateWithOrder(List arlList) {
+		Set set = new HashSet();
+		List newList = new ArrayList();
+		for (Iterator iter = arlList.iterator(); iter.hasNext();) {
+			Object element = iter.next();
+			if (set.add(element))
+				newList.add(element);
+		}
+		arlList.clear();
+		arlList.addAll(newList);
+	}
+
 }

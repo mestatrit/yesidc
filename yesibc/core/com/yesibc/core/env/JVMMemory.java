@@ -72,6 +72,10 @@ public class JVMMemory extends Thread {
 		//JVMMemory aTest = new JVMMemory();
 		//aTest.start();
 		
+		System.out.println(0%2);
+		System.out.println(3%2);
+		System.out.println(4%2);
+		
 		String str = "       3106988    3082768      24220          0     140104    2140876";
 		String[] s = str.split(" ");
 		List<String> ls = new ArrayList<String>();
