@@ -31,7 +31,7 @@
 		<br><br/>
 
 <%!
-	public static String getNum(String str) {
+	public String getNum(String str) {
 		try {
 			if (str == null || (str.trim()).length() < 1) {
 				return "";
@@ -52,7 +52,7 @@
 		}
 	}
 
-	public static String getNewNum(String str1) {
+	public String getNewNum(String str1) {
 		try {
 		
 		double d1 = Double.parseDouble(str1);
@@ -67,107 +67,145 @@
 		}
 	}
 	
+	public static boolean isNum(String str) {
+		try {
+			if (str == null || (str.trim()).length() < 1) {
+				return false;
+			}
+			String temp = "0123456789";
+			String tempString = "";
+			for (int i = 0; i < str.length(); i++) {
+				tempString = (str.substring(i, i + 1)).trim();
+				if (temp.indexOf(tempString) < 0) {
+					return false;
+				}
+			}
+			return true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
+	}
+
+
 %>
 		<%
-	try{
+			int i=0;
+			ProcessBuilder pb = null;
+			Process process = null;
+			InputStreamReader isr = null;
+			String str = "";
+			String os = null;
+			char[] buffer = null;
+			String[] sa = null;			
+			String[] ss = null;
+			List<String> ls = new ArrayList<String>();
 
-			String pathStr = request.getRealPath("/");
-			out.println("Currnet path:" + pathStr + "<BR>");
+			String[] titles = { "run in queue(r)", "blocked for IO(b)",
+			"swapped(w)", // 2 procs
+			"swap",
+			"free", // 4 Memory
+			"page reclaims(re)", "minor faults(mf)", "paged in(pi)", "paged out(po)", "freed(fr)",
+			"anticipated shortfall(de)", "pages scanned rates(sr)",// 11 pages
+			"disk 1", "disk 2", "disk 3", "disk 4",// 15 disk
+			"device interrupts(in)", "system calls(sy)", "CPU context switches(cs)",// 18
+																					// faults
+			"user time(us)", "system time(sy)", "idle time(id)" // 21 CPU
+			};
 
- 			ProcessBuilder pb = new ProcessBuilder("/bin/sh",
-                         "-c",
-                         "top -n 1 > "+pathStr+"memory.txt");
-			Process process = pb.start();
-
-			Thread.sleep(500);
 			
-			out.println("<br><b>process.exitValue():</b>"  + process.exitValue() + "<BR><p/>");
-			process.destroy();
-				
+		try{
 
-			File file = new File(pathStr+"memory.txt");
-			if(!file.exists() || file.length() < 1){
-				pb = new ProcessBuilder("/bin/sh","-c",
-                         "free > "+pathStr+"memory.txt");	
-                process = pb.start();		
-  				Thread.sleep(500);
-             }
-			out.println("<br><b>process.exitValue():</b>"  + process.exitValue() + "<BR><p/>");
-			process.destroy();
-			file = new File(pathStr+"memory.txt");
-			if(!file.exists() || file.length() < 1){
-				out.println("Can't read info.");
-				return;
-			}
-
-			FileInputStream fis = null;
-			byte[] buf = new byte[1024];
-			StringBuffer sb = new StringBuffer();
-			String memoryStr = "";
-			String temp = "";
-
-			try{
-				fis = new FileInputStream(file);
-				while ((fis.read(buf)) != -1) {
-					sb.append(new String(buf));
-					buf = new byte[1024];// 重新生成，避免和上次读取的数据重复
-				}
-			}finally{
-				if(fis!=null){
-					fis.close();
-				}
-			}
-
-			temp = sb.toString();
-			out.println("<br><b>System message by top===:</b><br>"  + temp + "<BR><p/>");
-			
-	        String total = "";
-	        String free = "";
-	        String[] str = null;
-	        
-	        int i = 0;
-	        int j = 0;
-	        
-	        if(temp.indexOf("Memory:")>-1){
-	        	i = temp.indexOf("Memory:");
-	        	j = temp.indexOf("swap free");
-	        	memoryStr = temp.substring(i+7,j);
-	        	str = memoryStr.split(",");
-		        total = getNum(str[0]);
-		        free = getNum(str[1]);
-	        }else{
-	        	i = temp.indexOf("Mem:");
-	        	j = temp.indexOf("-/");
-	        	memoryStr = temp.substring(i+4,j);	        	
-				str = memoryStr.split(" ");
-				List<String> ls = new ArrayList<String>();
-				for(String s1 : str){
-					if(!"".equals(s1)){
-						ls.add(s1);
+			os = (String)application.getAttribute("sys_version_uat");
+			if(os == null){
+				out.println("<br><b>System is :</b> null.");
+ 				pb = new ProcessBuilder("uname");
+				process = pb.start();
+				isr = new InputStreamReader(new BufferedInputStream(process.getInputStream()));
+				buffer = new char[1024];
+				while (isr.read(buffer) != -1) {
+					for (char c : buffer) {
+						str = str+c;
 					}
 				}
-		        total = getNewNum(ls.get(0));
-		        free = getNewNum(ls.get(2));        	
+				application.setAttribute("sys_version_uat",str.trim());
+				out.println("<br><b>Set system to :</b> "+str+".");
+			}else{
+				out.println("<br><b>System is :</b> "+os.trim()+".");
+			}
 
-				out.println("<br><b>memoryStr by top:</b><br><br>"  + memoryStr + "<BR><p/>");
-	        }
+			pb = new ProcessBuilder("/bin/sh",
+                         "-c",
+                         "vmstat 1 6");
+ 			//pb = new ProcessBuilder("vmstat 1 6");
+			process = pb.start();
 
-			out.println("System Total Memory:" + total + "MB<BR>");
-			out.println("System Free Memory:" + free + "MB<BR>");
 
-			pathStr = null;
-			pb = null;
-			process = null;
-			temp = null;
-			memoryStr = null;
-			file = null;
-			str = null;
-			fis = null;
-			buf = null;
-			sb = null;
+			isr = new InputStreamReader(new BufferedInputStream(process.getInputStream()));
+			buffer = new char[1024];
+
+			while (isr.read(buffer) != -1) {
+				for (char c : buffer) {
+					str = str+c;
+				}
+			}
+			//System.out.print(str);
+
+			//out.println("<br><b>System message by vmstat===:</b><br>"  + str + "<BR><p/>");
+			sa = str.split("\n");
+			
+			for(String t:sa){
+				//out.println(t+"abc<br>");
+				if(isNum(t)){
+					ls.add(t);
+				}
+			}
+			
+			if("SunOS".equals(os)){
+				for (Iterator<String> it = ls.iterator(); it.hasNext();) {
+					str = it.next();
+					if(i%2==0){
+						it.remove();
+						//out.println("move===:</b>"  + str + "<BR>");
+					}
+					i++;
+				}						
+			}
+			
+			out.println("<br><b>System message by t:sa===:</b>"  + ls.toString() + "<BR>");
+	
+			sa = new String[ls.size()];
+			ls.toArray(sa);
+			for (String temp : sa) {
+				if(temp==null){
+					continue;
+				}
+				ss = temp.split(" ");
+				i = 0;
+				for (String s0 : ss) {
+					if (s0 == null || "".equals(s0.trim())) {
+						continue;
+					}
+					out.print(titles[i] + "[" + s0 + "],");
+					i++;
+				}
+				out.print("<br>");
+			}
+
+
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println("Exception message:\n" + e.getMessage());
+		}finally{
+			i=0;
+			pb = null;
+			process = null;
+			isr = null;
+			str = null;
+			os = null;
+			buffer = null;
+			sa = null;			
+			ls = null;
 		}
   %>
    <jsp:include page="status" />

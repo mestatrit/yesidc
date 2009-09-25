@@ -3,8 +3,11 @@ package com.yesibc.core.env;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -86,12 +89,58 @@ public final class LinuxSystemTool {
 	}
 
 	public static void main(String[] args) throws Exception {
-		int[] memInfo = LinuxSystemTool.getMemInfo();
-		System.out.println("MemTotal：" + memInfo[0]);
-		System.out.println("MemFree：" + memInfo[1]);
-		System.out.println("SwapTotal：" + memInfo[2]);
-		System.out.println("SwapFree：" + memInfo[3]);
-
-		System.out.println("CPU利用率：" + LinuxSystemTool.getCpuInfo());
+//		int[] memInfo = LinuxSystemTool.getMemInfo();
+//		System.out.println("MemTotal：" + memInfo[0]);
+//		System.out.println("MemFree：" + memInfo[1]);
+//		System.out.println("SwapTotal：" + memInfo[2]);
+//		System.out.println("SwapFree：" + memInfo[3]);
+//
+//		System.out.println("CPU利用率：" + LinuxSystemTool.getCpuInfo());
+		
+		File file = new File("D:/new/test15.TXT");
+		FileReader fr = new FileReader(file);
+		BufferedReader br = new BufferedReader(fr);
+		String temp1 = br.readLine();
+		String temp = temp1;
+		String temp2 = "";
+		String[] str1 = new String[2];
+		while(temp1 != null){
+			//继续读文件
+			temp1 = br.readLine();
+			if(temp1!=null){
+				if(temp1.indexOf("swap")>-1){
+					str1[0] = temp1;
+				}
+				temp = temp + temp1;
+				temp2 = temp1;
+			} else{
+				str1[1] = temp2;
+			}
+		}
+		
+		System.out.println("str1[0]="+str1[0]);
+		System.out.println("str1[1]="+str1[1]);
+		
+		String[] title = str1[0].split(" ");
+		String[] runTimeData = str1[1].split(" ");
+		
+		List<String> titles = new ArrayList<String>();
+		for(String str:title){
+			if(!"".equals(str)){
+				titles.add(str);
+			}
+		}
+		List<String> runTimeDatas = new ArrayList<String>();
+		for(String str:runTimeData){
+			if(!"".equals(str)){
+				runTimeDatas.add(str);
+			}
+		}
+		
+		
+		System.out.println("title[0]="+titles.toString());
+		System.out.println("runTimeData[0]="+runTimeDatas.toString());
+		
+	
 	}
 }
