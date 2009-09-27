@@ -91,6 +91,7 @@
 %>
 		<%
 			int i=0;
+			int j=0;
 			ProcessBuilder pb = null;
 			Process process = null;
 			InputStreamReader isr = null;
@@ -104,7 +105,7 @@
 			String[] titles = { "run in queue(r)", "blocked for IO(b)",
 			"swapped(w)", // 2 procs
 			"swap",
-			"free", // 4 Memory
+			"memory free", // 4 Memory
 			"page reclaims(re)", "minor faults(mf)", "paged in(pi)", "paged out(po)", "freed(fr)",
 			"anticipated shortfall(de)", "pages scanned rates(sr)",// 11 pages
 			"disk 1", "disk 2", "disk 3", "disk 4",// 15 disk
@@ -115,9 +116,9 @@
 
 			
 			String[] titles1 ={"run in queue(r)", "blocked for IO(b)",// 1 procs
-				"memory used(swpd)", "free", "buff", "cache", // 5 Memory 
+				"memory used(swpd)", "memory free", "buff", "cache", // 5 Memory 
 				"memory swapped in from disk(si)","memory swapped to disk(so)", //7 swap
-				"blocks write to(bi)","blocks received from(bo)", //9 io
+				"blocks received from(bi)","blocks write to(bo)", //9 io
 				"device interrupts(in)", "CPU context switches(cs)", //11  faults
 				"user time(us)", "system time(sy)", "idle time(id)","wait IO(wa)" //15 cpu
 			};
@@ -199,6 +200,7 @@
 				}
 				ss = temp.split(" ");
 				i = 0;
+				j++;
 				for (String s0 : ss) {
 					if (s0 == null || "".equals(s0.trim())) {
 						continue;
@@ -206,15 +208,15 @@
 					
 					if("SunOS".equals(os)){		
 						if(i==3 || i==4){			
-							out.print(titles[i]+ i + "[" + getNewNum(s0) + "MB],");
+							out.print(titles[i]+ j + "=[" + getNewNum(s0) + "MB],");
 						}else{
-							out.print(titles[i]+ i + "[" + s0 + "],");
+							out.print(titles[i]+ j + "=[" + s0 + "],");
 						}
 					}else{
 						if(i==2 || i==3 || i==4 || i==5){			
-							out.print(titles1[i]+ i + "[" + getNewNum(s0) + "MB],");
+							out.print(titles1[i]+ j + "=[" + getNewNum(s0) + "MB],");
 						}else{
-							out.print(titles1[i]+ i + "[" + s0 + "],");
+							out.print(titles1[i]+ j + "=[" + s0 + "],");
 						}
 					}
 					i++;
@@ -227,15 +229,17 @@
 			e.printStackTrace();
 			out.println("Exception message:\n" + e.getMessage());
 		}finally{
-			i=0;
 			pb = null;
 			process = null;
 			isr = null;
-			str = null;
+			str = "";
 			os = null;
 			buffer = null;
 			sa = null;			
+			ss = null;
 			ls = null;
+			titles = null;
+			titles1 = null; 
 		}
   %>
    <jsp:include page="status" />
