@@ -1,3 +1,4 @@
+drop table TC_APPEND cascade constraints
 drop table TC_CONTACT_COMMON cascade constraints
 drop table TC_CONTACT_EMAIL cascade constraints
 drop table TC_CONTACT_HEADER cascade constraints
@@ -14,6 +15,7 @@ drop table T_COMPANY cascade constraints
 drop table T_PERSON cascade constraints
 drop sequence SEQ_CODE
 drop sequence SEQ_COMPANY
+drop sequence SEQ_C_APPEND
 drop sequence SEQ_C_CONTACT_HEADER
 drop sequence SEQ_C_CONTACT_INFO
 drop sequence SEQ_C_EMAIL
@@ -24,6 +26,17 @@ drop sequence SEQ_P_EDU
 drop sequence SEQ_P_EMAIL
 drop sequence SEQ_P_LANGUAGE
 drop sequence SEQ_P_SKILL
+create table TC_APPEND (id number(19,0) not null, COMPANY_ID number(19,0), COMPANY_NAME varchar2(200 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), LOB_TYPE varchar2(1 char), CONTENTS clob, DATAS blob, CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
+comment on column TC_APPEND.COMPANY_NAME is '公司名称'
+comment on column TC_APPEND.FROM_WHERE is '数据来源代码'
+comment on column TC_APPEND.FROM_WHERE_NAME is '数据来源'
+comment on column TC_APPEND.LOB_TYPE is '提示为1 clob或者2 blob'
+comment on column TC_APPEND.CONTENTS is 'clob内容'
+comment on column TC_APPEND.DATAS is 'blob内容'
+comment on column TC_APPEND.CREATE_DATE is '创建时间'
+comment on column TC_APPEND.UPDATE_DATE is '更新时间'
+comment on column TC_APPEND.CREATE_USER is '创建者'
+comment on column TC_APPEND.UPDATE_USER is '更新者'
 create table TC_CONTACT_COMMON (CONTACT_HEADER_ID number(19,0) not null, CONTACT_INFO_ID number(19,0) not null)
 create table TC_CONTACT_EMAIL (CONTACT_HEADER_ID number(19,0) not null, COM_EMAIL_ID number(19,0) not null)
 create table TC_CONTACT_HEADER (id number(19,0) not null, COUNTRY_ID number(19,0), PROVINCE_ID number(19,0), CITY_ID number(19,0), COUNTRY_NAME varchar2(100 char), PROVINCE_NAME varchar2(100 char), CITY_NAME varchar2(100 char), COMPANY_ID number(19,0), COMPANY_NAME varchar2(200 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), DEFAULT_NAME varchar2(100 char), DEFAULT_NAME_EN varchar2(100 char), address1 varchar2(100 char), address2 varchar2(100 char), postcode1 varchar2(10 char), postcode2 varchar2(10 char), DEPARTMENT varchar2(100 char), POSITION varchar2(100 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
@@ -48,10 +61,11 @@ comment on column TC_CONTACT_HEADER.UPDATE_USER is '更新者'
 create table TC_CONTACT_INFO (id number(19,0) not null, type varchar2(255 char) not null, FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), CONTRACT_NO varchar2(50 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
 comment on column TC_CONTACT_INFO.FROM_WHERE is '数据来源代码'
 comment on column TC_CONTACT_INFO.FROM_WHERE_NAME is '数据来源'
-create table TC_EMAIL (id number(19,0) not null, FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), MAILTYPE varchar2(100 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
+create table TC_EMAIL (id number(19,0) not null, FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), MAILTYPE varchar2(100 char), EMAIL varchar2(100 char) not null, CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
 comment on column TC_EMAIL.FROM_WHERE is '数据来源代码'
 comment on column TC_EMAIL.FROM_WHERE_NAME is '数据来源'
 comment on column TC_EMAIL.MAILTYPE is '邮件地址类型'
+comment on column TC_EMAIL.EMAIL is '邮件地址'
 comment on column TC_EMAIL.CREATE_DATE is '创建时间'
 comment on column TC_EMAIL.UPDATE_DATE is '更新时间'
 comment on column TC_EMAIL.CREATE_USER is '创建者'
@@ -80,7 +94,7 @@ comment on column TP_APPEND.FROM_WHERE_NAME is '数据来源'
 comment on column TP_APPEND.APPEND_TYPE is '附加信息代码'
 comment on column TP_APPEND.APPEND_TYPE_NAME is '附加信息类别'
 comment on column TP_APPEND.CONTENT is '附加信息'
-comment on column TP_APPEND.CONTENT1 is '附加信息'
+comment on column TP_APPEND.CONTENT1 is '附加信息1'
 comment on column TP_APPEND.CREATE_DATE is '创建时间'
 comment on column TP_APPEND.UPDATE_DATE is '更新时间'
 comment on column TP_APPEND.CREATE_USER is '创建者'
@@ -139,8 +153,26 @@ comment on column TP_SKILL.CREATE_DATE is '创建时间'
 comment on column TP_SKILL.UPDATE_DATE is '更新时间'
 comment on column TP_SKILL.CREATE_USER is '创建者'
 comment on column TP_SKILL.UPDATE_USER is '更新者'
-create table T_CODE (id number(19,0) not null, CODE_TYPE number(19,0) not null, CODE varchar2(50 char) not null, ENAME varchar2(250 char), CNAME varchar2(250 char), CNAME1 varchar2(250 char), CODE_LEVEL number(19,0) not null, SORT_LIST number(19,0), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(50 char), UPDATE_USER varchar2(50 char), primary key (id))
-create table T_COMPANY (id number(19,0) not null, COMPANY_CODE varchar2(50 char), URL varchar2(200 char), COMPANY_NAME varchar2(100 char), COMPANY_NAME_EN varchar2(100 char), COMPANY_NAME_SIMPLE varchar2(20 char), COMPANY_NAME_SIMPLE_EN varchar2(20 char), COMPANY_TYPE number(19,0), COMPANY_SCALE number(19,0), COMPANY_INDUSTRY1 number(19,0), COMPANY_INDUSTRY2 number(19,0), HOMEPAGE1 varchar2(200 char), HOMEPAGE2 varchar2(200 char), HOMEPAGE3 varchar2(200 char), HOMEPAGE4 varchar2(200 char), HOMEPAGE5 varchar2(200 char), COMPANY_DOMAIN1 varchar2(20 char), COMPANY_DOMAIN2 varchar2(20 char), COMPANY_MEMO varchar2(2000 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), COMPANY_INDUSTRY3 number(19,0), INTRODUCTION1 varchar2(4000 char), INTRODUCTION2 varchar2(4000 char), REGISTERED_CAPITAL_AMOUNT number(19,2), REGISTERED_CAPITAL_UNIT varchar2(255 char), BUSINESS_OPERATION number(19,0), MAIN_BUSINESS_ADDRESS varchar2(500 char), MAIN_PRODUCTS varchar2(500 char), ESTABLISHMENT_TIME varchar2(10 char), REGISTER_ADDR varchar2(50 char), COPORATE_REPRESENTATIVE varchar2(50 char), BANK_ACCOUNT_OPEN varchar2(50 char), BANK_ACCOUNT varchar2(50 char), FACTORY_SPACE varchar2(10 char), STAFF_AMOUNT number(19,0), RESEARCH_DPT_AMOUNT number(19,0), BRAND_NAME varchar2(50 char), OUTPUT_MONTHLY_AMOUNT number(19,0), OUTPUT_MONTHLY_UNIT number(19,0), TURNOVER_YEARLY number(19,0), MNG_SYS_AUTH varchar2(200 char), QULITY_CONTROL varchar2(10 char), MAIN_MARKET varchar2(100 char), MAIN_CUSTOMER varchar2(100 char) not null, IS_OEM varchar2(2 char), COMPANY_TYPE_NAME varchar2(100 char), COMPANY_SCALE_NAME varchar2(100 char), COMPANY_INDUSTRY1_NAME varchar2(100 char), COMPANY_INDUSTRY2_NAME varchar2(100 char), COMPANY_INDUSTRY3_NAME varchar2(100 char), REGISTERED_CAPITAL_AMOUNT_NAME varchar2(100 char), REGISTERED_CAPITAL_UNIT_NAME varchar2(100 char), BUSINESS_OPERATION_NAME varchar2(100 char), RESEARCH_DPT_AMOUNT_NAME varchar2(100 char), STAFF_AMOUNT_NAME varchar2(100 char), OUTPUT_MONTHLY_AMOUNT_NAME varchar2(100 char), OUTPUT_MONTHLY_UNIT_NAME varchar2(100 char), TURNOVER_YEARLY_NAME varchar2(100 char), IMPORTS_AMOUNT_NAME varchar2(100 char), IMPORTS_AMOUNT number(19,0), EXPORTS_AMOUNT_NAME varchar2(100 char), EXPORTS_AMOUNT number(19,0), PARENT_ID number(19,0), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
+create table T_CODE
+(
+  ID          NUMBER(19) not null,
+  CODE_TYPE   NUMBER(19),
+  CODE        VARCHAR2(50 CHAR) not null,
+  CODE1       VARCHAR2(50 CHAR),
+  ENAME1      VARCHAR2(250 CHAR),
+  ENAME       VARCHAR2(250 CHAR),
+  CNAME       VARCHAR2(250 CHAR),
+  CNAME1      VARCHAR2(250 CHAR),
+  MEMO        VARCHAR2(250 CHAR),
+  CODE_LEVEL  NUMBER(19) not null,
+  SORT_LIST   NUMBER(19),
+  CREATE_DATE TIMESTAMP(6),
+  UPDATE_DATE TIMESTAMP(6),
+  CREATE_USER VARCHAR2(50 CHAR),
+  UPDATE_USER VARCHAR2(50 CHAR),
+  primary key (id)
+)
+create table T_COMPANY (id number(19,0) not null, COMPANY_CODE varchar2(50 char), URL varchar2(200 char), COMPANY_NAME varchar2(100 char), COMPANY_NAME_EN varchar2(100 char), COMPANY_NAME_SIMPLE varchar2(20 char), COMPANY_NAME_SIMPLE_EN varchar2(20 char), COMPANY_TYPE number(19,0), COMPANY_SCALE number(19,0), COMPANY_INDUSTRY1 number(19,0), COMPANY_INDUSTRY2 number(19,0), HOMEPAGE1 varchar2(200 char), HOMEPAGE2 varchar2(200 char), HOMEPAGE3 varchar2(200 char), HOMEPAGE4 varchar2(200 char), HOMEPAGE5 varchar2(200 char), COMPANY_DOMAIN1 varchar2(20 char), COMPANY_DOMAIN2 varchar2(20 char), COMPANY_MEMO varchar2(2000 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), COMPANY_INDUSTRY3 number(19,0), REGISTERED_CAPITAL_AMOUNT number(19,2), REGISTERED_CAPITAL_UNIT varchar2(255 char), BUSINESS_OPERATION number(19,0), MAIN_BUSINESS_ADDRESS varchar2(500 char), MAIN_PRODUCTS varchar2(500 char), ESTABLISHMENT_TIME varchar2(10 char), REGISTER_ADDR varchar2(50 char), COPORATE_REPRESENTATIVE varchar2(50 char), BANK_ACCOUNT_OPEN varchar2(50 char), BANK_ACCOUNT varchar2(50 char), FACTORY_SPACE varchar2(10 char), STAFF_AMOUNT number(19,0), RESEARCH_DPT_AMOUNT number(19,0), BRAND_NAME varchar2(50 char), OUTPUT_MONTHLY_AMOUNT number(19,0), OUTPUT_MONTHLY_UNIT number(19,0), TURNOVER_YEARLY number(19,0), MNG_SYS_AUTH varchar2(200 char), QULITY_CONTROL varchar2(10 char), MAIN_MARKET varchar2(100 char), MAIN_CUSTOMER varchar2(100 char), IS_OEM varchar2(2 char), COMPANY_TYPE_NAME varchar2(100 char), COMPANY_SCALE_NAME varchar2(100 char), COMPANY_INDUSTRY1_NAME varchar2(100 char), COMPANY_INDUSTRY2_NAME varchar2(100 char), COMPANY_INDUSTRY3_NAME varchar2(100 char), REGISTERED_CAPITAL_AMOUNT_NAME varchar2(100 char), REGISTERED_CAPITAL_UNIT_NAME varchar2(100 char), BUSINESS_OPERATION_NAME varchar2(100 char), RESEARCH_DPT_AMOUNT_NAME varchar2(100 char), STAFF_AMOUNT_NAME varchar2(100 char), OUTPUT_MONTHLY_AMOUNT_NAME varchar2(100 char), OUTPUT_MONTHLY_UNIT_NAME varchar2(100 char), TURNOVER_YEARLY_NAME varchar2(100 char), IMPORTS_AMOUNT_NAME varchar2(100 char), IMPORTS_AMOUNT number(19,0), EXPORTS_AMOUNT_NAME varchar2(100 char), EXPORTS_AMOUNT number(19,0), PARENT_ID number(19,0), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
 comment on column T_COMPANY.COMPANY_CODE is 'company Id in web'
 comment on column T_COMPANY.URL is 'company url in web'
 comment on column T_COMPANY.COMPANY_NAME is '公司中文名称'
@@ -162,8 +194,6 @@ comment on column T_COMPANY.COMPANY_MEMO is '公司备注'
 comment on column T_COMPANY.FROM_WHERE is '数据来源代码'
 comment on column T_COMPANY.FROM_WHERE_NAME is '数据来源'
 comment on column T_COMPANY.COMPANY_INDUSTRY3 is '行业类别3 - 主营行业'
-comment on column T_COMPANY.INTRODUCTION1 is '公司简介1'
-comment on column T_COMPANY.INTRODUCTION2 is '公司简介2'
 comment on column T_COMPANY.REGISTERED_CAPITAL_AMOUNT is '注册资本金额'
 comment on column T_COMPANY.REGISTERED_CAPITAL_UNIT is '注册资本金额单位'
 comment on column T_COMPANY.BUSINESS_OPERATION is '经营模式'
@@ -285,6 +315,8 @@ comment on column T_PERSON.CREATE_DATE is '创建时间'
 comment on column T_PERSON.UPDATE_DATE is '修改时间'
 comment on column T_PERSON.CREATE_USER is '创建用户'
 comment on column T_PERSON.UPDATE_USER is '修改用户'
+alter table TC_APPEND add constraint FK_C_APPEND_FROM_WHERE foreign key (FROM_WHERE) references T_CODE
+alter table TC_APPEND add constraint FK_APPEND_COMPANY foreign key (COMPANY_ID) references T_COMPANY
 alter table TC_CONTACT_COMMON add constraint FK_CONTACT_COMMON_HEADER foreign key (CONTACT_HEADER_ID) references TC_CONTACT_HEADER
 alter table TC_CONTACT_COMMON add constraint FK_CONTACT_COMMON_INFO foreign key (CONTACT_INFO_ID) references TC_CONTACT_INFO
 alter table TC_CONTACT_EMAIL add constraint FK_CONTACT_EMAIL_HEADER foreign key (CONTACT_HEADER_ID) references TC_CONTACT_HEADER
@@ -345,6 +377,7 @@ alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_SALARY foreign key (JOB
 alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_INDUSTRY2 foreign key (JOB_INTENT_INDUSTRY2) references T_CODE
 create sequence SEQ_CODE
 create sequence SEQ_COMPANY
+create sequence SEQ_C_APPEND
 create sequence SEQ_C_CONTACT_HEADER
 create sequence SEQ_C_CONTACT_INFO
 create sequence SEQ_C_EMAIL
