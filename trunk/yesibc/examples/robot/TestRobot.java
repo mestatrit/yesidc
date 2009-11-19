@@ -154,6 +154,7 @@ public class TestRobot {
 		return elementByLoop;
 	}
 
+	@SuppressWarnings("unused")
 	private static IElement getElement(IElementCollection ies, String attribute, String attrVal) {
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);

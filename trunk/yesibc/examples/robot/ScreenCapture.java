@@ -15,14 +15,19 @@ package robot;
  * http://www.gnu.org/copyleft/gpl.html  
  */
 
-import java.awt.*;
-import java.awt.image.*;
-import java.io.*;
+import java.awt.AWTException;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 public class ScreenCapture {
-	public static void ScreenCapture(int seconds, String filename) {
+	public static void screenCapture(int seconds, String filename) {
 		Robot robot = null;
 		// 产生 Robot 物件，记着要 catch AWTException
 		try {
@@ -74,7 +79,7 @@ public class ScreenCapture {
 					usage();
 			}
 		}
-		ScreenCapture(s * 1000, filename);
+		screenCapture(s * 1000, filename);
 		System.exit(0);
 	}
 
