@@ -13,6 +13,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -21,7 +25,6 @@ import org.springframework.util.Assert;
 
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.utils.support.ExtendsBeanUtilsBean;
-
 
 /**
  * Extends Apache Commons BeanUtils. Provide the reflect function that is no
@@ -37,13 +40,36 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	private BeanUtils() {
 	}
 
+	public static boolean executeTimeControlMethod(Runnable runable,
+			long timeout) {
+		// 创建一个使用单个 worker 线程的 Executor
+		ExecutorService service = Executors.newSingleThreadExecutor();
+		// 提交一个 Runnable 任务用于执行，跟踪一个或多个异步任务执行状况而生成 Future 的方法。
+		// submit(Runnable task, T result) task - 要提交的任务 result - 返回的结果
+		Future result = service.submit(runable, 1);
+		try {
+			// get(long timeout, TimeUnit unit) 等待timeout时间之后，检索其结果
+			// 正常的应该返回submit方法传入的result
+			if (result.get(timeout, TimeUnit.MILLISECONDS) != null)
+				return true;
+			// 也可以通过cancel(boolean mayInterruptIfRunning) 取消对此任务的执行
+			// 当调用 cancel 时，如果调用成功，而此任务尚未启动，则此任务将永不运行。
+
+			// 试图停止所有正在执行的活动任务，暂停处理正在等待的任务，并返回等待执行的任务列表。
+			service.shutdownNow();
+		} catch (Exception e) {
+		}
+		return false;
+	}
+
 	/**
 	 * Change the type upward,and get DeclaredField of the object.
 	 * 
 	 * @throws NoSuchFieldException
 	 * 
 	 */
-	public static Field getDeclaredField(Object object, String propertyName) throws NoSuchFieldException {
+	public static Field getDeclaredField(Object object, String propertyName)
+			throws NoSuchFieldException {
 		Assert.notNull(object);
 		Assert.hasText(propertyName);
 		return getDeclaredField(object.getClass(), propertyName);
@@ -55,16 +81,19 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	 * @throws NoSuchFieldException
 	 * 
 	 */
-	public static Field getDeclaredField(Class clazz, String propertyName) throws NoSuchFieldException {
+	public static Field getDeclaredField(Class clazz, String propertyName)
+			throws NoSuchFieldException {
 		Assert.notNull(clazz);
 		Assert.hasText(propertyName);
-		for (Class superClass = clazz; superClass != Object.class; superClass = superClass.getSuperclass()) {
+		for (Class superClass = clazz; superClass != Object.class; superClass = superClass
+				.getSuperclass()) {
 			try {
 				return superClass.getDeclaredField(propertyName);
 			} catch (NoSuchFieldException e) {
 			}
 		}
-		throw new NoSuchFieldException("No such field: " + clazz.getName() + '.' + propertyName);
+		throw new NoSuchFieldException("No such field: " + clazz.getName()
+				+ '.' + propertyName);
 	}
 
 	/**
@@ -74,7 +103,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	 * @throws NoSuchFieldException
 	 * 
 	 */
-	public static Object forceGetProperty(Object object, String propertyName) throws NoSuchFieldException {
+	public static Object forceGetProperty(Object object, String propertyName)
+			throws NoSuchFieldException {
 		Assert.notNull(object);
 		Assert.hasText(propertyName);
 
@@ -100,8 +130,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	 * @throws NoSuchFieldException
 	 * 
 	 */
-	public static void forceSetProperty(Object object, String propertyName, Object newValue)
-			throws NoSuchFieldException {
+	public static void forceSetProperty(Object object, String propertyName,
+			Object newValue) throws NoSuchFieldException {
 		Assert.notNull(object);
 		Assert.hasText(propertyName);
 
@@ -123,7 +153,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	 * @throws NoSuchMethodException
 	 * 
 	 */
-	public static Object invokeMethod(Object object, String methodName, Object... params) throws Exception {
+	public static Object invokeMethod(Object object, String methodName,
+			Object... params) throws Exception {
 		Assert.notNull(object);
 		Assert.hasText(methodName);
 		Class[] types = new Class[params.length];
@@ -133,7 +164,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 
 		Class clazz = object.getClass();
 		Method method = null;
-		for (Class superClass = clazz; superClass != Object.class; superClass = superClass.getSuperclass()) {
+		for (Class superClass = clazz; superClass != Object.class; superClass = superClass
+				.getSuperclass()) {
 			try {
 				method = superClass.getDeclaredMethod(methodName, types);
 				break;
@@ -143,7 +175,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 		}
 
 		if (method == null)
-			throw new NoSuchMethodException("No Such Method:" + clazz.getSimpleName() + methodName);
+			throw new NoSuchMethodException("No Such Method:"
+					+ clazz.getSimpleName() + methodName);
 
 		boolean accessible = method.isAccessible();
 		method.setAccessible(true);
@@ -164,8 +197,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	 * @throws Throwable
 	 * 
 	 */
-	public static Object invokeMethodThrowTargetException(Object object, String methodName, Object... params)
-			throws Throwable {
+	public static Object invokeMethodThrowTargetException(Object object,
+			String methodName, Object... params) throws Throwable {
 		Assert.notNull(object);
 		Assert.hasText(methodName);
 		Class[] types = new Class[params.length];
@@ -175,7 +208,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 
 		Class clazz = object.getClass();
 		Method method = null;
-		for (Class superClass = clazz; superClass != Object.class; superClass = superClass.getSuperclass()) {
+		for (Class superClass = clazz; superClass != Object.class; superClass = superClass
+				.getSuperclass()) {
 			try {
 				method = superClass.getDeclaredMethod(methodName, types);
 				break;
@@ -185,7 +219,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 		}
 
 		if (method == null)
-			throw new NoSuchMethodException("No Such Method:" + clazz.getSimpleName() + methodName);
+			throw new NoSuchMethodException("No Such Method:"
+					+ clazz.getSimpleName() + methodName);
 
 		boolean accessible = method.isAccessible();
 		method.setAccessible(true);
@@ -206,13 +241,15 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	 * @throws NoSuchMethodException
 	 * 
 	 */
-	public static Object invokeMethod(Object object, String methodName) throws Exception {
+	public static Object invokeMethod(Object object, String methodName)
+			throws Exception {
 		Assert.notNull(object);
 		Assert.hasText(methodName);
 
 		Class clazz = object.getClass();
 		Method method = null;
-		for (Class superClass = clazz; superClass != Object.class; superClass = superClass.getSuperclass()) {
+		for (Class superClass = clazz; superClass != Object.class; superClass = superClass
+				.getSuperclass()) {
 			try {
 				method = superClass.getDeclaredMethod(methodName);
 				break;
@@ -222,7 +259,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 		}
 
 		if (method == null)
-			throw new NoSuchMethodException("No Such Method:" + clazz.getSimpleName() + "." + methodName);
+			throw new NoSuchMethodException("No Such Method:"
+					+ clazz.getSimpleName() + "." + methodName);
 
 		boolean accessible = method.isAccessible();
 		method.setAccessible(true);
@@ -243,13 +281,15 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	 * @throws Throwable
 	 * 
 	 */
-	public static Object invokeMethodThrowTargetException(Object object, String methodName) throws Throwable {
+	public static Object invokeMethodThrowTargetException(Object object,
+			String methodName) throws Throwable {
 		Assert.notNull(object);
 		Assert.hasText(methodName);
 
 		Class clazz = object.getClass();
 		Method method = null;
-		for (Class superClass = clazz; superClass != Object.class; superClass = superClass.getSuperclass()) {
+		for (Class superClass = clazz; superClass != Object.class; superClass = superClass
+				.getSuperclass()) {
 			try {
 				method = superClass.getDeclaredMethod(methodName);
 				break;
@@ -259,7 +299,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 		}
 
 		if (method == null)
-			throw new NoSuchMethodException("No Such Method:" + clazz.getSimpleName() + "." + methodName);
+			throw new NoSuchMethodException("No Such Method:"
+					+ clazz.getSimpleName() + "." + methodName);
 
 		boolean accessible = method.isAccessible();
 		method.setAccessible(true);
@@ -291,7 +332,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	/**
 	 * Get the field type by field name.
 	 */
-	public static Class getPropertyType(Class type, String name) throws NoSuchFieldException {
+	public static Class getPropertyType(Class type, String name)
+			throws NoSuchFieldException {
 		return getDeclaredField(type, name).getType();
 	}
 
@@ -328,45 +370,50 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
-	public static Object exCopyProperties(Object orig, Object dest) throws IllegalAccessException,
-			InvocationTargetException {
-
-		return ExtendsBeanUtilsBean.getInstance().extendCopyPropertiesForXFire(dest, orig, null, 0);
-	}
-
-	/**
-	 * @param dest
-	 * @param orig
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 */
-	public static Object copyPropertiesFromXFireStub(Object orig, Object dest) throws IllegalAccessException,
-			InvocationTargetException {
-
-		return ExtendsBeanUtilsBean.getInstance().extendCopyPropertiesForXFire(dest, orig, null, 0);
-	}
-
-	/**
-	 * @param orig
-	 * @param dest
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 */
-	public static void copyProperties(Object orig, Object dest) throws IllegalAccessException,
-			InvocationTargetException {
-		ExtendsBeanUtilsBean.getInstance().extendCopyPropertiesForXFire(dest, orig, null, 0);
-	}
-
-	/**
-	 * @param dest
-	 * @param orig
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 */
-	public static Object copyProperties2XFireStub(Object orig, Object dest, String qnameURI)
+	public static Object exCopyProperties(Object orig, Object dest)
 			throws IllegalAccessException, InvocationTargetException {
 
-		return ExtendsBeanUtilsBean.getInstance().extendCopyPropertiesForXFire(dest, orig, qnameURI, 0);
+		return ExtendsBeanUtilsBean.getInstance().extendCopyPropertiesForXFire(
+				dest, orig, null, 0);
+	}
+
+	/**
+	 * @param dest
+	 * @param orig
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	public static Object copyPropertiesFromXFireStub(Object orig, Object dest)
+			throws IllegalAccessException, InvocationTargetException {
+
+		return ExtendsBeanUtilsBean.getInstance().extendCopyPropertiesForXFire(
+				dest, orig, null, 0);
+	}
+
+	/**
+	 * @param orig
+	 * @param dest
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	public static void copyProperties(Object orig, Object dest)
+			throws IllegalAccessException, InvocationTargetException {
+		ExtendsBeanUtilsBean.getInstance().extendCopyPropertiesForXFire(dest,
+				orig, null, 0);
+	}
+
+	/**
+	 * @param dest
+	 * @param orig
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	public static Object copyProperties2XFireStub(Object orig, Object dest,
+			String qnameURI) throws IllegalAccessException,
+			InvocationTargetException {
+
+		return ExtendsBeanUtilsBean.getInstance().extendCopyPropertiesForXFire(
+				dest, orig, qnameURI, 0);
 	}
 
 	/**
@@ -376,7 +423,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Object invokePublicMethod(Object owner, String methodName, Object[] args) throws Exception {
+	public static Object invokePublicMethod(Object owner, String methodName,
+			Object[] args) throws Exception {
 		Class ownerClass = owner.getClass();
 		Class[] argsClass = null;
 		if (args != null && args.length > 0) {
@@ -399,10 +447,10 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	 * @param methodName
 	 * @param args
 	 * @return
-	 * @throws Throwable 
+	 * @throws Throwable
 	 */
-	public static Object invokePublicMethodThrowTargetException(Object owner, String methodName, Object[] args)
-			throws Throwable {
+	public static Object invokePublicMethodThrowTargetException(Object owner,
+			String methodName, Object[] args) throws Throwable {
 		Class ownerClass = owner.getClass();
 		Class[] argsClass = null;
 		if (args != null && args.length > 0) {
@@ -432,7 +480,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	 * 
 	 * @throws ApplicationException
 	 */
-	public static void copySimpleProperties(Object dest, Object origin, boolean copyNull) throws Exception {
+	public static void copySimpleProperties(Object dest, Object origin,
+			boolean copyNull) throws Exception {
 
 		Class<?> getClz2 = origin.getClass();
 		Class<?> setClz1 = dest.getClass();
@@ -440,8 +489,10 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 		PropertyDescriptor[] setDescs = null;
 		PropertyDescriptor[] getDescs = null;
 		try {
-			setDescs = Introspector.getBeanInfo(setClz1).getPropertyDescriptors();
-			getDescs = Introspector.getBeanInfo(getClz2).getPropertyDescriptors();
+			setDescs = Introspector.getBeanInfo(setClz1)
+					.getPropertyDescriptors();
+			getDescs = Introspector.getBeanInfo(getClz2)
+					.getPropertyDescriptors();
 		} catch (IntrospectionException e1) {
 			throw new Exception(e1);
 		}
