@@ -14,6 +14,7 @@ public class ThreadPool {
 
 	private static volatile boolean loaded = false;
 	private static ExecutorService executorService;
+	private final static int POOL_SIZE = 10;// single CPU
 
 	private ThreadPool() {
 	}
@@ -21,6 +22,20 @@ public class ThreadPool {
 	public static ExecutorService loadPool() {
 		if (!loaded) {
 			executorService = Executors.newCachedThreadPool();
+			loaded = true;
+		}
+		return executorService;
+	}
+
+	public static ExecutorService loadPool(int poolSize) {
+		if (!loaded) {
+			if (poolSize < 1) {
+				poolSize = POOL_SIZE;
+			}
+			executorService = Executors.newFixedThreadPool(Runtime.getRuntime()
+					.availableProcessors()
+					* poolSize);
+
 			loaded = true;
 		}
 		return executorService;

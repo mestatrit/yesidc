@@ -898,15 +898,18 @@ public final class StringUtils {
 			url = clzObj.getResource(strClassFileName + ".class");
 			String strURL = url.toString();
 
-			if (StringUtils.getOSName().indexOf("Windows") > -1) {
-				strURL = strURL.substring(strURL.indexOf("/") + 1);
+			strURL = strURL.substring(strURL.indexOf("/") + 1);
+
+			if (cutPath == null || "".equals(cutPath)) {
+				strURL = strURL.substring(0, strURL.lastIndexOf("/") + 1);
 			} else {
-				strURL = strURL.substring(strURL
-						.indexOf(java.io.File.separatorChar));
+				strURL = strURL.substring(0, strURL.lastIndexOf(cutPath));
 			}
 
-			strURL = strURL.substring(0, strURL.lastIndexOf(cutPath));
-			strURL = strURL + makePath;
+			if (makePath != null) {
+				strURL = strURL + makePath + "/";
+			}
+
 			File file = new File(strURL);
 			if (!file.exists()) {
 				file.mkdirs();
@@ -1465,6 +1468,16 @@ public final class StringUtils {
 		return binaryStr;
 	}
 
+	public static String parseOutHTML(String input) {
+		if (input == null || input.trim().equals("")) {
+			return "";
+		}
+		String str = input.replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll(
+				"<[^>]*>", "");
+		str = str.replaceAll("[(/>)<]", "");
+		return str;
+	}
+
 	/**
 	 * @param args
 	 * @throws UnsupportedEncodingException
@@ -1476,6 +1489,13 @@ public final class StringUtils {
 		// System.out.print(s);
 		// testReg();
 
+		System.out.println("1="+isEmail("sdf@163.com"));
+		System.out.println("2="+isEmail("2sdf@163.com"));
+		System.out.println("3="+isEmail("sdf@163.3com"));
+		System.out.println("4="+isEmail("sdf@163..com"));
+		System.out.println("5="+isEmail("sdf@163.com"));
+		System.out.println("6="+isEmail("sdf@@163.com"));
+		System.out.println(padLeft("1", 3, '0'));
 		System.out.println(isNums("a-43.342"));
 		String s = "ab度度";
 		String s1 = subStringByByte(s, 0, 0);
@@ -1505,5 +1525,6 @@ public final class StringUtils {
 		// System.out.println(absoluteLength(s));
 
 		System.out.println(getRealPath(StringUtils.class, "bin", ""));
+		System.out.println(getRealPath(StringUtils.class, "", null));
 	}
 }
