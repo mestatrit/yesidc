@@ -1,0 +1,412 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<link rel="stylesheet" href="../../templates/newtech/index.css"></link>
+<link rel="alternate" type="application/rss+xml" title="ChinaUnix Blog RSS Feed" href="http://blog.chinaunix.net/u/rss.php?id=76697"></link>
+<meta name="keywords" content="Hibernate Tool: hbm2java or hbm2ddl  - Hibernate - 四方">
+<meta name="description" content="中国最大的IT技术博客-ChinaUnix博客：Hibernate Tool: hbm2java or hbm2ddl  - Hibernate - 四方">
+<title>Hibernate Tool: hbm2java or hbm2ddl  - Hibernate - 四方</title>
+</head>
+<body leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 style="background:#FFFFFF;background-image:url()" align="center">
+
+
+<table border="0" cellspacing="0" cellpadding="0" background="/images/tophem1.gif" style="border-collapse: collapse;height:25" height="25" width="100%" >
+<tr> <td id="tool-bar" align="left" width="540" nowrap>
+&nbsp;
+<a href="http://blog.chinaunix.net/" target="_blank">博客首页</a>
+<a href="http://blog.chinaunix.net/register.php" target="_blank">注册</a>
+<a href="http://bbs.chinaunix.net/forumdisplay.php?fid=51" target="_blank">建议与交流</a> 
+<a href="http://blog.chinaunix.net/top/" target="_blank">排行榜</a>
+<a href="" target="_blank" onclick="NewWindows('http://www.cublog.cn/addlink.php?url='+location.href+'&title='+document.title);return false;">加入友情链接</a>
+
+</td><form id="loginForm" method="get" target="_blank" action="/search.php">
+<td align="right" nowrap>
+<img src="/u2/userstar.php?blogid=76697" id="starimg" border=0 alt="" width=55 height=12>
+<a href="/u2/star.php?blogid=76697" id="star" onclick="NewWindows(this.href);return false;" title="给此博客推荐值">推荐</a>
+<a href="/u2/complaint.php?blogid=76697" id="complaint" onclick="NewWindows(this.href);return false;" title="投诉此博客">投诉</a>
+
+ 搜索：<input type="text" name="q" size="20"> <input type="submit" value="搜索" class="button1"> <a href="/help/" >帮助</a></td>
+</form></tr>
+<tr><td colspan="2">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="1000">
+<tr><td width="1000"></td></tr>
+</table>
+</td></tr>
+</table>
+<script language="javascript">
+<!--
+
+navHover = function() {
+var lis = document.getElementById("navmenu").getElementsByTagName("LI");
+for (var i=0; i<lis.length; i++) {
+lis[i].onmouseover=function() {
+this.className+=" iehover";
+}
+lis[i].onmouseout=function() {
+this.className=this.className.replace(new RegExp(" iehover\\b"), "");
+}
+}
+}
+
+function NewWindows(shref){
+var xx=(window.screen.width-450)/2;
+var yy=(window.screen.height-200)/2;
+pp=window.open(shref,"win","menubar=no,location=no,resizable=no,scrollbars=no,status=no,left="+xx+",top="+yy+",Width=450,Height=200");
+}
+function $(s){return document.getElementById(s);}
+//-->
+</script>
+<table border="0" cellspacing="0" cellpadding="0" height="80" style="border-collapse: collapse;background-image:url();background-repeat: " width="100%" bgcolor="#204689">
+<tr><td align="center"  width="200" >
+<p style="line-height: 150%; margin: 5px">
+ <font style="font-size:14px" 
+ 
+ color="#FFFFFF">
+ 
+<b>
+ 
+ 
+ 
+ 四方 
+ 
+ 
+</b>
+ 
+ </font></p>
+ 
+</td><td style="color:#AAC6F6">
+</td></tr>
+</table>
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="100%" height="27"  bgcolor="#EEEEEE">
+<tr><td>&nbsp;
+<a href="http://xpjjy.cublog.cn" class="list1" target="_blank">xpjjy.cublog.cn</a>
+ 
+</td><td align="right" style="color:#2A5200" width="680">
+<ul id="navmenu"><li class="ul0"><a href="http://control.cublog.cn/" target="_blank" class="list1">管理博客</a> </li>
+
+<li class="ul0"><a href="http://control.cublog.cn/article_new.php" target="_blank" class="list1">发表文章</a></li>
+<li class="ul0"><a href="guestbook.html" class="list1">留言</a></li>
+<li class="ul0"><a href="links.html" class="list1">收藏夹</a>
+<!-- 0 -->
+</li>
+<li class="ul0"><a href="group.html" class="list1">博客圈</a></li>
+<li class="ul0"><a href="music.html" class="list1">音乐</a>
+<!-- 0 -->
+</li>
+<li class="ul0"><a href="photo.html" class="list1">相册</a>
+<!-- 0 -->
+</li> 
+<li class="ul0"><a href="myimport.html" class="list1">导入文章</a></li>
+ 
+<li class="ul0"><a href="article.html" class="list1">文章</a>
+<ul class="ul1"><li><a href="article_93256.html"> · 我的文章&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_100174.html"> · 算法<!-- a100174 --></a><!-- 100174 --></li>
+<li><a href="article_101923.html"> · Eclipse<!-- a101923 --></a><!-- 101923 --></li>
+<li><a href="article_100395.html"> · heritrix<!-- a100395 --></a><!-- 100395 --></li>
+<li><a href="article_93438.html"> · Hibernate<!-- a93438 --></a><!-- 93438 --></li>
+<li><a href="article_98542.html"> · J2EE<!-- a98542 --></a><!-- 98542 --></li>
+<li><a href="article_93257.html"> · java<!-- a93257 --></a><!-- 93257 --></li>
+<li><a href="article_93259.html"> · javascript<!-- a93259 --></a><!-- 93259 --></li>
+<li><a href="article_108983.html"> · jms<!-- a108983 --></a><!-- 108983 --></li>
+<li><a href="article_93258.html"> · jsp<!-- a93258 --></a><!-- 93258 --></li>
+<li><a href="article_107367.html"> · 异常大杂烩<!-- a107367 --></a><!-- 107367 --></li>
+<li><a href="article_104578.html"> · 异常锦集<!-- a104578 --></a><!-- 104578 --></li>
+<li><a href="article_99318.html"> · Servlet<!-- a99318 --></a><!-- 99318 --></li>
+<li><a href="article_93260.html"> · SQL<!-- a93260 --></a><!-- 93260 --></li>
+<li><a href="article_98369.html"> · struts<!-- a98369 --></a><!-- 98369 --></li>
+<li><a href="article_109435.html"> · swt<!-- a109435 --></a><!-- 109435 --></li>
+<li><a href="article_102756.html"> · tomcat<!-- a102756 --></a><!-- 102756 --></li>
+<li><a href="article_93261.html"> · xml<!-- a93261 --></a><!-- 93261 --></li>
+</ul>
+</li>
+<li><a href="article_104055.html"> · nutch<!-- a104055 --></a><!-- 104055 --></li>
+<li><a href="article_103306.html"> · SSH笔记<!-- a103306 --></a><!-- 103306 --></li>
+<li><a href="article_104204.html"> · unix<!-- a104204 --></a><!-- 104204 --></li>
+</ul>
+
+</li> 
+<li class="ul0"><a href="index.html" class="list1">首页</a></li>
+</ul>
+</td>
+<td width="2"></td>
+</tr>
+</table>
+<script language="javascript">
+function $(s){return document.getElementById(s);}
+function ShowHideDiv(divid,iImg){
+if($(divid).style.display == "none"){
+iImg.src="../../templates/tech/images/dot2.gif";
+$(divid).style.display = "block";
+iImg.title="收起";
+}else{
+iImg.src="../../templates/tech/images/dot4.gif";
+$(divid).style.display = "none";
+iImg.title="展开";
+}
+}
+if (window.attachEvent) window.attachEvent("onload", navHover);
+</script>
+
+<script language="javascript" src="http://stat.it168.com/pv.js"></script>
+<script>
+function sendPV(){
+    var pvTrack = new PvTrack();
+    pvTrack.type = 10; // 频道类别ID
+    pvTrack.channel = 22; // 频道ID
+   
+    pvTrack.pageType = 0;
+    pvTrack.track();
+}
+window.setTimeout("sendPV()", 0);
+</script>
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="100%" >
+<tr><td width="235" valign="top"  align="center">
+<br />
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="220">
+<tr><td><img src="../../templates/newtech/images/left_bg_top.gif" border="0" alt="" /></td></tr>
+<tr><td bgcolor="#EDF2F2" height="25" align="center">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="200">
+<tr><td width="180" align="center"><font style="font-size:10pt" color="#1F72D0"><b>关于作者</b></font></td><td width="20"><img src="../../templates/newtech/images/dot2.gif" border="0" title="收起" onclick="ShowHideDiv('aboutwriter',this);return false;"/></td></tr>
+</table>
+
+</td></tr>
+<tr><td bgcolor="#D2DEE2" height="1"></td></tr>
+<tr><td bgcolor="#FFFFFF" height="1"></td></tr>
+
+<tr><td style="color:#02368D" bgcolor="F3F6F6"  align="center">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;word-wrap:break-word;table-layout: fixed;color:#02368D;" width="200" id="aboutwriter">
+<tr><td align="center">
+<a href="up_user.jpg" target="_blank"><img src="up_user_pre.jpg" border=0 alt=""></a>
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;word-wrap:break-word;" width="200">
+<tr><td width="200">
+<pre style="line-height: 150%; margin: 5px; " width="25">
+姓名：XU
+职业：计算机
+年龄：25
+位置：
+个性介绍：
+</pre>	
+</td></tr>
+</table>
+</td></tr>
+</table>
+</td></tr>
+<tr><td>
+<table bgcolor="#FFFFFF" cellspacing="0" cellpadding="0" style="border-collapse: collapse;border: 1px solid #D2DEE2; padding: 1" align="center" width="220" border="0">
+<tr height="20" bgcolor="#EDF2F2">
+<td align="center" width="14" style="cursor: hand; color: #1F72D0;font-size:9pt;" title="上一年" onclick="pushBtm('YU')">||</td>
+<td align="center" width="14" style="cursor: hand; color: #1F72D0;font-size:9pt" title="上一月" onclick="pushBtm('MU')">&lt;&lt;</td>
+<td align="center" nowrap="nowrap" id="YMBG" style="color: #1F72D0;font-size:9pt"></td>
+<td align="center" nowrap="nowrap" id="GZ" style="color: #1F72D0;font-size:9pt"></td>
+<td align="center" width="14" style="cursor: hand; color: #1F72D0;font-size:9pt" title="下一月" onclick="pushBtm('MD')">>></td>
+<td align="center" width="14" style="cursor: hand; color: #1F72D0;font-size:9pt" title="下一年" onclick="pushBtm('YD')">||</td>
+</tr>
+<tr><td colspan="6">
+<div id="ttdiv" align="center" width="210"></div>
+</td></tr>
+<tr><td colspan="6" height="1"></td></tr>
+</table>
+
+<script src="../../templates/newtech/mdate.js" ></script>
+<script language="javascript">
+var arrArtdate=new Array('19700101','20060117','20080822','20080823','20081029','20081030','20081101','20081102','20081106','20081109','20081111','20081112','20081116','20081118','20081122','20081123','20081125','20081203','20081204','20081210','20081213','20081215','20081218','20081219','20081227','20081228','20090101','20090103','20090105','20090107','20090108','20090109','20090111','20090212','20090213','20090305','20090307','20090313','20090317','20090320','20090321','20090322','20090323','20090324','20090325','20090328','20090330','20090331','20090402','20090405','20090408','20090409','20090415','20090425','20090508','20090509','20090511','20090513','20090516');
+
+initial("ttdiv");
+
+</script>
+
+</td></tr>
+<tr><td bgcolor="#D2DEE2" height="1"></td></tr>
+<tr><td bgcolor="#FFFFFF" height="1"></td></tr>
+<tr><td bgcolor="#EDF2F2" height="25" align="center">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="200">
+<tr><td width="180" align="center"><font style="font-size:10pt" color="#1F72D0"><b>我的分类</b></font></td><td width="20"><img src="../../templates/tech/images/dot2.gif" border="0" title="收起" onclick="ShowHideDiv('lefttree',this);return false;"/></td></tr>
+</table>
+
+</td></tr>
+<tr><td bgcolor="#D2DEE2" height="1"></td></tr>
+<tr><td bgcolor="#FFFFFF" height="1"></td></tr>
+<tr><td style="color:#02368D" bgcolor="F3F6F6">
+<script src="../../templates/newtech/tree.js" ></script>
+<div style="overflow:auto;scrollbar-face-color: #EEEEEE;scrollbar-highlight-color: #FFFFFF;scrollbar-shadow-color: #CCCCCC;scrollbar-3dlight-color: #D1D7DC;scrollbar-arrow-color:#006699;scrollbar-track-color: #CCCCCC;scrollbar-darkshadow-color: #EEDFE7;" id="lefttree"></div>
+<script language="javascript">
+ContentsTree = new CTree("ContentsTree");
+ContentsTree.bAutoClose = false;
+ContentsTree.stTarget = "";
+a0 = ContentsTree.AddNode(null, "我的文章分类", "article.html");
+i0 = ContentsTree.AddNode(null, "我导入的文章", "myimport.html");
+a0.bOpen=true;
+p0 = ContentsTree.AddNode(null, "我的图片分类", "photo.html");
+p0.bOpen=true;
+f0 = ContentsTree.AddNode(null, "我的链接分类", "links.html");
+f0.bOpen=true;
+m0 = ContentsTree.AddNode(null, "我的音乐分类", "music.html");
+m0.bOpen=true;
+a93256 = ContentsTree.AddNode(a0, "我的文章", "article_93256.html");
+a100174 = ContentsTree.AddNode(a93256, "算法", "article_100174.html");
+a101923 = ContentsTree.AddNode(a93256, "Eclipse", "article_101923.html");
+a100395 = ContentsTree.AddNode(a93256, "heritrix", "article_100395.html");
+a93438 = ContentsTree.AddNode(a93256, "Hibernate", "article_93438.html");
+a98542 = ContentsTree.AddNode(a93256, "J2EE", "article_98542.html");
+a93257 = ContentsTree.AddNode(a93256, "java", "article_93257.html");
+a93259 = ContentsTree.AddNode(a93256, "javascript", "article_93259.html");
+a108983 = ContentsTree.AddNode(a93256, "jms", "article_108983.html");
+a93258 = ContentsTree.AddNode(a93256, "jsp", "article_93258.html");
+a107367 = ContentsTree.AddNode(a93256, "异常大杂烩", "article_107367.html");
+a104578 = ContentsTree.AddNode(a93256, "异常锦集", "article_104578.html");
+a99318 = ContentsTree.AddNode(a93256, "Servlet", "article_99318.html");
+a93260 = ContentsTree.AddNode(a93256, "SQL", "article_93260.html");
+a98369 = ContentsTree.AddNode(a93256, "struts", "article_98369.html");
+a109435 = ContentsTree.AddNode(a93256, "swt", "article_109435.html");
+a102756 = ContentsTree.AddNode(a93256, "tomcat", "article_102756.html");
+a93261 = ContentsTree.AddNode(a93256, "xml", "article_93261.html");
+a104055 = ContentsTree.AddNode(a0, "nutch", "article_104055.html");
+a103306 = ContentsTree.AddNode(a0, "SSH笔记", "article_103306.html");
+a104204 = ContentsTree.AddNode(a0, "unix", "article_104204.html");
+ 
+ 
+ 
+ 
+//document.write(ContentsTree.GetHTMLCode());
+document.getElementById("lefttree").innerHTML=ContentsTree.GetHTMLCode();
+</script>	
+</td></tr>
+<tr><td bgcolor="#D2DEE2" height="1"></td></tr>
+<tr><td bgcolor="#FFFFFF" height="1"></td></tr>
+
+<tr><td><img src="../../templates/tech/images/left_bg_bottom.gif" border="0" alt="" /></td></tr>
+
+</table>
+
+
+</td><td width="10"></td><td  valign="top" align="center">
+
+<br />
+
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="100%">
+<tr><td width="11" height="11"><img src="../../templates/tech/images/g_left_top.gif" border="0" alt="" /></td>
+<td bgcolor="#DDDDDD" width="99%" height="11"></td>
+<td width="11" height="11"><img src="../../templates/tech/images/g_right_top.gif" border="0" alt="" /></td>
+</tr>
+
+<tr><td colspan="3" width="100%" bgcolor="#DDDDDD" align="center" valign="top"> 
+
+
+
+
+
+
+
+
+<br />
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="96%">
+<tr><td width="7" height="7"><img src="../../templates/tech/images/w_left_top.gif" border="0" alt="" /></td>
+<td bgcolor="#F3F3F3" width="100%"></td>
+<td width="7" height="7"><img src="../../templates/tech/images/w_right_top.gif" border="0" alt="" /></td>
+</tr>
+<tr><td colspan="3"  bgcolor="#F3F3F3" align="center">
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;word-wrap:break-word;" width="100%" >
+<tr><td height="25" align="center">
+<font color="#02368D" style="font-size:14pt"><b>Hibernate Tool: hbm2java or hbm2ddl </b></font></b></font><br />
+</td></tr>
+<tr><td bgcolor="#D2DEE2" height="1"></td></tr>
+<tr><td bgcolor="#FFFFFF" height="1"></td></tr>
+<tr><td align="center">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;word-wrap:break-word;"  width="100%">
+<tr><td width="100%">
+<div id="art" width="100%" style=" margin: 15px">
+<DIV><FONT size=2>&nbsp;&nbsp;Hibernate为了简化开发,给我们提供了四种工具,hbm2java,hbm2ddl,XDoclet,Middlegen.其中我觉得hbm2java(根据映射文件生成JAVA源文件),hbm2ddl(根据映射文件生成数据库文件,这两个工具非常实用.还有XDoclet(根据带有XDoclet标记的JAVA源文件生成映射文件).Middlegen(根据数据库文件生成映射文件的工具也不错.不过我没怎么使用过.所以这里就不多说了.好了下面我们创建一个对象-关系映射文件,来演示一下这两种工具的使用方法.首先创建我们的XML映射文件.这里命名为Demo.hbm.xml<BR><BR>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<BR>&lt;!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "hibernate-mapping-2.0.dtd" &gt;<BR>&lt;hibernate-mapping&gt;<BR>&nbsp;&lt;class name="hibernate.Demo" table="DEMOS"&gt;<BR>&nbsp;&nbsp;&lt;meta attribute="class-description"&gt;ToolDemo&lt;/meta&gt;<BR>&nbsp;&nbsp;&lt;meta attribute="class-scope"&gt;public&lt;/meta&gt;<BR>&nbsp;&nbsp;<BR>&nbsp;&nbsp;&lt;id name="id" type="long" column="ID"&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;meta attribute="scope-set"&gt;protected&lt;/meta&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;generator class="native"/&gt;<BR>&nbsp;&nbsp;&lt;/id&gt;<BR>&nbsp;&nbsp;<BR>&nbsp;&nbsp;&lt;property name="name" type="string"&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;meta attribute="finder-method"&gt;findByName&lt;/meta&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;meta attribute="use-in-tostring"&gt;true&lt;/meta&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;column name="NAME" length="15" not-null="true" unique="true"/&gt;<BR>&nbsp;&nbsp;&lt;/property&gt;<BR>&nbsp;&nbsp;<BR>&nbsp;&nbsp;&lt;property name="registeredTime" type="timestamp"&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;meta attribute="field-description"&gt;When the Demo&lt;/meta&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;meta attribute="use-in-tostring"&gt;true&lt;/meta&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;column name="REGISTERED_TIME" index="IDX_REGISTERED_TIME" sql-type="timestamp"/&gt;<BR>&nbsp;&nbsp;&lt;/property&gt;<BR>&nbsp;&nbsp;<BR>&nbsp;&nbsp;&lt;property name="age" type="int"&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;meta attribute="field-description"&gt;How old is the Demo&lt;/meta&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;meta attribute="use-in-tostring"&gt;true&lt;/meta&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;column name="AGE" check="AGE&gt;10" not-null="true"/&gt;<BR>&nbsp;&nbsp;&lt;/property&gt;<BR>&nbsp;&nbsp;<BR>&nbsp;&nbsp;&lt;property name="sex" column="SEX" type="char"&gt;&lt;/property&gt;<BR>&nbsp;&nbsp;<BR>&nbsp;&nbsp;&lt;property name="married" type="boolean" column="IS_MARRIED"&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;meta attribute="field-description"&gt;Is the Demo married&lt;/meta&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;meta attribute="use-in-tostring"&gt;true&lt;/meta&gt;<BR>&nbsp;&nbsp;&lt;/property&gt;<BR>&nbsp;&nbsp;<BR>&nbsp;&nbsp;&lt;property name="description" type="string"&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;meta attribute="use-in-tostring"&gt;true&lt;/meta&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;column name="DESCRIPTION" sql-type="text"/&gt;&nbsp;<BR>&nbsp;&nbsp;&lt;/property&gt;<BR>&nbsp;&lt;/class&gt;<BR>&lt;/hibernate-mapping&gt;<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;解释下上面的XML文件,这里主要说明是的&lt;meta&gt;元素,用于精确的控制JAVA源文件的内容.<BR>&nbsp;&nbsp;&lt;meta attribute="class-description"&gt;ToolDemo&lt;/meta&gt;这里是源文件类的注释,用于生成javadoc<BR>&nbsp;&nbsp;&lt;meta attribute="class-scope"&gt;public&lt;/meta&gt;这个是类的修饰符<BR>&nbsp; &lt;meta attribute="extends"&gt;hibernate.Tool&lt;/meta&gt;这里声明这个类继承于哪个类,这里是继承hibernate包下的Tool类<BR>&nbsp;&nbsp;&nbsp;&lt;meta attribute="field-description"&gt;Is the Demo married&lt;/meta&gt;这个也是注释,是属性的注释,用于生成javadoc<BR>&nbsp;&nbsp;&nbsp;&lt;meta attribute="use-in-tostring"&gt;true&lt;/meta&gt;这个是指定在类的toString()方法返回的字符串是否包含这个属性.<BR>&nbsp;&nbsp;&nbsp;&lt;meta attribute="scope-set"&gt;protected&lt;/meta&gt;指定类的属性的get或set方法的修饰符,包括static public final privete等等<BR>&nbsp;&nbsp;&nbsp;<BR>&nbsp;&nbsp;&nbsp;下面列出&lt;meta&gt;元素的所有属性的用法<BR>&nbsp;&nbsp;&nbsp;class-description指定类的注释,javadoc<BR>&nbsp;&nbsp;&nbsp;field-description指定类的属性的注释,javadoc<BR>&nbsp;&nbsp;&nbsp;interface如果是true表示生成的就接口,不是类,默认是false<BR>&nbsp;&nbsp;&nbsp;implements指定类要实现的接口<BR>&nbsp;&nbsp;&nbsp;extends指定类要继承的类&nbsp;&nbsp;<BR>&nbsp;&nbsp;&nbsp;generated-class重新生成类名<BR>&nbsp;&nbsp;&nbsp;scope-class指定类的修饰复,默认的是public<BR>&nbsp;&nbsp;&nbsp;scope-set设置set方法的修饰复,默认public<BR>&nbsp;&nbsp;&nbsp;scope-get设置get方法的修饰复,默认public<BR>&nbsp;&nbsp;&nbsp;scope-field设定类的属性的修饰复,默认public<BR>&nbsp;&nbsp;&nbsp;use-in-tostring如果是true表示在类的toString()方法中包含这个属性<BR>&nbsp;&nbsp;&nbsp;gen-property如果是false表示不会在类中生成这个属性,默认是true<BR>&nbsp;&nbsp;&nbsp;finder-method设定find方法名<BR><BR>&nbsp;&nbsp;&nbsp;下面列出&lt;column&gt;元素的所有属性和用法<BR>&nbsp;&nbsp;&nbsp;name设置表字段的名字<BR>&nbsp;&nbsp;&nbsp;length设置表字段的长度<BR>&nbsp;&nbsp;&nbsp;not-null如果是true说明字段不可以为null,默认是false<BR>&nbsp;&nbsp;&nbsp;unique如果是true,设置字段唯一性约束,默认是false<BR>&nbsp;&nbsp;&nbsp;index给一个字段或者多个字段建立索引<BR>&nbsp;&nbsp;&nbsp;unique-key为多个字段设置唯一约束<BR>&nbsp;&nbsp;&nbsp;freign-key为外键约束命名<BR>&nbsp;&nbsp;&nbsp;sql-type设定字段的SQL类型<BR>&nbsp;&nbsp;&nbsp;check设定SQL检查约束</FONT><BR></DIV>
+</div>
+</td></tr>
+</table>
+
+
+<p style="line-height: 150%; margin: 5px">
+ 
+ 
+</p>
+</td></tr>
+<tr><td height="25">
+&nbsp;<font color="#000099"><b>原文地址</b></font>
+<a href="http://www.blogjava.net/action/archive/2007/05/17/118129.html" target="_blank">http://www.blogjava.net/action/archive/2007/05/17/118129.html</a>
+</td></tr>
+ 
+ 
+<tr><td height="25" align="center">
+<font color="#295200">发表于： 2008-11-16，修改于： 2008-11-16 23:23，已浏览172次，有评论0条</font> 
+<a href="/u2/star.php?blogid=76697&artid=1419564" id="star" onclick="NewWindows(this.href);return false;" title="推荐这篇文章">推荐</a>
+<a href="/u2/complaint.php?blogid=76697&artid=1419564" id="complaint" onclick="NewWindows(this.href);return false;" title="投诉这篇文章">投诉</a>
+</td></tr>
+
+
+
+
+</table>
+
+
+</td></tr>
+<tr><td width="7" height="7"><img src="../../templates/tech/images/w_left_buttom.gif" border="0" alt="" /></td>
+<td bgcolor="#F3F3F3"></td>
+<td width="7" height="7"><img src="../../templates/tech/images/w_right_buttom.gif" border="0" alt="" /></td>
+</tr>
+</table>
+
+
+<tr><td width="11" height="11"><img src="../../templates/tech/images/g_left_bottom.gif" border="0" alt="" /></td>
+<td bgcolor="#DDDDDD"></td>
+<td width="11" height="11"><img src="../../templates/tech/images/g_right_bottom.gif" border="0" alt="" /></td>
+</tr>
+</table>
+<br />
+<br />
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="100%">
+<tr><td width="11" height="11"><img src="../../templates/tech/images/g_left_top.gif" border="0" alt="" /></td>
+<td bgcolor="#DDDDDD" width="99%" height="11"></td>
+<td width="11" height="11"><img src="../../templates/tech/images/g_right_top.gif" border="0" alt="" /></td>
+</tr>
+
+<tr><td colspan="3" width="100%" bgcolor="#DDDDDD" align="center" valign="top"> 
+<b>网友评论</b>
+<br />
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="96%">
+<tr><td width="7" height="7"><img src="../../templates/tech/images/w_left_top.gif" border="0" alt="" /></td>
+<td bgcolor="#F3F3F3" width="100%"></td>
+<td width="7" height="7"><img src="../../templates/tech/images/w_right_top.gif" border="0" alt="" /></td>
+</tr>
+<tr><td colspan="3"  bgcolor="#F3F3F3" align="center">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="700" align="center">
+
+<tr><td style="color:#0000CC;" height="25">
+　发表评论
+</td></tr>
+<tr><td height="25">
+ 
+<IFRAME NAME="comment" SRC="/comment/comment.php?bg=F3F3F3&ctype=0&iscomment=1&artid=1419564&blogid=76697" WIDTH="640" HEIGHT="160" frameborder="0"></IFRAME>
+ 
+</td></tr>
+
+</table>
+
+</td></tr>
+<tr><td width="7" height="7"><img src="../../templates/tech/images/w_left_buttom.gif" border="0" alt="" /></td>
+<td bgcolor="#F3F3F3"></td>
+<td width="7" height="7"><img src="../../templates/tech/images/w_right_buttom.gif" border="0" alt="" /></td>
+</tr>
+</table>
+
+
+<tr><td width="11" height="11"><img src="../../templates/tech/images/g_left_bottom.gif" border="0" alt="" /></td>
+<td bgcolor="#DDDDDD"></td>
+<td width="11" height="11"><img src="../../templates/tech/images/g_right_bottom.gif" border="0" alt="" /></td>
+</tr>
+</table>
+</td></tr>
+</table>
+
+</center>
+
+</html>

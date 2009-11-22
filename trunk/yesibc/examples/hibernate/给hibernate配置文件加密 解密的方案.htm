@@ -1,0 +1,875 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>给hibernate配置文件加密 解密的方案 - 企业应用 - Java - JavaEye论坛</title>
+    <meta name="description" content="如何给工程中的配置文件加密 解密 之前有人问过hibernate密码问题，大家都没有给出一个具体的解决方案，所以我就看了一下代码，把我的想法和实现拿出来和大家讨论一下。 我现在的环境是spring+hibernate，但是这并不影响这个加密解密的问题，其他环境应该是略有不同，但是思路肯定是一样的。 总体思路：在工程的配置文件中填写数据库密码的密文，在应用程序使用datasource的时候解密成明文以 ..." />
+    <meta name="keywords" content="安全 企业应用 Java" />
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link href="/rss/board/Java" rel="alternate" title="JavaEye论坛" type="application/rss+xml" />
+    <link href="http://www.javaeye.com/stylesheets/forum.css?1258797599" media="screen" rel="stylesheet" type="text/css" />
+    <script src="http://www.javaeye.com/javascripts/application.js?1248170042" type="text/javascript"></script>
+      <link href="http://www.javaeye.com/javascripts/syntaxhighlighter/SyntaxHighlighter.css?1201588027" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/syntaxhighlighter/shCoreCommon.js?1238329845" type="text/javascript"></script>
+<script src="http://www.javaeye.com/javascripts/hotkey.js?1238403289" type="text/javascript"></script>
+          <script src="http://www.javaeye.com/javascripts/dragdrop.js?1231828836" type="text/javascript"></script>
+          </head>
+  <body>
+    <div id="page">
+      <div id="header">
+        <div class="clearfix"><div id="user_nav">
+      <a href="http://bibye-domain.javaeye.com" title="查看我的博客首页" class="welcome">欢迎bibiye</a>
+    
+      <a href="http://app.javaeye.com/messages" title="发送站内短信">收件箱</a>
+    
+    
+      <a href="http://app.javaeye.com" title="我的应用首页">我的应用</a>
+    
+    <div class="quick_menu" style="display:none;">
+      <a href="http://app.javaeye.com/feed" title="我订阅的好友动态消息">我的订阅</a>
+      <a href="http://app.javaeye.com/feed/my" title="我参与的话题更新的消息">我的参与</a>
+      <a href="http://app.javaeye.com/chat" title="用闲聊发表简短的话题">我的闲聊</a>
+      <a href="http://app.javaeye.com/mygroup" title="我加入的圈子最新话题">我的圈子</a>
+      <a href="http://app.javaeye.com/links" title="我收藏的网络资源链接">我的收藏</a>
+      <a href="http://app.javaeye.com/myresume" title="我的个人简历">我的简历</a>
+    </div>
+        <a href="http://bibye-domain.javaeye.com/admin" title="管理我的博客">我的博客</a>
+    <a href="http://app.javaeye.com/profile" title="修改我的个人设置">设置</a>
+    <a href="/logout" class="nobg" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'put'); f.appendChild(m);f.submit();return false;">退出</a>
+  </div></div>
+        <div class="clearfix">
+          <div id="branding">
+            <a href="http://www.javaeye.com"><img alt="JavaEye-最棒的软件开发交流社区" src="http://www.javaeye.com/images/logo.gif?1252896923" title="JavaEye-最棒的软件开发交流社区" /></a>
+          </div>
+          <div id="gg"><a href='/clicks/226' target='_blank'><img src="http://ftp.javaeye.com/public/thoughtworks/thoughtworks.jpg?100"/></a></div>
+        </div>
+      </div>
+
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+          
+
+<div class="clearfix">
+  <div class="crumbs">
+    <a href="/forums">论坛首页</a> <span class="arrow">&rarr;</span>
+    <a href="/forums/board/Java">Java编程和Java企业应用版</a> <span class="arrow">&rarr;</span>
+    <a href="/forums/tag/J2EE">企业应用</a> <span class="arrow">&rarr;</span>
+    <h1>给hibernate配置文件加密 解密的方案</h1>
+  </div>
+</div>
+
+<div id="forum_tag_list">
+  <a href='/forums/board/Java'>全部</a>
+      <a href='/forums/tag/Hibernate'>Hibernate</a>
+      <a href='/forums/tag/Spring'>Spring</a>
+      <a href='/forums/tag/Struts'>Struts</a>
+      <a href='/forums/tag/iBATIS'>iBATIS</a>
+      <a href='/forums/tag/J2EE'>企业应用</a>
+      <a href='/forums/tag/Design-Pattern'>设计模式</a>
+      <a href='/forums/tag/DAO'>DAO</a>
+      <a href='/forums/tag/Object-Domain'>领域模型</a>
+      <a href='/forums/tag/OO'>OO</a>
+      <a href='/forums/tag/Tomcat'>Tomcat</a>
+      <a href='/forums/tag/SOA'>SOA</a>
+      <a href='/forums/tag/JBoss'>JBoss</a>
+      <a href='/forums/tag/Swing'>Swing</a>
+  </div>
+
+<div class="actions">
+  <div class="buttons"></div>
+  <div class="wrapper">
+    <div id="forum_advert_f4"></div>
+    <div class="pagination"><span class="disabled prev_page">&laquo; 上一页</span> <span class="current">1</span> <a href="/topic/70663?page=2" rel="next">2</a> <a href="/topic/70663?page=2" class="next_page" rel="next">下一页 &raquo;</a></div>
+    <div class="info">浏览 10187 次</div>
+  </div>
+</div>
+
+
+
+<table id="forum_main" cellspacing="1">
+  <thead>
+    <tr>
+      <th colspan="2" class="topic_title">
+        <div class="wrapper"><span class='locked'>锁定老贴子</span> <a href="/topic/70663">主题：给hibernate配置文件加密 解密的方案</a></div>
+        <div id='topic_rate_box'><strong class='highlight'>该帖已经被评为良好帖</strong></div>
+      </th>
+    </tr>
+    <tr>
+      <td class="first_col">作者</td>
+      <td class="last_col">正文</td>
+    </tr>
+  </thead>
+  <tbody id="posts">
+    <tr id="261866">
+  <td class="postauthor">
+    <ul>
+      <li class="name">ahuaxuan</li>
+      <li>等级: <img src="/images/dimd5.gif" alt="五钻会员" title="五钻会员"/></li>
+      <li><a href='http://ahuaxuan.javaeye.com' target='_blank'><img alt="ahuaxuan的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/105062/f6715a5c-fbf1-3ac0-b673-0c94dfbb1004.jpg?1242718601" title="ahuaxuan的博客: ahuaxuan" /></a></li>
+      <li>文章: 804</li>
+      <li>积分: 2446</li>
+      <li>来自: 飚车案件多发地</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        发表时间：2007-04-13
+        关键字: <strong>安全</strong>
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=%E7%BB%99hibernate%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E5%AF%86+%E8%A7%A3%E5%AF%86%E7%9A%84%E6%96%B9%E6%A1%88&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F70663' target='_blank' class='favorite'>收藏</a>
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+                                            <div id="related_topics">相关文章: <span class="close"><a href="#" onclick="$('related_topics').hide();return false;" title="关闭">&nbsp;</a></span>
+              <ul>
+                                    <li><a href='http://www.javaeye.com/topic/336406' title='文件加密解密' target='_blank'>文件加密解密</a></li>
+                                      <li><a href='http://www.javaeye.com/topic/198359' title='证书加密解密' target='_blank'>证书加密解密</a></li>
+                                      <li><a href='http://www.javaeye.com/topic/193137' title='RSA DES加密 在使用delphi密匙文件时会有错' target='_blank'>RSA DES加密 在使用delphi密匙文件时会有错</a></li>
+                                  </ul>
+                <br/><span>推荐圈子: <a href="http://JavaEyeTianJin.group.javaeye.com" target="_blank">天津JavaEye</a></span>
+                <br/><a href="/wiki/topic/70663" target="_blank">更多相关推荐</a>
+              </div>
+              <script type="text/javascript">
+                new Draggable("related_topics");
+              </script>
+                              
+        如何给工程中的配置文件加密 解密<br />之前有人问过hibernate密码问题，大家都没有给出一个具体的解决方案，所以我就看了一下代码，把我的想法和实现拿出来和大家讨论一下。<br /><br />我现在的环境是spring+hibernate，但是这并不影响这个加密解密的问题，其他环境应该是略有不同，但是思路肯定是一样的。<br /><br />总体思路：在工程的配置文件中填写数据库密码的密文，在应用程序使用datasource的时候解密成明文以创建连接。<br />步骤1 <br /><span style="color: darkred">使用java的中cipher类并使用DES（对称加密算法）算法对明文进行加密<br /> ````````````````这里如何使用cipher类和DES算法的原理可以上网查找，我懒得写了，如果大家真的也怕麻烦自己去找的话我再写一个贴出来吧</span><br /><br />修改：我随便写了一个类，大家看着改吧，我没有测试过<br /><br /><pre name="code" class="java">public class DESUtil {
+	
+	public static void main(String[] args){
+		try {
+			if(args[0].equals("-genKey")){
+				generateKey(args[1]);
+			}else{
+				
+				//if (args[0].equals("-encrypt"))encrypt();
+					
+				//else decrypt();	
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	public static String encrypt(String plainText, String encryptString, File keyFile)throws IOException, ClassNotFoundException,GeneralSecurityException{
+		ObjectInputStream keyIn = new ObjectInputStream(new FileInputStream(keyFile));
+		int mode = Cipher.ENCRYPT_MODE;
+		Key key = (Key)keyIn.readObject();	
+		keyIn.close();
+		
+		InputStream in = new FileInputStream(plainText);
+		OutputStream out = new FileOutputStream(encryptString);
+		
+		Cipher cipher = Cipher.getInstance("DES");
+		cipher.init(mode, key);
+		
+		doEncryptAndDecrypt(in, out, cipher);
+		
+		String result = out.toString();
+		System.out.print(result);
+		in.close();
+		out.close();
+		return result;
+	}
+	
+	public static String decrypt(String encryptString, String plainText, File keyFile)throws IOException, ClassNotFoundException,GeneralSecurityException{
+		ObjectInputStream keyIn = new ObjectInputStream(new FileInputStream(keyFile));
+		int mode = Cipher.DECRYPT_MODE;
+		Key key = (Key)keyIn.readObject();	
+		keyIn.close();
+		
+		InputStream in = new FileInputStream(encryptString);
+		OutputStream out = new FileOutputStream(plainText);
+		
+		Cipher cipher = Cipher.getInstance("DES");
+		cipher.init(mode, key);
+		
+		doEncryptAndDecrypt(in, out, cipher);
+		
+		String result = out.toString();
+		System.out.print(result);
+		in.close();
+		out.close();
+		return result;
+	}
+	
+	public static void doEncryptAndDecrypt(InputStream in, OutputStream out, Cipher cipher)throws IOException, GeneralSecurityException{
+		int blockSize = cipher.getBlockSize();
+		int outputSize = cipher.getOutputSize(blockSize);
+		
+		byte[] inBytes = new byte[blockSize];
+		byte[]	outBytes = new byte[outputSize];
+		
+		int inLength = 0;
+		boolean more = true;
+		
+		while(more){
+			inLength = in.read(inBytes);
+			if(inLength == blockSize){
+				int outLength = cipher.update(inBytes, 0, blockSize, outBytes);
+				out.write(outBytes,0,outLength);
+			}
+			else more = false;
+		}
+		
+		if(inLength&gt;0) outBytes = cipher.doFinal(inBytes, 0, inLength);
+		else outBytes = cipher.doFinal();
+		
+		out.write(outBytes);
+		
+	}
+	
+	public static void generateKey(String path) throws Exception{
+		KeyGenerator keygen = KeyGenerator.getInstance("DES");
+		SecureRandom random = new SecureRandom();
+		
+		keygen.init(random);
+		SecretKey key = keygen.generateKey();
+		
+		ObjectOutputStream out = new ObjectOutputStream( new FileOutputStream(path));
+		out.writeObject(key);
+		out.close();
+	}
+
+}</pre><br /><br />通过以上的encrypt方法得到一个密码的密文（一般的密码是明文，作为参数传进去可以得到对应的密文），比如说21sadf25<br /><br />步骤2<br />将加密后的密文添加到配置文件中<br /><br /><pre name="code" class="java">&lt;bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"&gt;
+        &lt;property name="driverClassName" value="org.gjt.mm.mysql.Driver"/&gt;
+        &lt;property name="url" value="jdbc:mysql://localhost/test?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true"/&gt;
+        &lt;property name="username" value="root"/&gt;
+        &lt;property name="password" value="21sadf25"/&gt;
+        &lt;property name="maxActive" value="100"/&gt;
+        &lt;property name="whenExhaustedAction" value="1"/&gt;
+        &lt;property name="maxWait" value="120000"/&gt;
+        &lt;property name="maxIdle" value="30"/&gt;
+        &lt;property name="defaultAutoCommit" value="true"/&gt;
+    &lt;/bean&gt;  </pre>&nbsp; <br /><br />步骤3<br />继承spring的LocalSessionFactoryBean类，override其setDataSource方法，将dataSource的password取出，解密后再赋值。<br />为什么要这么做呢，因为datasource是localsessionFactoryBean的一个属性，在注入dataSource时将其密码解密是比较恰当的。所以选择这个setDataSource方法进行override。假设我们使用的dbcp连接池<br />代码如下：（类名是AhuaXuanLocalSessionFactoryBean）<br /><pre name="code" class="java">public void setDataSource(DataSource dataSource) {
+String password = (BasicDataSource)dataSource.getPassword();
+//通过cipher类进行解密
+String decryPassword = DESUtil.decrypt(password);
+dataSource.setPassword(decryPassword);
+		this.dataSource = dataSource;
+	}</pre>配置如下：<br /><pre name="code" class="java">&lt;bean id="sessionFactory" class="org.springframework.orm.hibernate.AhuaXuanLocalSessionFactoryBean"&gt;
+                    &lt;property name="dataSource"&gt;
+            &lt;ref bean="dataSource"/&gt;
+        &lt;/property&gt;
+&lt;/bean&gt;</pre>之前robbin说的DataSourceFactoryBean那个类我在spring1.2.8中没有找到，但是我觉得改造LocalSessionFactoryBean也不错<br /><br />这样就完成了一个我们的目标，以上代码是随便写的，没有经过测试，有兴趣的同学可以试一下<br /><br />作者：张荣华，未经作者同意不得随意转载！<br /><br />
+      </div>
+      
+              <div id="topic_copyright">声明：JavaEye文章版权属于作者，受法律保护。没有作者书面许可不得转载。 </div>
+        <div id="forum_advert_f5"><span>推荐链接</span><ul><li><a href='/clicks/111' target='_blank'><img src="http://ftp.javaeye.com/public/taobao/720_60.gif?20091101" style="BORDER:1px SOLID #FFFFFF" width="720" height="60" alt="taobao，赢在淘宝" title="taobao，赢在淘宝"/>
+
+</a></li></ul></div>
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://ahuaxuan.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://ahuaxuan.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=ahuaxuan" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://ahuaxuan.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        
+                
+      </div>
+                        </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="261877">
+  <td class="postauthor">
+    <ul>
+      <li class="name">ahuaxuan</li>
+      <li>等级: <img src="/images/dimd5.gif" alt="五钻会员" title="五钻会员"/></li>
+      <li><a href='http://ahuaxuan.javaeye.com' target='_blank'><img alt="ahuaxuan的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/105062/f6715a5c-fbf1-3ac0-b673-0c94dfbb1004.jpg?1242718601" title="ahuaxuan的博客: ahuaxuan" /></a></li>
+      <li>文章: 804</li>
+      <li>积分: 2446</li>
+      <li>来自: 飚车案件多发地</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        发表时间：2007-04-13
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=ahuaxuan%E5%9B%9E%E8%B4%B4%3A%E7%BB%99hibernate%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E5%AF%86+%E8%A7%A3%E5%AF%86%E7%9A%84%E6%96%B9%E6%A1%88&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F70663%3Fpage%3D1%23261877' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+        <div class="quote_title">lixuehui 写道</div><div class="quote_div">没觉得安全性高在哪,真实密码照样在程序中出现.<br /><br />很容易就被破解了,照样可以得到数据库的真实密码<br /><br />不可取<br /><br /><br /></div><br /><br />你发布工程的时候不能混淆一下吗，我还没有见不在代码中读取密码的安全应用呢
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://ahuaxuan.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://ahuaxuan.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=ahuaxuan" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://ahuaxuan.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        
+                  <a href="#261877" title="ahuaxuan回帖:给hibernate配置文件加密 解密的方案">回帖地址</a>
+                
+      </div>
+                        <div id='post_rate_box_261877' class='post_rate_box'><a href='#' onclick='rate_post(261877, "good"); return false;' class='good' title='好'>1</a> <a href='#' onclick='rate_post(261877, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="262015">
+  <td class="postauthor">
+    <ul>
+      <li class="name">jamesby</li>
+      <li>等级: <img src="/images/dimd1.gif" alt="一钻会员" title="一钻会员"/></li>
+      <li><a href='http://jamesby.javaeye.com' target='_blank'><img alt="jamesby的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/24785/f45a16b2-cc97-4313-b5df-eee06537c77f.jpg?1236832728" title="jamesby的博客: jamesby" /></a></li>
+      <li>文章: 484</li>
+      <li>积分: 845</li>
+      
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        发表时间：2007-04-13
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=jamesby%E5%9B%9E%E8%B4%B4%3A%E7%BB%99hibernate%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E5%AF%86+%E8%A7%A3%E5%AF%86%E7%9A%84%E6%96%B9%E6%A1%88&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F70663%3Fpage%3D1%23262015' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+        我在想一个问题,能不能想办法对setPassword方法进行拦截器拦截,这样一来任何需要加密的地方都拦截一下就可以了.
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://jamesby.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://jamesby.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=jamesby" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://jamesby.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        
+                  <a href="#262015" title="jamesby回帖:给hibernate配置文件加密 解密的方案">回帖地址</a>
+                
+      </div>
+                        <div id='post_rate_box_262015' class='post_rate_box'><a href='#' onclick='rate_post(262015, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(262015, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="264010">
+  <td class="postauthor">
+    <ul>
+      <li class="name">小开ye</li>
+      <li>等级: <img src="/images/star2.gif" alt="二星会员" title="二星会员"/></li>
+      <li><a href='http://xiaokaiye.javaeye.com' target='_blank'><img alt="小开ye的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/130611/5a706d3d-f4b5-34c5-8ec7-624cc907867f.jpg?1248932684" title="小开ye的博客: 小开ye" /></a></li>
+      <li>文章: 22</li>
+      <li>积分: 164</li>
+      <li>来自: 上海</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        发表时间：2007-04-16
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=%E5%B0%8F%E5%BC%80ye%E5%9B%9E%E8%B4%B4%3A%E7%BB%99hibernate%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E5%AF%86+%E8%A7%A3%E5%AF%86%E7%9A%84%E6%96%B9%E6%A1%88&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F70663%3Fpage%3D1%23264010' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+        我还记得四年前我想通过一些非常手法来获取数据库的口令，却被一个同事批评了一通，他说，既然是bs模式，就没有必要在服务器上去加密数据库口令了；因为如果有人能进入服务器了，你还能阻止他什么？<br />当然日常的安全性我们还是需要考虑的。
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://xiaokaiye.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://xiaokaiye.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=%E5%B0%8F%E5%BC%80ye" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://xiaokaiye.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        
+                  <a href="#264010" title="小开ye回帖:给hibernate配置文件加密 解密的方案">回帖地址</a>
+                
+      </div>
+                        <div id='post_rate_box_264010' class='post_rate_box'><a href='#' onclick='rate_post(264010, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(264010, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="264193">
+  <td class="postauthor">
+    <ul>
+      <li class="name">weiqingfei</li>
+      <li>等级: 初级会员</li>
+      <li><a href='http://weiqingfei.javaeye.com' target='_blank'><img alt="weiqingfei的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/52286/7f869cb5-ab13-42a9-ad09-13e66aea15a0.jpg?1236835413" title="weiqingfei的博客: weiqingfei" /></a></li>
+      <li>文章: 2772</li>
+      <li>积分: 60</li>
+      <li>来自: 黑洞</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        发表时间：2007-04-17
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=weiqingfei%E5%9B%9E%E8%B4%B4%3A%E7%BB%99hibernate%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E5%AF%86+%E8%A7%A3%E5%AF%86%E7%9A%84%E6%96%B9%E6%A1%88&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F70663%3Fpage%3D1%23264193' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+        可以参考一下.net配置文件的加密方式，把加密解密委托给别的程序。
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://weiqingfei.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://weiqingfei.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=weiqingfei" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://weiqingfei.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        
+                  <a href="#264193" title="weiqingfei回帖:给hibernate配置文件加密 解密的方案">回帖地址</a>
+                
+      </div>
+                        <div id='post_rate_box_264193' class='post_rate_box'><a href='#' onclick='rate_post(264193, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(264193, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="264670">
+  <td class="postauthor">
+    <ul>
+      <li class="name">remanhu</li>
+      <li>等级: 初级会员</li>
+      <li><a href='http://remanhu.javaeye.com' target='_blank'><img alt="remanhu的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/52128/a3944534-cabb-400a-a56e-07a24e9d24e1.gif?1236835398" title="remanhu的博客: remanhu" /></a></li>
+      <li>文章: 4</li>
+      <li>积分: 38</li>
+      
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        发表时间：2007-04-17
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=remanhu%E5%9B%9E%E8%B4%B4%3A%E7%BB%99hibernate%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E5%AF%86+%E8%A7%A3%E5%AF%86%E7%9A%84%E6%96%B9%E6%A1%88&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F70663%3Fpage%3D1%23264670' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+        用jndi是最安全的，其它方式都可能有问题，即使是通过混淆代码，一样是有办法解开的
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://remanhu.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://remanhu.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=remanhu" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://remanhu.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        
+                  <a href="#264670" title="remanhu回帖:给hibernate配置文件加密 解密的方案">回帖地址</a>
+                
+      </div>
+                        <div id='post_rate_box_264670' class='post_rate_box'><a href='#' onclick='rate_post(264670, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(264670, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="269774">
+  <td class="postauthor">
+    <ul>
+      <li class="name">ahuaxuan</li>
+      <li>等级: <img src="/images/dimd5.gif" alt="五钻会员" title="五钻会员"/></li>
+      <li><a href='http://ahuaxuan.javaeye.com' target='_blank'><img alt="ahuaxuan的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/105062/f6715a5c-fbf1-3ac0-b673-0c94dfbb1004.jpg?1242718601" title="ahuaxuan的博客: ahuaxuan" /></a></li>
+      <li>文章: 804</li>
+      <li>积分: 2446</li>
+      <li>来自: 飚车案件多发地</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        发表时间：2007-04-23
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=ahuaxuan%E5%9B%9E%E8%B4%B4%3A%E7%BB%99hibernate%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E5%AF%86+%E8%A7%A3%E5%AF%86%E7%9A%84%E6%96%B9%E6%A1%88&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F70663%3Fpage%3D1%23269774' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+        <div class="quote_title">小开ye 写道</div><div class="quote_div">我还记得四年前我想通过一些非常手法来获取数据库的口令，却被一个同事批评了一通，他说，既然是bs模式，就没有必要在服务器上去加密数据库口令了；因为如果有人能进入服务器了，你还能阻止他什么？<br /></div>能入侵服务器的黑客就一定能知道服务器上数据的密码吗，他可以在应用程序的配置文件中找数据库密码，如果应用程序的数据库password被保护了，至少在一定程度上阻止了他的步伐，如果他水平很高，对加密解密很了解，说不定能破解（或者用其他什么工具直接破解数据库密码，我猜的），但前提的他是黑客中的高手，但是事实告诉我们黑客中的菜鸟也不少，只会用点小工具去扫描扫描端口等等，不同的客户不同的应用是需要不同的安全级别的
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://ahuaxuan.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://ahuaxuan.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=ahuaxuan" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://ahuaxuan.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        
+                  <a href="#269774" title="ahuaxuan回帖:给hibernate配置文件加密 解密的方案">回帖地址</a>
+                
+      </div>
+                        <div id='post_rate_box_269774' class='post_rate_box'><a href='#' onclick='rate_post(269774, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(269774, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="298060">
+  <td class="postauthor">
+    <ul>
+      <li class="name">spiritfrog</li>
+      <li>等级: <img src="/images/star1.gif" alt="一星会员" title="一星会员"/></li>
+      <li><a href='http://spiritfrog.javaeye.com' target='_blank'><img alt="spiritfrog的博客" class="logo" src="http://www.javaeye.com/images/user-logo.gif?1194185304" title="spiritfrog的博客: spiritfrog" /></a></li>
+      <li>文章: 241</li>
+      <li>积分: 111</li>
+      <li>来自: 长沙</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        发表时间：2007-05-29
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=spiritfrog%E5%9B%9E%E8%B4%B4%3A%E7%BB%99hibernate%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E5%AF%86+%E8%A7%A3%E5%AF%86%E7%9A%84%E6%96%B9%E6%A1%88&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F70663%3Fpage%3D1%23298060' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+        这样也足够用了,加密过的密码放在配置文件中,就算看得到有什么关系呢?<br />这里讨论的也不是加密的方案如何如何安全可靠,重点还是能够在创建datasource的时候得到正确的密码明文, 黑客入侵就扯得远了嘛.
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://spiritfrog.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://spiritfrog.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=spiritfrog" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://spiritfrog.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        
+                  <a href="#298060" title="spiritfrog回帖:给hibernate配置文件加密 解密的方案">回帖地址</a>
+                
+      </div>
+                        <div id='post_rate_box_298060' class='post_rate_box'><a href='#' onclick='rate_post(298060, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(298060, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="298252">
+  <td class="postauthor">
+    <ul>
+      <li class="name">抛出异常的爱</li>
+      <li>等级: <img src="/images/dimd5.gif" alt="五钻会员" title="五钻会员"/></li>
+      <li><a href='http://loveexception.javaeye.com' target='_blank'><img alt="抛出异常的爱的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/88932/cf229cec-37e2-377f-b4d1-2b57b1c637df.jpg?1238376230" title="抛出异常的爱的博客: 作孽终有报" /></a></li>
+      <li>文章: 10584</li>
+      <li>积分: 2532</li>
+      <li>来自: 北京</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        发表时间：2007-05-29
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=%E6%8A%9B%E5%87%BA%E5%BC%82%E5%B8%B8%E7%9A%84%E7%88%B1%E5%9B%9E%E8%B4%B4%3A%E7%BB%99hibernate%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E5%AF%86+%E8%A7%A3%E5%AF%86%E7%9A%84%E6%96%B9%E6%A1%88&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F70663%3Fpage%3D1%23298252' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+        加密的作用就是让黑客一次破解的周期延长。。。。并提高发现可能<br />而不是为了让他破不开。。。<br /><br />至少要大于24小时。。。<br />那样的话。。。不用24小时守着电脑了。
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://loveexception.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://loveexception.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=%E6%8A%9B%E5%87%BA%E5%BC%82%E5%B8%B8%E7%9A%84%E7%88%B1" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://loveexception.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        
+                  <a href="#298252" title="抛出异常的爱回帖:给hibernate配置文件加密 解密的方案">回帖地址</a>
+                
+      </div>
+                        <div id='post_rate_box_298252' class='post_rate_box'><a href='#' onclick='rate_post(298252, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(298252, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="303165">
+  <td class="postauthor">
+    <ul>
+      <li class="name">Michael.zhl</li>
+      <li>等级: 初级会员</li>
+      <li><a href='http://michael-zhl.javaeye.com' target='_blank'><img alt="Michael.zhl的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/72374/a25393cb-26ad-4acf-8eca-e575545d2fb3.jpg?1236837194" title="Michael.zhl的博客: Michael.zhl" /></a></li>
+      <li>文章: 48</li>
+      <li>积分: 40</li>
+      <li>来自: 北京</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        发表时间：2007-06-04
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=Michael.zhl%E5%9B%9E%E8%B4%B4%3A%E7%BB%99hibernate%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E5%AF%86+%E8%A7%A3%E5%AF%86%E7%9A%84%E6%96%B9%E6%A1%88&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F70663%3Fpage%3D1%23303165' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+        没必要吧,人家要是连你的配置文件都看了.还有什么干不了呢.安全问题应该从服务器整体考虑.
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://michael-zhl.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://michael-zhl.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=Michael.zhl" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://michael-zhl.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        
+                  <a href="#303165" title="Michael.zhl回帖:给hibernate配置文件加密 解密的方案">回帖地址</a>
+                
+      </div>
+                        <div id='post_rate_box_303165' class='post_rate_box'><a href='#' onclick='rate_post(303165, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(303165, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+
+  </tbody>
+</table>
+
+
+<div class="actions">
+  <div class="buttons"></div>
+  <div class="wrapper"><div class="pagination"><span class="disabled prev_page">&laquo; 上一页</span> <span class="current">1</span> <a href="/topic/70663?page=2" rel="next">2</a> <a href="/topic/70663?page=2" class="next_page" rel="next">下一页 &raquo;</a></div></div>
+</div>
+
+<div>
+  <div class="crumbs">
+    <a href="/forums">论坛首页</a> <span class="arrow">&rarr;</span>
+    <a href="/forums/board/Java">Java编程和Java企业应用版</a>
+     <span class="arrow">&rarr;</span> <a href='/forums/tag/J2EE'>企业应用</a>
+    <br/><br/>跳转论坛:<select id="forum_urlname" name="forum[urlname]" onchange="window.location='/forums/board/'+this.value"><option value="Java" selected="selected">Java编程和Java企业应用</option>
+<option value="web">Web前端技术：AJAX和RIA</option>
+<option value="mobile">移动编程和手机应用开发</option>
+<option value="cpp">C/C++编程</option>
+<option value="Ruby">Ruby编程</option>
+<option value="Python">Python编程</option>
+<option value="PHP">PHP编程</option>
+<option value="Flash">Flash编程</option>
+<option value="dotnet">Microsoft .Net</option>
+<option value="Tech">综合技术</option>
+<option value="develop">软件开发和项目管理</option>
+<option value="Industry">行业应用</option>
+<option value="New">入门讨论</option>
+<option value="Job">招聘求职</option>
+<option value="Life">海阔天空</option></select>
+    <div id="forum_advert_f6"></div>
+  </div>
+
+  
+</div>
+
+<div style="display:none">
+  <form action="/posts/rate" id="post_rate_form" method="post" onsubmit="new Ajax.Request('/posts/rate', {asynchronous:true, evalScripts:true, parameters:Form.serialize(this)}); return false;">
+    <input type="hidden" id="post_rate_id" name="id"/>
+    <input type="hidden" id="post_rate_type" name="type"/>
+  </form></div>
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  fix_image_size($$('div.postbody img'), 760);
+
+  function rate_post(id, type) {
+    Element.update('post_rate_box_' + id, '提交中...');
+    new Ajax.Request('/posts/rate', {asynchronous:true, evalScripts:true, parameters:{"id":id, "type":type}});
+  }
+
+  function rate_topic(type) {
+    Element.update('topic_rate_box', '提交中...');
+    new Ajax.Request('/topics/rate', {asynchronous:true, evalScripts:true, parameters:{"id":70663, "type":type}});
+  }
+</script>
+
+
+        </div>
+        <div id="nav">
+  <div class="wrapper">
+    <ul>
+            <li><a href="http://www.javaeye.com/">首页</a></li>
+      <li><a href="http://www.javaeye.com/news">新闻</a></li>
+      <li><a href="http://www.javaeye.com/forums" class='selected'>论坛</a></li>
+      <li><a href="http://www.javaeye.com/ask">问答</a></li>
+      <li><a href="http://www.javaeye.com/wiki">知识库</a></li>
+      <li><a href="http://www.javaeye.com/blogs">博客</a></li>
+      <li><a href="http://www.javaeye.com/groups">圈子</a></li>
+      <!--<li><a href="http://www.javaeye.com/hunters">猎头</a></li>//-->
+      <li><a href="http://www.javaeye.com/job">招聘</a></li>
+      <li><a href="http://www.javaeye.com/index/service">服务</a></li>
+      <li class="last"><a href="http://www.javaeye.com/google_search">搜索</a></li>
+    </ul>
+  </div>
+</div>
+
+<div id="channel_nav">
+  <ul>
+    <li><a href="http://java.javaeye.com" >Java</a></li>
+    <li><a href="http://webapp.javaeye.com" >Web</a></li>
+    <li><a href="http://ruby.javaeye.com" >Ruby</a></li>
+    <li><a href="http://python.javaeye.com" >Python</a></li>
+    <li><a href="http://agile.javaeye.com" >敏捷</a></li>
+    <li><a href="http://mysql.javaeye.com" >MySQL</a></li>
+    <li><a href="http://primeton.javaeye.com" >普元</a></li>
+    <li><a href="http://dorado.javaeye.com" >Dorado</a></li>
+    <li><a href="http://kingdee.javaeye.com" >金蝶中间件</a></li>
+    <li class="last"><a href="http://book.javaeye.com" >图书</a></li>
+  </ul>
+</div>
+      </div>
+      <div id="footer">
+  <div id="site_nav">
+    <ul>
+      <li><a href="/index/service">广告服务</a></li>
+      <li><a href="http://webmaster.javaeye.com">JavaEye黑板报</a></li>
+      <li><a href="/index/aboutus">关于我们</a></li>
+      <li><a href="/index/contactus">联系我们</a></li>
+      <li class="last"><a href="/index/friend_links">友情链接</a></li>
+    </ul>
+  </div>
+  <div id="copyright">
+    &copy; 2003-2009 JavaEye.com.   All rights reserved. [ 沪ICP备05023328号 ] 
+  </div>
+</div>
+
+    </div>
+    
+  <div id="chat_input" style="display:none;">
+    <iframe id="chat_iframe" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" allowTransparency="true"></iframe>
+  </div>
+  <div id="chat_button"><a href="#" style="text-decoration:none;color:black" onclick="$('chat_input').show();$('chat_iframe').src='/chat/widget';return false;">说点啥吧 <img alt="Chat" src="http://www.javaeye.com/images/app/chat.gif?1236064059" /></a></div>
+
+<script type="text/javascript">
+  document.write("<img src='http://stat.javaeye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&logged_in=yes" + "' width='0' height='0' />");
+</script>
+  </body>
+</html>
