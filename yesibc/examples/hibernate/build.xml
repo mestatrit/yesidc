@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="pms" default="" basedir=".">
+	<property file="build.properties" />
+	<property name="app.home" value="." />
+	<property name="app.name" value="pms" />
+	<property name="src.dir" value="${app.home}/src" />
+
+	<path id="xdoclet.classpath">
+		<fileset dir="${xdoclet.lib}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	<!-- =================================================================== -->
+	<!-- Initialise -->
+	<!-- =================================================================== -->
+	<target name="init">
+		<tstamp>
+			<format property="TODAY" pattern="d-MM-yy" />
+		</tstamp>
+		<taskdef name="hibernatedoclet"
+classname="xdoclet.modules.hibernate.HibernateDocletTask"
+classpathref="xdoclet.classpath" />
+	</target>
+	<!-- =================================================================== -->
+	<!-- The "hibernatedoclet" target generates Hibernate mapping files -->
+	<!-- based on XDoclet marked-up Plain Old Java Object (POJO) -->
+	<!-- =================================================================== -->
+	<target name="hibernatedoclet" depends="init"
+unless="hibernatedoclet.unnecessary"
+description="Generate Hibernate mapping files">
+
+		<taskdef name="hibernatedoclet"
+classname="xdoclet.modules.hibernate.HibernateDocletTask"
+classpathref="compile.classpath" />
+
+		<!-- generate hibernate files -->
+		<hibernatedoclet destdir="${src.dir}"
+mergedir="${src.dir}" excludedtags="@version,@author,@todo,@see"
+addedtags="@xdoclet-generated at ${TODAY}" force="false"
+verbose="false">
+			<fileset dir="${src.dir}">
+				<include name="hibernate/*.java" />
+			</fileset>
+			<hibernate version="3.0" />
+		</hibernatedoclet>
+	</target>
+</project>
