@@ -19,8 +19,8 @@ public class LocateCompanyInfo {
 
 	private static final String[] COMPANY_DETAIL_TAGS = { "公司行业：", "公司性质：",
 			"公司规模：", "http://images.51job.com/im/2009/search/c/gsjjbt.gif",// 4
-			"公司网站：", "地    址：", "邮政编码：", "传    真：", "联 系 人：",// 9
-			"电    话：", "电子邮箱：" };//11
+			"公司网站：", "址：", "邮政编码：", "真：", "人：",// 9
+			"话：", "电子邮箱：" };// 11
 	private static final String[] CRR_COMPANY_DETAIL_TAGS = {
 			COMPANY_DETAIL_TAGS[0], COMPANY_DETAIL_TAGS[3] };
 
@@ -69,21 +69,31 @@ public class LocateCompanyInfo {
 		List<IElement> ies = JobSupport.getElementsByTxt(doc.getAll()
 				.tags("TD"), ieStr);
 
-		errorHandle(ies, "Company detail error!getComIndustryTypeScale!URL="
-				+ string);
+		String[] str = new String[] { "", "", "", "" };
+		if (ies == null || ies.isEmpty()) {
+			return str;
+		}
+		// errorHandle(ies, "Company detail error!getComIndustryTypeScale!URL="
+		// + string);
 
-		String[] str = new String[4];
 		String outHtml = ies.get(0).getOuterHTML();
 		int i = outHtml.indexOf(COMPANY_DETAIL_TAGS[0]);
-		int j = outHtml.indexOf("<", (i + 14));
-		String[] temp = getStr(outHtml.substring((i + 14), j));
-		str[0] = temp[0];
-		str[1] = temp[1];
+		int j = 0;
+		if (i > -1 && outHtml.length() > (i + 14)) {
+			j = outHtml.indexOf("<", (i + 14));
+			if (j > (i + 14)) {
+				String[] temp = getStr(outHtml.substring((i + 14), j));
+				str[0] = temp[0];
+				str[1] = temp[1];
+			}
+		}
 
 		i = outHtml.indexOf(COMPANY_DETAIL_TAGS[1]);
 		if (i > 0) {
 			j = outHtml.indexOf("<", (i + 14));
-			str[2] = getStr1(outHtml.substring((i + 14), j));
+			if (j > (i + 14)) {
+				str[2] = getStr1(outHtml.substring((i + 14), j));
+			}
 		} else {
 			str[2] = "";
 		}
@@ -91,7 +101,9 @@ public class LocateCompanyInfo {
 		i = outHtml.indexOf(COMPANY_DETAIL_TAGS[2]);
 		if (i > 0) {
 			j = outHtml.indexOf("<", (i + 14));
-			str[3] = getStr1(outHtml.substring((i + 14), j));
+			if (j > (i + 14)) {
+				str[3] = getStr1(outHtml.substring((i + 14), j));
+			}
 		} else {
 			str[3] = "";
 		}
@@ -104,9 +116,9 @@ public class LocateCompanyInfo {
 		while (true) {
 			i = temp.indexOf("&nbsp;");
 			if (i == 0) {
-				temp = temp.substring(6);
+				temp = temp.substring(6).replace("&nbsp;", "");
 			} else {
-				return temp;
+				return temp.replace("&nbsp;", "");
 			}
 		}
 	}
@@ -130,7 +142,7 @@ public class LocateCompanyInfo {
 						if (i == 0) {
 							temp = temp.substring(6);
 						} else {
-							str[1] = temp;
+							str[1] = temp.replace("&nbsp;", "");
 							break;
 						}
 					}
@@ -142,8 +154,8 @@ public class LocateCompanyInfo {
 	}
 
 	public static String getDescription(IDocument doc, String string) {
-		List<IElement> ies = JobSupport.getElements(doc.getAll().tags("P"),
-				"class", "txt_font");
+		List<IElement> ies = JobSupport.getElements(doc.getAll().tags("DIV"),
+				"class", "jobs_txt");
 
 		errorHandle(ies, "Company detail error!getDescription!URL=" + string);
 
@@ -154,18 +166,42 @@ public class LocateCompanyInfo {
 		List<IElement> ies = JobSupport.getElements(doc.getAll().tags("P"),
 				"P", "class", "txt_font1", COMPANY_DETAIL_TAGS[4]);
 
-		errorHandle(ies, "Company detail error!getWebsite!URL=" + string);
+		if (ies == null || ies.isEmpty()) {
+			return "";
+		}
 
-		String temp = ies.get((ies.size() - 1)).getInnerText();
-		return temp.substring(5);
+		String temp = ies.get(0).getInnerHTML();
+		int i = temp.indexOf("\">");
+		int j = temp.indexOf("</");
+		if ((i + 2) < j) {
+			temp = temp.substring(i + 2, j);
+		}
+
+		return temp;
 	}
 
 	public static String getAddress(IDocument doc, String string) {
 		List<IElement> ies = JobSupport.getElements(doc.getAll().tags("P"),
 				"P", "class", "txt_font1", COMPANY_DETAIL_TAGS[5]);
-		errorHandle(ies, "Company detail error!getAddress!URL=" + string);
-		String temp = ies.get((ies.size() - 1)).getInnerText();
-		return temp.substring(7);
+
+		if (ies == null || ies.isEmpty()) {
+			return "";
+		}
+
+		String temp = ies.get(0).getInnerHTML();
+		// errorHandle(ies, "Company detail error!getAddress!URL=" + string);
+		int i = temp.indexOf(COMPANY_DETAIL_TAGS[5]);
+		int j = temp.indexOf("<");
+
+		if(j>(i+2)){
+			return temp.substring((i + 2),j).replace("&nbsp;", "");
+		}
+		else if (temp.length() > (i + 2)) {
+			return temp.substring(i + 2).replace("&nbsp;", "");
+		} else {
+			return "";
+		}
+
 	}
 
 	private static void errorHandle(List<IElement> ies, String str) {
@@ -183,40 +219,84 @@ public class LocateCompanyInfo {
 	public static String getZip(IDocument doc, String url) {
 		List<IElement> ies = JobSupport.getElements(doc.getAll().tags("P"),
 				"P", "class", "txt_font1", COMPANY_DETAIL_TAGS[6]);
-		errorHandle(ies, "Company detail error!getZip!URL=" + url);
-		String temp = ies.get((ies.size() - 1)).getInnerText();
-		return temp.substring(5);
+		if (ies == null || ies.isEmpty()) {
+			return "";
+		}
+		// errorHandle(ies, "Company detail error!getZip!URL=" + url);
+		String temp = ies.get(0).getInnerHTML();
+		if (temp.length() > 5) {
+			return temp.substring(5);
+		} else {
+			return "";
+		}
 	}
 
 	public static String getFax(IDocument doc, String url) {
 		List<IElement> ies = JobSupport.getElements(doc.getAll().tags("P"),
 				"P", "class", "txt_font1", COMPANY_DETAIL_TAGS[7]);
-		errorHandle(ies, "Company detail error!getFax!URL=" + url);
-		String temp = ies.get((ies.size() - 1)).getInnerText();
-		return temp.substring(7);
+		if (ies == null || ies.isEmpty()) {
+			return "";
+		}
+		// errorHandle(ies, "Company detail error!getFax!URL=" + url);
+
+		String temp = ies.get(0).getInnerHTML();
+		int i = temp.indexOf(COMPANY_DETAIL_TAGS[7]);
+		if (i > 0) {
+			temp = temp.substring(i + COMPANY_DETAIL_TAGS[7].length());
+			return temp;
+		} else {
+			return "";
+		}
 	}
 
 	public static String getLinkman(IDocument doc, String url) {
 		List<IElement> ies = JobSupport.getElements(doc.getAll().tags("P"),
 				"P", "class", "txt_font1", COMPANY_DETAIL_TAGS[8]);
-		errorHandle(ies, "Company detail error!getLinkman!URL=" + url);
-		String temp = ies.get((ies.size() - 1)).getInnerText();
-		return temp.substring(6);
+		if (ies == null || ies.isEmpty()) {
+			return "";
+		}
+		// errorHandle(ies, "Company detail error!getLinkman!URL=" + url);
+		String temp = ies.get(0).getInnerHTML();
+		int i = temp.indexOf(COMPANY_DETAIL_TAGS[8]);
+		if (temp.length() > (i + 2)) {
+			return temp.substring(i + 2);
+		} else {
+			return "";
+		}
 	}
 
 	public static String getTel(IDocument doc, String url) {
 		List<IElement> ies = JobSupport.getElements(doc.getAll().tags("P"),
 				"P", "class", "txt_font1", COMPANY_DETAIL_TAGS[9]);
-		errorHandle(ies, "Company detail error!getTel!URL=" + url);
-		String temp = ies.get((ies.size() - 1)).getInnerText();
-		return temp.substring(7);
+		if (ies == null || ies.isEmpty()) {
+			return "";
+		}
+		// errorHandle(ies, "Company detail error!getTel!URL=" + url);
+		String temp = ies.get(0).getInnerHTML();
+		int i = temp.indexOf(COMPANY_DETAIL_TAGS[9]);
+		if (temp.length() > (i + 2)) {
+			return temp.substring(i + 2);
+		} else {
+			return "";
+		}
 	}
 
 	public static String getEmail(IDocument doc, String url) {
 		List<IElement> ies = JobSupport.getElements(doc.getAll().tags("P"),
 				"P", "class", "txt_font1", COMPANY_DETAIL_TAGS[10]);
-		errorHandle(ies, "Company detail error!getEmail!URL=" + url);
-		String temp = ies.get((ies.size() - 1)).getInnerText();
-		return temp.substring(5);
+		if (ies == null || ies.isEmpty()) {
+			return "";
+		}
+
+		// errorHandle(ies, "Company detail error!getEmail!URL=" + url);
+		String temp = ies.get(0).getInnerHTML();
+		int i = temp.indexOf("\">");
+		int j = temp.indexOf("</");
+		if ((i + 2) < j) {
+			temp = temp.substring(i + 2, j);
+			return temp;
+		} else {
+			return "";
+		}
 	}
 }
