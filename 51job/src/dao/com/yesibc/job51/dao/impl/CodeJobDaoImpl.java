@@ -1,14 +1,13 @@
 package com.yesibc.job51.dao.impl;
 
-import org.hibernate.stat.Statistics;
-
 import com.yesibc.core.dao.HibernateEntityDao;
 import com.yesibc.job51.common.BaseCode;
-import com.yesibc.job51.dao.BaseCodeDao;
+import com.yesibc.job51.dao.CodeJobDao;
 import com.yesibc.job51.model.Code;
+import com.yesibc.job51.model.CodeJob;
 
-public class BaseCodeDaoImpl extends HibernateEntityDao<Code> implements
-		BaseCodeDao {
+public class CodeJobDaoImpl extends HibernateEntityDao<CodeJob> implements
+		CodeJobDao {
 
 	public Code queryByCode(String code, String type) {
 		Code c = new Code();
@@ -83,7 +82,4 @@ public class BaseCodeDaoImpl extends HibernateEntityDao<Code> implements
 		return queryByName(name, BaseCode.APPENDIX, 0);
 	}
 
-	public Statistics getStatistics() {
-		return this.getHibernateTemplate().getSessionFactory().getStatistics();
-	}
 }

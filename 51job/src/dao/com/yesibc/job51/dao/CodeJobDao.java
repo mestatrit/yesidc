@@ -1,12 +1,11 @@
 package com.yesibc.job51.dao;
 
-import org.hibernate.stat.Statistics;
-
 import com.yesibc.core.dao.EntityDao;
 import com.yesibc.job51.model.Code;
+import com.yesibc.job51.model.CodeJob;
 
-public interface BaseCodeDao  extends EntityDao<Code>{
-	
+public interface CodeJobDao  extends EntityDao<CodeJob>{
+
 	public Code queryByCode(String code, String type);
 
 	public Code queryByName(String name, String type, int level);
@@ -39,5 +38,4 @@ public interface BaseCodeDao  extends EntityDao<Code>{
 
 	public Code queryAppendixByName(String name);
 
-	public Statistics getStatistics();
 }

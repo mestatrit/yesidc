@@ -18,7 +18,7 @@ public class ComEmail implements java.io.Serializable {
 	private Long id;
 	private String email;
 	/**
-	 * 个人-1 公司共享-2 公司个人-3 
+	 * 涓汉-1 鍏徃鍏变韩-2 鍏徃涓汉-3 
 	 */
 	private String mailType;
 	public final static String MAIL_TYPE_PRIVATE = "1";

@@ -1,10 +1,8 @@
 package com.yesibc.job51.model;
 
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
 
 /**
  * TeCCompany entity. @author MyEclipse Persistence Tools
@@ -29,7 +27,7 @@ public class Company implements java.io.Serializable {
 	private Long companyScale;
 	private Long companyIndustry1;
 	private Long companyIndustry2;
-	
+
 	private String homepage1;
 	private String homepage2;
 	private String homepage3;
@@ -45,8 +43,6 @@ public class Company implements java.io.Serializable {
 	private String createUser;
 	private String updateUser;
 	private Long companyIndustry3;
-	private String introduction1;
-	private String introduction2;
 	private BigDecimal registeredCapitalAmount;
 	private String registeredCapitalUnit;
 	private Long businessOperation;
@@ -86,10 +82,12 @@ public class Company implements java.io.Serializable {
 	private Long importsAmount;
 	private String exportsAmountName;
 	private Long exportsAmount;
-	
+
 	private Company parent;
 	private List<Company> children;
 	private List<ComContactHeader> comContactHeaders;
+	private List<ComAppend> comAppends;
+
 	// Constructors
 
 	public Long getId() {
@@ -274,22 +272,6 @@ public class Company implements java.io.Serializable {
 
 	public void setCompanyIndustry3(Long companyIndustry3) {
 		this.companyIndustry3 = companyIndustry3;
-	}
-
-	public String getIntroduction1() {
-		return this.introduction1;
-	}
-
-	public void setIntroduction1(String introduction1) {
-		this.introduction1 = introduction1;
-	}
-
-	public String getIntroduction2() {
-		return this.introduction2;
-	}
-
-	public void setIntroduction2(String introduction2) {
-		this.introduction2 = introduction2;
 	}
 
 	public BigDecimal getRegisteredCapitalAmount() {
@@ -512,7 +494,8 @@ public class Company implements java.io.Serializable {
 		return this.registeredCapitalAmountName;
 	}
 
-	public void setRegisteredCapitalAmountName(String registeredCapitalAmountName) {
+	public void setRegisteredCapitalAmountName(
+			String registeredCapitalAmountName) {
 		this.registeredCapitalAmountName = registeredCapitalAmountName;
 	}
 
@@ -604,7 +587,6 @@ public class Company implements java.io.Serializable {
 		this.exportsAmount = exportsAmount;
 	}
 
-
 	public Company getParent() {
 		return parent;
 	}
@@ -653,6 +635,12 @@ public class Company implements java.io.Serializable {
 		this.companyCode = companyCode;
 	}
 
+	public List<ComAppend> getComAppends() {
+		return comAppends;
+	}
 
+	public void setComAppends(List<ComAppend> comAppends) {
+		this.comAppends = comAppends;
+	}
 
 }

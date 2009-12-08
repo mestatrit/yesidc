@@ -7,7 +7,7 @@ import java.util.List;
  * TeCode entity. @author MyEclipse Persistence Tools
  */
 
-public class Code implements java.io.Serializable {
+public class CodeJob implements java.io.Serializable {
 
 	// Fields
 
@@ -16,7 +16,7 @@ public class Code implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = -4231312582019918823L;
 	private Long id;
-	private Code parent;
+	private CodeJob parent;
 	private String code;
 	private String code1;
 	private String ename;
@@ -30,8 +30,8 @@ public class Code implements java.io.Serializable {
 	private Long codeLevel;
 	private String createUser;
 	private String updateUser;
-	private List<Code> children;
-	private List<CodeJob> codeJobs;
+	private List<CodeJob> children;
+	private List<Code> codes;
 
 	public String getCname1() {
 		return cname1;
@@ -44,7 +44,7 @@ public class Code implements java.io.Serializable {
 	// Constructors
 
 	/** default constructor */
-	public Code() {
+	public CodeJob() {
 	}
 
 	// Property accessors
@@ -129,19 +129,19 @@ public class Code implements java.io.Serializable {
 		this.updateUser = updateUser;
 	}
 
-	public Code getParent() {
+	public CodeJob getParent() {
 		return parent;
 	}
 
-	public void setParent(Code parent) {
+	public void setParent(CodeJob parent) {
 		this.parent = parent;
 	}
 
-	public List<Code> getChildren() {
+	public List<CodeJob> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<Code> children) {
+	public void setChildren(List<CodeJob> children) {
 		this.children = children;
 	}
 
@@ -169,12 +169,12 @@ public class Code implements java.io.Serializable {
 		this.memo = memo;
 	}
 
-	public List<CodeJob> getCodeJobs() {
-		return codeJobs;
+	public List<Code> getCodes() {
+		return codes;
 	}
 
-	public void setCodeJobs(List<CodeJob> codeJobs) {
-		this.codeJobs = codeJobs;
+	public void setCodes(List<Code> codes) {
+		this.codes = codes;
 	}
 
 }
