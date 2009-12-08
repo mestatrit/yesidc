@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: dataAccessContext-hibernate.xml,v 1.4 2007/11/14 09:14:05 abel Exp $ -->
+	<!--
+		$Id: dataAccessContext-hibernate.xml,v 1.4 2007/11/14 09:14:05 abel
+		Exp $
+	-->
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 <beans default-autowire="byName" default-lazy-init="false">
 
 	<!-- 数据源定义,使用Apache DBCP 连接池 -->
-	<bean id="dataSource"
-		class="org.apache.commons.dbcp.BasicDataSource"
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
-		<property name="driverClassName"
-			value="${jdbc.driverClassName}" />
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
 		<property name="url" value="${jdbc.url}" />
 		<property name="username" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
@@ -21,22 +22,29 @@
 		</property>
 		<property name="mappingDirectoryLocations">
 			<!--property name="mappingResources" -->
-
 			<list>
 				<value>
 					classpath:/com/yesibc/job51/model/
-				</value>			
+				</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
 			<props>
-				<!-- prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop//-->
+				<!--
+					prop
+					key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop//
+				-->
 				<prop key="hibernate.dialect">
 					org.hibernate.dialect.Oracle9Dialect
 				</prop>
 
 				<prop key="hibernate.show_sql">true</prop>
+
+				<prop key="hibernate.jdbc.fetch_size">50</prop>
+				<prop key="hibernate.jdbc.batch_size">30</prop>
+
 				<prop key="hibernate.generate_statistics">true</prop>
+
 				<prop key="hibernate.jdbc.use_streams_for_binary">
 					true
 				</prop>
@@ -50,11 +58,34 @@
 
 			</props>
 		</property>
+		<property name="lobHandler" ref="oracleLobHandler" />
 	</bean>
+
+	<!--Blob field hander for Oracle9i or Oracle10g-->
+	<bean id="nativeJdbcExtractor"
+		class="org.springframework.jdbc.support.nativejdbc.SimpleNativeJdbcExtractor" />
+	<bean id="oracleLobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler"
+		lazy-init="true">
+		<property name="nativeJdbcExtractor">
+			<ref bean="nativeJdbcExtractor" />
+		</property>
+	</bean>
+
+	<!--  webLogic下的配置 -->
+	<!--
+		bean id="nativeJdbcExtractor"
+		class="org.springframework.jdbc.support.nativejdbc.WebLogicNativeJdbcExtractor"
+		lazy-init="true" /
+	-->
+
 
 	<!--Hibernate TransactionManager-->
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
+		<!--
+			property name="nestedTransactionAllowed"> <value>true</value>
+			</property
+		-->
 	</bean>
 </beans>
