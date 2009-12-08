@@ -9,6 +9,7 @@ import com.yesibc.core.utils.CommonLog;
 public class MapTest {
 	public static void main(String[] args) {
 		Map<String, String> map = new HashMap<String, String>();
+		CommonLog.info("map="+map.get("1"));
 		CommonLog.info("map="+map.size());
 		map.put("1", "1-1");
 		map.put("2", "2-2");
