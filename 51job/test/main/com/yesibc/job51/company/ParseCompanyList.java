@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.webrenderer.swing.dom.IElement;
+import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.exception.NestedRuntimeException;
 import com.yesibc.core.spring.SpringContext;
+import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.common.ClawerUtils;
 import com.yesibc.job51.company.search1.LocateCompanyInfo;
 import com.yesibc.job51.dao.CompanyDao;
@@ -21,7 +23,7 @@ public class ParseCompanyList {
 		initMap();
 	}
 
-	public static void parseCompanies() {
+	public static void parseCompanies() throws ApplicationException {
 		// Add code to judge this page is OK?
 		int i = LocateCompanyInfo.checkValidation();
 		if (i < 1) {
@@ -45,6 +47,9 @@ public class ParseCompanyList {
 		List<Company> companies = companyDao.findAll(Company.class);
 		for (Company company : companies) {
 			map.put(company.getCompanyCode(), company);
+		}
+		if (map != null && !map.isEmpty()) {
+			LogHandler.info("Init company map! map size is " + map.size());
 		}
 	}
 
@@ -72,7 +77,8 @@ public class ParseCompanyList {
 			if (name.equals("")) {
 				continue;
 			}
-			companyId = getCompanyId(url);
+			companyId = ClawerConstants.FROM_WHERE_51JOB + "_"
+					+ getCompanyId(url);
 			Company com = new Company();
 			com.setCompanyName(name);
 			com.setUrl(url);
@@ -83,6 +89,8 @@ public class ParseCompanyList {
 				continue;
 			}
 
+			LogHandler.info("Put [" + companyId + "," + name
+					+ "] to company map! map size is " + map.size());
 			list.add(com);
 		}
 		return list;
@@ -97,7 +105,10 @@ public class ParseCompanyList {
 
 	public static void main(String[] args) {
 		String url = "http://search.51job.com/list/co,c,872424,0000,10,1.html";
+		
 		LogHandler.info(getCompanyId(url));
+		
+		url = "http://search.51job.com/job/39536457,c.html";
 
 	}
 
