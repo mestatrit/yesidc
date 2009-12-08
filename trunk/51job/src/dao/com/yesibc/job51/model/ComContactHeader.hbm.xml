@@ -12,7 +12,7 @@
 			</generator>
 		</id>
 
-		<many-to-one name="country" class="Code" cascade="none"
+		<many-to-one name="country" class="Code" cascade="save-update" 
 			fetch="select" foreign-key="FK_CONTACT_HEADER_COUNTRY">
 			<column name="COUNTRY_ID" />
 		</many-to-one>
@@ -37,12 +37,11 @@
 		</property>
 		<property name="cityName" type="java.lang.String">
 			<column name="CITY_NAME" length="100">
-				<comment>市名称</comment>
+				<comment>城市名称</comment>
 			</column>
 		</property>
 
-		<many-to-one name="company" class="Company" cascade="none"
-			fetch="select" foreign-key="FK_CONTACT_HEADER_COMPANY">
+		<many-to-one name="company" class="Company" foreign-key="FK_CONTACT_HEADER_COMPANY">
 			<column name="COMPANY_ID" />
 		</many-to-one>
 		<property name="companyName" type="java.lang.String">
@@ -52,19 +51,17 @@
 		</property>
 
 
-		<bag name="comContactInfos" table="TC_CONTACT_COMMON" lazy="true"
-			cascade="none">
+		<bag name="comContactInfos" table="TC_CONTACT_COMMON" lazy="false" cascade="all">
 			<key column="CONTACT_HEADER_ID" foreign-key="FK_CONTACT_COMMON_HEADER"></key>
 			<many-to-many class="ComContactInfo" column="CONTACT_INFO_ID" />
 		</bag>
 
-		<bag name="comEmails" table="TC_CONTACT_EMAIL" lazy="true"
-			cascade="none">
+		<bag name="comEmails" table="TC_CONTACT_EMAIL" lazy="false" cascade="all">
 			<key column="CONTACT_HEADER_ID" foreign-key="FK_CONTACT_EMAIL_HEADER"></key>
 			<many-to-many class="ComEmail" column="COM_EMAIL_ID"/>
 		</bag>
 
-		<many-to-one name="fromWhere" class="Code"
+		<many-to-one name="fromWhere" class="Code" lazy="false"
 			foreign-key="FK_C_CONTACT_HEADER_FROM_WHERE">
 			<column name="FROM_WHERE">
 				<comment>数据来源代码</comment>
@@ -72,17 +69,17 @@
 		</many-to-one>
 		<property name="fromWhereName" type="java.lang.String">
 			<column name="FROM_WHERE_NAME" length="100">
-				<comment>数据来源</comment>
+				<comment>数据来源名称</comment>
 			</column>
 		</property>
 		<property name="defaultName" type="java.lang.String">
 			<column name="DEFAULT_NAME" length="100">
-				<comment>中文名称</comment>
+				<comment>默认中文名称</comment>
 			</column>
 		</property>
 		<property name="defaultNameEn" type="java.lang.String">
 			<column name="DEFAULT_NAME_EN" length="100">
-				<comment>英文名称</comment>
+				<comment>默认英文名称</comment>
 			</column>
 		</property>
 
@@ -99,12 +96,12 @@
 		</property>
 		<property name="postcode1" type="java.lang.String">
 			<column name="postcode1" length="10">
-				<comment>邮编一</comment>
+				<comment>邮政编码一</comment>
 			</column>
 		</property>
 		<property name="postcode2" type="java.lang.String">
 			<column name="postcode2" length="10">
-				<comment>邮编二</comment>
+				<comment>邮政编码二</comment>
 			</column>
 		</property>
 

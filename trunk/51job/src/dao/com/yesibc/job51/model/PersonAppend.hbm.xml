@@ -40,13 +40,13 @@
 			</column>
 		</property>
 		<property name="content" type="java.lang.String">
-			<column name="CONTENT" length="4000">
+			<column name="CONTENT" length="4000" >
 				<comment>附加信息</comment>
 			</column>
 		</property>
 		<property name="content1" type="java.lang.String">
 			<column name="CONTENT1" length="4000">
-				<comment>附加信息</comment>
+				<comment>附加信息1</comment>
 			</column>
 		</property>
 		<property name="createDate" type="timestamp">

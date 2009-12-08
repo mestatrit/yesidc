@@ -119,16 +119,6 @@
 				<comment>行业类别3 - 主营行业</comment>
 			</column>
 		</property>
-		<property name="introduction1" type="java.lang.String">
-			<column name="INTRODUCTION1" length="4000">
-				<comment>公司简介1</comment>
-			</column>
-		</property>
-		<property name="introduction2" type="java.lang.String">
-			<column name="INTRODUCTION2" length="4000">
-				<comment>公司简介2</comment>
-			</column>
-		</property>
 		<property name="registeredCapitalAmount" type="java.math.BigDecimal">
 			<column name="REGISTERED_CAPITAL_AMOUNT">
 				<comment>注册资本金额</comment>
@@ -230,7 +220,7 @@
             </column>
         </property>
         <property name="mainCustomer" type="java.lang.String">
-            <column name="MAIN_CUSTOMER" length="100" not-null="true">
+            <column name="MAIN_CUSTOMER" length="100">
                 <comment>主要客户群,如：超市、服装厂、印染厂</comment>
             </column>
         </property>
@@ -325,19 +315,25 @@
             </column>
         </property>
         
- 		<bag lazy="true" name="children" table="T_COMPANY">
+ 		<bag lazy="false" name="children" table="T_COMPANY">
 			<key column="PARENT_ID" />
 			<one-to-many class="Company" />
 		</bag>
+		
  		<many-to-one name="parent" class="Company" cascade="none"   
                           outer-join="auto" foreign-key="FK_COMPANY_PARENT">   
                <column name="PARENT_ID" />   
           </many-to-one>   
     
 		
- 		<bag lazy="true" name="comContactHeaders" table="TC_CONTACT_HEADER">
+ 		<bag lazy="false" name="comContactHeaders" table="TC_CONTACT_HEADER" cascade="all">
 			<key column="COMPANY_ID"/>
 			<one-to-many class="ComContactHeader" />
+		</bag>
+ 
+  		<bag lazy="false" name="comAppends" table="TC_APPEND" cascade="save-update">
+			<key column="COMPANY_ID"/>
+			<one-to-many class="ComAppend" />
 		</bag>
  
  		<property name="createDate" type="timestamp">

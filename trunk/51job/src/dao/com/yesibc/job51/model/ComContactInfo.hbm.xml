@@ -40,8 +40,7 @@
 		<property name="updateUser" type="java.lang.String">
 			<column name="UPDATE_USER" length="20" />
 		</property>
-		<bag name="comContactHeaders" table="TC_CONTACT_COMMON" lazy="true"
-			cascade="none">
+		<bag name="comContactHeaders" table="TC_CONTACT_COMMON" lazy="false" inverse="true">
 			<key column="CONTACT_INFO_ID" foreign-key="FK_CONTACT_COMMON_INFO"></key>
 			<many-to-many class="ComContactHeader" column="CONTACT_HEADER_ID" />
 		</bag>		
