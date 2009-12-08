@@ -26,7 +26,7 @@ import com.yesibc.job51.service.support.ParseResumeWorkExperience;
 
 public class ResumeHandlerServiceImpl implements ResumeHandlerService {
 	
-	public static BaseCodeDao baseCode = (BaseCodeDao)SpringContext.getBean("baseCode");
+	public static BaseCodeDao baseCode = (BaseCodeDao)SpringContext.getBean("baseCodeDao");
 
 	public void setPersonDao(PersonDao personDao) {
 		this.personDao = personDao;
