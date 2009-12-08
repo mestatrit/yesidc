@@ -6,13 +6,17 @@ import java.util.Map;
 
 import com.yesibc.core.exception.NestedRuntimeException;
 import com.yesibc.core.spring.SpringContext;
-import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.support.Address;
+import com.yesibc.job51.common.support.FromWhere;
 import com.yesibc.job51.company.ErrorHandler;
+import com.yesibc.job51.company.LogHandler;
 import com.yesibc.job51.dao.BaseCodeDao;
 import com.yesibc.job51.model.Code;
 
-public class BaseCode {
+public abstract class BaseCode {
+
+	public static BaseCodeDao baseCodeDao = (BaseCodeDao) SpringContext
+			.getBean("baseCodeDao");
 
 	public final static String ADDRESS = "address";
 	public final static String WORK_YEAR = "work.year";
@@ -20,27 +24,34 @@ public class BaseCode {
 	public final static String SALARY_MONTHLY = "salary.monthly";
 	public final static String INDUSTRY = "industry";
 	public final static String FUNCTION = "function";
-	public final static String JOB_NATURE = "nature";
+	public final static String COMPANY_NATURE = "company.nature";
 	public final static String SPECIALITY = "speciality";
-	public final static String EDULEVEL = "eduLevel";
+	public final static String EDULEVEL = "edu.level";
 	public static final String LANGUAGE = "language";
 	public static final String LEVEL = "level";
 	public static final String SKILLS = "skills";
 	public static final String APPENDIX = "appendix";
+	public static final String FROM_WHERE = "from.where";
+	public static final String COMPANY_SCALE = "company.scale";
 
 	public static final Long CODE_LEVEL_TOP = new Long(0);
 	public static final Long CODE_LEVEL_FIRST = new Long(1);
 	public static final Long CODE_LEVEL_SECOND = new Long(2);
 	public static final Long CODE_LEVEL_THIRD = new Long(3);
-
-	public static BaseCodeDao baseCodeDao = (BaseCodeDao) SpringContext
-			.getBean("baseCodeDao");
-
+	public static final Long CODE_LEVEL_FOURTH = new Long(4);
+	public static final Long CODE_LEVEL_FIFTH = new Long(5);
+	
 	public static Map<String, Code> TOPS = new HashMap<String, Code>();
-	public static Map<String, Code> PROVINCES = new HashMap<String, Code>();
+	public static Map<String, Code> CONTINENTS = new HashMap<String, Code>();
 	public static Map<String, Code> CONTRIES = new HashMap<String, Code>();
+	public static Map<String, Code> PROVINCES = new HashMap<String, Code>();
 	public static Map<String, Code> CITIES = new HashMap<String, Code>();
+	public static Map<String, Code> DISTRICTS = new HashMap<String, Code>();
+	public static Map<String, Code> FROM_WHERES = new HashMap<String, Code>();
+
 	public static List<Code> TOP_CODES = refreshAll();
+
+	public static int i = 0;
 
 	private static List<Code> refreshAll() {
 		// System.out.println("456");
@@ -51,6 +62,8 @@ public class BaseCode {
 		// }else{
 		// return null;
 		// }
+
+		LogHandler.info("Refresh:" + (++i) + "times.");
 
 		List<Code> codes = baseCodeDao.findByNameValue(Code.class, "codeLevel",
 				CODE_LEVEL_TOP, "sortList", true);
@@ -68,7 +81,9 @@ public class BaseCode {
 		for (Code code : codes) {
 			TOPS.put(code.getCode(), code);
 			if (ADDRESS.equals(code.getCode())) {
-				Address.put2Contries(code.getChildren());
+				Address.put2Continents(code.getChildren());
+			} else if (FROM_WHERE.equals(code.getCode())) {
+				FromWhere.put2Map(code.getChildren());
 			}
 		}
 	}
@@ -83,40 +98,10 @@ public class BaseCode {
 		}
 	}
 
-	/**
-	 * TODO: 效率可提高
-	 * @param str
-	 * @return
-	 */
-	public static Map<Long, Code> getAddress(String str) {
-		if (StringUtils.isEmpty(str)) {
-			return null;
-		}
-
-		Map<Long, Code> map = new HashMap<Long, Code>();
-		Code c = null;
-		for (Map.Entry<String, Code> entry : CONTRIES.entrySet()) {
-			c = (Code) entry.getValue();
-			if (str.indexOf(c.getCname()) > -1) {
-				map.put(CODE_LEVEL_FIRST, c);
-			}
-		}
-
-		for (Map.Entry<String, Code> entry : PROVINCES.entrySet()) {
-			c = (Code) entry.getValue();
-			if (str.indexOf(c.getCname()) > -1) {
-				map.put(CODE_LEVEL_SECOND, c);
-			}
-		}
-
-		for (Map.Entry<String, Code> entry : CITIES.entrySet()) {
-			c = (Code) entry.getValue();
-			if (str.indexOf(c.getCname()) > -1) {
-				map.put(CODE_LEVEL_THIRD, c);
-			}
-		}
-
-		return map;
+	public static Code getTopCode(String code) {
+		return TOPS.get(code);
 	}
+
+	public abstract Code getCode(String code, Long level);
 
 }
