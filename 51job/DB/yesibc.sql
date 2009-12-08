@@ -1,390 +1,381 @@
-drop table TC_APPEND cascade constraints
-drop table TC_CONTACT_COMMON cascade constraints
-drop table TC_CONTACT_EMAIL cascade constraints
-drop table TC_CONTACT_HEADER cascade constraints
-drop table TC_CONTACT_INFO cascade constraints
-drop table TC_EMAIL cascade constraints
-drop table TP_ADDR cascade constraints
-drop table TP_APPEND cascade constraints
-drop table TP_EDU cascade constraints
-drop table TP_EMAIL cascade constraints
-drop table TP_LANGUAGE cascade constraints
-drop table TP_SKILL cascade constraints
-drop table T_CODE cascade constraints
-drop table T_COMPANY cascade constraints
-drop table T_PERSON cascade constraints
-drop sequence SEQ_CODE
-drop sequence SEQ_COMPANY
-drop sequence SEQ_C_APPEND
-drop sequence SEQ_C_CONTACT_HEADER
-drop sequence SEQ_C_CONTACT_INFO
-drop sequence SEQ_C_EMAIL
-drop sequence SEQ_PERSON
-drop sequence SEQ_P_ADDRESS
-drop sequence SEQ_P_APPEND
-drop sequence SEQ_P_EDU
-drop sequence SEQ_P_EMAIL
-drop sequence SEQ_P_LANGUAGE
-drop sequence SEQ_P_SKILL
-create table TC_APPEND (id number(19,0) not null, COMPANY_ID number(19,0), COMPANY_NAME varchar2(200 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), LOB_TYPE varchar2(1 char), CONTENTS clob, DATAS blob, CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
-comment on column TC_APPEND.COMPANY_NAME is '¹«Ë¾Ãû³Æ'
-comment on column TC_APPEND.FROM_WHERE is 'Êı¾İÀ´Ô´´úÂë'
-comment on column TC_APPEND.FROM_WHERE_NAME is 'Êı¾İÀ´Ô´'
-comment on column TC_APPEND.LOB_TYPE is 'ÌáÊ¾Îª1 clob»òÕß2 blob'
-comment on column TC_APPEND.CONTENTS is 'clobÄÚÈİ'
-comment on column TC_APPEND.DATAS is 'blobÄÚÈİ'
-comment on column TC_APPEND.CREATE_DATE is '´´½¨Ê±¼ä'
-comment on column TC_APPEND.UPDATE_DATE is '¸üĞÂÊ±¼ä'
-comment on column TC_APPEND.CREATE_USER is '´´½¨Õß'
-comment on column TC_APPEND.UPDATE_USER is '¸üĞÂÕß'
-create table TC_CONTACT_COMMON (CONTACT_HEADER_ID number(19,0) not null, CONTACT_INFO_ID number(19,0) not null)
-create table TC_CONTACT_EMAIL (CONTACT_HEADER_ID number(19,0) not null, COM_EMAIL_ID number(19,0) not null)
-create table TC_CONTACT_HEADER (id number(19,0) not null, COUNTRY_ID number(19,0), PROVINCE_ID number(19,0), CITY_ID number(19,0), COUNTRY_NAME varchar2(100 char), PROVINCE_NAME varchar2(100 char), CITY_NAME varchar2(100 char), COMPANY_ID number(19,0), COMPANY_NAME varchar2(200 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), DEFAULT_NAME varchar2(100 char), DEFAULT_NAME_EN varchar2(100 char), address1 varchar2(100 char), address2 varchar2(100 char), postcode1 varchar2(10 char), postcode2 varchar2(10 char), DEPARTMENT varchar2(100 char), POSITION varchar2(100 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
-comment on column TC_CONTACT_HEADER.COUNTRY_NAME is '¹ú¼ÒÃû³Æ'
-comment on column TC_CONTACT_HEADER.PROVINCE_NAME is 'Ê¡Ãû³Æ'
-comment on column TC_CONTACT_HEADER.CITY_NAME is 'ÊĞÃû³Æ'
-comment on column TC_CONTACT_HEADER.COMPANY_NAME is '¹«Ë¾Ãû³Æ'
-comment on column TC_CONTACT_HEADER.FROM_WHERE is 'Êı¾İÀ´Ô´´úÂë'
-comment on column TC_CONTACT_HEADER.FROM_WHERE_NAME is 'Êı¾İÀ´Ô´'
-comment on column TC_CONTACT_HEADER.DEFAULT_NAME is 'ÖĞÎÄÃû³Æ'
-comment on column TC_CONTACT_HEADER.DEFAULT_NAME_EN is 'Ó¢ÎÄÃû³Æ'
-comment on column TC_CONTACT_HEADER.address1 is 'µØÖ·Ò»'
-comment on column TC_CONTACT_HEADER.address2 is 'µØÖ·¶ş'
-comment on column TC_CONTACT_HEADER.postcode1 is 'ÓÊ±àÒ»'
-comment on column TC_CONTACT_HEADER.postcode2 is 'ÓÊ±à¶ş'
-comment on column TC_CONTACT_HEADER.DEPARTMENT is '²¿ÃÅ'
-comment on column TC_CONTACT_HEADER.POSITION is 'Ö°Î»'
-comment on column TC_CONTACT_HEADER.CREATE_DATE is '´´½¨Ê±¼ä'
-comment on column TC_CONTACT_HEADER.UPDATE_DATE is '¸üĞÂÊ±¼ä'
-comment on column TC_CONTACT_HEADER.CREATE_USER is '´´½¨Õß'
-comment on column TC_CONTACT_HEADER.UPDATE_USER is '¸üĞÂÕß'
-create table TC_CONTACT_INFO (id number(19,0) not null, type varchar2(255 char) not null, FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), CONTRACT_NO varchar2(50 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
-comment on column TC_CONTACT_INFO.FROM_WHERE is 'Êı¾İÀ´Ô´´úÂë'
-comment on column TC_CONTACT_INFO.FROM_WHERE_NAME is 'Êı¾İÀ´Ô´'
-create table TC_EMAIL (id number(19,0) not null, FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), MAILTYPE varchar2(100 char), EMAIL varchar2(100 char) not null, CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
-comment on column TC_EMAIL.FROM_WHERE is 'Êı¾İÀ´Ô´´úÂë'
-comment on column TC_EMAIL.FROM_WHERE_NAME is 'Êı¾İÀ´Ô´'
-comment on column TC_EMAIL.MAILTYPE is 'ÓÊ¼şµØÖ·ÀàĞÍ'
-comment on column TC_EMAIL.EMAIL is 'ÓÊ¼şµØÖ·'
-comment on column TC_EMAIL.CREATE_DATE is '´´½¨Ê±¼ä'
-comment on column TC_EMAIL.UPDATE_DATE is '¸üĞÂÊ±¼ä'
-comment on column TC_EMAIL.CREATE_USER is '´´½¨Õß'
-comment on column TC_EMAIL.UPDATE_USER is '¸üĞÂÕß'
-create table TP_ADDR (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), COUNTRY_ID number(19,0), PROVINCE_ID number(19,0), CITY_ID number(19,0), COUNTRY_NAME varchar2(100 char), PROVINCE_NAME varchar2(100 char), CITY_NAME varchar2(100 char), ADDRESS varchar2(200 char), POSTCODE varchar2(10 char), MEMO varchar2(1000 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
-comment on column TP_ADDR.PERSON_ID is 'ËùÓĞÕß'
-comment on column TP_ADDR.FROM_WHERE is 'Êı¾İÀ´Ô´´úÂë'
-comment on column TP_ADDR.FROM_WHERE_NAME is 'Êı¾İÀ´Ô´'
-comment on column TP_ADDR.COUNTRY_ID is '¹ú¼Ò´úÂë'
-comment on column TP_ADDR.PROVINCE_ID is 'Ê¡´úÂë'
-comment on column TP_ADDR.CITY_ID is 'ÊĞ´úÂë'
-comment on column TP_ADDR.COUNTRY_NAME is '¹ú¼ÒÃû³Æ'
-comment on column TP_ADDR.PROVINCE_NAME is 'Ê¡Ãû³Æ'
-comment on column TP_ADDR.CITY_NAME is 'ÊĞÃû³Æ'
-comment on column TP_ADDR.ADDRESS is 'µØÖ·'
-comment on column TP_ADDR.POSTCODE is 'ÓÊ±à'
-comment on column TP_ADDR.MEMO is '±¸×¢'
-comment on column TP_ADDR.CREATE_DATE is '´´½¨Ê±¼ä'
-comment on column TP_ADDR.UPDATE_DATE is '¸üĞÂÊ±¼ä'
-comment on column TP_ADDR.CREATE_USER is '´´½¨Õß'
-comment on column TP_ADDR.UPDATE_USER is '¸üĞÂÕß'
-create table TP_APPEND (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), APPEND_TYPE number(19,0), APPEND_TYPE_NAME varchar2(100 char), CONTENT varchar2(4000 char), CONTENT1 varchar2(4000 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
-comment on column TP_APPEND.PERSON_ID is 'ËùÓĞÕß'
-comment on column TP_APPEND.FROM_WHERE is 'Êı¾İÀ´Ô´´úÂë'
-comment on column TP_APPEND.FROM_WHERE_NAME is 'Êı¾İÀ´Ô´'
-comment on column TP_APPEND.APPEND_TYPE is '¸½¼ÓĞÅÏ¢´úÂë'
-comment on column TP_APPEND.APPEND_TYPE_NAME is '¸½¼ÓĞÅÏ¢Àà±ğ'
-comment on column TP_APPEND.CONTENT is '¸½¼ÓĞÅÏ¢'
-comment on column TP_APPEND.CONTENT1 is '¸½¼ÓĞÅÏ¢1'
-comment on column TP_APPEND.CREATE_DATE is '´´½¨Ê±¼ä'
-comment on column TP_APPEND.UPDATE_DATE is '¸üĞÂÊ±¼ä'
-comment on column TP_APPEND.CREATE_USER is '´´½¨Õß'
-comment on column TP_APPEND.UPDATE_USER is '¸üĞÂÕß'
-create table TP_EDU (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), EDU_DATE_FROM timestamp, EDU_DATE_TO timestamp, EDU_NAME varchar2(100 char), EDU_SPECIALITY_NAME varchar2(100 char), EDU_SPECIALITY number(19,0), EDU_LEVEL number(19,0), EDU_LEVEL_NAME varchar2(50 char), EDU_TYPE varchar2(2 char), MEMO varchar2(2000 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
-comment on column TP_EDU.PERSON_ID is 'ËùÓĞÕß'
-comment on column TP_EDU.FROM_WHERE is 'Êı¾İÀ´Ô´´úÂë'
-comment on column TP_EDU.FROM_WHERE_NAME is 'Êı¾İÀ´Ô´'
-comment on column TP_EDU.EDU_DATE_FROM is 'ÆğÊ¼Ê±¼ä'
-comment on column TP_EDU.EDU_DATE_TO is '½áÊøÊ±¼ä'
-comment on column TP_EDU.EDU_NAME is 'Ñ§Ğ£Ãû³Æ/ÅàÑµ»ú¹¹/Ö¤Êé°ä·¢»ú¹¹'
-comment on column TP_EDU.EDU_SPECIALITY_NAME is '×¨ÒµÃû³Æ/ÅàÑµ¿Î³Ì/Ö¤ÊéÃû³Æ'
-comment on column TP_EDU.EDU_SPECIALITY is '×¨ÒµÃû³Æ/ÅàÑµ¿Î³Ì/Ö¤ÊéÃû³Æ ´úÂë'
-comment on column TP_EDU.EDU_LEVEL is 'Ñ§Àú/»ñµÃÖ¤Êé/Ö¤Êé³É¼¨ ´úÂë'
-comment on column TP_EDU.EDU_LEVEL_NAME is 'Ñ§Àú/»ñµÃÖ¤Êé/Ö¤Êé³É¼¨'
-comment on column TP_EDU.EDU_TYPE is 'EDU_TYPE_SCHOOL="1";EDU_TYPE_TRAINING="2";EDU_TYPE_CERTIFICATION="3";'
-comment on column TP_EDU.MEMO is 'ÏêÏ¸ÃèÊö'
-comment on column TP_EDU.CREATE_DATE is '´´½¨Ê±¼ä'
-comment on column TP_EDU.UPDATE_DATE is '¸üĞÂÊ±¼ä'
-comment on column TP_EDU.CREATE_USER is '´´½¨Õß'
-comment on column TP_EDU.UPDATE_USER is '¸üĞÂÕß'
-create table TP_EMAIL (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), EMAIL varchar2(100 char) not null, MAIL_TYPE varchar2(2 char), NAME_DEFAULT varchar2(100 char), NAME1 varchar2(100 char), NAME2 varchar2(100 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
-comment on column TP_EMAIL.PERSON_ID is 'µç×ÓÓÊÏäËùÓĞÕß'
-comment on column TP_EMAIL.FROM_WHERE is 'Êı¾İÀ´Ô´´úÂë'
-comment on column TP_EMAIL.FROM_WHERE_NAME is 'Êı¾İÀ´Ô´'
-comment on column TP_EMAIL.EMAIL is 'ÓÊ¼şµØÖ·'
-comment on column TP_EMAIL.MAIL_TYPE is 'ÓÊ¼şÀàĞÍ : 0-Î´Öª£»1-³£ÓÃ£»2-×¢²áÓÃ £»3-ºÜÉÙÓÃ£»4-»ù±¾²»ÓÃ'
-comment on column TP_EMAIL.NAME_DEFAULT is 'ÓÊ¼ş³Æºô'
-comment on column TP_EMAIL.NAME1 is 'ÓÊ¼ş³Æºô1'
-comment on column TP_EMAIL.NAME2 is 'ÓÊ¼ş³Æºô2'
-comment on column TP_EMAIL.CREATE_DATE is '´´½¨Ê±¼ä'
-comment on column TP_EMAIL.UPDATE_DATE is '¸üĞÂÊ±¼ä'
-comment on column TP_EMAIL.CREATE_USER is '´´½¨Õß'
-comment on column TP_EMAIL.UPDATE_USER is '¸üĞÂÕß'
-create table TP_LANGUAGE (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), LANGUAGE_NAME varchar2(100 char), LANGUAGE_CODE number(19,0), USE_LEVEL_NAME varchar2(50 char), USE_LEVEL number(19,0), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
-comment on column TP_LANGUAGE.PERSON_ID is 'ËùÓĞÕß'
-comment on column TP_LANGUAGE.FROM_WHERE is 'Êı¾İÀ´Ô´´úÂë'
-comment on column TP_LANGUAGE.FROM_WHERE_NAME is 'Êı¾İÀ´Ô´'
-comment on column TP_LANGUAGE.LANGUAGE_NAME is 'ÓïÑÔÃû³Æ'
-comment on column TP_LANGUAGE.LANGUAGE_CODE is 'ÓïÑÔ´úÂë'
-comment on column TP_LANGUAGE.USE_LEVEL_NAME is 'ÓïÑÔË®Æ½'
-comment on column TP_LANGUAGE.USE_LEVEL is 'ÓïÑÔË®Æ½´úÂë'
-comment on column TP_LANGUAGE.CREATE_DATE is '´´½¨Ê±¼ä'
-comment on column TP_LANGUAGE.UPDATE_DATE is '¸üĞÂÊ±¼ä'
-comment on column TP_LANGUAGE.CREATE_USER is '´´½¨Õß'
-comment on column TP_LANGUAGE.UPDATE_USER is '¸üĞÂÕß'
-create table TP_SKILL (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), USE_MONTHS double precision, USE_LEVEL_NAME varchar2(50 char), USE_LEVEL number(19,0), SKILL_NAME varchar2(50 char), SKILL number(19,0), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
-comment on column TP_SKILL.PERSON_ID is 'ËùÓĞÕß'
-comment on column TP_SKILL.FROM_WHERE is 'Êı¾İÀ´Ô´´úÂë'
-comment on column TP_SKILL.FROM_WHERE_NAME is 'Êı¾İÀ´Ô´'
-comment on column TP_SKILL.USE_LEVEL_NAME is '¼¼ÊõË®Æ½'
-comment on column TP_SKILL.USE_LEVEL is '¼¼ÊõË®Æ½´úÂë'
-comment on column TP_SKILL.SKILL_NAME is '¼¼ÊõÃû³Æ'
-comment on column TP_SKILL.SKILL is '¼¼ÊõÃû³Æ´úÂë'
-comment on column TP_SKILL.CREATE_DATE is '´´½¨Ê±¼ä'
-comment on column TP_SKILL.UPDATE_DATE is '¸üĞÂÊ±¼ä'
-comment on column TP_SKILL.CREATE_USER is '´´½¨Õß'
-comment on column TP_SKILL.UPDATE_USER is '¸üĞÂÕß'
-create table T_CODE
-(
-  ID          NUMBER(19) not null,
-  CODE_TYPE   NUMBER(19),
-  CODE        VARCHAR2(50 CHAR) not null,
-  CODE1       VARCHAR2(50 CHAR),
-  ENAME1      VARCHAR2(250 CHAR),
-  ENAME       VARCHAR2(250 CHAR),
-  CNAME       VARCHAR2(250 CHAR),
-  CNAME1      VARCHAR2(250 CHAR),
-  MEMO        VARCHAR2(250 CHAR),
-  CODE_LEVEL  NUMBER(19) not null,
-  SORT_LIST   NUMBER(19),
-  CREATE_DATE TIMESTAMP(6),
-  UPDATE_DATE TIMESTAMP(6),
-  CREATE_USER VARCHAR2(50 CHAR),
-  UPDATE_USER VARCHAR2(50 CHAR),
-  primary key (id)
-)
-create table T_COMPANY (id number(19,0) not null, COMPANY_CODE varchar2(50 char), URL varchar2(200 char), COMPANY_NAME varchar2(100 char), COMPANY_NAME_EN varchar2(100 char), COMPANY_NAME_SIMPLE varchar2(20 char), COMPANY_NAME_SIMPLE_EN varchar2(20 char), COMPANY_TYPE number(19,0), COMPANY_SCALE number(19,0), COMPANY_INDUSTRY1 number(19,0), COMPANY_INDUSTRY2 number(19,0), HOMEPAGE1 varchar2(200 char), HOMEPAGE2 varchar2(200 char), HOMEPAGE3 varchar2(200 char), HOMEPAGE4 varchar2(200 char), HOMEPAGE5 varchar2(200 char), COMPANY_DOMAIN1 varchar2(20 char), COMPANY_DOMAIN2 varchar2(20 char), COMPANY_MEMO varchar2(2000 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), COMPANY_INDUSTRY3 number(19,0), REGISTERED_CAPITAL_AMOUNT number(19,2), REGISTERED_CAPITAL_UNIT varchar2(255 char), BUSINESS_OPERATION number(19,0), MAIN_BUSINESS_ADDRESS varchar2(500 char), MAIN_PRODUCTS varchar2(500 char), ESTABLISHMENT_TIME varchar2(10 char), REGISTER_ADDR varchar2(50 char), COPORATE_REPRESENTATIVE varchar2(50 char), BANK_ACCOUNT_OPEN varchar2(50 char), BANK_ACCOUNT varchar2(50 char), FACTORY_SPACE varchar2(10 char), STAFF_AMOUNT number(19,0), RESEARCH_DPT_AMOUNT number(19,0), BRAND_NAME varchar2(50 char), OUTPUT_MONTHLY_AMOUNT number(19,0), OUTPUT_MONTHLY_UNIT number(19,0), TURNOVER_YEARLY number(19,0), MNG_SYS_AUTH varchar2(200 char), QULITY_CONTROL varchar2(10 char), MAIN_MARKET varchar2(100 char), MAIN_CUSTOMER varchar2(100 char), IS_OEM varchar2(2 char), COMPANY_TYPE_NAME varchar2(100 char), COMPANY_SCALE_NAME varchar2(100 char), COMPANY_INDUSTRY1_NAME varchar2(100 char), COMPANY_INDUSTRY2_NAME varchar2(100 char), COMPANY_INDUSTRY3_NAME varchar2(100 char), REGISTERED_CAPITAL_AMOUNT_NAME varchar2(100 char), REGISTERED_CAPITAL_UNIT_NAME varchar2(100 char), BUSINESS_OPERATION_NAME varchar2(100 char), RESEARCH_DPT_AMOUNT_NAME varchar2(100 char), STAFF_AMOUNT_NAME varchar2(100 char), OUTPUT_MONTHLY_AMOUNT_NAME varchar2(100 char), OUTPUT_MONTHLY_UNIT_NAME varchar2(100 char), TURNOVER_YEARLY_NAME varchar2(100 char), IMPORTS_AMOUNT_NAME varchar2(100 char), IMPORTS_AMOUNT number(19,0), EXPORTS_AMOUNT_NAME varchar2(100 char), EXPORTS_AMOUNT number(19,0), PARENT_ID number(19,0), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id))
-comment on column T_COMPANY.COMPANY_CODE is 'company Id in web'
-comment on column T_COMPANY.URL is 'company url in web'
-comment on column T_COMPANY.COMPANY_NAME is '¹«Ë¾ÖĞÎÄÃû³Æ'
-comment on column T_COMPANY.COMPANY_NAME_EN is '¹«Ë¾Ó¢ÎÄÃû³Æ'
-comment on column T_COMPANY.COMPANY_NAME_SIMPLE is '¹«Ë¾ÖĞÎÄ¼ò³Æ'
-comment on column T_COMPANY.COMPANY_NAME_SIMPLE_EN is '¹«Ë¾Ó¢ÎÄ¼ò³Æ'
-comment on column T_COMPANY.COMPANY_TYPE is '¹«Ë¾ÀàĞÍ'
-comment on column T_COMPANY.COMPANY_SCALE is '¹«Ë¾¹æÄ£'
-comment on column T_COMPANY.COMPANY_INDUSTRY1 is 'ĞĞÒµÀà±ğ1 - Ö÷ÓªĞĞÒµ'
-comment on column T_COMPANY.COMPANY_INDUSTRY2 is 'ĞĞÒµÀà±ğ2 - Ö÷ÓªĞĞÒµ'
-comment on column T_COMPANY.HOMEPAGE1 is 'Ö÷ Ò³ 1'
-comment on column T_COMPANY.HOMEPAGE2 is 'Ö÷ Ò³ 2'
-comment on column T_COMPANY.HOMEPAGE3 is 'Ö÷ Ò³ 3'
-comment on column T_COMPANY.HOMEPAGE4 is 'Ö÷ Ò³ 4'
-comment on column T_COMPANY.HOMEPAGE5 is 'Ö÷ Ò³ 5'
-comment on column T_COMPANY.COMPANY_DOMAIN1 is '¹«Ë¾ÓòÃû1'
-comment on column T_COMPANY.COMPANY_DOMAIN2 is '¹«Ë¾ÓòÃû2'
-comment on column T_COMPANY.COMPANY_MEMO is '¹«Ë¾±¸×¢'
-comment on column T_COMPANY.FROM_WHERE is 'Êı¾İÀ´Ô´´úÂë'
-comment on column T_COMPANY.FROM_WHERE_NAME is 'Êı¾İÀ´Ô´'
-comment on column T_COMPANY.COMPANY_INDUSTRY3 is 'ĞĞÒµÀà±ğ3 - Ö÷ÓªĞĞÒµ'
-comment on column T_COMPANY.REGISTERED_CAPITAL_AMOUNT is '×¢²á×Ê±¾½ğ¶î'
-comment on column T_COMPANY.REGISTERED_CAPITAL_UNIT is '×¢²á×Ê±¾½ğ¶îµ¥Î»'
-comment on column T_COMPANY.BUSINESS_OPERATION is '¾­ÓªÄ£Ê½'
-comment on column T_COMPANY.MAIN_BUSINESS_ADDRESS is 'Ö÷Òª¾­ÓªµØµã'
-comment on column T_COMPANY.MAIN_PRODUCTS is 'Ö÷Óª²úÆ·'
-comment on column T_COMPANY.ESTABLISHMENT_TIME is '³ÉÁ¢Ê±¼ä'
-comment on column T_COMPANY.REGISTER_ADDR is '¹«Ë¾×¢²áµØ'
-comment on column T_COMPANY.COPORATE_REPRESENTATIVE is '·¨¶¨´ú±íÈË/¸ºÔğÈË'
-comment on column T_COMPANY.BANK_ACCOUNT_OPEN is '¿ª»§ÒøĞĞ'
-comment on column T_COMPANY.BANK_ACCOUNT is 'ÒøĞĞÕÊºÅ'
-comment on column T_COMPANY.FACTORY_SPACE is '³§·¿Ãæ»ı'
-comment on column T_COMPANY.STAFF_AMOUNT is 'Ô±¹¤ÈËÊı'
-comment on column T_COMPANY.RESEARCH_DPT_AMOUNT is 'ÑĞ·¢²¿ÃÅÈËÊı'
-comment on column T_COMPANY.BRAND_NAME is 'Æ·ÅÆÃû³Æ'
-comment on column T_COMPANY.OUTPUT_MONTHLY_AMOUNT is 'ÔÂ²úÁ¿'
-comment on column T_COMPANY.OUTPUT_MONTHLY_UNIT is 'ÔÂ²úÁ¿µ¥Î»'
-comment on column T_COMPANY.TURNOVER_YEARLY is 'ÄêÓªÒµ¶î -> Äê³ö¿Ú¶î ²»ÄÜ´óÓÚ ÄêÓªÒµ¶î'
-comment on column T_COMPANY.MNG_SYS_AUTH is '¹ÜÀíÌåÏµÈÏÖ¤:ISO 9000 ISO 9001 ISO 9002 ISO 9003 ISO 9004 ISO 14000 ÆäËû'
-comment on column T_COMPANY.QULITY_CONTROL is 'ÖÊÁ¿¿ØÖÆ:ÄÚ²¿:µÚÈı·½:ÎŞ'
-comment on column T_COMPANY.MAIN_MARKET is 'Ö÷ÒªÊĞ³¡: ´óÂ½ ¸Û°ÄÌ¨µØÇø ÈÕ±¾ ±±ÃÀ ÄÏÃÀ Î÷Å· ¶«Å· ¶«ÑÇ ¶«ÄÏÑÇ ÖĞ¶« ·ÇÖŞ ´óÑóÖŞ È«Çò ÆäËûÊĞ³¡'
-comment on column T_COMPANY.MAIN_CUSTOMER is 'Ö÷Òª¿Í»§Èº,Èç£º³¬ÊĞ¡¢·ş×°³§¡¢Ó¡È¾³§'
-comment on column T_COMPANY.IS_OEM is 'ÊÇ·ñÌá¹©OEM´ú¼Ó¹¤£¿ÊÇ ¡¡ ·ñ'
-comment on column T_COMPANY.COMPANY_TYPE_NAME is '¹«Ë¾ÀàĞÍ'
-comment on column T_COMPANY.COMPANY_SCALE_NAME is '¹«Ë¾¹æÄ£'
-comment on column T_COMPANY.COMPANY_INDUSTRY1_NAME is 'ĞĞÒµÀà±ğ1 - Ö÷ÓªĞĞÒµ'
-comment on column T_COMPANY.COMPANY_INDUSTRY2_NAME is 'ĞĞÒµÀà±ğ2 - Ö÷ÓªĞĞÒµ'
-comment on column T_COMPANY.COMPANY_INDUSTRY3_NAME is 'ĞĞÒµÀà±ğ3 - Ö÷ÓªĞĞÒµ'
-comment on column T_COMPANY.REGISTERED_CAPITAL_AMOUNT_NAME is '×¢²á×Ê±¾½ğ¶î'
-comment on column T_COMPANY.REGISTERED_CAPITAL_UNIT_NAME is '×¢²á×Ê±¾½ğ¶îµ¥Î»'
-comment on column T_COMPANY.BUSINESS_OPERATION_NAME is '¾­ÓªÄ£Ê½'
-comment on column T_COMPANY.RESEARCH_DPT_AMOUNT_NAME is 'Ô±¹¤ÈËÊı'
-comment on column T_COMPANY.STAFF_AMOUNT_NAME is 'ÑĞ·¢²¿ÃÅÈËÊı'
-comment on column T_COMPANY.OUTPUT_MONTHLY_AMOUNT_NAME is 'ÔÂ²úÁ¿'
-comment on column T_COMPANY.OUTPUT_MONTHLY_UNIT_NAME is 'ÔÂ²úÁ¿µ¥Î»'
-comment on column T_COMPANY.TURNOVER_YEARLY_NAME is 'ÄêÓªÒµ¶î -> Äê³ö¿Ú¶î ²»ÄÜ´óÓÚ ÄêÓªÒµ¶î'
-comment on column T_COMPANY.IMPORTS_AMOUNT_NAME is 'Äê½ø¿Ú¶î'
-comment on column T_COMPANY.IMPORTS_AMOUNT is 'Äê½ø¿Ú¶î'
-comment on column T_COMPANY.EXPORTS_AMOUNT_NAME is 'Äê³ö¿Ú¶î -> Äê³ö¿Ú¶î ²»ÄÜ´óÓÚ ÄêÓªÒµ¶î'
-comment on column T_COMPANY.EXPORTS_AMOUNT is 'Äê³ö¿Ú¶î -> Äê³ö¿Ú¶î ²»ÄÜ´óÓÚ ÄêÓªÒµ¶î'
-comment on column T_COMPANY.CREATE_DATE is '´´½¨Ê±¼ä'
-comment on column T_COMPANY.UPDATE_DATE is '¸üĞÂÊ±¼ä'
-comment on column T_COMPANY.CREATE_USER is '´´½¨Õß'
-comment on column T_COMPANY.UPDATE_USER is '¸üĞÂÕß'
-create table T_PERSON (id number(19,0) not null, ID_TYPE number(19,0), ID_TYPE_NAME varchar2(50 char), PERSON_ID varchar2(30 char), NAME_DEFAULT varchar2(200 char), NAME_FIRST varchar2(50 char), NAME_MIDDLE varchar2(50 char), ĞÕ varchar2(50 char), NAME_NICK1 varchar2(50 char), NAME_NICK2 varchar2(50 char), NAME_NICK3 varchar2(50 char), SEX varchar2(1 char), BIRTHDAY timestamp, ADDR_LIVE number(19,0), ADDR_LIVE_NAME varchar2(50 char), WORK_YEARS number(19,0), WORK_YEARS_NAME varchar2(50 char), ADDR_DOMICILE number(19,0), ADDR_DOMICILE_NAME varchar2(50 char), ADDR_LIVE_DETAIL varchar2(300 char), ADDR_LIVE_ZIP varchar2(10 char), SARALY_YEAR number(19,0), SARALY_YEAR_NAME varchar2(50 char), TEL_MOBILE varchar2(50 char), TEL_COMPANY varchar2(50 char), TEL_BP varchar2(50 char), TEL_FAMILY varchar2(50 char), HOMEPAGE_SELF1 varchar2(200 char), HOMEPAGE_SELF2 varchar2(200 char), LINK_WANGWANG varchar2(50 char), LINK_QQ varchar2(50 char), LINK_MSN varchar2(50 char), LINK_SKYPE varchar2(50 char), LINK_GTALK varchar2(50 char), LINK_FETION varchar2(50 char), WORK_SARALY_BASIC number(19,2), WORK_BONUS number(19,2), WORK_SUBSIDY number(19,2), WORK_STOCK number(19,2), SELF_ADJUST varchar2(1000 char), JOB_NATURE varchar2(2 char), JOB_INTENT_INDUSTRY1 number(19,0), JOB_INTENT_INDUSTRY_NAME1 varchar2(50 char), JOB_INTENT_INDUSTRY2 number(19,0), JOB_INTENT_INDUSTRY_NAME2 varchar2(50 char), JOB_INTENT_INDUSTRY3 number(19,0), JOB_INTENT_INDUSTRY_NAME3 varchar2(50 char), JOB_INTENT_INDUSTRY4 number(19,0), JOB_INTENT_INDUSTRY_NAME4 varchar2(50 char), JOB_INTENT_INDUSTRY5 number(19,0), JOB_INTENT_INDUSTRY_NAME5 varchar2(50 char), JOB_INTENT_ADDR1 number(19,0), JOB_INTENT_ADDR_NAME1 varchar2(50 char), JOB_INTENT_ADDR2 number(19,0), JOB_INTENT_ADDR_NAME2 varchar2(50 char), JOB_INTENT_ADDR3 number(19,0), JOB_INTENT_ADDR_NAME3 varchar2(50 char), JOB_INTENT_ADDR4 number(19,0), JOB_INTENT_ADDR_NAME4 varchar2(50 char), JOB_INTENT_ADDR5 number(19,0), JOB_INTENT_ADDR_NAME5 varchar2(50 char), JOB_INTENT_FUN1 number(19,0), JOB_INTENT_FUN_NAME1 varchar2(50 char), JOB_INTENT_FUN2 number(19,0), JOB_INTENT_FUN_NAME2 varchar2(50 char), JOB_INTENT_FUN3 number(19,0), JOB_INTENT_FUN_NAME3 varchar2(50 char), JOB_INTENT_FUN4 number(19,0), JOB_INTENT_FUN_NAME4 varchar2(50 char), JOB_INTENT_FUN5 number(19,0), JOB_INTENT_FUN_NAME5 varchar2(50 char), JOB_INTENT_SALARY number(19,0), JOB_INTENT_SALARY_NAME varchar2(50 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(50 char), UPDATE_USER varchar2(50 char), primary key (id))
-comment on column T_PERSON.ID_TYPE is 'Ö¤¼şÀà±ğ´úÂë'
-comment on column T_PERSON.ID_TYPE_NAME is 'Ö¤¼şÀà±ğ'
-comment on column T_PERSON.PERSON_ID is 'Ö¤¼şºÅÂë'
-comment on column T_PERSON.NAME_DEFAULT is 'Ãû×Ö'
-comment on column T_PERSON.NAME_FIRST is 'Ãû'
-comment on column T_PERSON.NAME_MIDDLE is 'Ãû×ÖÖĞ¼ä'
-comment on column T_PERSON.NAME_NICK1 is 'êÇ³Æ1'
-comment on column T_PERSON.NAME_NICK2 is 'êÇ³Æ2'
-comment on column T_PERSON.NAME_NICK3 is 'êÇ³Æ3'
-comment on column T_PERSON.SEX is 'ĞÔ±ğ:1-ÄĞ£»2-Å®£»0-Î´Öª'
-comment on column T_PERSON.BIRTHDAY is 'ÉúÈÕ'
-comment on column T_PERSON.ADDR_LIVE is '¾Ó×¡µØ´úÂë'
-comment on column T_PERSON.ADDR_LIVE_NAME is '¾Ó×¡µØ'
-comment on column T_PERSON.WORK_YEARS is '¹¤×÷ÄêÏŞ´úÂë'
-comment on column T_PERSON.WORK_YEARS_NAME is '¹¤×÷ÄêÏŞ'
-comment on column T_PERSON.ADDR_DOMICILE is '»§¿ÚµØ´úÂë'
-comment on column T_PERSON.ADDR_DOMICILE_NAME is '»§¿ÚµØ'
-comment on column T_PERSON.ADDR_LIVE_DETAIL is '¾Ó×¡µØÖ·'
-comment on column T_PERSON.ADDR_LIVE_ZIP is '¾Ó×¡µØÓÊ±à'
-comment on column T_PERSON.SARALY_YEAR is 'Ä¿Ç°ÄêĞ½´úÂë'
-comment on column T_PERSON.SARALY_YEAR_NAME is 'Ä¿Ç°ÄêĞ½ Íò/Äê'
-comment on column T_PERSON.TEL_MOBILE is 'ÊÖ»ú'
-comment on column T_PERSON.TEL_COMPANY is '¹«Ë¾µç»°'
-comment on column T_PERSON.TEL_BP is 'BP»ú'
-comment on column T_PERSON.TEL_FAMILY is '¼ÒÍ¥µç»°'
-comment on column T_PERSON.HOMEPAGE_SELF1 is '¸öÈËÖ÷Ò³'
-comment on column T_PERSON.HOMEPAGE_SELF2 is '¸öÈËÖ÷Ò³'
-comment on column T_PERSON.LINK_WANGWANG is 'ÍúÍúÕÊºÅ'
-comment on column T_PERSON.LINK_QQ is 'QQÕÊºÅ'
-comment on column T_PERSON.LINK_MSN is 'MSNÕÊºÅ'
-comment on column T_PERSON.LINK_SKYPE is 'SKYPEÕÊºÅ'
-comment on column T_PERSON.LINK_GTALK is 'GTalkÕÊºÅ'
-comment on column T_PERSON.LINK_FETION is '·ÉĞÅÕÊºÅ'
-comment on column T_PERSON.WORK_SARALY_BASIC is '»ù±¾ÄêĞ½ Íò/Äê'
-comment on column T_PERSON.WORK_BONUS is 'Äê¶È½±½ğ/Ó¶½ğ Íò/Äê'
-comment on column T_PERSON.WORK_SUBSIDY is '²¹Ìù/½òÌù Íò/Äê'
-comment on column T_PERSON.WORK_STOCK is '¹ÉÆ±Êı'
-comment on column T_PERSON.SELF_ADJUST is '×ÔÎÒÆÀ¼Û'
-comment on column T_PERSON.JOB_NATURE is '¹¤×÷ĞÔÖÊ:1-È«Ö°;2-¼æÖ°;3-ÊµÏ°;4-È«/¼æÖ°'
-comment on column T_PERSON.JOB_INTENT_INDUSTRY1 is 'ÒâÏòĞĞÒµ´úÂë1'
-comment on column T_PERSON.JOB_INTENT_INDUSTRY_NAME1 is 'ÒâÏòĞĞÒµ1'
-comment on column T_PERSON.JOB_INTENT_INDUSTRY2 is 'ÒâÏòĞĞÒµ´úÂë2'
-comment on column T_PERSON.JOB_INTENT_INDUSTRY_NAME2 is 'ÒâÏòĞĞÒµ2'
-comment on column T_PERSON.JOB_INTENT_INDUSTRY3 is 'ÒâÏòĞĞÒµ´úÂë3'
-comment on column T_PERSON.JOB_INTENT_INDUSTRY_NAME3 is 'ÒâÏòĞĞÒµ3'
-comment on column T_PERSON.JOB_INTENT_INDUSTRY4 is 'ÒâÏòĞĞÒµ´úÂë4'
-comment on column T_PERSON.JOB_INTENT_INDUSTRY_NAME4 is 'ÒâÏòĞĞÒµ4'
-comment on column T_PERSON.JOB_INTENT_INDUSTRY5 is 'ÒâÏòĞĞÒµ´úÂë5'
-comment on column T_PERSON.JOB_INTENT_INDUSTRY_NAME5 is 'ÒâÏòĞĞÒµ5'
-comment on column T_PERSON.JOB_INTENT_ADDR1 is 'ÒâÏòµØÖ·´úÂë1'
-comment on column T_PERSON.JOB_INTENT_ADDR_NAME1 is 'ÒâÏòµØÖ·1'
-comment on column T_PERSON.JOB_INTENT_ADDR2 is 'ÒâÏòµØÖ·´úÂë2'
-comment on column T_PERSON.JOB_INTENT_ADDR_NAME2 is 'ÒâÏòµØÖ·2'
-comment on column T_PERSON.JOB_INTENT_ADDR3 is 'ÒâÏòµØÖ·´úÂë3'
-comment on column T_PERSON.JOB_INTENT_ADDR_NAME3 is 'ÒâÏòµØÖ·3'
-comment on column T_PERSON.JOB_INTENT_ADDR4 is 'ÒâÏòµØÖ·´úÂë4'
-comment on column T_PERSON.JOB_INTENT_ADDR_NAME4 is 'ÒâÏòµØÖ·4'
-comment on column T_PERSON.JOB_INTENT_ADDR5 is 'ÒâÏòµØÖ·´úÂë5'
-comment on column T_PERSON.JOB_INTENT_ADDR_NAME5 is 'ÒâÏòµØÖ·5'
-comment on column T_PERSON.JOB_INTENT_FUN1 is 'ÒâÏòÖ°ÄÜ´úÂë1'
-comment on column T_PERSON.JOB_INTENT_FUN_NAME1 is 'ÒâÏòÖ°ÄÜ1'
-comment on column T_PERSON.JOB_INTENT_FUN2 is 'ÒâÏòÖ°ÄÜ´úÂë2'
-comment on column T_PERSON.JOB_INTENT_FUN_NAME2 is 'ÒâÏòÖ°ÄÜ2'
-comment on column T_PERSON.JOB_INTENT_FUN3 is 'ÒâÏòÖ°ÄÜ´úÂë3'
-comment on column T_PERSON.JOB_INTENT_FUN_NAME3 is 'ÒâÏòÖ°ÄÜ3'
-comment on column T_PERSON.JOB_INTENT_FUN4 is 'ÒâÏòÖ°ÄÜ´úÂë4'
-comment on column T_PERSON.JOB_INTENT_FUN_NAME4 is 'ÒâÏòÖ°ÄÜ4'
-comment on column T_PERSON.JOB_INTENT_FUN5 is 'ÒâÏòÖ°ÄÜ´úÂë5'
-comment on column T_PERSON.JOB_INTENT_FUN_NAME5 is 'ÒâÏòÖ°ÄÜ5'
-comment on column T_PERSON.JOB_INTENT_SALARY is 'ÒâÏòÄêĞ½´úÂë'
-comment on column T_PERSON.JOB_INTENT_SALARY_NAME is 'ÒâÏòÄêĞ½ Íò/Äê'
-comment on column T_PERSON.FROM_WHERE is 'Êı¾İÀ´Ô´´úÂë'
-comment on column T_PERSON.FROM_WHERE_NAME is 'Êı¾İÀ´Ô´'
-comment on column T_PERSON.CREATE_DATE is '´´½¨Ê±¼ä'
-comment on column T_PERSON.UPDATE_DATE is 'ĞŞ¸ÄÊ±¼ä'
-comment on column T_PERSON.CREATE_USER is '´´½¨ÓÃ»§'
-comment on column T_PERSON.UPDATE_USER is 'ĞŞ¸ÄÓÃ»§'
-alter table TC_APPEND add constraint FK_C_APPEND_FROM_WHERE foreign key (FROM_WHERE) references T_CODE
-alter table TC_APPEND add constraint FK_APPEND_COMPANY foreign key (COMPANY_ID) references T_COMPANY
-alter table TC_CONTACT_COMMON add constraint FK_CONTACT_COMMON_HEADER foreign key (CONTACT_HEADER_ID) references TC_CONTACT_HEADER
-alter table TC_CONTACT_COMMON add constraint FK_CONTACT_COMMON_INFO foreign key (CONTACT_INFO_ID) references TC_CONTACT_INFO
-alter table TC_CONTACT_EMAIL add constraint FK_CONTACT_EMAIL_HEADER foreign key (CONTACT_HEADER_ID) references TC_CONTACT_HEADER
-alter table TC_CONTACT_EMAIL add constraint FK_CONTACT_EMAIL_EMAIL foreign key (COM_EMAIL_ID) references TC_EMAIL
-alter table TC_CONTACT_HEADER add constraint FK_CONTACT_HEADER_CITY foreign key (CITY_ID) references T_CODE
-alter table TC_CONTACT_HEADER add constraint FK_C_CONTACT_HEADER_FROM_WHERE foreign key (FROM_WHERE) references T_CODE
-alter table TC_CONTACT_HEADER add constraint FK_CONTACT_HEADER_COUNTRY foreign key (COUNTRY_ID) references T_CODE
-alter table TC_CONTACT_HEADER add constraint FK_CONTACT_HEADER_PROVINCE foreign key (PROVINCE_ID) references T_CODE
-alter table TC_CONTACT_HEADER add constraint FK_CONTACT_HEADER_COMPANY foreign key (COMPANY_ID) references T_COMPANY
-alter table TC_CONTACT_INFO add constraint FK_C_CONTACT_INFO_FROM_WHERE foreign key (FROM_WHERE) references T_CODE
-alter table TC_EMAIL add constraint FK_C_EMAIL_FROM_WHERE foreign key (FROM_WHERE) references T_CODE
-alter table TP_ADDR add constraint FK_P_ADDR_CITY foreign key (CITY_ID) references T_CODE
-alter table TP_ADDR add constraint FK_P_ADDR_FROM_WHERE foreign key (FROM_WHERE) references T_CODE
-alter table TP_ADDR add constraint FK_P_ADDR_PERSON foreign key (PERSON_ID) references T_PERSON
-alter table TP_ADDR add constraint FK_P_ADDR_COUNTRY foreign key (COUNTRY_ID) references T_CODE
-alter table TP_ADDR add constraint FK_P_ADDR_PROVINCE foreign key (PROVINCE_ID) references T_CODE
-alter table TP_APPEND add constraint FK_P_APPEND_TYPE_CODE foreign key (APPEND_TYPE) references T_CODE
-alter table TP_APPEND add constraint FK_P_APPEND_FROM_WHERE foreign key (FROM_WHERE) references T_CODE
-alter table TP_APPEND add constraint FK_P_APPEND_PERSON foreign key (PERSON_ID) references T_PERSON
-alter table TP_EDU add constraint FK_P_EDU_FROM_WHERE foreign key (FROM_WHERE) references T_CODE
-alter table TP_EDU add constraint FK_P_EDU_PERSON foreign key (PERSON_ID) references T_PERSON
-alter table TP_EDU add constraint FK_P_EDU_SPECIALITY_CODE foreign key (EDU_SPECIALITY) references T_CODE
-alter table TP_EDU add constraint FK_P_EDU_LEVEL_CODE foreign key (EDU_LEVEL) references T_CODE
-alter table TP_EMAIL add constraint FK_P_EMAIL_FROM_WHERE foreign key (FROM_WHERE) references T_CODE
-alter table TP_EMAIL add constraint FK_P_EMAIL_PERSON foreign key (PERSON_ID) references T_PERSON
-alter table TP_LANGUAGE add constraint FK_P_LANGUAGE_CODE foreign key (LANGUAGE_CODE) references T_CODE
-alter table TP_LANGUAGE add constraint FK_P_LEVEL_CODE foreign key (USE_LEVEL) references T_CODE
-alter table TP_LANGUAGE add constraint FK_P_LANGUAGE_FROM_WHERE foreign key (FROM_WHERE) references T_CODE
-alter table TP_LANGUAGE add constraint FK_P_LANGUAGE_PERSON foreign key (PERSON_ID) references T_PERSON
-alter table TP_SKILL add constraint FK_P_SKILL_LEVEL_CODE foreign key (USE_LEVEL) references T_CODE
-alter table TP_SKILL add constraint FK_P_SKILL_CODE foreign key (SKILL) references T_CODE
-alter table TP_SKILL add constraint FK_P_SKILL_FROM_WHERE foreign key (FROM_WHERE) references T_CODE
-alter table TP_SKILL add constraint FK_P_SKILL_PERSON foreign key (PERSON_ID) references T_PERSON
-alter table T_CODE add constraint FK_CODE_TYPE foreign key (CODE_TYPE) references T_CODE
-alter table T_COMPANY add constraint FK_COMPANY_FROM_WHERE foreign key (FROM_WHERE) references T_CODE
-alter table T_COMPANY add constraint FK_COMPANY_PARENT foreign key (PARENT_ID) references T_COMPANY
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_FUN2 foreign key (JOB_INTENT_FUN2) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_WORK_YEARS foreign key (WORK_YEARS) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_FUN5 foreign key (JOB_INTENT_FUN5) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_ADDR2 foreign key (JOB_INTENT_ADDR2) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_ADDR4 foreign key (JOB_INTENT_ADDR4) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_INDUSTRY5 foreign key (JOB_INTENT_INDUSTRY5) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_INDUSTRY1 foreign key (JOB_INTENT_INDUSTRY1) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_ADDR5 foreign key (JOB_INTENT_ADDR5) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_INDUSTRY4 foreign key (JOB_INTENT_INDUSTRY4) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_ADDR1 foreign key (JOB_INTENT_ADDR1) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_FUN3 foreign key (JOB_INTENT_FUN3) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_ID_TYPE foreign key (ID_TYPE) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_ADDR_DOMICILE foreign key (ADDR_DOMICILE) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_INDUSTRY3 foreign key (JOB_INTENT_INDUSTRY3) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_FUN4 foreign key (JOB_INTENT_FUN4) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_ADDR_LIVE foreign key (ADDR_LIVE) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_FROM_WHERE foreign key (FROM_WHERE) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_FUN1 foreign key (JOB_INTENT_FUN1) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_ADDR3 foreign key (JOB_INTENT_ADDR3) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_SARALY_YEAR foreign key (SARALY_YEAR) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_SALARY foreign key (JOB_INTENT_SALARY) references T_CODE
-alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_INDUSTRY2 foreign key (JOB_INTENT_INDUSTRY2) references T_CODE
-create sequence SEQ_CODE
-create sequence SEQ_COMPANY
-create sequence SEQ_C_APPEND
-create sequence SEQ_C_CONTACT_HEADER
-create sequence SEQ_C_CONTACT_INFO
-create sequence SEQ_C_EMAIL
-create sequence SEQ_PERSON
-create sequence SEQ_P_ADDRESS
-create sequence SEQ_P_APPEND
-create sequence SEQ_P_EDU
-create sequence SEQ_P_EMAIL
-create sequence SEQ_P_LANGUAGE
-create sequence SEQ_P_SKILL
+drop table TC_APPEND cascade constraints;
+drop table TC_CONTACT_COMMON cascade constraints;
+drop table TC_CONTACT_EMAIL cascade constraints;
+drop table TC_CONTACT_HEADER cascade constraints;
+drop table TC_CONTACT_INFO cascade constraints;
+drop table TC_EMAIL cascade constraints;
+drop table TP_ADDR cascade constraints;
+drop table TP_APPEND cascade constraints;
+drop table TP_EDU cascade constraints;
+drop table TP_EMAIL cascade constraints;
+drop table TP_LANGUAGE cascade constraints;
+drop table TP_SKILL cascade constraints;
+drop table T_CODE cascade constraints;
+drop table T_CODE_CODE_JOB cascade constraints;
+drop table T_CODE_JOB cascade constraints;
+drop table T_COMPANY cascade constraints;
+drop table T_PERSON cascade constraints;
+drop sequence SEQ_CODE;
+drop sequence SEQ_CODE_JOB;
+drop sequence SEQ_COMPANY;
+drop sequence SEQ_C_APPEND;
+drop sequence SEQ_C_CONTACT_HEADER;
+drop sequence SEQ_C_CONTACT_INFO;
+drop sequence SEQ_C_EMAIL;
+drop sequence SEQ_PERSON;
+drop sequence SEQ_P_ADDRESS;
+drop sequence SEQ_P_APPEND;
+drop sequence SEQ_P_EDU;
+drop sequence SEQ_P_EMAIL;
+drop sequence SEQ_P_LANGUAGE;
+drop sequence SEQ_P_SKILL;
+create table TC_APPEND (id number(19,0) not null, COMPANY_ID number(19,0), COMPANY_NAME varchar2(200 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), LOB_TYPE varchar2(1 char), CONTENTS clob, DATAS blob, CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
+comment on column TC_APPEND.COMPANY_NAME is 'å…¬å¸åç§°';
+comment on column TC_APPEND.FROM_WHERE is 'æ•°æ®æ¥æºä»£ç ';
+comment on column TC_APPEND.FROM_WHERE_NAME is 'æ•°æ®æ¥æº';
+comment on column TC_APPEND.LOB_TYPE is 'æç¤ºä¸º1 clobæˆ–è€…2 blob';
+comment on column TC_APPEND.CONTENTS is 'clobå†…å®¹';
+comment on column TC_APPEND.DATAS is 'blobå†…å®¹';
+comment on column TC_APPEND.CREATE_DATE is 'åˆ›å»ºæ—¶é—´';
+comment on column TC_APPEND.UPDATE_DATE is 'æ›´æ–°æ—¶é—´';
+comment on column TC_APPEND.CREATE_USER is 'åˆ›å»ºè€…';
+comment on column TC_APPEND.UPDATE_USER is 'æ›´æ–°è€…';
+create table TC_CONTACT_COMMON (CONTACT_HEADER_ID number(19,0) not null, CONTACT_INFO_ID number(19,0) not null);
+create table TC_CONTACT_EMAIL (CONTACT_HEADER_ID number(19,0) not null, COM_EMAIL_ID number(19,0) not null);
+create table TC_CONTACT_HEADER (id number(19,0) not null, COUNTRY_ID number(19,0), PROVINCE_ID number(19,0), CITY_ID number(19,0), COUNTRY_NAME varchar2(100 char), PROVINCE_NAME varchar2(100 char), CITY_NAME varchar2(100 char), COMPANY_ID number(19,0), COMPANY_NAME varchar2(200 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), DEFAULT_NAME varchar2(100 char), DEFAULT_NAME_EN varchar2(100 char), address1 varchar2(100 char), address2 varchar2(100 char), postcode1 varchar2(10 char), postcode2 varchar2(10 char), DEPARTMENT varchar2(100 char), POSITION varchar2(100 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
+comment on column TC_CONTACT_HEADER.COUNTRY_NAME is 'å›½å®¶åç§°';
+comment on column TC_CONTACT_HEADER.PROVINCE_NAME is 'çœåç§°';
+comment on column TC_CONTACT_HEADER.CITY_NAME is 'åŸå¸‚åç§°';
+comment on column TC_CONTACT_HEADER.COMPANY_NAME is 'å…¬å¸åç§°';
+comment on column TC_CONTACT_HEADER.FROM_WHERE is 'æ•°æ®æ¥æºä»£ç ';
+comment on column TC_CONTACT_HEADER.FROM_WHERE_NAME is 'æ•°æ®æ¥æºåç§°';
+comment on column TC_CONTACT_HEADER.DEFAULT_NAME is 'é»˜è®¤ä¸­æ–‡åç§°';
+comment on column TC_CONTACT_HEADER.DEFAULT_NAME_EN is 'é»˜è®¤è‹±æ–‡åç§°';
+comment on column TC_CONTACT_HEADER.address1 is 'åœ°å€ä¸€';
+comment on column TC_CONTACT_HEADER.address2 is 'åœ°å€äºŒ';
+comment on column TC_CONTACT_HEADER.postcode1 is 'é‚®æ”¿ç¼–ç ä¸€';
+comment on column TC_CONTACT_HEADER.postcode2 is 'é‚®æ”¿ç¼–ç äºŒ';
+comment on column TC_CONTACT_HEADER.DEPARTMENT is 'éƒ¨é—¨';
+comment on column TC_CONTACT_HEADER.POSITION is 'èŒä½';
+comment on column TC_CONTACT_HEADER.CREATE_DATE is 'åˆ›å»ºæ—¶é—´';
+comment on column TC_CONTACT_HEADER.UPDATE_DATE is 'æ›´æ–°æ—¶é—´';
+comment on column TC_CONTACT_HEADER.CREATE_USER is 'åˆ›å»ºè€…';
+comment on column TC_CONTACT_HEADER.UPDATE_USER is 'æ›´æ–°è€…';
+create table TC_CONTACT_INFO (id number(19,0) not null, type varchar2(255 char) not null, FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), CONTRACT_NO varchar2(50 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
+comment on column TC_CONTACT_INFO.FROM_WHERE is 'æ•°æ®æ¥æºä»£ç ';
+comment on column TC_CONTACT_INFO.FROM_WHERE_NAME is 'æ•°æ®æ¥æº';
+create table TC_EMAIL (id number(19,0) not null, FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), MAILTYPE varchar2(100 char), EMAIL varchar2(100 char) not null, CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
+comment on column TC_EMAIL.FROM_WHERE is 'æ•°æ®æ¥æºä»£ç ';
+comment on column TC_EMAIL.FROM_WHERE_NAME is 'æ•°æ®æ¥æº';
+comment on column TC_EMAIL.MAILTYPE is 'é‚®ä»¶åœ°å€ç±»å‹';
+comment on column TC_EMAIL.EMAIL is 'é‚®ä»¶åœ°å€';
+comment on column TC_EMAIL.CREATE_DATE is 'åˆ›å»ºæ—¶é—´';
+comment on column TC_EMAIL.UPDATE_DATE is 'æ›´æ–°æ—¶é—´';
+comment on column TC_EMAIL.CREATE_USER is 'åˆ›å»ºè€…';
+comment on column TC_EMAIL.UPDATE_USER is 'æ›´æ–°è€…';
+create table TP_ADDR (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), COUNTRY_ID number(19,0), PROVINCE_ID number(19,0), CITY_ID number(19,0), COUNTRY_NAME varchar2(100 char), PROVINCE_NAME varchar2(100 char), CITY_NAME varchar2(100 char), ADDRESS varchar2(200 char), POSTCODE varchar2(10 char), MEMO varchar2(1000 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
+comment on column TP_ADDR.PERSON_ID is 'æ‰€æœ‰è€…';
+comment on column TP_ADDR.FROM_WHERE is 'æ•°æ®æ¥æºä»£ç ';
+comment on column TP_ADDR.FROM_WHERE_NAME is 'æ•°æ®æ¥æº';
+comment on column TP_ADDR.COUNTRY_ID is 'å›½å®¶ä»£ç ';
+comment on column TP_ADDR.PROVINCE_ID is 'çœä»£ç ';
+comment on column TP_ADDR.CITY_ID is 'å¸‚ä»£ç ';
+comment on column TP_ADDR.COUNTRY_NAME is 'å›½å®¶åç§°';
+comment on column TP_ADDR.PROVINCE_NAME is 'çœåç§°';
+comment on column TP_ADDR.CITY_NAME is 'å¸‚åç§°';
+comment on column TP_ADDR.ADDRESS is 'åœ°å€';
+comment on column TP_ADDR.POSTCODE is 'é‚®ç¼–';
+comment on column TP_ADDR.MEMO is 'å¤‡æ³¨';
+comment on column TP_ADDR.CREATE_DATE is 'åˆ›å»ºæ—¶é—´';
+comment on column TP_ADDR.UPDATE_DATE is 'æ›´æ–°æ—¶é—´';
+comment on column TP_ADDR.CREATE_USER is 'åˆ›å»ºè€…';
+comment on column TP_ADDR.UPDATE_USER is 'æ›´æ–°è€…';
+create table TP_APPEND (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), APPEND_TYPE number(19,0), APPEND_TYPE_NAME varchar2(100 char), CONTENT varchar2(4000 char), CONTENT1 varchar2(4000 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
+comment on column TP_APPEND.PERSON_ID is 'æ‰€æœ‰è€…';
+comment on column TP_APPEND.FROM_WHERE is 'æ•°æ®æ¥æºä»£ç ';
+comment on column TP_APPEND.FROM_WHERE_NAME is 'æ•°æ®æ¥æº';
+comment on column TP_APPEND.APPEND_TYPE is 'é™„åŠ ä¿¡æ¯ä»£ç ';
+comment on column TP_APPEND.APPEND_TYPE_NAME is 'é™„åŠ ä¿¡æ¯ç±»åˆ«';
+comment on column TP_APPEND.CONTENT is 'é™„åŠ ä¿¡æ¯';
+comment on column TP_APPEND.CONTENT1 is 'é™„åŠ ä¿¡æ¯1';
+comment on column TP_APPEND.CREATE_DATE is 'åˆ›å»ºæ—¶é—´';
+comment on column TP_APPEND.UPDATE_DATE is 'æ›´æ–°æ—¶é—´';
+comment on column TP_APPEND.CREATE_USER is 'åˆ›å»ºè€…';
+comment on column TP_APPEND.UPDATE_USER is 'æ›´æ–°è€…';
+create table TP_EDU (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), EDU_DATE_FROM timestamp, EDU_DATE_TO timestamp, EDU_NAME varchar2(100 char), EDU_SPECIALITY_NAME varchar2(100 char), EDU_SPECIALITY number(19,0), EDU_LEVEL number(19,0), EDU_LEVEL_NAME varchar2(50 char), EDU_TYPE varchar2(2 char), MEMO varchar2(2000 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
+comment on column TP_EDU.PERSON_ID is 'æ‰€æœ‰è€…';
+comment on column TP_EDU.FROM_WHERE is 'æ•°æ®æ¥æºä»£ç ';
+comment on column TP_EDU.FROM_WHERE_NAME is 'æ•°æ®æ¥æº';
+comment on column TP_EDU.EDU_DATE_FROM is 'èµ·å§‹æ—¶é—´';
+comment on column TP_EDU.EDU_DATE_TO is 'ç»“æŸæ—¶é—´';
+comment on column TP_EDU.EDU_NAME is 'å­¦æ ¡åç§°/åŸ¹è®­æœºæ„/è¯ä¹¦é¢å‘æœºæ„';
+comment on column TP_EDU.EDU_SPECIALITY_NAME is 'ä¸“ä¸šåç§°/åŸ¹è®­è¯¾ç¨‹/è¯ä¹¦åç§°';
+comment on column TP_EDU.EDU_SPECIALITY is 'ä¸“ä¸šåç§°/åŸ¹è®­è¯¾ç¨‹/è¯ä¹¦åç§° ä»£ç ';
+comment on column TP_EDU.EDU_LEVEL is 'å­¦å†/è·å¾—è¯ä¹¦/è¯ä¹¦æˆç»© ä»£ç ';
+comment on column TP_EDU.EDU_LEVEL_NAME is 'å­¦å†/è·å¾—è¯ä¹¦/è¯ä¹¦æˆç»©';
+comment on column TP_EDU.EDU_TYPE is 'EDU_TYPE_SCHOOL="1";EDU_TYPE_TRAINING="2";EDU_TYPE_CERTIFICATION="3";';
+comment on column TP_EDU.MEMO is 'è¯¦ç»†æè¿°';
+comment on column TP_EDU.CREATE_DATE is 'åˆ›å»ºæ—¶é—´';
+comment on column TP_EDU.UPDATE_DATE is 'æ›´æ–°æ—¶é—´';
+comment on column TP_EDU.CREATE_USER is 'åˆ›å»ºè€…';
+comment on column TP_EDU.UPDATE_USER is 'æ›´æ–°è€…';
+create table TP_EMAIL (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), EMAIL varchar2(100 char) not null, MAIL_TYPE varchar2(2 char), NAME_DEFAULT varchar2(100 char), NAME1 varchar2(100 char), NAME2 varchar2(100 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
+comment on column TP_EMAIL.PERSON_ID is 'ç”µå­é‚®ç®±æ‰€æœ‰è€…';
+comment on column TP_EMAIL.FROM_WHERE is 'æ•°æ®æ¥æºä»£ç ';
+comment on column TP_EMAIL.FROM_WHERE_NAME is 'æ•°æ®æ¥æº';
+comment on column TP_EMAIL.EMAIL is 'é‚®ä»¶åœ°å€';
+comment on column TP_EMAIL.MAIL_TYPE is 'é‚®ä»¶ç±»å‹ : 0-æœªçŸ¥ï¼›1-å¸¸ç”¨ï¼›2-æ³¨å†Œç”¨ ï¼›3-å¾ˆå°‘ç”¨ï¼›4-åŸºæœ¬ä¸ç”¨';
+comment on column TP_EMAIL.NAME_DEFAULT is 'é‚®ä»¶ç§°å‘¼';
+comment on column TP_EMAIL.NAME1 is 'é‚®ä»¶ç§°å‘¼1';
+comment on column TP_EMAIL.NAME2 is 'é‚®ä»¶ç§°å‘¼2';
+comment on column TP_EMAIL.CREATE_DATE is 'åˆ›å»ºæ—¶é—´';
+comment on column TP_EMAIL.UPDATE_DATE is 'æ›´æ–°æ—¶é—´';
+comment on column TP_EMAIL.CREATE_USER is 'åˆ›å»ºè€…';
+comment on column TP_EMAIL.UPDATE_USER is 'æ›´æ–°è€…';
+create table TP_LANGUAGE (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), LANGUAGE_NAME varchar2(100 char), LANGUAGE_CODE number(19,0), USE_LEVEL_NAME varchar2(50 char), USE_LEVEL number(19,0), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
+comment on column TP_LANGUAGE.PERSON_ID is 'æ‰€æœ‰è€…';
+comment on column TP_LANGUAGE.FROM_WHERE is 'æ•°æ®æ¥æºä»£ç ';
+comment on column TP_LANGUAGE.FROM_WHERE_NAME is 'æ•°æ®æ¥æº';
+comment on column TP_LANGUAGE.LANGUAGE_NAME is 'è¯­è¨€åç§°';
+comment on column TP_LANGUAGE.LANGUAGE_CODE is 'è¯­è¨€ä»£ç ';
+comment on column TP_LANGUAGE.USE_LEVEL_NAME is 'è¯­è¨€æ°´å¹³';
+comment on column TP_LANGUAGE.USE_LEVEL is 'è¯­è¨€æ°´å¹³ä»£ç ';
+comment on column TP_LANGUAGE.CREATE_DATE is 'åˆ›å»ºæ—¶é—´';
+comment on column TP_LANGUAGE.UPDATE_DATE is 'æ›´æ–°æ—¶é—´';
+comment on column TP_LANGUAGE.CREATE_USER is 'åˆ›å»ºè€…';
+comment on column TP_LANGUAGE.UPDATE_USER is 'æ›´æ–°è€…';
+create table TP_SKILL (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), USE_MONTHS double precision, USE_LEVEL_NAME varchar2(50 char), USE_LEVEL number(19,0), SKILL_NAME varchar2(50 char), SKILL number(19,0), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
+comment on column TP_SKILL.PERSON_ID is 'æ‰€æœ‰è€…';
+comment on column TP_SKILL.FROM_WHERE is 'æ•°æ®æ¥æºä»£ç ';
+comment on column TP_SKILL.FROM_WHERE_NAME is 'æ•°æ®æ¥æº';
+comment on column TP_SKILL.USE_LEVEL_NAME is 'æŠ€æœ¯æ°´å¹³';
+comment on column TP_SKILL.USE_LEVEL is 'æŠ€æœ¯æ°´å¹³ä»£ç ';
+comment on column TP_SKILL.SKILL_NAME is 'æŠ€æœ¯åç§°';
+comment on column TP_SKILL.SKILL is 'æŠ€æœ¯åç§°ä»£ç ';
+comment on column TP_SKILL.CREATE_DATE is 'åˆ›å»ºæ—¶é—´';
+comment on column TP_SKILL.UPDATE_DATE is 'æ›´æ–°æ—¶é—´';
+comment on column TP_SKILL.CREATE_USER is 'åˆ›å»ºè€…';
+comment on column TP_SKILL.UPDATE_USER is 'æ›´æ–°è€…';
+create table T_CODE (id number(19,0) not null, CODE_TYPE number(19,0), CODE varchar2(50 char) not null, CODE1 varchar2(50 char), ENAME1 varchar2(250 char), ENAME varchar2(250 char), CNAME varchar2(250 char), CNAME1 varchar2(250 char), memo varchar2(250 char), CODE_LEVEL number(19,0) not null, SORT_LIST number(19,0), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(50 char), UPDATE_USER varchar2(50 char), primary key (id), unique (CODE_TYPE, CODE));
+create table T_CODE_CODE_JOB (CODE_ID number(19,0) not null, CODE_JOB_ID number(19,0) not null);
+create table T_CODE_JOB (id number(19,0) not null, CODE_TYPE number(19,0), CODE varchar2(50 char) not null, CODE1 varchar2(50 char), ENAME1 varchar2(250 char), ENAME varchar2(250 char), CNAME varchar2(250 char), CNAME1 varchar2(250 char), memo varchar2(250 char), CODE_LEVEL number(19,0) not null, SORT_LIST number(19,0), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(50 char), UPDATE_USER varchar2(50 char), primary key (id), unique (CODE_TYPE, CODE));
+create table T_COMPANY (id number(19,0) not null, COMPANY_CODE varchar2(50 char), URL varchar2(200 char), COMPANY_NAME varchar2(100 char), COMPANY_NAME_EN varchar2(100 char), COMPANY_NAME_SIMPLE varchar2(20 char), COMPANY_NAME_SIMPLE_EN varchar2(20 char), COMPANY_TYPE number(19,0), COMPANY_SCALE number(19,0), COMPANY_INDUSTRY1 number(19,0), COMPANY_INDUSTRY2 number(19,0), HOMEPAGE1 varchar2(200 char), HOMEPAGE2 varchar2(200 char), HOMEPAGE3 varchar2(200 char), HOMEPAGE4 varchar2(200 char), HOMEPAGE5 varchar2(200 char), COMPANY_DOMAIN1 varchar2(20 char), COMPANY_DOMAIN2 varchar2(20 char), COMPANY_MEMO varchar2(2000 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), COMPANY_INDUSTRY3 number(19,0), REGISTERED_CAPITAL_AMOUNT number(19,2), REGISTERED_CAPITAL_UNIT varchar2(255 char), BUSINESS_OPERATION number(19,0), MAIN_BUSINESS_ADDRESS varchar2(500 char), MAIN_PRODUCTS varchar2(500 char), ESTABLISHMENT_TIME varchar2(10 char), REGISTER_ADDR varchar2(50 char), COPORATE_REPRESENTATIVE varchar2(50 char), BANK_ACCOUNT_OPEN varchar2(50 char), BANK_ACCOUNT varchar2(50 char), FACTORY_SPACE varchar2(10 char), STAFF_AMOUNT number(19,0), RESEARCH_DPT_AMOUNT number(19,0), BRAND_NAME varchar2(50 char), OUTPUT_MONTHLY_AMOUNT number(19,0), OUTPUT_MONTHLY_UNIT number(19,0), TURNOVER_YEARLY number(19,0), MNG_SYS_AUTH varchar2(200 char), QULITY_CONTROL varchar2(10 char), MAIN_MARKET varchar2(100 char), MAIN_CUSTOMER varchar2(100 char), IS_OEM varchar2(2 char), COMPANY_TYPE_NAME varchar2(100 char), COMPANY_SCALE_NAME varchar2(100 char), COMPANY_INDUSTRY1_NAME varchar2(100 char), COMPANY_INDUSTRY2_NAME varchar2(100 char), COMPANY_INDUSTRY3_NAME varchar2(100 char), REGISTERED_CAPITAL_AMOUNT_NAME varchar2(100 char), REGISTERED_CAPITAL_UNIT_NAME varchar2(100 char), BUSINESS_OPERATION_NAME varchar2(100 char), RESEARCH_DPT_AMOUNT_NAME varchar2(100 char), STAFF_AMOUNT_NAME varchar2(100 char), OUTPUT_MONTHLY_AMOUNT_NAME varchar2(100 char), OUTPUT_MONTHLY_UNIT_NAME varchar2(100 char), TURNOVER_YEARLY_NAME varchar2(100 char), IMPORTS_AMOUNT_NAME varchar2(100 char), IMPORTS_AMOUNT number(19,0), EXPORTS_AMOUNT_NAME varchar2(100 char), EXPORTS_AMOUNT number(19,0), PARENT_ID number(19,0), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
+comment on column T_COMPANY.COMPANY_CODE is 'company Id in web';
+comment on column T_COMPANY.URL is 'company url in web';
+comment on column T_COMPANY.COMPANY_NAME is 'å…¬å¸ä¸­æ–‡åç§°';
+comment on column T_COMPANY.COMPANY_NAME_EN is 'å…¬å¸è‹±æ–‡åç§°';
+comment on column T_COMPANY.COMPANY_NAME_SIMPLE is 'å…¬å¸ä¸­æ–‡ç®€ç§°';
+comment on column T_COMPANY.COMPANY_NAME_SIMPLE_EN is 'å…¬å¸è‹±æ–‡ç®€ç§°';
+comment on column T_COMPANY.COMPANY_TYPE is 'å…¬å¸ç±»å‹';
+comment on column T_COMPANY.COMPANY_SCALE is 'å…¬å¸è§„æ¨¡';
+comment on column T_COMPANY.COMPANY_INDUSTRY1 is 'è¡Œä¸šç±»åˆ«1 - ä¸»è¥è¡Œä¸š';
+comment on column T_COMPANY.COMPANY_INDUSTRY2 is 'è¡Œä¸šç±»åˆ«2 - ä¸»è¥è¡Œä¸š';
+comment on column T_COMPANY.HOMEPAGE1 is 'ä¸» é¡µ 1';
+comment on column T_COMPANY.HOMEPAGE2 is 'ä¸» é¡µ 2';
+comment on column T_COMPANY.HOMEPAGE3 is 'ä¸» é¡µ 3';
+comment on column T_COMPANY.HOMEPAGE4 is 'ä¸» é¡µ 4';
+comment on column T_COMPANY.HOMEPAGE5 is 'ä¸» é¡µ 5';
+comment on column T_COMPANY.COMPANY_DOMAIN1 is 'å…¬å¸åŸŸå1';
+comment on column T_COMPANY.COMPANY_DOMAIN2 is 'å…¬å¸åŸŸå2';
+comment on column T_COMPANY.COMPANY_MEMO is 'å…¬å¸å¤‡æ³¨';
+comment on column T_COMPANY.FROM_WHERE is 'æ•°æ®æ¥æºä»£ç ';
+comment on column T_COMPANY.FROM_WHERE_NAME is 'æ•°æ®æ¥æº';
+comment on column T_COMPANY.COMPANY_INDUSTRY3 is 'è¡Œä¸šç±»åˆ«3 - ä¸»è¥è¡Œä¸š';
+comment on column T_COMPANY.REGISTERED_CAPITAL_AMOUNT is 'æ³¨å†Œèµ„æœ¬é‡‘é¢';
+comment on column T_COMPANY.REGISTERED_CAPITAL_UNIT is 'æ³¨å†Œèµ„æœ¬é‡‘é¢å•ä½';
+comment on column T_COMPANY.BUSINESS_OPERATION is 'ç»è¥æ¨¡å¼';
+comment on column T_COMPANY.MAIN_BUSINESS_ADDRESS is 'ä¸»è¦ç»è¥åœ°ç‚¹';
+comment on column T_COMPANY.MAIN_PRODUCTS is 'ä¸»è¥äº§å“';
+comment on column T_COMPANY.ESTABLISHMENT_TIME is 'æˆç«‹æ—¶é—´';
+comment on column T_COMPANY.REGISTER_ADDR is 'å…¬å¸æ³¨å†Œåœ°';
+comment on column T_COMPANY.COPORATE_REPRESENTATIVE is 'æ³•å®šä»£è¡¨äºº/è´Ÿè´£äºº';
+comment on column T_COMPANY.BANK_ACCOUNT_OPEN is 'å¼€æˆ·é“¶è¡Œ';
+comment on column T_COMPANY.BANK_ACCOUNT is 'é“¶è¡Œå¸å·';
+comment on column T_COMPANY.FACTORY_SPACE is 'å‚æˆ¿é¢ç§¯';
+comment on column T_COMPANY.STAFF_AMOUNT is 'å‘˜å·¥äººæ•°';
+comment on column T_COMPANY.RESEARCH_DPT_AMOUNT is 'ç ”å‘éƒ¨é—¨äººæ•°';
+comment on column T_COMPANY.BRAND_NAME is 'å“ç‰Œåç§°';
+comment on column T_COMPANY.OUTPUT_MONTHLY_AMOUNT is 'æœˆäº§é‡';
+comment on column T_COMPANY.OUTPUT_MONTHLY_UNIT is 'æœˆäº§é‡å•ä½';
+comment on column T_COMPANY.TURNOVER_YEARLY is 'å¹´è¥ä¸šé¢ -> å¹´å‡ºå£é¢ ä¸èƒ½å¤§äº å¹´è¥ä¸šé¢';
+comment on column T_COMPANY.MNG_SYS_AUTH is 'ç®¡ç†ä½“ç³»è®¤è¯:ISO 9000 ISO 9001 ISO 9002 ISO 9003 ISO 9004 ISO 14000 å…¶ä»–';
+comment on column T_COMPANY.QULITY_CONTROL is 'è´¨é‡æ§åˆ¶:å†…éƒ¨:ç¬¬ä¸‰æ–¹:æ— ';
+comment on column T_COMPANY.MAIN_MARKET is 'ä¸»è¦å¸‚åœº: å¤§é™† æ¸¯æ¾³å°åœ°åŒº æ—¥æœ¬ åŒ—ç¾ å—ç¾ è¥¿æ¬§ ä¸œæ¬§ ä¸œäºš ä¸œå—äºš ä¸­ä¸œ éæ´² å¤§æ´‹æ´² å…¨çƒ å…¶ä»–å¸‚åœº';
+comment on column T_COMPANY.MAIN_CUSTOMER is 'ä¸»è¦å®¢æˆ·ç¾¤,å¦‚ï¼šè¶…å¸‚ã€æœè£…å‚ã€å°æŸ“å‚';
+comment on column T_COMPANY.IS_OEM is 'æ˜¯å¦æä¾›OEMä»£åŠ å·¥ï¼Ÿæ˜¯ ã€€ å¦';
+comment on column T_COMPANY.COMPANY_TYPE_NAME is 'å…¬å¸ç±»å‹';
+comment on column T_COMPANY.COMPANY_SCALE_NAME is 'å…¬å¸è§„æ¨¡';
+comment on column T_COMPANY.COMPANY_INDUSTRY1_NAME is 'è¡Œä¸šç±»åˆ«1 - ä¸»è¥è¡Œä¸š';
+comment on column T_COMPANY.COMPANY_INDUSTRY2_NAME is 'è¡Œä¸šç±»åˆ«2 - ä¸»è¥è¡Œä¸š';
+comment on column T_COMPANY.COMPANY_INDUSTRY3_NAME is 'è¡Œä¸šç±»åˆ«3 - ä¸»è¥è¡Œä¸š';
+comment on column T_COMPANY.REGISTERED_CAPITAL_AMOUNT_NAME is 'æ³¨å†Œèµ„æœ¬é‡‘é¢';
+comment on column T_COMPANY.REGISTERED_CAPITAL_UNIT_NAME is 'æ³¨å†Œèµ„æœ¬é‡‘é¢å•ä½';
+comment on column T_COMPANY.BUSINESS_OPERATION_NAME is 'ç»è¥æ¨¡å¼';
+comment on column T_COMPANY.RESEARCH_DPT_AMOUNT_NAME is 'å‘˜å·¥äººæ•°';
+comment on column T_COMPANY.STAFF_AMOUNT_NAME is 'ç ”å‘éƒ¨é—¨äººæ•°';
+comment on column T_COMPANY.OUTPUT_MONTHLY_AMOUNT_NAME is 'æœˆäº§é‡';
+comment on column T_COMPANY.OUTPUT_MONTHLY_UNIT_NAME is 'æœˆäº§é‡å•ä½';
+comment on column T_COMPANY.TURNOVER_YEARLY_NAME is 'å¹´è¥ä¸šé¢ -> å¹´å‡ºå£é¢ ä¸èƒ½å¤§äº å¹´è¥ä¸šé¢';
+comment on column T_COMPANY.IMPORTS_AMOUNT_NAME is 'å¹´è¿›å£é¢';
+comment on column T_COMPANY.IMPORTS_AMOUNT is 'å¹´è¿›å£é¢';
+comment on column T_COMPANY.EXPORTS_AMOUNT_NAME is 'å¹´å‡ºå£é¢ -> å¹´å‡ºå£é¢ ä¸èƒ½å¤§äº å¹´è¥ä¸šé¢';
+comment on column T_COMPANY.EXPORTS_AMOUNT is 'å¹´å‡ºå£é¢ -> å¹´å‡ºå£é¢ ä¸èƒ½å¤§äº å¹´è¥ä¸šé¢';
+comment on column T_COMPANY.CREATE_DATE is 'åˆ›å»ºæ—¶é—´';
+comment on column T_COMPANY.UPDATE_DATE is 'æ›´æ–°æ—¶é—´';
+comment on column T_COMPANY.CREATE_USER is 'åˆ›å»ºè€…';
+comment on column T_COMPANY.UPDATE_USER is 'æ›´æ–°è€…';
+create table T_PERSON (id number(19,0) not null, ID_TYPE number(19,0), ID_TYPE_NAME varchar2(50 char), PERSON_ID varchar2(30 char), NAME_DEFAULT varchar2(200 char), NAME_FIRST varchar2(50 char), NAME_MIDDLE varchar2(50 char), å§“ varchar2(50 char), NAME_NICK1 varchar2(50 char), NAME_NICK2 varchar2(50 char), NAME_NICK3 varchar2(50 char), SEX varchar2(1 char), BIRTHDAY timestamp, ADDR_LIVE number(19,0), ADDR_LIVE_NAME varchar2(50 char), WORK_YEARS number(19,0), WORK_YEARS_NAME varchar2(50 char), ADDR_DOMICILE number(19,0), ADDR_DOMICILE_NAME varchar2(50 char), ADDR_LIVE_DETAIL varchar2(300 char), ADDR_LIVE_ZIP varchar2(10 char), SARALY_YEAR number(19,0), SARALY_YEAR_NAME varchar2(50 char), TEL_MOBILE varchar2(50 char), TEL_COMPANY varchar2(50 char), TEL_BP varchar2(50 char), TEL_FAMILY varchar2(50 char), HOMEPAGE_SELF1 varchar2(200 char), HOMEPAGE_SELF2 varchar2(200 char), LINK_WANGWANG varchar2(50 char), LINK_QQ varchar2(50 char), LINK_MSN varchar2(50 char), LINK_SKYPE varchar2(50 char), LINK_GTALK varchar2(50 char), LINK_FETION varchar2(50 char), WORK_SARALY_BASIC number(19,2), WORK_BONUS number(19,2), WORK_SUBSIDY number(19,2), WORK_STOCK number(19,2), SELF_ADJUST varchar2(1000 char), JOB_NATURE varchar2(2 char), JOB_INTENT_INDUSTRY1 number(19,0), JOB_INTENT_INDUSTRY_NAME1 varchar2(50 char), JOB_INTENT_INDUSTRY2 number(19,0), JOB_INTENT_INDUSTRY_NAME2 varchar2(50 char), JOB_INTENT_INDUSTRY3 number(19,0), JOB_INTENT_INDUSTRY_NAME3 varchar2(50 char), JOB_INTENT_INDUSTRY4 number(19,0), JOB_INTENT_INDUSTRY_NAME4 varchar2(50 char), JOB_INTENT_INDUSTRY5 number(19,0), JOB_INTENT_INDUSTRY_NAME5 varchar2(50 char), JOB_INTENT_ADDR1 number(19,0), JOB_INTENT_ADDR_NAME1 varchar2(50 char), JOB_INTENT_ADDR2 number(19,0), JOB_INTENT_ADDR_NAME2 varchar2(50 char), JOB_INTENT_ADDR3 number(19,0), JOB_INTENT_ADDR_NAME3 varchar2(50 char), JOB_INTENT_ADDR4 number(19,0), JOB_INTENT_ADDR_NAME4 varchar2(50 char), JOB_INTENT_ADDR5 number(19,0), JOB_INTENT_ADDR_NAME5 varchar2(50 char), JOB_INTENT_FUN1 number(19,0), JOB_INTENT_FUN_NAME1 varchar2(50 char), JOB_INTENT_FUN2 number(19,0), JOB_INTENT_FUN_NAME2 varchar2(50 char), JOB_INTENT_FUN3 number(19,0), JOB_INTENT_FUN_NAME3 varchar2(50 char), JOB_INTENT_FUN4 number(19,0), JOB_INTENT_FUN_NAME4 varchar2(50 char), JOB_INTENT_FUN5 number(19,0), JOB_INTENT_FUN_NAME5 varchar2(50 char), JOB_INTENT_SALARY number(19,0), JOB_INTENT_SALARY_NAME varchar2(50 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(50 char), UPDATE_USER varchar2(50 char), primary key (id));
+comment on column T_PERSON.ID_TYPE is 'è¯ä»¶ç±»åˆ«ä»£ç ';
+comment on column T_PERSON.ID_TYPE_NAME is 'è¯ä»¶ç±»åˆ«';
+comment on column T_PERSON.PERSON_ID is 'è¯ä»¶å·ç ';
+comment on column T_PERSON.NAME_DEFAULT is 'åå­—';
+comment on column T_PERSON.NAME_FIRST is 'å';
+comment on column T_PERSON.NAME_MIDDLE is 'åå­—ä¸­é—´';
+comment on column T_PERSON.NAME_NICK1 is 'æ˜µç§°1';
+comment on column T_PERSON.NAME_NICK2 is 'æ˜µç§°2';
+comment on column T_PERSON.NAME_NICK3 is 'æ˜µç§°3';
+comment on column T_PERSON.SEX is 'æ€§åˆ«:1-ç”·ï¼›2-å¥³ï¼›0-æœªçŸ¥';
+comment on column T_PERSON.BIRTHDAY is 'ç”Ÿæ—¥';
+comment on column T_PERSON.ADDR_LIVE is 'å±…ä½åœ°ä»£ç ';
+comment on column T_PERSON.ADDR_LIVE_NAME is 'å±…ä½åœ°';
+comment on column T_PERSON.WORK_YEARS is 'å·¥ä½œå¹´é™ä»£ç ';
+comment on column T_PERSON.WORK_YEARS_NAME is 'å·¥ä½œå¹´é™';
+comment on column T_PERSON.ADDR_DOMICILE is 'æˆ·å£åœ°ä»£ç ';
+comment on column T_PERSON.ADDR_DOMICILE_NAME is 'æˆ·å£åœ°';
+comment on column T_PERSON.ADDR_LIVE_DETAIL is 'å±…ä½åœ°å€';
+comment on column T_PERSON.ADDR_LIVE_ZIP is 'å±…ä½åœ°é‚®ç¼–';
+comment on column T_PERSON.SARALY_YEAR is 'ç›®å‰å¹´è–ªä»£ç ';
+comment on column T_PERSON.SARALY_YEAR_NAME is 'ç›®å‰å¹´è–ª ä¸‡/å¹´';
+comment on column T_PERSON.TEL_MOBILE is 'æ‰‹æœº';
+comment on column T_PERSON.TEL_COMPANY is 'å…¬å¸ç”µè¯';
+comment on column T_PERSON.TEL_BP is 'BPæœº';
+comment on column T_PERSON.TEL_FAMILY is 'å®¶åº­ç”µè¯';
+comment on column T_PERSON.HOMEPAGE_SELF1 is 'ä¸ªäººä¸»é¡µ';
+comment on column T_PERSON.HOMEPAGE_SELF2 is 'ä¸ªäººä¸»é¡µ';
+comment on column T_PERSON.LINK_WANGWANG is 'æ—ºæ—ºå¸å·';
+comment on column T_PERSON.LINK_QQ is 'QQå¸å·';
+comment on column T_PERSON.LINK_MSN is 'MSNå¸å·';
+comment on column T_PERSON.LINK_SKYPE is 'SKYPEå¸å·';
+comment on column T_PERSON.LINK_GTALK is 'GTalkå¸å·';
+comment on column T_PERSON.LINK_FETION is 'é£ä¿¡å¸å·';
+comment on column T_PERSON.WORK_SARALY_BASIC is 'åŸºæœ¬å¹´è–ª ä¸‡/å¹´';
+comment on column T_PERSON.WORK_BONUS is 'å¹´åº¦å¥–é‡‘/ä½£é‡‘ ä¸‡/å¹´';
+comment on column T_PERSON.WORK_SUBSIDY is 'è¡¥è´´/æ´¥è´´ ä¸‡/å¹´';
+comment on column T_PERSON.WORK_STOCK is 'è‚¡ç¥¨æ•°';
+comment on column T_PERSON.SELF_ADJUST is 'è‡ªæˆ‘è¯„ä»·';
+comment on column T_PERSON.JOB_NATURE is 'å·¥ä½œæ€§è´¨:1-å…¨èŒ;2-å…¼èŒ;3-å®ä¹ ;4-å…¨/å…¼èŒ';
+comment on column T_PERSON.JOB_INTENT_INDUSTRY1 is 'æ„å‘è¡Œä¸šä»£ç 1';
+comment on column T_PERSON.JOB_INTENT_INDUSTRY_NAME1 is 'æ„å‘è¡Œä¸š1';
+comment on column T_PERSON.JOB_INTENT_INDUSTRY2 is 'æ„å‘è¡Œä¸šä»£ç 2';
+comment on column T_PERSON.JOB_INTENT_INDUSTRY_NAME2 is 'æ„å‘è¡Œä¸š2';
+comment on column T_PERSON.JOB_INTENT_INDUSTRY3 is 'æ„å‘è¡Œä¸šä»£ç 3';
+comment on column T_PERSON.JOB_INTENT_INDUSTRY_NAME3 is 'æ„å‘è¡Œä¸š3';
+comment on column T_PERSON.JOB_INTENT_INDUSTRY4 is 'æ„å‘è¡Œä¸šä»£ç 4';
+comment on column T_PERSON.JOB_INTENT_INDUSTRY_NAME4 is 'æ„å‘è¡Œä¸š4';
+comment on column T_PERSON.JOB_INTENT_INDUSTRY5 is 'æ„å‘è¡Œä¸šä»£ç 5';
+comment on column T_PERSON.JOB_INTENT_INDUSTRY_NAME5 is 'æ„å‘è¡Œä¸š5';
+comment on column T_PERSON.JOB_INTENT_ADDR1 is 'æ„å‘åœ°å€ä»£ç 1';
+comment on column T_PERSON.JOB_INTENT_ADDR_NAME1 is 'æ„å‘åœ°å€1';
+comment on column T_PERSON.JOB_INTENT_ADDR2 is 'æ„å‘åœ°å€ä»£ç 2';
+comment on column T_PERSON.JOB_INTENT_ADDR_NAME2 is 'æ„å‘åœ°å€2';
+comment on column T_PERSON.JOB_INTENT_ADDR3 is 'æ„å‘åœ°å€ä»£ç 3';
+comment on column T_PERSON.JOB_INTENT_ADDR_NAME3 is 'æ„å‘åœ°å€3';
+comment on column T_PERSON.JOB_INTENT_ADDR4 is 'æ„å‘åœ°å€ä»£ç 4';
+comment on column T_PERSON.JOB_INTENT_ADDR_NAME4 is 'æ„å‘åœ°å€4';
+comment on column T_PERSON.JOB_INTENT_ADDR5 is 'æ„å‘åœ°å€ä»£ç 5';
+comment on column T_PERSON.JOB_INTENT_ADDR_NAME5 is 'æ„å‘åœ°å€5';
+comment on column T_PERSON.JOB_INTENT_FUN1 is 'æ„å‘èŒèƒ½ä»£ç 1';
+comment on column T_PERSON.JOB_INTENT_FUN_NAME1 is 'æ„å‘èŒèƒ½1';
+comment on column T_PERSON.JOB_INTENT_FUN2 is 'æ„å‘èŒèƒ½ä»£ç 2';
+comment on column T_PERSON.JOB_INTENT_FUN_NAME2 is 'æ„å‘èŒèƒ½2';
+comment on column T_PERSON.JOB_INTENT_FUN3 is 'æ„å‘èŒèƒ½ä»£ç 3';
+comment on column T_PERSON.JOB_INTENT_FUN_NAME3 is 'æ„å‘èŒèƒ½3';
+comment on column T_PERSON.JOB_INTENT_FUN4 is 'æ„å‘èŒèƒ½ä»£ç 4';
+comment on column T_PERSON.JOB_INTENT_FUN_NAME4 is 'æ„å‘èŒèƒ½4';
+comment on column T_PERSON.JOB_INTENT_FUN5 is 'æ„å‘èŒèƒ½ä»£ç 5';
+comment on column T_PERSON.JOB_INTENT_FUN_NAME5 is 'æ„å‘èŒèƒ½5';
+comment on column T_PERSON.JOB_INTENT_SALARY is 'æ„å‘å¹´è–ªä»£ç ';
+comment on column T_PERSON.JOB_INTENT_SALARY_NAME is 'æ„å‘å¹´è–ª ä¸‡/å¹´';
+comment on column T_PERSON.FROM_WHERE is 'æ•°æ®æ¥æºä»£ç ';
+comment on column T_PERSON.FROM_WHERE_NAME is 'æ•°æ®æ¥æº';
+comment on column T_PERSON.CREATE_DATE is 'åˆ›å»ºæ—¶é—´';
+comment on column T_PERSON.UPDATE_DATE is 'ä¿®æ”¹æ—¶é—´';
+comment on column T_PERSON.CREATE_USER is 'åˆ›å»ºç”¨æˆ·';
+comment on column T_PERSON.UPDATE_USER is 'ä¿®æ”¹ç”¨æˆ·';
+alter table TC_APPEND add constraint FK_C_APPEND_FROM_WHERE foreign key (FROM_WHERE) references T_CODE;
+alter table TC_APPEND add constraint FK_APPEND_COMPANY foreign key (COMPANY_ID) references T_COMPANY;
+alter table TC_CONTACT_COMMON add constraint FK_CONTACT_COMMON_HEADER foreign key (CONTACT_HEADER_ID) references TC_CONTACT_HEADER;
+alter table TC_CONTACT_COMMON add constraint FK_CONTACT_COMMON_INFO foreign key (CONTACT_INFO_ID) references TC_CONTACT_INFO;
+alter table TC_CONTACT_EMAIL add constraint FK_CONTACT_EMAIL_HEADER foreign key (CONTACT_HEADER_ID) references TC_CONTACT_HEADER;
+alter table TC_CONTACT_EMAIL add constraint FK_CONTACT_EMAIL_EMAIL foreign key (COM_EMAIL_ID) references TC_EMAIL;
+alter table TC_CONTACT_HEADER add constraint FK_CONTACT_HEADER_CITY foreign key (CITY_ID) references T_CODE;
+alter table TC_CONTACT_HEADER add constraint FK_C_CONTACT_HEADER_FROM_WHERE foreign key (FROM_WHERE) references T_CODE;
+alter table TC_CONTACT_HEADER add constraint FK_CONTACT_HEADER_COUNTRY foreign key (COUNTRY_ID) references T_CODE;
+alter table TC_CONTACT_HEADER add constraint FK_CONTACT_HEADER_PROVINCE foreign key (PROVINCE_ID) references T_CODE;
+alter table TC_CONTACT_HEADER add constraint FK_CONTACT_HEADER_COMPANY foreign key (COMPANY_ID) references T_COMPANY;
+alter table TC_CONTACT_INFO add constraint FK_C_CONTACT_INFO_FROM_WHERE foreign key (FROM_WHERE) references T_CODE;
+alter table TC_EMAIL add constraint FK_C_EMAIL_FROM_WHERE foreign key (FROM_WHERE) references T_CODE;
+alter table TP_ADDR add constraint FK_P_ADDR_CITY foreign key (CITY_ID) references T_CODE;
+alter table TP_ADDR add constraint FK_P_ADDR_FROM_WHERE foreign key (FROM_WHERE) references T_CODE;
+alter table TP_ADDR add constraint FK_P_ADDR_PERSON foreign key (PERSON_ID) references T_PERSON;
+alter table TP_ADDR add constraint FK_P_ADDR_COUNTRY foreign key (COUNTRY_ID) references T_CODE;
+alter table TP_ADDR add constraint FK_P_ADDR_PROVINCE foreign key (PROVINCE_ID) references T_CODE;
+alter table TP_APPEND add constraint FK_P_APPEND_TYPE_CODE foreign key (APPEND_TYPE) references T_CODE;
+alter table TP_APPEND add constraint FK_P_APPEND_FROM_WHERE foreign key (FROM_WHERE) references T_CODE;
+alter table TP_APPEND add constraint FK_P_APPEND_PERSON foreign key (PERSON_ID) references T_PERSON;
+alter table TP_EDU add constraint FK_P_EDU_FROM_WHERE foreign key (FROM_WHERE) references T_CODE;
+alter table TP_EDU add constraint FK_P_EDU_PERSON foreign key (PERSON_ID) references T_PERSON;
+alter table TP_EDU add constraint FK_P_EDU_SPECIALITY_CODE foreign key (EDU_SPECIALITY) references T_CODE;
+alter table TP_EDU add constraint FK_P_EDU_LEVEL_CODE foreign key (EDU_LEVEL) references T_CODE;
+alter table TP_EMAIL add constraint FK_P_EMAIL_FROM_WHERE foreign key (FROM_WHERE) references T_CODE;
+alter table TP_EMAIL add constraint FK_P_EMAIL_PERSON foreign key (PERSON_ID) references T_PERSON;
+alter table TP_LANGUAGE add constraint FK_P_LANGUAGE_CODE foreign key (LANGUAGE_CODE) references T_CODE;
+alter table TP_LANGUAGE add constraint FK_P_LEVEL_CODE foreign key (USE_LEVEL) references T_CODE;
+alter table TP_LANGUAGE add constraint FK_P_LANGUAGE_FROM_WHERE foreign key (FROM_WHERE) references T_CODE;
+alter table TP_LANGUAGE add constraint FK_P_LANGUAGE_PERSON foreign key (PERSON_ID) references T_PERSON;
+alter table TP_SKILL add constraint FK_P_SKILL_LEVEL_CODE foreign key (USE_LEVEL) references T_CODE;
+alter table TP_SKILL add constraint FK_P_SKILL_CODE foreign key (SKILL) references T_CODE;
+alter table TP_SKILL add constraint FK_P_SKILL_FROM_WHERE foreign key (FROM_WHERE) references T_CODE;
+alter table TP_SKILL add constraint FK_P_SKILL_PERSON foreign key (PERSON_ID) references T_PERSON;
+alter table T_CODE add constraint FK_CODE_TYPE foreign key (CODE_TYPE) references T_CODE;
+alter table T_CODE_CODE_JOB add constraint FK_CODE_CODE_JOB foreign key (CODE_ID) references T_CODE;
+alter table T_CODE_CODE_JOB add constraint FK_CODE_JOB_CODE foreign key (CODE_JOB_ID) references T_CODE_JOB;
+alter table T_CODE_JOB add constraint FK_CODE_JOB_TYPE foreign key (CODE_TYPE) references T_CODE_JOB;
+alter table T_COMPANY add constraint FK_COMPANY_FROM_WHERE foreign key (FROM_WHERE) references T_CODE;
+alter table T_COMPANY add constraint FK_COMPANY_PARENT foreign key (PARENT_ID) references T_COMPANY;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_FUN2 foreign key (JOB_INTENT_FUN2) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_WORK_YEARS foreign key (WORK_YEARS) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_FUN5 foreign key (JOB_INTENT_FUN5) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_ADDR2 foreign key (JOB_INTENT_ADDR2) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_ADDR4 foreign key (JOB_INTENT_ADDR4) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_INDUSTRY5 foreign key (JOB_INTENT_INDUSTRY5) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_INDUSTRY1 foreign key (JOB_INTENT_INDUSTRY1) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_ADDR5 foreign key (JOB_INTENT_ADDR5) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_INDUSTRY4 foreign key (JOB_INTENT_INDUSTRY4) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_ADDR1 foreign key (JOB_INTENT_ADDR1) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_FUN3 foreign key (JOB_INTENT_FUN3) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_ID_TYPE foreign key (ID_TYPE) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_ADDR_DOMICILE foreign key (ADDR_DOMICILE) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_INDUSTRY3 foreign key (JOB_INTENT_INDUSTRY3) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_FUN4 foreign key (JOB_INTENT_FUN4) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_ADDR_LIVE foreign key (ADDR_LIVE) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_FROM_WHERE foreign key (FROM_WHERE) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_FUN1 foreign key (JOB_INTENT_FUN1) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_ADDR3 foreign key (JOB_INTENT_ADDR3) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_SARALY_YEAR foreign key (SARALY_YEAR) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_SALARY foreign key (JOB_INTENT_SALARY) references T_CODE;
+alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_INDUSTRY2 foreign key (JOB_INTENT_INDUSTRY2) references T_CODE;
+create sequence SEQ_CODE START WITH 10000;
+create sequence SEQ_CODE_JOB START WITH 1;
+create sequence SEQ_COMPANY;
+create sequence SEQ_C_APPEND;
+create sequence SEQ_C_CONTACT_HEADER;
+create sequence SEQ_C_CONTACT_INFO;
+create sequence SEQ_C_EMAIL;
+create sequence SEQ_PERSON;
+create sequence SEQ_P_ADDRESS;
+create sequence SEQ_P_APPEND;
+create sequence SEQ_P_EDU;
+create sequence SEQ_P_EMAIL;
+create sequence SEQ_P_LANGUAGE;
+create sequence SEQ_P_SKILL;

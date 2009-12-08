@@ -1,71 +1,96 @@
-alter sequence SEQ_CODE
-minvalue 100000
-maxvalue 999999999999999999999999999
-increment by 1
-cache 20;
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (1, null, 'address', 'address', 'Âú∞ÂùÄ', null, 0, 0, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (1, null, 'address', 'address', 'µÿ÷∑', null, 0, 0, sysdate, sysdate, 'YTB', 'YTB');
+values (2, null, 'from.where', 'from where', 'Êï∞ÊçÆÊù•Ê∫ê', null, 0, 1, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (2, null, 'from.where', 'from where', ' ˝æ›¿¥‘¥', null, 0, 1, sysdate, sysdate, 'YTB', 'YTB');
+values (3, null, 'work.year', 'work year', 'Â∑•‰Ωú Âπ¥Èôê', null, 0, 2, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (3, null, 'work.year', 'work year', 'π§◊˜ ƒÍœﬁ', null, 0, 2, sysdate, sysdate, 'YTB', 'YTB');
+values (4, null, 'salary.yearly', 'salary yearly', 'Âπ¥Ëñ™', null, 0, 3, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (4, null, 'salary.yearly', 'salary yearly', 'ƒÍ–Ω', null, 0, 3, sysdate, sysdate, 'YTB', 'YTB');
+values (5, null, 'salary.monthly', 'salary monthly', 'ÊúàËñ™', null, 0, 4, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (5, null, 'salary monthly', 'salary.monthly', '‘¬–Ω', null, 0, 4, sysdate, sysdate, 'YTB', 'YTB');
+values (6, null, 'industry', 'industry', 'Ë°å‰∏öÁ±ªÂà´', null, 0, 5, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (6, null, 'industry', 'industry', '––“µ¿‡±', null, 0, 5, sysdate, sysdate, 'YTB', 'YTB');
+values (7, null, 'function', 'function', 'ËÅåËÉΩÁ±ªÂà´', null, 0, 6, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (7, null, 'function', 'function', '÷∞ƒ‹¿‡±', null, 0, 6, sysdate, sysdate, 'YTB', 'YTB');
+values (8, null, 'company.nature', 'company nature', 'ÂÖ¨Âè∏ÊÄßË¥®', null, 0, 7, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (8, null, 'nature', 'nature', 'π´Àæ–‘÷ ', null, 0, 7, sysdate, sysdate, 'YTB', 'YTB');
+values (9, null, 'speciality', 'speciality', '‰∏ì‰∏ö', null, 0, 8, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (9, null, 'speciality', 'speciality', '◊®“µ', null, 0, 8, sysdate, sysdate, 'YTB', 'YTB');
+values (10, null, 'edu.level', 'edu level', 'ÊïôËÇ≤Ê∞¥Âπ≥', null, 0, 9, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (10, null, 'edu.level', 'edu level', 'ΩÃ”˝ÀÆ∆Ω', null, 0, 9, sysdate, sysdate, 'YTB', 'YTB');
+values (11, null, 'language', 'language', 'ËØ≠Ë®Ä', null, 0, 10, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (11, null, 'language', 'language', '”Ô—‘', null, 0, 10, sysdate, sysdate, 'YTB', 'YTB');
+values (12, null, 'level', 'level', 'ËÉΩÂäõÊ∞¥Âπ≥', null, 0, 11, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (12, null, 'level', 'level', 'ƒ‹¡¶ÀÆ∆Ω', null, 0, 11, sysdate, sysdate, 'YTB', 'YTB');
+values (13, null, 'skills', 'skills', 'ÊäÄËÉΩ', null, 0, 12, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (13, null, 'skills', 'skills', 'ººƒ‹', null, 0, 12, sysdate, sysdate, 'YTB', 'YTB');
+values (14, null, 'appendix', 'appendix', 'ÈôÑÂä†‰ø°ÊÅØ‰∏ªÈ¢ò', null, 0, 13, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (14, null, 'appendix', 'appendix', '∏Ωº”–≈œ¢÷˜Ã‚', null, 0, 13, sysdate, sysdate, 'YTB', 'YTB');
+values (15, null, 'company.scale', 'company scale', 'ÂÖ¨Âè∏ËßÑÊ®°', null, 0, 1, sysdate, sysdate, 'YTB', 'YTB');
+
 
 --address
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (101, 1, 'yazhou', '', 'Asia', 'Asia', '—«÷ﬁ', 'ÅÜ÷ﬁ', null, 1, 1, sysdate,sysdate, 'YTB', 'YTB');
+values (101, 1, 'yazhou', '', 'Asia', 'Asia', '‰∫öÊ¥≤', '‰∫ûÊ¥≤', null, 1, 1, sysdate,sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (102, 1, 'feizhou', '', 'Afric', 'Afric', '∑«÷ﬁ', '∑«÷ﬁ', null, 1, 2, sysdate,sysdate, 'YTB', 'YTB');
+values (102, 1, 'feizhou', '', 'Afric', 'Afric', 'ÈùûÊ¥≤', 'ÈùûÊ¥≤', null, 1, 2, sysdate,sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (103, 1, 'beimeizhou', '', 'North America', 'North America', '±±√¿÷ﬁ', '±±√¿÷ﬁ', null, 1, 3, sysdate,sysdate, 'YTB', 'YTB');
+values (103, 1, 'beimeizhou', '', 'North America', 'North America', 'ÂåóÁæéÊ¥≤', 'ÂåóÁæéÊ¥≤', null, 1, 3, sysdate,sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (104, 1, 'nanmeizhou', '', 'South America', 'South America', 'ƒœ√¿÷ﬁ', 'ƒœ√¿÷ﬁ', null, 1, 4, sysdate,sysdate, 'YTB', 'YTB');
+values (104, 1, 'nanmeizhou', '', 'South America', 'South America', 'ÂçóÁæéÊ¥≤', 'ÂçóÁæéÊ¥≤', null, 1, 4, sysdate,sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (105, 1, 'ouzhou', '', 'Europe', 'Europe', '≈∑÷ﬁ', 'öW÷ﬁ', null, 1, 5, sysdate,sysdate, 'YTB', 'YTB');
+values (105, 1, 'ouzhou', '', 'Europe', 'Europe', 'Ê¨ßÊ¥≤', 'Ê≠êÊ¥≤', null, 1, 5, sysdate,sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (106, 1, 'dayangzhou', '', 'Oceania', 'Oceania', '¥Û—Û÷ﬁ', '¥Û—Û÷ﬁ', null, 1, 6, sysdate,sysdate, 'YTB', 'YTB');
+values (106, 1, 'dayangzhou', '', 'Oceania', 'Oceania', 'Â§ßÊ¥ãÊ¥≤', 'Â§ßÊ¥ãÊ¥≤', null, 1, 6, sysdate,sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (107, 1, 'nanjizhou', '', 'Antarctica', 'Antarctica', 'ƒœº´÷ﬁ', 'ƒœòO÷ﬁ', null, 1, 7, sysdate,sysdate, 'YTB', 'YTB');
+values (107, 1, 'nanjizhou', '', 'Antarctica', 'Antarctica', 'ÂçóÊûÅÊ¥≤', 'ÂçóÊ•µÊ¥≤', null, 1, 7, sysdate,sysdate, 'YTB', 'YTB');
 
 
 --From where
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (1000, 2, '51job', 'http://www.51job.com', '«∞≥ÃŒﬁ”«', null, 0, 1, sysdate, sysdate, 'YTB', 'YTB');
---From where
+values (1000, 2, '51job', 'http://www.51job.com', 'ÂâçÁ®ãÊó†Âøß', null, 0, 1, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (1001, 2, 'alibaba', 'http://www.alibaba.com', '∞¢¿Ô∞Õ∞Õ', null, 0, 2, sysdate, sysdate, 'YTB', 'YTB');
+values (1001, 2, 'alibaba', 'http://www.alibaba.com', 'ÈòøÈáåÂ∑¥Â∑¥', null, 0, 2, sysdate, sysdate, 'YTB', 'YTB');
+
+--company scale
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (1501, 15, '1', '<50 people', 'Â∞è‰∫é50‰∫∫', null, 0, 1, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (1502, 15, '2', '50-150 people', '50-150‰∫∫', null, 0, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (1503, 15, '3', '150-500 people', '150-500‰∫∫', null, 0, 3, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (1504, 15, '4', '>500 people', '500‰∫∫‰ª•‰∏ä', null, 0, 4, sysdate, sysdate, 'YTB', 'YTB');
+
+--company nature
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (2001, 8, '01', 'Foreign Comp.(Eur./N.Amer.)', 'Â§ñËµÑ(Ê¨ßÁæé)', null, 0, 1, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (2002, 8, '02', 'Foreign Comp.(Others)', 'Â§ñËµÑ(ÈùûÊ¨ßÁæé)', null, 0, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (2003, 8, '03', 'Joint Ventures(Eur./N.Amer.)', 'ÂêàËµÑ(Ê¨ßÁæé)', null, 0, 3, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (2004, 8, '04', 'Joint Venture(Others)', 'ÂêàËµÑ(ÈùûÊ¨ßÁæé)', null, 0, 4, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (2005, 8, '05', 'State-Owned/Public Comp.', 'ÂõΩ‰ºÅ/‰∏äÂ∏ÇÂÖ¨Âè∏', null, 0, 5, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (2006, 8, '06', 'Private Comp.', 'Ê∞ëËê•/ÁßÅËê•ÂÖ¨Âè∏', null, 0, 6, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (2007, 8, '07', 'Rep. Office of Foreign Comp.', 'Â§ñ‰ºÅ‰ª£Ë°®Â§Ñ', null, 0, 7, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (2008, 8, '08', 'Others', 'ÂÖ∂ÂÆÉÊÄßË¥®', null, 0, 8, sysdate, sysdate, 'YTB', 'YTB');
