@@ -6,14 +6,22 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
 import com.yesibc.core.utils.ReadProperties;
+import com.yesibc.core.utils.ThreadPool;
 
 public class ClawerUtils {
 
 	private static String ENCODE = "GB2312";
-	private static ReadProperties sourProperties = ReadProperties.getInst("codeval");
+	private static ReadProperties sourProperties = ReadProperties
+			.getInst("codeval");
+	private static ReadProperties serverConfProperties = ReadProperties
+			.getInst("server");
 
 	public static String getValByKey(String key) {
 		return sourProperties.getValuesByKey("codeval", key);
+	}
+
+	public static String getServerConfByKey(String key) {
+		return serverConfProperties.getValuesByKey("server", key);
 	}
 
 	public static String removeSpace(String str) {
@@ -33,7 +41,8 @@ public class ClawerUtils {
 		}
 		str = str.replaceAll(" ", "");
 		str = str.trim();
-		String[] filters = { ClawerConstants.CHAR_COLON, "\n", ClawerConstants.FILTER_SPACE };
+		String[] filters = { ClawerConstants.CHAR_COLON, "\n",
+				ClawerConstants.FILTER_SPACE };
 		str = filter(str, filters);
 		return str;
 	}
@@ -44,9 +53,20 @@ public class ClawerUtils {
 		}
 		str = str.replaceAll(" ", "");
 		str = str.trim();
-		String[] filters = { ClawerConstants.CHAR_COLON, "\n", ClawerConstants.FILTER_SPACE, ClawerConstants.FILTER_SALARY1,
+		String[] filters = { ClawerConstants.CHAR_COLON, "\n",
+				ClawerConstants.FILTER_SPACE, ClawerConstants.FILTER_SALARY1,
 				ClawerConstants.FILTER_SALARY2, ClawerConstants.FILTER_SALARY3 };
 		str = filter(str, filters);
+		return str;
+	}
+
+	public static String removeSpecial(String str) {
+		if (str == null) {
+			return "";
+		}
+		str = str.replaceAll(" ", "");
+		str = str.trim();
+		str = filter(str, ClawerConstants.FILTER_SPECIAL);
 		return str;
 	}
 
@@ -66,8 +86,8 @@ public class ClawerUtils {
 
 	public static String openFile(String szFileName) {
 		try {
-			BufferedReader bis = new BufferedReader(new InputStreamReader(new FileInputStream(new File(szFileName)),
-					ENCODE));
+			BufferedReader bis = new BufferedReader(new InputStreamReader(
+					new FileInputStream(new File(szFileName)), ENCODE));
 			String szContent = "";
 			String szTemp;
 
@@ -79,6 +99,10 @@ public class ClawerUtils {
 		} catch (Exception e) {
 			return "";
 		}
+	}
+
+	public static void excuteThreads(Thread thread) {
+		ThreadPool.loadPool(ClawerConstants.THREADS_NUMBER).execute(thread);
 	}
 
 	/**
