@@ -22,7 +22,7 @@ public class ParseResumeBasic {
 
 	private static Log log = LogFactory.getLog(ParseResumeBasic.class);
 
-	// SpringContext.getBean("baseCode");
+	// SpringContext.getBean("baseCodeDao");
 	static BaseCodeDao baseCode = new BaseCodeDaoImpl();
 
 	/**
