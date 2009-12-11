@@ -82,3 +82,8 @@ vmstat 1
 
 软链接/硬链接
 ln -s /tmp/less /usr/local/bin/less
+
+大小写转换
+APP_NAME_TOMCAT=`echo $APP_NAME | sed  'y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/'`
+unzip -d $TOMCAT_HOME/webapps/$APP_NAME_TOMCAT  $APP_HOME/build/$APP_NAME.war
+
