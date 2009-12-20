@@ -44,8 +44,8 @@ public class SearchJobDetailEngine extends Thread {
 	}
 
 	public void run() {
+		CompanyJobContext.doCount(processContext.getLogTitle());
 		int i = 0;
-
 		for (String url : urls) {
 			try {
 				if (url == null || "".equals(url)) {

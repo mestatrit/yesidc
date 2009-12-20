@@ -70,6 +70,10 @@ public class ClawerConstants {
 	public final static String IT_SKILLS = ClawerUtils.getValByKey("IT.skills");
 	public final static String ATTACHMENT = ClawerUtils
 			.getValByKey("attachment");
+	public final static String RECONNECT_CUT = ClawerUtils
+			.getValByKey("reconnect.cut");
+	public final static String RECONNECT_RECONN = ClawerUtils
+			.getValByKey("reconnect.reconn");
 	public final static String VAL = "_val";
 
 	/**

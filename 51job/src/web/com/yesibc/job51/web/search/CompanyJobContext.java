@@ -319,10 +319,11 @@ public class CompanyJobContext {
 
 	public synchronized static void doCount(String tag) {
 		countLoaded++;
+		log.info(tag + "whether reconnect internet:" + countLoaded);
 		if ((countLoaded + 1) % ClawerConstants.COUNT_LOADED == 0) {
 			log.info(tag + "reconnect internet start!");
 			long start = System.currentTimeMillis();
-			WebLinkSupport.reconnectInternet();
+			WebLinkSupport.reconnectInternet(tag);
 			log.info(tag + "reconnect internet end! time is "
 					+ (System.currentTimeMillis() - start));
 		}

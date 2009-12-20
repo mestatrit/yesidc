@@ -303,10 +303,10 @@ public class JobSupport {
 				LogHandler.info("username=" + ClawerConstants.DIALOG_USERNAME
 						+ ",password=" + ClawerConstants.DIALOG_PASSWORD);
 
-				// e.setButtonResult(PromptEvent.BUTTON_OK);
 				e.setUserName(ClawerConstants.DIALOG_USERNAME);
 				e.setPassword(ClawerConstants.DIALOG_PASSWORD);
 				e.setButtonResult(PromptEvent.BUTTON_YES);
+				e.setButtonResult(PromptEvent.BUTTON_OK);
 			}
 		});
 	}
