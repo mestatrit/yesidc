@@ -87,3 +87,8 @@ ln -s /tmp/less /usr/local/bin/less
 APP_NAME_TOMCAT=`echo $APP_NAME | sed  'y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/'`
 unzip -d $TOMCAT_HOME/webapps/$APP_NAME_TOMCAT  $APP_HOME/build/$APP_NAME.war
 
+允许ROOT用户登录
+cd /etc/ssh
+vi sshd_config
+找到PermitRootLogin这一行,把no改为yes.保存退出.
+

@@ -1,0 +1,413 @@
+1）Q：装完solaris 9后，/usr 目录太小了，没有空间了，我又在机器上加了一块硬盘， 
+我想把这块硬盘作为以后的/usr目录来用，我该如何设置阿？ 
+A：/USR目录是系统用的，不能再mount，可以mount到别的目录下面，做连接到/usr下使用。 
+例如： 
+新硬盘用c0t1d0s0做/usr的新空间。 
+# newfs c0t1d0s0 
+# mount /dev/dsk/c0t1d0s0 /mnt/new_usr 
+# mount /dev/dsk/c0t0d0s4 /mnt/old_usr 
+# cd /mnt/old_usr 
+# find . -depth -print | cpio -pdm /mnt/new_usr 
+-- 编辑 /etc/vfstab 加入下面一行 
+/dev/dsk/c0t1d0s0 /dev/rdsk/c0t1d0s0 /usr ufs 1 no - 
+(如果要把原来/usr的空间释放 
+# cd /mnt/old_usr; rm -r *) 
+# init 6 
+
+2) Q：假设有2台联网solaris 8主机，分别叫sun和earth，没有设置NIS或NIS 服务。 
+
+在sun上有用户root,a还有b；在earth上有用户root,a1还有c。 
+
+其中，a,a1属于同一个人--甲，b和c分属不同的另外2个人，乙和丙。 
+
+1、用户甲可以先以a的身份登陆sun,然后再以a1的身份telnet到earth。 
+2、甲可以在主机sun的GUI的登陆界面的options里选择remote login，以a1的身份直接登陆主机earth吗？（不登陆sun） 
+
+3、甲先以a的身份登陆sun,然后rlogin到earth，请问：他可以直接以sun用户a的身份rlogin到earth 上吗？ 
+
+a.如果可以的话，earth上需要设置的文件（/etc/hosts.equiv, /.rhosts）里，应该怎样设置，哪一个文件起决定作用？登陆以后，a在主机earth上是什么状态，例如：$HOME,$ PATH等变量。 
+
+b.如果不可以的话，是不是因为a不是earth上的注册用户？换用a1这个身份呢，例如：sun$ rlogin -l a1 earth，应该可以了吧？不过，这样一来，和用telnet命令的结果不就一样了吗？ 
+
+c.earth用户a1或者c的home directory里的.rhosts文件，是不是也可以设置成允许a登陆earth呢？如果可以的话，岂不是一般用户就可以向 别人敞开系统的大门了？ 
+
+d.乙只有主机sun上的注册用户b,只能登陆到sun上面；他在主机earth上没有账号，他有可能登陆到earth上吗？黑 客办法除外! 
+
+e.以上允许登陆的几种情况下，什么情况下需要密码，什么情况下不需要密码？ 
+A：什么都不用设置，直接登录2.可以的，因为sun和earth网络是连通的 
+3.不可以,earth上没有a这个用户 
+3.b 如果光从登陆效果来看，rlogin -l a1和telnet 没区别 
+3.c 不可以，因为earth上没有a这个用户 
+3.d不可以，理由如上 
+3.e如果没有写.rhosts的情况下，rlogin是需要密码的 
+
+3) Q : 为磁带机配置 Solaris Operating System 
+当添加一个外部 SCSI 磁带机时，必须修改 Solaris OS 配置文件 /kernel/drv/st.conf。 
+
+作为 root 来到 /kernel/drv/ 目录下，并建立 st.conf 文件的一个备份。 
+# cp st.conf st.conf.bak 
+使用编辑器（如 vi）打开该文件，定位到下面的行： 
+
+# tape-config-list= 
+如果它还没有取消注释，那么删除 # 来取消该行的注释。 
+该文件的以下部分包括对一些常用磁带机的配置设置。它们以三个用引号括起来、且以逗号分开的字段形式出现。如果碰巧正在安装列表 中有的磁带机，那么可以滚动到相应行，并取消其注释。 
+
+例如，如果正在安装一个 WangDAT 3400，那么，这一行应该像这样： 
+
+# WangDAT Model 3400, WangDAT 4mm DAT, WangDAT, 
+
+如果它还没有被取消注释，删除 #，取消对该行的注释。另外，如果这是要配置的最后一个或者唯一的磁带机，那么将该行末尾的逗号改为分号。 
+
+重要提示：所启用的最后一个磁带机的配置行（也就是最后一个非注释行）必须以一个分号结束。分号表示被启用的磁带机列表的结束。 所有出现在最后一个被启用的磁带机前的启用磁带机都以逗号结束。否则，在执行重配置重新启动时将会出现错误。 
+
+滚动到该文件的下一部分，找到一行，其中位于等号“=”前的字段匹配前面提到的已启用磁带机配置行中的第三个引号中的字段。继续 WangDAT 磁带机的例子，寻找以 WangDAT 开头的行，像这样： 
+
+#WangDAT = 1,0x2b,0,0x659,1,0x00,0; 
+
+取消该行的注释。注意，如果存在超过一个匹配项，那么可能需要找到产生最佳结果的那项。 
+
+现在保存编辑过的文件。 
+请注意：如果 st.conf 文件不包含正在安装的磁带机类型的配置信息，那么就需要从制造商获取配置条目。 
+
+4) Q: 安装了php5,修改httpd.conf如下： 
+LoadModule php5_module modules/libphp5.so 
+但启动时，出错如下： 
+
+Syntax error on line 270 of /usr/local/apache2/conf/httpd.conf: 
+Cannot load /usr/local/apache2/modules/libphp5.so into server: ld.so.1: /usr/local/apache2/bin/httpd: xd6xc2xc3xfcxb5xc4: xd6xd8xb6xa8xcexbbxb4xedxcexf3: xcexc4 xbcxfe/usr/local/apache2/modules/libphp5.so: xb7xfbxbaxc5xm lRelaxNGCleanupTypes: xb2xcexd5xd5xb5xc4xb7xfbxbaxc5xc3xbbx d3xd0xd5xd2xb5xbd 在浏览器的地址中输入后，出现下载对话框 
+我怎么办呀 
+A: AddType application/x-httpd-php .php .php3 .phtml 
+AddType application/x-httpd-php-source .phps 
+有这个　/usr/local/lib/php.ini 　？ 
+没有的话　cp (dir,path)/php.ini-dist /usr/local/lib/php.ini 
+httpd.conf DirectoryIndex index.php index.html 
+apachectl stop 
+apachectl start　有没有什么错误提示? 
+pkgadd -d libxml2-2.6.16-sol7-sparc-local 
+
+等会是不是还要装 MySQL?　我都是用　pkgadd -d 来装 Apache Mysql PHP 的，折腾了我整整一个星期，包括晚上。 
+我也是刚学这个，我是在[url]www.sunfreeware.com[/url]下载的sol9-x86的.gz,直接pkgadd安装的，my sql和apache2都安装完了，apache2可以用了，mysql运行时也出了错，好像是少了包（这个等下解决，先解决p hp) 
+pkgadd -d libxml2-2.6.16-sol7-sparc-local 
+我先试一下pkgadd -d libxml2-2.6.16-sol9-intel-local 行否？可以了，感谢感谢，太感谢了,现在可以了 
+
+5) Q: 我是这个添加用户的： 
+#useradd -u 1010 -g root -d /export/home/user1 -s /bin/ksh user1 
+#passwd user1 
+修改好密码 
+但是我发先在/export没有home 的目录，那我创建的用户目录跑哪里去了？？难道创建之前要先在export下面把home目录先建立好？ 
+还有下面的问题 
+#id user1 
+uid=1010(user1) gid=0(root) 
+这里我的用户应该是root组的吧，可是 
+#su user1 
+$ 
+$reboot 
+reboot: permission denied 
+我是ROOT用户组的怎么会没有权限？？如果错了是错在什么地方，正确的做法是怎么做的，请大家帮帮我 
+A: #useradd -u 1010 -g root -d /export/home/user1 -s /bin/ksh user1 你忘了 -m 了吧？ 
+〉但是我发先在/export没有home 的目录，那我创建的用户目录跑哪里去了？？难道创建之前要先在export下面把home目录先建立好？ /export下不可能没有home吧？ 
+〉我是ROOT用户组的怎么会没有权限？应该是uid=o的人才有这个权限吧？root肯定可以啊！其他人么，就不好说了，你没 ls -l一下reboot? 
+还有，为什么要用reboot呢？shutdown -y -g0 -i6 不好么？ 
+或者，你再看看role based access contol里是怎么说的。 
+
+6) Q: solaris网络安装 
+A: 网络安装你必须先用cdrom安装盘在本网络内 
+装一台启动服务器.. 
+还必须先用cdrom安装盘在本网络或相邻网段 
+内装一台安装服务器.. 
+(当然可在本网段内一台服务器上同时运行) 
+安装服务器: 
+#volcheck 
+#cd /cdrom/cdrom/s0 
+#./set_install_server /export/ 
+配置客户机: 
+#/export/add_install_client .....(具体查man) 
+#share -F nfs -o ro /export 
+#/etc/init.d/nfs.server stop 
+#/etc/init.d/nfs.server start 
+(大概这些吧 !) 
+安装客户机: 
+stop A 
+ok boot net 
+
+7) Q: 关于vfstab中的fsck pass，我这样理解对吗？ 0或非数值表示不需fsck检查。 
+1表示需要检查，检查完成后才能继续处理vfstab中后面的条目。 
+>1表示将其加入待检查设备列表，等所有vfstab中的项目都处理完后一同检查，最多可以同时并行检查8个设备。 
+A: 0和- 表示boot时不执行fsck 
+除0以外的整数表示boot时执行fsck. 
+
+8) Q: 如何在sun下记录各个用户名telnet登陆信息的设置例如：10。10。10。10是台sun主机，开了telnet服 务，有用户名test1和test2和 test3共3个用户，我想对这三个用户telnet该sun主机后分别记录这三个用 户所做的操作，并实时分别记录在 /export/home/test1和/export/home/test2和/expo rt/home/test3这三个文件中，我该如何设置。劳烦指教。谢谢。 
+装个bash shell,看用户目录下的.bash_history文件 
+
+9) Q: 大家好，我是新手，我刚刚在ultra 10上装了一个solaris 9，不知道为什么，装好后，如果长时间不用（3个小时左右）它就自动关机，请高手赐教 
+A：自动关机有2个原因： 
+1、部件过热的自动保护 
+2、powersave设定节能设置。搞定了，果然是/etc/power.conf的问题 
+
+10) Q：我是菜鸟接触solaris才几天。单位新购的Sun公司的V880,solaris9，70G×6，主要是用于科研计算， 想把一块盘作为系统盘，另一块克隆系统盘以防万一，其他4块盘装计算软件和数据备份，局域网，没有专门的管理员。 
+用命令： 
+% dd if=/dev/dsk/c1t0d0s2 of=/dev/dsk/c1t1d0s2 bs=128 
+但要克隆约24小时! 最槽糕的是，为了检验克隆是否成功，用c1t1d0s2替换c1t0d0s2，无法启动，只有一串『O K』什么地。为何不能克隆？无论放在0号或1号设备位都不行。另外128能否改为1024？应该怎样克隆才好。听说可以把其 他4块盘合并用较好，以便Windows终端用户（大菜鸟级）登陆计算。请大家另外帮规划一下，最好能有执行命令。 
+A：如果一定要做科隆，先把所有的应用关闭掉 
+dd if=/dev/dsk/c1t0d0s2 of=/dev/dsk/c1t1d0s2 bs=10240K 
+估计要1.5-2小时，这种科隆的系统由于硬盘的WWN号在物理地址中的问题，恢复比较麻烦，其实可以使用SOLARIS 9带的SVM，做个引导盘的镜像，剩下4个盘做个RAID5或者RAID 0 1来存储数据。这些操作论坛有很多精华和原创可以参考 
+需要将目的盘中的/etc/path_to_inst及/etc/path_to_inst.old两文件删除，然后关机、取走 源盘，用boot -ar命令从目的盘启动系统，当提示是否recreate path_to_inst时输入y。 
+应该就可以了，精华里都有，希望下次先看一下FC-AL的盘需要这样做，SCSI的盘不需要。 
+
+11） Q：SOLARIS关于network services 
+（1） 管理internet service Daemon的后台进程 inetd 
+（2）在inetd启动网络的相关服务时的信息来自与/etc/inet/inetd.conf，它决定启动哪些服务，用什么命 令启动这些服务，以及这些服务的相关信息，下面是我从此文件中截取的一段。 
+ftp stream tcp6 nowait root /usr/sbin/in.ftpd in.ftpd 
+telnet stream tcp6 nowait root /usr/local/bin/tcpd in.telnetd 
+rarpd stream tcp6 nowait root /usr/sbin/in.rarpd in.rarpd –a 
+（3）当对/etc/inet/inetd.conf进行修改时，要对此文件进行重读（即重新启动inetd后台进程），使用如 下命令： #pkill –HUP inetd 
+（4）/etc/services文件记录一些常用的接口及其所提供的服务，在没有其它的用途，如果想查找某些服务极其所提供的 端口，可以查看/etc/services文件。 
+（5）inetd是控制网络服务的后台进程，如果需要停止某些网络服务，只需修改/etc/inet/inetd.conf文件 即可（即对其中的网络服务进行注释，封掉某些服务），然后执行 
+pkill –HUP inetd命令即可。 
+（6）每个网络服务在网络中必须有唯一一个被网络中所有hosts都公认的端口。Sun开发了扩展的client-server 模式，它开发了一个叫 RPC，使用RPC时，客户机就会连接到其指定要求的服务，rpchind是一个有名的internet service注册程序。 
+（7）rpchind程序注册的端口及与此端口关连的网络服务都列在/etc/rpc文件中。 
+（8）使用rpcinfo 工具来管理端口注册 
+#rpcinfo –p hostname 查看rpc的注册情况 
+#rpcinfo –d sprayd 1 取消注册一个网络服务，取消后再用# rpcinfo –p|grep sprayd 命令来证实以下是否此网络服务已经被取消，然后执行#pkill –HUP inetd重启网络服务。 
+>在linux下面，可以用#service telnet restart或#/etc/rc.d/init.d/telnet >restart等这样的命令，在不重启系统的前提下，重启某项服务。 
+>在solaris下这样的功能该如何实现呢？ 
+
+在solaris下面,也可以使用/etc/rc3.d/S15nfs.server stop ; 
+/etc/rc3.d/S15nfs.server start来重起服务。 
+
+>另外，在linux环境下，每个用户的目录里面都有一个.bashrc隐藏文件，在这 
+>里可以定义别名。在solaris下该如何操作呢？ 
+
+这要取决于你用的是哪种shell，如果用的是bsh或者bash,那么在用户的目录里有一个.profile的隐藏文件，可以 在这里定义。 
+如果用的是csh,那么这个隐藏文件应该是.cshrc. 
+
+12） Q：SHELL=/bin/sh,我在哪设置环境变量呢? 静态的啊! 
+/etc/profile and $HOME/.profile 
+在你用户的家目录中的.profile文件中加就可以了。 
+
+13） Q: 怎么解开bind-9.2.3-sol8-sparc-local.gz出错啦! 
+#gunzip -d bind-9.2.3.gz 
+
+gunzip: bind-9.2.3.gz: invalid compressed data--crc error 
+
+gunzip /home1/bind-9.2.3.gz 
+
+gunzip: /home1/bind-9.2.3.gz: invalid compressed data--crc error 
+
+gunzip: /home1/bind-9.2.3.gz: invalid compressed data--length error 
+
+请问大家这是什么问题呢? 
+A: 你是怎么下载的？又是怎么传到SUN机器上的？ 
+跟GUNZIP的版本没关系。 
+正确的方法是先下载到PC上，在FTP到SUN上，FTP的时候需要bin方式。 
+
+gunzip /home1/bind-9.2.3.gz 
+
+gunzip: /home1/bind-9.2.3.gz: invalid compressed data--crc error 
+
+invalid compressed data--crc error这就是问题根源，找找哪步把压缩文件破坏了。 
+
+14） Q: 客户一台E450有个磁带机，现在有个磁带出不来了，有什么办法强行让磁带退出阿 
+A: 强按退出按钮，5秒.重启是个好办法。 在机器重启过程中看能不能取出磁带。如果不行，磁带机或者磁带有问题了。 
+
+15） Q: 使用ufsrestore恢复文件时i节点也恢复吗？ 
+如果恢复单个文件的话，那个文件的i节点已经被占用了怎么办？ 
+A: 覆盖文件，别管i 节点，如果非要钻这个话，可以对比一下前后的i节点到底有什么变化。 
+A level 0 dump must be done after a full restore. Because 
+ufsrestore runs in user mode, it has no control over inode 
+allocation. This means that ufsrestore repositions the 
+files, although it does not change their contents. Thus, a 
+full dump must be done to get a new set of directories 
+reflecting the new file positions, so that later incremental 
+dumps will be correct. 
+
+16） Q：ＳＵＮ Ｔ３陈列硬盘坏了如何更换 
+A：1、准备好新硬盘，必需跟以前阵列的硬盘相同型号（尤其是容量、转速） 
+2、用串口线连接到阵列（通过超级终端），连接时可能会叫您输用户名密码 
+3、查看阵列状态 
+proc list (查看当前进程状况) 
+fru stat (查看各部件运行状况，您的2号盘的状况可能是substituted状态，如果proc list查看有进程运行除外） 
+
+4、取出坏盘，插入新盘，等约60秒，阵列自动会同步数据。proc list 可以看到同步已完成了多少，全部同步完成约几小时（146G大约4-5小时） 
+5、同步完后查看状态执行 fru stat (fru list)命令 
+
+替换坏盘其实很容易。 
+
+17） Q：请问哪位高手知道 SOLARIS 1。X 
+上怎么建用户？它没有ADMINTOOL。 
+A：No such things like admintool in SunOS 4.x.x. 
+
+1. mkdir home_dir 
+2. vi /etc/passwd and /etc/group 
+3. chown home_dir 
+
+Note: /etc/shadow doesnt exist unless C2 or patch 100564 is installed ... 
+
+18） Q：请教crontab的一个问题:执行不了 
+以一个普通用户登陆 
+crontab -e回车 
+在dtpad中编辑以下信息，并存盘退出。 
+＊ ＊ ＊ ＊ ＊ /usr/sfw/bin/mozilla 
+
+预期每分钟起一次mozilla 
+
+一分钟后，没有反应， 
+但是可以收到邮件，邮件中显示： 
+Your cron job on ava 
+/usr/sfw/bin/mozilla 
+
+produced the following output: 
+(mozilla-bin:1863): Gtk-WARNING **: cannot open display: 
+请问这是什么原因亚？？ 
+说明一下： 
+有些命令就可以执行，例如 
+＊ ＊ ＊ ＊ ＊ /bin/ls > /dev/pts/4 
+A：在后面加上-display displayName参数，明确指定显示设备。 
+或者在前面设置DISPLAY环境变量 
+
+19） Q：solaris 9 上 sybase数据库的安装 
+A：solaris9下安装sybase的步骤 
+1 修改etc下system文件 
+set shmsys:shminfo_shmmax=67108864 
+set shmsys:shminfo_shmmin=1 
+set shmsys:shminfo_shmseg=256 
+然后运行touch ./reconfigure 
+最后重新启动reboot 
+2 创建sybase组,groupadd sybase 
+3 在opt目录下建立sybase文件夹 
+4 增加sybase组下的sybase用户并制定/opt/sybase目录 
+useradd -d /opt/sybase -g sybase sybase 
+5 编辑文件/etc/group,在sybase组下增加root和sybase 
+6 更改用户登陆 su - sybase 
+7 找到sybase的安装目录执行安装程序./setup -console 
+8 安装完成后,将文件SYBASH.sh更改名称为.profile,修改所有权,增加信息 
+执行命令:cp SYBASH.sh .profile 
+chown sybase:sybase .profile 
+在.profile文件中增加一下信息 
+DISPLAY=e3500:0:0 
+export DISPLAY 
+DSQUERY=testunix (testunix 是 sybase数据库的名称) 
+export DSQUERY 
+9 注销然后重新用sybase用户登陆 
+10 执行asecfg 开始配置sybase数据库 
+
+20） Q：sun新 挂上磁带机后 硬盘没了，去掉磁带机后，硬盘又显示了？ 
+A：SCSI设备有各自的SCSI ID，缺省： 
+
+带机为 4 或5， 从带机后面看所选的ID，不满意可再跳成别的， 
+
+硬盘缺省为0， 1， 2， 3， 。。。。 
+
+光驱缺省为6， 也有为2的， 
+
+硬盘光驱也可跳线该SCSI ID，但Sun常常是自动设的。 
+
+磁带机和硬盘SCSI ID冲突，不要怕，先看拔下磁带，查一下原机硬盘所用的ID： 
+
+OK probe-scsi-all 
+
+记录下硬盘的SCSI ID，并决定磁带机准备选何SCSI ID，在磁带机跳下线，再连入机器，再查一下SCSI ID 真的不冲突： 
+
+OK probe-scsi-all 
+
+如不再冲突，boot -r 启动，即可用。 
+
+21） Q：我这的系统报告里总提示 omp- cpu alarm，有人说是一些进程占用了大量的进程，需要将那些死掉的进程重启，我想问一下，是否有方法可以查系统上哪些进程已经死 掉。谢谢 
+A：所谓孤儿,就是父进程死掉后,由init进程收养的进程.孤儿进程能被杀掉. 
+所谓僵尸,就是子进程死掉后,父进程不收尸,导致进程表中仍被占用,僵尸不能被杀,因为它已经死了. 
+每个进程结束必然经过僵尸状态,因为要等待父进程来为它注销进程表,注销完进程表后,僵尸状态结束,子进程的生命周期也就结束了 . 
+如果程序设计上有问题,父进程发生异常或陷入死循环,这样僵尸就无法被清除,会一直延续到父进程死亡或系统重新启动. 
+一般情况下,少量的僵尸进程不会影响到系统,因为它不会占用系统资源,但是如果僵尸进程太多,把进程表占满,系统无法生成新的进 程,就会出问题了. 
+
+22） Q：有关vm、vxvm、sds、cluster的概念以及它们的关系 
+A：vm，Volume Manager，卷管理，常指用软件管理多硬盘的方式，一般在性能/可靠性/费用间平衡，如Raid0串接多硬盘，性能好但可靠 性差，费用不变，Raid1镜像可靠性好，但需多一倍硬盘/费用，Raid5等折衷，及其它很多方法。 
+
+sds，Solaris Disk Suite，旧版本的Sun的卷管理软件，现叫SVM，Solaris Volume Manager，免费，支持Cluster, 无论Sun的，还是其它的。 
+
+vxvm, Veritas卷管理软件，Veritas Volume Manager, 支持Cluster， Veritas专门做软件，VxVM简单好用，在Sun平台常见， 
+
+pwerpath, EMC的卷管理软件，支持Cluster，EMC专门做存储，Sun平台连EMC时常见， 
+
+cluster，集群，以软硬件结合共同实现，即以通用服务器为节点，多个节点互相连接，组成一个连续可用的系统进行工作，或提 供高可用性或提供高性能，用途不一。 
+
+但如注重高可用性，则必须避免单点故障，即出现单点故障时，服务可恢复或本来就不中断，服务器硬件通过采用冗余热插拔部件实现， 存储也采用冗余的磁盘系统，以使某个磁盘出现故障时操作不被中断，并且到服务器冗余的连接保证数据不被隔离，即存储硬件 上往往采用磁盘阵列，软件上往往采用卷管理，个人体会是 VxVM不会把我仍在用户那回不来，企业常用，但SVM确实可用又免 费，但本人的水平可不敢在线操作SVM。 
+
+23） Q：想问一下,目录服务Directory Server 如何启动啊,邮件服务器IMS安装完了，开始登陆界面可以登陆，重启服务器后就不行了，应该目录服务没启， 
+还有安装的WEBMAIL是英文界面，怎么改为中文啊， 
+
+A：找到目录服务器的实例的目录， 
+
+start-slapd 
+
+或找到admin server启动LDAP GUI： 
+
+startconsole 
+
+24） Q：我的问题是: 
+在Solaris里面, 如何查看允许一个进程可以打开的文件数 
+等核心参数. 
+ndd好象只能看到有关网络的参数. 
+A：#adb -k 
+然后输入 
+rlim_fd_max /E 
+或者 
+rlim_fd_max /D 
+
+25） Q：我的8139的网卡问题，请帮忙，谢谢大家~ 
+步骤是这样的：下载了8139的驱动，在solaris下unzip， 
+我的机器名是：solaris 
+执行./install 
+然后建立/etc/solaris.rtls0文件，内容：solaris 
+然后修改/etc/netmask文件，内容：192.168.0.0 255.255.255.0 
+然后修改/etc/hosts文件，内容：192.168.0.8 solaris 
+建立/etc/defaultrouter 文件，内容：192.168.0.1 
+最后reboot 
+问题出来了 ： 
+1，reboot后使用ifconfig -a发现只有lo0起来了，请问为什么？谢谢 
+2,使用ifconfig rtls0 192.168.0.8 netmask 255.255.255.0 up来配置ip地址，结果发现仍然不能起来。 
+3，使用ifconfig rtls0 plumb，网卡起来了，可以正常ping通网络了。但是当下次启动的时候又看不见rtls0网卡，必须从新使用ifconfi g添加。这个是为什么？ 
+另外：还有个问题，就是我ping一个地址的时候，提示不是返回ttl值，而是提示(hostname)is alive.这个是为什么呢？ 
+请大家帮忙，我刚接触solaris 
+
+A：请在安装之后，建一个/reconfigura文件，或使用devfsadm来创建新的设备树，你的原因在没有创建新的设备 树，而是手工的启用网卡，故重启之后，设备即停用了我使用从新装了，先Install然后touch /reconfigure 
+系统自检的时候看见网卡了，但是进系统了以后还是一样，只看见lo0 
+如何解决？ 
+很简单 
+你这里错了 
+
+创建的文件是/etc/hostname.rtls0不是你写的/etc/solaris.rtls0 
+我的hostname是solaris ,呵呵~ 
+搞定了。 
+在/etc/rcS.d/下的S30network.sh里添加如下信息 
+ifconfig rtls0 plumb ip地址信息 up 就可以了 
+然后手动运行一遍./S30network.sh.搞定 
+
+26）Q：我用VxVM4.0来管理卷，我的一个磁盘以前在vxvm3.5时可以很好的用， 
+
+可是我重新安装了solaris9.0，然后安装了vxvm4.0，我要将磁盘初始化，在VEA中执行初始化时，出错，提示如下 ： 
+
+Error V-40-49408-40 
+Disk In Use 
+Failed to execute the operation 
+
+我用vxdisksetup -i 命令，出以下提示： 
+# vxdisksetup -if c0t2d0 
+VxVM vxdisksetup ERROR V-5-2-3628 The dmpnode c0t2d0s2 is disabled.Can not 
+proceed with vxdisksetup. 
+A：我是这样做的， 
+1。我用启动的那个盘的 分区表复制到这个盘 
+fmthard -s vtoc.txt > /dev/rdsk/c0t2d0s2 
+2。 用vxdiskadm将磁盘加初始化，初始化时我选默认的选项，其中有个什么 
+Enter the desired format 
+[cdsdisk,sliced,simple,q,?](default:cdsdisk) 
+我选择了默认的这个。 
+3。我用vxdisk list看状态，这时磁盘的状态是online invalid 
+4。在vea中我又来初始化磁盘，结果还是有问题，错误的意思是 
+Invalid disk device for cdsdisk format 
+5。我重新用vxdiskadm初始化，然后再第2步的选择中我选择了sliced 
+6。我再用vea界面来初始化，正常了。
+
+27) # source .cshrc
+源: 没找
+这个 alias 和 setenv 用的是 csh 的语法，bash 不能用。
+直接用 csh -l 启动 csh 作为登陆 shell 再运行程序吧。
