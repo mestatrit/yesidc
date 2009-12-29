@@ -1,0 +1,10 @@
+1.为达到1G的Swap space要求，创建临时交换空间，命令如下：
+mkfile 1000m /tmpswap
+swap –a /tmpswap
+swap -l
+注重：重新启动后，临时交换空间不会自动加载，需要再次执行swap–a命令。
+安装完毕后，可以用swap –d /tmpswap；rm /tmpswap命令删除交换空间和临时文件。
+
+2.增加最大用户进程数.
+max_users=1100
+v_maxuproc=16*max_users+10
