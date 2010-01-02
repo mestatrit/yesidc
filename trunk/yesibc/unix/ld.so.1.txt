@@ -1,0 +1,88 @@
+实时连接器ld.so.1文件损坏或丢失后系统怎样恢复正常? 
+前言：看到网上好多人遇到ld.so.1文件损坏或丢失，系统瘫痪询问怎样处理，为此我将这一故障现象进行归纳总结，供各位网友参考，希望从中得到帮助。 
+
+一、动态连接库的概念 
+大家都知道，在WINDOWS系统中有很多的动态链接库(以.DLL为后缀的文件，DLL即Dynamic Link Library)。这种动态链接库，和静态函数库不同，它里面的函数并不是执行程序本身的一部分，而是根据执行程序需要按需装入，同时其执行代码可在多个执行程序间共享，节省了空间，提高了效率，具备很高的灵活性，得到越来越多程序员和用户的青睐。 
+Solaris系统里面有些库文件，当编译的时候，如果把库文件也编译到文件中，那文件本身就可以执行，但这样的缺点是生成的文件十分大。所以很多情况下使用动态连接库，就是编译出的文件不包含库，而只包含到库的指针，这样在运行的时候会到指定的地方调用这个库，这样就减少了文件的大小。Solaris包含的实时连接器ld.so.1，就是动态对象的运行阶段链接程序。 
+
+从下面的的命令中，我们可以列出可执行文件或者共享对象的动态从属关系，这玩意没了，你的什么ls,cd什么的命令就都费了，如果ld.so.1文件被破坏了，系统肯定无法正常启动。 
+
+/usr/bin/ldd [filename] 
+/* List the dynamic dependencies of executable files */ 
+
+# /usr/bin/ldd /usr/bin/cat 
+libc.so.1 => /usr/lib/libc.so.1 
+libdl.so.1 => /usr/lib/libdl.so.1 
+/usr/platform/SUNW,Ultra-1/lib/libc_psr.so.1 
+# ldd /usr/bin/ls 
+libc.so.1 => /usr/lib/libc.so.1 
+libdl.so.1 => /usr/lib/libdl.so.1 
+/usr/platform/SUNW,Ultra-1/lib/libc_psr.so.1 
+# ldd /usr/bin/cp 
+libc.so.1 => /usr/lib/libc.so.1 
+libdl.so.1 => /usr/lib/libdl.so.1 
+/usr/platform/SUNW,Ultra-1/lib/libc_psr.so.1 
+
+二、ld.so.1文件损坏或丢失解决的办法 
+
+1．如果意外的/usr/lib/ld.so.1损坏或丢失，系统没有正常启动的情况下： 
+执行命令都会出现错误信息： 
+#reboot 
+Reboot :can not find /usr/lib/ld.so.1 
+#find 
+Find: /usr/lib/ld.so.1 
+#ls 
+Ls: can not find can not find 
+
+这时，千万不要重启动，立即用/usr/sbin/static/mv、/usr/sbin/static/cp命令恢复 ： 
+
+#/sbin/static/cp /etc/lib/ld.so.1 /usr/lib/ 
+经过实验，系统恢复正常！这时，你试试如下命令，就能体会到为什么了。 
+--------------------------------------------------------------------------- 
+# ls /usr/sbin/static 
+cp* ln* mv* rcp* tar* 
+SUN的工程师非常聪明，为了防备了这个情况， 做了以上几个不使用动态连接库的命令 
+#find / -name ld.so.1 -print 
+/usr/lib/sparcv9/ld.so.1 
+/usr/lib/ld.so.1 
+/etc/lib/ld.so.1 
+blade% ls -ld /usr/lib/sparcv9/ld.so.1 
+-rwxr-xr-x 1 root bin 191672 Jul 28 2001 /usr/lib/sparcv9/ld.so.1 
+blade% ls -ld /usr/lib/ld.so.1 
+-rwxr-xr-x 1 root bin 196852 Jul 28 2001 /usr/lib/ld.so.1 
+blade% ls -ld /etc/lib/ld.so.1 
+-rwxr-xr-x 1 root bin 196852 Jul 28 2001 /etc/lib/ld.so.1 
+--------------------------------------------------------------------------- 
+从上面的，我们又可以看到，这个库文件，不仅仅在/usr/lib有，在/etc/lib、/usr/lib/sparcv9/下也有，所以你就重新在本机上拷贝一份就行了。这些信息在这个连接库不正常的情况下是看不到的。 
+
+2．如果意外的/usr/lib/ld.so.1损坏或丢失，系统启动的情况下： 
+错误信息： 
+Uname:can not find /usr/lib/ld.so.1 
+Loadkeys: can not find /usr/lib/ld.so.1 
+Killed 
+Cfsfstype: can not find /usr/lib/ld.so.1 
+Expr: can not find /usr/lib/ld.so.1 
+Swap: can not find /usr/lib/ld.so.1 
+Killed 
+Fsck: can not find /usr/lib/ld.so.1 
+Killed 
+
+这时，用光盘启动到单用户下： 
+ok boot cdrom -s (放入启动安装光盘) 
+#mount /dev/dsk/c0t0d0s0 /mnt (这里指定原usr目录对应的原始设备名) 
+# cp /mnt/etc/lib/ld.so.1 /mnt/lib/(就是将/usr/etc下的这个文件拷贝到/usr/lib下。) 
+系统重新启动,一切正常! 
+
+3.如果/usr被改名了情况下，怎么办？ 
+假设/usr改名成了/faint，系统没有启动 
+马上执行 
+#/faint/sbin/static/mv /faint /usr 
+
+假设/usr改名成了/faint，系统重新启动,这时肯定不能正常启动,同样我们启动到单用户下: 
+ok boot cdrom -s (放入启动安装光盘) 
+mount /dev/dsk/c0t0d0s0 /mnt (这里指定原usr目录对应的原始设备名) 
+mv /mnt/faint /mnt/usr 
+
+建议把/usr/sbin/static下的东西拷一份到/sbin下或者其它比较可信的跟/在同一个文件系统下的目录下。以备系统不测. 
+
+之后，我又进行了多次实验，各个版本系统下的/usr/lib/ld.so.1文件互相兼容。所以也可以从其他机器拷贝过来。 
