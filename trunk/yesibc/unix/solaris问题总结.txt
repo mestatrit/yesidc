@@ -411,3 +411,22 @@ Invalid disk device for cdsdisk format
 源: 没找
 这个 alias 和 setenv 用的是 csh 的语法，bash 不能用。
 直接用 csh -l 启动 csh 作为登陆 shell 再运行程序吧。
+
+28)关机时报错RPC: 程序未注册？
+天看了下NFS的资料,又看了下这台机器的配置文件/etc/mnttab,此文件中有:
+heihe-cache1:vold(pid394)       /vol    nfs     ignore,noquota,dev=5980001      1205132100
+表明这个机器以前起过NFS的客户端,并将mount的信息记录了下来,而NFS服务端没运行,所以导致不能正常关机.
+解决步骤:
+# share -F nfs /vol
+# ps -ef |grep nfs
+    root   525     1   0 16:30:36 ?           0:00 /usr/lib/nfs/mountd
+  daemon   506     1   0 16:30:34 ?           0:00 /usr/lib/nfs/statd
+  daemon   512     1   0 16:30:34 ?           0:00 /usr/lib/nfs/nfsmapid
+    root   528   476   0 16:30:42 pts/1       0:00 grep nfs
+  daemon   514     1   0 16:30:35 ?           0:00 /usr/lib/nfs/lockd
+  daemon   527     1   0 16:30:36 ?           0:00 /usr/lib/nfs/nfsd
+# umount /vol
+umount: 警告：/vol 不在 mnttab 中
+到此/etc/mnttab里已没有nfs文件的相关信息.
+
+

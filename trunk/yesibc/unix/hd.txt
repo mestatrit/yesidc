@@ -1,0 +1,365 @@
+====================================================
+yeah！SUN硬盘backup分区不见了被（suisuiyouyu）搞好了。把过程贴出来给大家分享！
+
+bash-2.05# format -e c0t1d0
+selecting c0t1d0
+[disk formatted]
+
+FORMAT MENU:
+        disk       - select a disk
+        type       - select (define) a disk type
+        partition  - select (define) a partition table
+        current    - describe the current disk
+        format     - format and analyze the disk
+        repair     - repair a defective sector
+        label      - write label to the disk
+        analyze    - surface analysis
+        defect     - defect list management
+        backup     - search for backup labels
+        verify     - read and display labels
+        inquiry    - show vendor, product and revision
+        scsi       - independent SCSI mode selects
+        cache      - enable, disable or query SCSI disk cache
+        volname    - set 8-character volume name
+        !<cmd>     - execute <cmd>, then return
+        quit
+format> p
+
+PARTITION MENU:
+        0      - change `0' partition
+        1      - change `1' partition
+        2      - change `2' partition
+        3      - change `3' partition
+        4      - change `4' partition
+        5      - change `5' partition
+        6      - change `6' partition
+        7      - change `7' partition
+        8      - change '8' partition
+        select - select a predefined table
+        modify - modify a predefined partition table
+        name   - name the current table
+        print  - display the current table
+        label  - write partition map and label to the disk
+        !<cmd> - execute <cmd>, then return
+        quit
+partition> m
+Select partitioning base:
+        0. Current partition table (original)
+        1. All Free Hog
+Choose base (enter number) [0]? 1
+
+Part      Tag    Flag     First Sector        Size        Last Sector
+  0        usr    wm                 0          0              0    
+  1        usr    wm                 0          0              0    
+  2        usr    wm                 0          0              0    
+  3        usr    wm                 0          0              0    
+  4        usr    wm                 0          0              0    
+  5        usr    wm                 0          0              0    
+  6        usr    wm                 0          0              0    
+  7        usr    wm                 0          0              0    
+  8   reserved    wm          71116540       8.00MB         71132923    
+
+Do you wish to continue creating a new partition
+table based on above table[yes]? 
+Free Hog partition[6]? 8
+`8' is not expected.
+Free Hog partition[6]? 7
+Enter size of partition 0 [0b, 34e, 0mb, 0gb, 0tb]: 34e
+Enter size of partition 1 [0b, 35e, 0mb, 0gb, 0tb]: 35e
+Enter size of partition 2 [0b, 36e, 0mb, 0gb, 0tb]: 36e
+Enter size of partition 3 [0b, 37e, 0mb, 0gb, 0tb]: 37e
+Enter size of partition 4 [0b, 38e, 0mb, 0gb, 0tb]: 38e
+Enter size of partition 5 [0b, 39e, 0mb, 0gb, 0tb]: 39e
+Enter size of partition 6 [0b, 40e, 0mb, 0gb, 0tb]: 40e
+
+Ready to label disk, continue? y   
+
+partition> p
+Current partition table (original):
+Total disk sectors available: 71116540 + 16384 (reserved sectors)
+
+partition> q
+
+FORMAT MENU:
+        disk       - select a disk
+        type       - select (define) a disk type
+        partition  - select (define) a partition table
+        current    - describe the current disk
+        format     - format and analyze the disk
+        repair     - repair a defective sector
+        label      - write label to the disk
+        analyze    - surface analysis
+        defect     - defect list management
+        backup     - search for backup labels
+        verify     - read and display labels
+        inquiry    - show vendor, product and revision
+        scsi       - independent SCSI mode selects
+        cache      - enable, disable or query SCSI disk cache
+        volname    - set 8-character volume name
+        !<cmd>     - execute <cmd>, then return
+        quit
+format> l
+[0] SMI Label
+[1] EFI Label
+Specify Label type[1]: 0
+Auto configuration via format.dat[no]? yes
+Ready to label disk, continue? y
+
+format> l
+[0] SMI Label
+[1] EFI Label
+Specify Label type[0]: 0
+Ready to label disk, continue? y
+
+format> p
+
+PARTITION MENU:
+        0      - change `0' partition
+        1      - change `1' partition
+        2      - change `2' partition
+        3      - change `3' partition
+        4      - change `4' partition
+        5      - change `5' partition
+        6      - change `6' partition
+        7      - change `7' partition
+        select - select a predefined table
+        modify - modify a predefined partition table
+        name   - name the current table
+        print  - display the current table
+        label  - write partition map and label to the disk
+        !<cmd> - execute <cmd>, then return
+        quit
+partition> p
+Current partition table (default):
+Total disk cylinders available: 24620 + 2 (reserved cylinders)
+
+Part      Tag    Flag     Cylinders         Size            Blocks
+  0       root    wm       0 -    90      128.37MB    (91/0/0)      262899
+  1       swap    wu      91 -   181      128.37MB    (91/0/0)      262899
+  2     backup    wu       0 - 24619       33.92GB    (24620/0/0) 71127180
+  3 unassigned    wm       0                0         (0/0/0)            0
+  4 unassigned    wm       0                0         (0/0/0)            0
+  5 unassigned    wm       0                0         (0/0/0)            0
+  6        usr    wm     182 - 24619       33.67GB    (24438/0/0) 70601382
+  7 unassigned    wm       0                0         (0/0/0)            0
+
+partition> q
+
+
+FORMAT MENU:
+        disk       - select a disk
+        type       - select (define) a disk type
+        partition  - select (define) a partition table
+        current    - describe the current disk
+        format     - format and analyze the disk
+        repair     - repair a defective sector
+        label      - write label to the disk
+        analyze    - surface analysis
+        defect     - defect list management
+        backup     - search for backup labels
+        verify     - read and display labels
+        save       - save new disk/partition definitions
+        inquiry    - show vendor, product and revision
+        scsi       - independent SCSI mode selects
+        cache      - enable, disable or query SCSI disk cache
+        volname    - set 8-character volume name
+        !<cmd>     - execute <cmd>, then return
+        quit
+format> q
+bash-2.05# format
+Searching for disks...done
+
+
+AVAILABLE DISK SELECTIONS:
+       0. c0t0d0 <SUN36G cyl 24620 alt 2 hd 27 sec 107>
+          /pci@1f,4000/scsi@3/sd@0,0
+       1. c0t1d0 <SUN36G cyl 24620 alt 2 hd 27 sec 107>
+          /pci@1f,4000/scsi@3/sd@1,0
+Specify disk (enter its number): 1
+selecting c0t1d0
+[disk formatted]
+
+
+FORMAT MENU:
+        disk       - select a disk
+        type       - select (define) a disk type
+        partition  - select (define) a partition table
+        current    - describe the current disk
+        format     - format and analyze the disk
+        repair     - repair a defective sector
+        label      - write label to the disk
+        analyze    - surface analysis
+        defect     - defect list management
+        backup     - search for backup labels
+        verify     - read and display labels
+        save       - save new disk/partition definitions
+        inquiry    - show vendor, product and revision
+        volname    - set 8-character volume name
+        !<cmd>     - execute <cmd>, then return
+        quit
+format> p
+
+
+PARTITION MENU:
+        0      - change `0' partition
+        1      - change `1' partition
+        2      - change `2' partition
+        3      - change `3' partition
+        4      - change `4' partition
+        5      - change `5' partition
+        6      - change `6' partition
+        7      - change `7' partition
+        select - select a predefined table
+        modify - modify a predefined partition table
+        name   - name the current table
+        print  - display the current table
+        label  - write partition map and label to the disk
+        !<cmd> - execute <cmd>, then return
+        quit
+partition> p
+Current partition table (original):
+Total disk cylinders available: 24620 + 2 (reserved cylinders)
+
+Part      Tag    Flag     Cylinders         Size            Blocks
+  0       root    wm       0 -    90      128.37MB    (91/0/0)      262899
+  1       swap    wu      91 -   181      128.37MB    (91/0/0)      262899
+  2     backup    wu       0 - 24619       33.92GB    (24620/0/0) 71127180
+  3 unassigned    wm       0                0         (0/0/0)            0
+  4 unassigned    wm       0                0         (0/0/0)            0
+  5 unassigned    wm       0                0         (0/0/0)            0
+  6        usr    wm     182 - 24619       33.67GB    (24438/0/0) 70601382
+  7 unassigned    wm       0                0         (0/0/0)            0
+
+partition> q
+
+
+FORMAT MENU:
+        disk       - select a disk
+        type       - select (define) a disk type
+        partition  - select (define) a partition table
+        current    - describe the current disk
+        format     - format and analyze the disk
+        repair     - repair a defective sector
+        label      - write label to the disk
+        analyze    - surface analysis
+        defect     - defect list management
+        backup     - search for backup labels
+        verify     - read and display labels
+        save       - save new disk/partition definitions
+        inquiry    - show vendor, product and revision
+        volname    - set 8-character volume name
+        !<cmd>     - execute <cmd>, then return
+        quit
+format> q
+bash-2.05# format
+Searching for disks...done
+
+
+AVAILABLE DISK SELECTIONS:
+       0. c0t0d0 <SUN36G cyl 24620 alt 2 hd 27 sec 107>
+          /pci@1f,4000/scsi@3/sd@0,0
+       1. c0t1d0 <SUN36G cyl 24620 alt 2 hd 27 sec 107>
+          /pci@1f,4000/scsi@3/sd@1,0
+Specify disk (enter its number): 1
+selecting c0t1d0
+[disk formatted]
+再次感谢suisuiyouyu
+
+=============================================================================
+（转）使用 ZFS 在 VMware Fusion 中扩展 Solaris 虚拟磁盘
+By Jim Laurent,
+
+在本文中，您会找到我折腾了数小时都未能尝试向 Solaris 虚拟机磁盘映像添加磁盘空间的记录。原来是需要某些“新思维”。如果您需要正确的解决方案，就直接转到文章结束部分。
+
+我正在 MacBook Pro 上的 VMware Fusion 中运行我的 Solaris 映像。现在的问题的是如何扩展虚拟磁盘大小。
+
+* 下载用于 MacOS X 的 VMware 虚拟磁盘管理器。这是随 Fusion 一起提供的命令行工具的一个 GUI。如果您确实喜欢使用命令行，则可以在以下位置找到它：/Library/Application\ Support/VMware\ Fusion/vmware-vdiskmanager。自己来权衡。我相信您的能力！
+* 复制您的虚拟机。仅对副本进行操作！在 Finder 中选中它，然后选择“编辑”>“复制”(Apple-D)。在制作副本时，虚拟机不能正在运行，甚至不能在使用中和处于挂起状态。Fusion 会对此提示操作不当。
+* 启动 Fusion
+* “文件打开...”新的虚拟机副本
+* Fusion 会注意到文件名已更改并提示您是否已复制该文件。
+* 挂起虚拟机
+* 在扩展此磁盘前您必须先丢弃任何快照。虚拟机 > 丢弃快照。
+* 启动 Vdiskmanager GUI
+* 单击“扩展”，然后在虚拟机中查找 vmdk 文件。选择所需的大小。
+* 单击“运行”（该 GUI 将在窗口底部回显它所使用的命令行，以检查欺骗行为）
+* 该 GUI 不会显示此活动的进度。
+* 完成时如果具有此状态则将打开“结果”选项卡。
+
+现在，真正有趣的就要开始了。但是，Format 显示我的磁盘为其初始大小 10 GB，而非新大小 18 GB。此时 fdisk 将派上用场。
+
+fdisk /dev/rdsk/c8t0d0p0 显示我的磁盘有一个占整个磁盘 56% 的分区。这证明该操作发挥了作用。现在我们尝试删除该分区，然后在操作系统运行时重新创建一个空间较大的分区（屏息）。遗憾的是，此尝试失败了，如果您不乐意从我的失败中汲取教训，请跳到下一部分。
+
+* fdisk /dev/rdsk/c8t0d0p0
+* 选择 3 删除该分区，选择分区 1 并确认
+* 选择 1 创建一个分区。指定占磁盘的 100%。
+* 选择 5 退出，但愿能成功！
+* 运行 Format，崩溃了（哦，惨了！庆幸的是这只是个副本！）
+* 系统重新引导并且 Grub 没有菜单。引导内核的所有尝试均告失败。哎。再试一次。
+
+好了，可以看出 Solaris 在运行时不希望我移除和重新创建其 fdisk 分区。如何创建单独的分区并装载它呢？摒弃此核心此虚拟机并创建原件的另一个副本。重复这些步骤来增加磁盘大小，然后... 此尝试也告失败，如果您不乐意从我的失败中汲取教训，请跳到下一部分。
+
+* 需要重新引导，以使 fdisk 识别新的较大大小
+* fdisk /dev/rdsk/c8t0d0p0
+* 选择 1 创建新分区，输入大小，不要使其处于活动状态
+
+现在，我又卡壳了。我找不到获取格式的方法来识别磁盘以便构建盘片。newfs 拒绝写入没有分区表的新文件系统。
+
+在 SunSolve 中，我发现了 6307998 这个错误，已附有以下注释。
+
+我已经验证，基本上 Solaris 的限制在于
+它不允许同一个磁盘上有多个 Solaris 物理分区。
+
+功能的这种缺乏超过了安装程序，总的来说这是
+Solaris 中所缺少的东西。Solaris 不支持同一个磁盘上有 2 个 Solaris 分区，
+原因是磁盘驱动程序假定每个磁盘仅有一个
+Solaris 分区。例如，如果我们引用 /dev/dsk/c0d0s0，则我们
+如何确定需要在 c0d0 上访问的 Solaris 分区。
+
+救助的 ZFS
+
+当您有 ZFS 时有谁会需要那种讨厌的旧格式和 mkfs 材料呢！
+
+* 需要重新引导，这样 fdisk 才能识别新的较大磁盘
+* fdisk /dev/rdsk/c8t0d0p0
+* 选择 1 创建新分区，输入大小，不要使其处于活动状态
+* zpool 创建 mypool /dev/dsk/c8t0d0p1
+* zfs 创建 mypool/jim
+
+我已经成功增加了虚拟存储！
+
+备选方法：为映像中添加第二个磁盘
+
+为了通过 Fusion 添加第二个硬盘。
+
+* solaris 必须停止运行。
+* 虚拟机必须关闭。
+* 单击 + 号，添加磁盘并输入大小。
+* devfsadm（差点键入了重新引导 -- -r，但这是“旧思维”，以便 format 可以看到新设备）。
+
+format
+搜索磁盘...完成
+
+
+可用的磁盘选择：
+0. c1t0d0 <DEFAULT cyl 1302 alt 2 hd 255 sec 63>
+/pci@0,0/pci1000,30@10/sd@0,0
+1. c1t1d0 <DEFAULT cyl 2557 alt 2 hd 128 sec 32>
+/pci@0,0/pci1000,30@10/sd@1,0
+
+# zpool create mypool /dev/dsk/c1t1d0
+# zfs create mypool/jim
+
+# zpool status
+pool: mypool
+state: ONLINE
+scrub: none requested
+config:
+
+NAME STATE READ WRITE CKSUM
+mypool ONLINE 0 0 0
+c1t1d0 ONLINE 0 0 0
+
+# zpool list
+NAME SIZE USED AVAIL CAP HEALTH ALTROOT
+mypool 4.97G 116K 4.97G 0% ONLINE -
