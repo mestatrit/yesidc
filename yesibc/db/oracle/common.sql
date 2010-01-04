@@ -9,13 +9,18 @@ select *From user_source;
 
 --3.表空间
 CREATE TABLESPACE cfccc
-DATAFILE 'D:/DB/spacer/cfccc.dbf' SIZE 200M
+DATAFILE '/opt/oracle/oradata/orcl/itc.dbf' SIZE 200M
 UNIFORM SIZE 128k;
 
+--增加额外的数据文件到表空间中
+alter tablespace users add datafile '/opt/oracle/oradata/orcl/itc.dbf' size 25m;
+--修改表空间当前的数据文件
+alter database datafile '/opt/oracle/oradata/orcl/itc.dbf' resize 50m;
+
 --4.用户权限
+create user cfccc identified by cfccc;
 alter user des_app default tablespace cfccc
 temporary tablespace temp;
-create user cfccc identified by cfccc;
 grant create session,connect,resource to cfccc;
 grant select, insert, update, delete on CHN_INST.APPLICATION_BASIC to CHN_NEWECREDIT;
 
