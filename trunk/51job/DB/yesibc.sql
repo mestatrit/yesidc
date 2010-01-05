@@ -365,7 +365,7 @@ alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_ADDR3 foreign key (JOB_
 alter table T_PERSON add constraint FK_PERSON_SARALY_YEAR foreign key (SARALY_YEAR) references T_CODE;
 alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_SALARY foreign key (JOB_INTENT_SALARY) references T_CODE;
 alter table T_PERSON add constraint FK_PERSON_JOB_INTENT_INDUSTRY2 foreign key (JOB_INTENT_INDUSTRY2) references T_CODE;
-create sequence SEQ_CODE START WITH 10000;
+create sequence SEQ_CODE START WITH 100000;
 create sequence SEQ_CODE_JOB START WITH 1;
 create sequence SEQ_COMPANY;
 create sequence SEQ_C_APPEND;
