@@ -123,4 +123,14 @@ public class ComAppend implements java.io.Serializable {
 		this.datas = datas;
 	}
 
+	@Override
+	public String toString() {
+		return "ComAppend [company=" + company + ", companyName=" + companyName
+				+ ", contents=" + contents + ", createDate=" + createDate
+				+ ", createUser=" + createUser  + ", fromWhere=" + fromWhere
+				+ ", fromWhereName=" + fromWhereName + ", id=" + id
+				+ ", lobType=" + lobType + ", updateDate=" + updateDate
+				+ ", updateUser=" + updateUser + "]";
+	}
+
 }

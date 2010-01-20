@@ -5,9 +5,11 @@ import com.yesibc.job51.model.Code;
 public class ClawerConstants {
 
 	// public final static boolean TEST = true;
-	public final static boolean TEST_DAO = true;
+	public final static boolean TEST_DAO = false;
 
-	public final static boolean TEST_WEB = true;
+	public final static boolean TEST_WEB = false;
+
+	public final static boolean SHOW_FRAME = true;
 
 	public final static int TEST_WEB_NUM = 4;
 
@@ -19,33 +21,35 @@ public class ClawerConstants {
 
 	public final static String UPDATE_USER = "YTB";
 
+	public final static long WAITING_TIME = 10000;
+
 	public final static String[] EMAIL_SPLITS = { ";", "," };
 
 	public static Code FROM_WHERE_51JOB_CODE = new Code();
 
 	/**
 	 * <pre>
-	 * #�� �� �� Ϣ
+	 * #基 本 信 息
 	 * basic.info=\u57FA\u672C\u4FE1\u606F
-	 * #�� �� �� ��
+	 * #自 我 评 价
 	 * self.evaluation=\u81EA\u6211\u8BC4\u4EF7
-	 * #�� ְ �� ��
+	 * #求 职 意 向
 	 * job.intent=\u6C42\u804C\u610F\u5411
-	 * #�� �� �� ��
+	 * #工 作 经 验
 	 * job.experience=\u5DE5\u4F5C\u7ECF\u9A8C
-	 * #�� Ŀ �� ��
+	 * #项 目 经 验
 	 * project.experience=\u9879\u76EE\u7ECF\u9A8C
-	 * #�� �� �� ��
+	 * #教 育 经 历
 	 * edu.experience=\u6559\u80B2\u7ECF\u5386
-	 * #�� ѵ �� ��
+	 * #培 训 经 历
 	 * training.experience=\u57F9\u8BAD\u7ECF\u5386
-	 * #֤ ��
+	 * #证 书
 	 * certification=\u8BC1\u4E66
-	 * #�� �� �� ��
+	 * #语 言 能 力
 	 * language.level=\u8BED\u8A00\u80FD\u529B
-	 * #IT �� ��
+	 * #IT 技 能
 	 * IT.skills=IT\u6280\u80FD
-	 * #�� �� �� Ϣ
+	 * #附 加 信 息
 	 * attachment=\u9644\u52A0\u4FE1\u606F
 	 * </pre>
 	 */
@@ -70,9 +74,11 @@ public class ClawerConstants {
 	public final static String IT_SKILLS = ClawerUtils.getValByKey("IT.skills");
 	public final static String ATTACHMENT = ClawerUtils
 			.getValByKey("attachment");
-	public final static String RECONNECT_CUT = ClawerUtils
+	public final static String RECONNECT_CUT_NAME = ClawerUtils
 			.getValByKey("reconnect.cut");
-	public final static String RECONNECT_RECONN = ClawerUtils
+	public final static String RECONNECT_CUT_TAG = "Connect(this.form,'Disconnect_pppoe')";
+	public final static String RECONNECT_RECONN_TAG = "Connect(this.form,'Connect_pppoe')";
+	public final static String RECONNECT_RECONN_NAME = ClawerUtils
 			.getValByKey("reconnect.reconn");
 	public final static String VAL = "_val";
 
@@ -183,14 +189,14 @@ public class ClawerConstants {
 
 	/**
 	 * <pre>
-	 * 01 = ��Ȥ����
-	 * 02 = �س�
-	 * 03 = ְҵĿ�� 
-	 * 04 = ���⼼��
-	 * 5 = ���
-	 * 06 = ����
-	 * 07 = �ڽ�����
-	 * 08 = �Ƽ���
+	 * 01 = 兴趣爱好
+	 * 02 = 特长
+	 * 03 = 职业目标 
+	 * 04 = 特殊技能
+	 * 5 = 社会活动
+	 * 06 = 荣誉
+	 * 07 = 宗教信仰
+	 * 08 = 推荐信
 	 * appendix.interesting=\u5174\u8DA3\u7231\u597D
 	 * appendix.specialty=\u7279\u957F
 	 * appendix.career.goal=\u804C\u4E1A\u76EE\u6807
@@ -240,7 +246,7 @@ public class ClawerConstants {
 			.getServerConfByKey("webrenderer.id");
 	public final static String WEBRENDERER_SN = ClawerUtils
 			.getServerConfByKey("webrenderer.sn");
-	public final static int THREADS_NUMBER = Integer.parseInt(ClawerUtils
+	public static int THREADS_NUMBER = Integer.parseInt(ClawerUtils
 			.getServerConfByKey("threads.number"));
 	public final static long COUNT_LOADED = Long.parseLong(ClawerUtils
 			.getServerConfByKey("count.loaded.reconnect"));
@@ -250,6 +256,7 @@ public class ClawerConstants {
 			.getServerConfByKey("dialog.password");
 
 	public static final String MANUAL_LOG = "manual";
+	public static final String LOG_URLS = "logurls";
 
 	/**
 	 * <pre>
@@ -274,6 +281,8 @@ public class ClawerConstants {
 			.getValByKey("company.fax");
 	public final static String COMPANY_CONTACT_PERSON = ClawerUtils
 			.getValByKey("company.contact.person");
+	public final static String COMPANY_MOBILE = ClawerUtils
+			.getValByKey("company.mobile");
 	public final static String COMPANY_TEL = ClawerUtils
 			.getValByKey("company.tel");
 	public final static String COMPANY_GIF = ClawerUtils
@@ -298,6 +307,8 @@ public class ClawerConstants {
 			"city.filter.list").split(",");
 	public final static String[] FILTERS_ADDRESS = ClawerUtils.getValByKey(
 			"filters.address").split(",");
+
+	public static final String ALERT_ERROR = "0001";
 
 	static {
 		if (!TEST_DAO) {

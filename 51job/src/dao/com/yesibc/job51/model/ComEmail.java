@@ -130,5 +130,14 @@ public class ComEmail implements java.io.Serializable {
 		this.fromWhereName = fromWhereName;
 	}
 
+	@Override
+	public String toString() {
+		return "ComEmail [createDate=" + createDate + ", createUser=" + createUser
+				+ ", email=" + email + ", fromWhere=" + fromWhere
+				+ ", fromWhereName=" + fromWhereName + ", id=" + id
+				+ ", mailType=" + mailType + ", updateDate=" + updateDate
+				+ ", updateUser=" + updateUser + "]";
+	}
+
 
 }

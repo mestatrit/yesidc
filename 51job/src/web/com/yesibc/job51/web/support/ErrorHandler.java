@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.webrenderer.swing.dom.IElement;
 import com.yesibc.job51.common.ClawerConstants;
+import com.yesibc.job51.common.ClawerUtils;
 
 public class ErrorHandler {
 	public final static String ERROR_PREFIX = "Fatal error!";
@@ -17,11 +18,11 @@ public class ErrorHandler {
 	}
 
 	public static void errorLogAndMail(String errMsg) {
-		logManual.error(errMsg);
+		ClawerUtils.sendAlert(errMsg);
 	}
 
 	public static void errorLogAndMail(String errMsg, Exception e) {
-		logManual.error(errMsg, e);
+		ClawerUtils.sendEXAlert(e, errMsg);
 	}
 
 	public static void errorIElement(IElement ie, String errmsg) {

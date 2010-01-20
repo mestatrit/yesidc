@@ -35,17 +35,18 @@ public class WebrendererContext {
 
 	public static Map<Integer, WebRenderEntity> initContext() {
 		Map<Integer, WebRenderEntity> webRenderEntity = new HashMap<Integer, WebRenderEntity>();
-		for (int i = 0; i < ClawerConstants.THREADS_NUMBER; i++) {
+		for (int i = 0; i < ClawerConstants.THREADS_NUMBER + 1; i++) {
 			IBrowserCanvas browser = BrowserFactory.spawnMozilla();
 			browser.enableImageLoading(false);
 			JobSupport.addListener(browser);
 			WebRenderEntity wre=new WebRenderEntity();
 			wre.setBrowser(browser);
-			if (ClawerConstants.TEST_WEB) {
+			if (ClawerConstants.SHOW_FRAME) {
 				JFrame frame = JobSupport.showFrame(browser, "Loading");
 				wre.setFrame(frame);
 			}	
 			webRenderEntity.put(i, wre);
+
 		}
 		log.info("Initial " + ClawerConstants.THREADS_NUMBER + " BROWSERS OK!");
 		return webRenderEntity;

@@ -5,6 +5,14 @@ import javax.swing.JFrame;
 import com.webrenderer.swing.IBrowserCanvas;
 
 public class WebRenderEntity {
+	
+	private boolean loaded = true;
+	public boolean isLoaded() {
+		return loaded;
+	}
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
+	}
 	private IBrowserCanvas browser;
 	private JFrame frame;
 	/**

@@ -177,4 +177,13 @@ public class CodeJob implements java.io.Serializable {
 		this.codes = codes;
 	}
 
+	@Override
+	public String toString() {
+		return "CodeJob [cname=" + cname + ", cname1=" + cname1 + ", code="
+				+ code + ", code1=" + code1 + ", codeLevel=" + codeLevel
+				+ ", createDate=" + createDate + ", createUser=" + createUser
+				+ ", ename=" + ename + ", ename1=" + ename1 + ", id=" + id
+				+ ", memo=" + memo + ", sortList=" + sortList + ", updateDate="
+				+ updateDate + ", updateUser=" + updateUser + "]";
+	}
 }

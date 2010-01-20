@@ -386,4 +386,27 @@ public class LocateCompanyInfo {
 					+ processContext.getBrowser().getURL() + "]", e);
 		}
 	}
+
+	public static String getMobile(ProcessContext processContext) {
+		try {
+			List<IElement> ies = JobSupport.getElements(processContext
+					.getBrowser().getDocument().getAll().tags("P"), "P",
+					"class", "txt_font1", ClawerConstants.COMPANY_MOBILE);
+			if (ies == null || ies.isEmpty()) {
+				return "";
+			}
+			// errorHandle(ies, "Company detail error!getTel!URL=" + url);
+			String temp = ies.get(0).getInnerHTML();
+			int i = temp.indexOf(ClawerConstants.COMPANY_MOBILE);
+			if (temp.length() > (i + 5)) {
+				return temp.substring(i + 5);
+			} else {
+				return "";
+			}
+		} catch (Exception e) {
+			throw new NestedRuntimeException(processContext.getLogTitle()
+					+ "getMobile error!" + "URL["
+					+ processContext.getBrowser().getURL() + "]", e);
+		}
+	}
 }

@@ -255,4 +255,20 @@ public class ComContactHeader implements java.io.Serializable {
 		this.fromWhereName = fromWhereName;
 	}
 
+	@Override
+	public String toString() {
+		return "ComContactHeader [address1=" + address1 + ", address2="
+				+ address2 + ", city=" + city + ", cityName=" + cityName
+				+ ", company=" + company + ", companyName=" + companyName
+				+ ", country=" + country + ", countryName=" + countryName
+				+ ", createDate=" + createDate + ", createUser=" + createUser
+				+ ", defaultName=" + defaultName + ", defaultNameEn="
+				+ defaultNameEn + ", department=" + department + ", fromWhere="
+				+ fromWhere + ", fromWhereName=" + fromWhereName + ", id=" + id
+				+ ", position=" + position + ", postcode1=" + postcode1
+				+ ", postcode2=" + postcode2 + ", province=" + province
+				+ ", provinceName=" + provinceName + ", updateDate="
+				+ updateDate + ", updateUser=" + updateUser + "]";
+	}
+
 }

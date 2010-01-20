@@ -48,6 +48,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 		if (mainThreadsStr != null) {
 			try {
 				threadNumber = Integer.parseInt(mainThreadsStr);
+				ClawerConstants.THREADS_NUMBER = threadNumber;
 			} catch (Exception e) {
 				log.error("Parse threadNumber error:" + mainThreadsStr, e);
 			}
@@ -113,9 +114,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 		boolean end = false;
 		for (int i = 0; i < threadNumber; i++) {
-			String[] urls = new String[threadNumber];
+			String[] urls = new String[circleTimes];
 			for (int j = 0; j < circleTimes; j++) {
-				k = i * threadNumber + j;
+				k = i * circleTimes + j;
 				if ((k + 1) > size) {
 					end = true;
 					break;
@@ -162,9 +163,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 		boolean end = false;
 		for (int i = 0; i < threadNumber; i++) {
-			String[] urls = new String[threadNumber];
+			String[] urls = new String[circleTimes];
 			for (int j = 0; j < circleTimes; j++) {
-				k = i * threadNumber + j;
+				k = i * circleTimes + j;
 				if ((k + 1) > size) {
 					end = true;
 					break;
@@ -212,9 +213,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 		boolean end = false;
 		for (int i = 0; i < threadNumber; i++) {
-			String[] urls = new String[threadNumber];
+			String[] urls = new String[circleTimes];
 			for (int j = 0; j < circleTimes; j++) {
-				k = i * threadNumber + j;
+				k = i * circleTimes + j;
 				if ((k + 1) > size) {
 					end = true;
 					break;
@@ -222,7 +223,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 				urls[j] = CompanyJobContext.getUrlPages().get(k);
 			}
 			SearchCompanyLinksEngine sce = new SearchCompanyLinksEngine(
-					requestId + ",parse company links [" + k + "].", urls,i);
+					requestId + ",parse company links [" + k + "].", urls, i);
 			sce.start();
 			sces.add(sce);
 			if (end) {
@@ -259,9 +260,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 		boolean end = false;
 		for (int i = 0; i < threadNumber; i++) {
-			String[] urls = new String[threadNumber];
+			String[] urls = new String[circleTimes];
 			for (int j = 0; j < circleTimes; j++) {
-				k = i * threadNumber + j;
+				k = i * circleTimes + j;
 				if ((k + 1) > size) {
 					end = true;
 					break;
@@ -269,7 +270,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 				urls[j] = CompanyJobContext.getSearchResultUrls().get(k);
 			}
 			SearchPagesEngine spe = new SearchPagesEngine(requestId
-					+ ",parse page links [" + k + "].", urls,i);
+					+ ",parse page links [" + k + "].", urls, i);
 			spe.start();
 			spes.add(spe);
 			if (end) {
