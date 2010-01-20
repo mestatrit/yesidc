@@ -14,6 +14,7 @@ import com.yesibc.job51.company.LogHandler;
 import com.yesibc.job51.model.Company;
 import com.yesibc.job51.service.CompanyInfoHandlerService;
 import com.yesibc.job51.web.support.CompanyInfoSupport;
+import com.yesibc.job51.web.support.ErrorHandler;
 import com.yesibc.job51.web.support.JobSupport;
 import com.yesibc.job51.web.support.LocateCompanyInfo;
 
@@ -46,15 +47,16 @@ public class ParseCompanyNJobLinks {
 				CompanyInfoHandlerService companyInfoHandlerService = (CompanyInfoHandlerService) SpringContext
 						.getBean("companyInfoHandlerService");
 				companyInfoHandlerService.save(company);
-				companyInfoHandlerService.logHibernateStat();
+				// companyInfoHandlerService.logHibernateStat();
 
 				log.info(processContext.getLogTitle()
 						+ "Save company to DB for [" + companyCode + ","
 						+ company.getCompanyName() + "] OK.");
 			} catch (Exception e) {
-				log.error(processContext.getLogTitle() + ",url="
-						+ processContext.getBrowser().getURL()
-						+ " companyInfoHandlerService error! ", e);
+				ErrorHandler.errorLogAndMail(processContext.getLogTitle()
+						+ ",url=" + processContext.getBrowser().getURL()
+						+ " companyInfoHandlerService error! "
+						+ company.toString(), e);
 			}
 		}
 
@@ -94,7 +96,8 @@ public class ParseCompanyNJobLinks {
 					+ " for [" + company.getCompanyCode() + ","
 					+ company.getCompanyName() + "]");
 			for (IElement ie : urls) {
-				CompanyJobContext.setUrlJobs(ie.getAttribute("href", 0));
+				CompanyJobContext.setUrlJobs(ie.getAttribute("href", 0),
+						company);
 			}
 			return;
 		}
@@ -110,7 +113,7 @@ public class ParseCompanyNJobLinks {
 		urls = JobSupport.getElements(processContext.getBrowser().getDocument()
 				.getAll().tags("A"), "href", ClawerConstants.JOB_URL_PREFIX);
 		for (IElement ie : urls) {
-			CompanyJobContext.setUrlJobs(ie.getAttribute("href", 0));
+			CompanyJobContext.setUrlJobs(ie.getAttribute("href", 0), company);
 		}
 
 		int i = 1;
@@ -130,7 +133,8 @@ public class ParseCompanyNJobLinks {
 					.getDocument().getAll().tags("A"), "href",
 					ClawerConstants.JOB_URL_PREFIX);
 			for (IElement ie : urls) {
-				CompanyJobContext.setUrlJobs(ie.getAttribute("href", 0));
+				CompanyJobContext.setUrlJobs(ie.getAttribute("href", 0),
+						company);
 			}
 			size = size + urls.size();
 			ies = JobSupport.getElementsByTxt(processContext.getBrowser()
@@ -179,8 +183,10 @@ public class ParseCompanyNJobLinks {
 
 		String fax = LocateCompanyInfo.getFax(processContext);
 		String tel = LocateCompanyInfo.getTel(processContext);
-		if (!"".equals(fax) || !"".equals(tel)) {
-			CompanyInfoSupport.setFax2CompanyHeaders(have, company, fax, tel);
+		String mobile = LocateCompanyInfo.getMobile(processContext);
+		if (!"".equals(fax) || !"".equals(tel) || !"".equals(mobile)) {
+			CompanyInfoSupport.setFax2CompanyHeaders(have, company, fax, tel,
+					mobile);
 			have = true;
 		}
 

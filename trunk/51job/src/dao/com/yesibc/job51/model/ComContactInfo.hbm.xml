@@ -51,6 +51,9 @@
 		<subclass name="com.yesibc.job51.model.sub.ComContactTel"
 			discriminator-value="tel">
 		</subclass>
+		<subclass name="com.yesibc.job51.model.sub.ComContactMobile"
+			discriminator-value="mobile">
+		</subclass>
 		<subclass name="com.yesibc.job51.model.sub.ComContactQQ"
 			discriminator-value="qq">
 		</subclass>

@@ -27,17 +27,18 @@
 
 	<!-- Support AOP by AspectJ -->
 	<aop:config proxy-target-class="true">
-		<aop:pointcut id="interceptorPointCut1"
+		<!--aop:pointcut id="interceptorPointCut1"
 			expression="execution(* com.yesibc.job51.service.*.*(..))" />
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="interceptorPointCut1" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="interceptorPointCut1" /-->
 
-		<!--aop:advisor pointcut="execution(* com.yesibc.job51.service..*.*(..))"
-			advice-ref="txAdvice" /-->
+		<aop:advisor pointcut="execution(* com.yesibc.job51.service.*.*(..))"
+			advice-ref="txAdvice" />
+		<aop:advisor pointcut="execution(* com.yesibc.job51.dao.*.*(..))"
+			advice-ref="txAdvice" />
 	</aop:config>
+	
+	
 
-	<aop:config proxy-target-class="true">
-
-	</aop:config>
 
 	<!--
 		Support transaction. The transaction type of method names like "get*"

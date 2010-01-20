@@ -23,17 +23,20 @@ public class SearchCompanyNJobLinksEngine extends Thread {
 	private boolean finish = false;
 	private String rid;
 	private String[] urls;
+	private int index;
 	private ProcessContext processContext;
 
 	public SearchCompanyNJobLinksEngine(String rid, String[] urls, int index) {
 		this.rid = "[" + String.valueOf(rid) + "]";
 		this.urls = urls;
-		finish = false;
+		this.index = index;
 		browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
 		onDocumnetComplete();
 		processContext = setProcessContext();
-		WebrendererContext.WEBRENDER_ENTITIES.get(index).getFrame().setTitle(
-				processContext.getLogTitle());
+		if (ClawerConstants.SHOW_FRAME) {
+			WebrendererContext.WEBRENDER_ENTITIES.get(index).getFrame()
+					.setTitle(processContext.getLogTitle());
+		}
 	}
 
 	private ProcessContext setProcessContext() {
@@ -45,9 +48,11 @@ public class SearchCompanyNJobLinksEngine extends Thread {
 	}
 
 	public void run() {
-		CompanyJobContext.doCount(processContext.getLogTitle());
 		int i = 0;
 		for (String url : urls) {
+			CompanyJobContext.doCount(processContext.getLogTitle());
+			finish = false;
+			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(finish);
 			try {
 				if (url == null || "".equals(url)) {
 					continue;
@@ -58,7 +63,6 @@ public class SearchCompanyNJobLinksEngine extends Thread {
 						break;
 					}
 				}
-				finish = false;
 				l = System.currentTimeMillis();
 				browser.loadURL(url);
 				waitingLoading();
@@ -78,6 +82,8 @@ public class SearchCompanyNJobLinksEngine extends Thread {
 						+ "] is error=SerchJobEngine!" + e.getMessage()
 						+ "\n HTML contents:"
 						+ browser.getDocument().getBody().getOuterHTML(), e);
+			}finally{
+				WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(true);
 			}
 		}
 

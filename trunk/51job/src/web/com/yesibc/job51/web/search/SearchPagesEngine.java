@@ -22,17 +22,20 @@ public class SearchPagesEngine extends Thread {
 	private boolean finish = false;
 	private String rid;
 	private String[] urls;
+	private int index;
 	private ProcessContext processContext;
 
 	public SearchPagesEngine(String rid, String[] urls, int index) {
 		this.rid = "[" + String.valueOf(rid) + "]";
 		this.urls = urls;
-		finish = false;
+		this.index = index;
 		browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
 		onDocumnetComplete();
 		processContext = setProcessContext();
-		WebrendererContext.WEBRENDER_ENTITIES.get(index).getFrame().setTitle(
-				processContext.getLogTitle());
+		if (ClawerConstants.SHOW_FRAME) {
+			WebrendererContext.WEBRENDER_ENTITIES.get(index).getFrame()
+					.setTitle(processContext.getLogTitle());
+		}
 	}
 
 	private ProcessContext setProcessContext() {
@@ -50,14 +53,16 @@ public class SearchPagesEngine extends Thread {
 		strs[0] = CompanyJobContext.getSearchResultUrls().get(0);
 		strs[1] = CompanyJobContext.getSearchResultUrls().get(1);
 		SearchPagesEngine sje = new SearchPagesEngine(String.valueOf(System
-				.currentTimeMillis()), strs,0);
+				.currentTimeMillis()), strs, 0);
 		sje.run();
 	}
 
 	public void run() {
-		CompanyJobContext.doCount(processContext.getLogTitle());
 		int i = 0;
 		for (String url : urls) {
+			CompanyJobContext.doCount(processContext.getLogTitle());
+			finish = false;
+			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(finish);
 			try {
 				if (url == null || "".equals(url)) {
 					continue;
@@ -89,6 +94,9 @@ public class SearchPagesEngine extends Thread {
 						+ "] is error=SearchPagesEngine!" + e.getMessage()
 						+ "\n HTML contents:"
 						+ browser.getDocument().getBody().getOuterHTML(), e);
+			} finally {
+				WebrendererContext.WEBRENDER_ENTITIES.get(index)
+						.setLoaded(true);
 			}
 		}
 	}
@@ -118,8 +126,8 @@ public class SearchPagesEngine extends Thread {
 			LogHandler.info(rid + "SearchPagesEngine waiting loading……[" + i
 					* 10 + "]s");
 		}
-		LogHandler.info(rid + "SearchPagesEngine waiting loading end![" + i * 10
-				+ "]s");
+		LogHandler.info(rid + "SearchPagesEngine waiting loading end![" + i
+				* 10 + "]s");
 	}
 
 	public ProcessContext getProcessContext() {

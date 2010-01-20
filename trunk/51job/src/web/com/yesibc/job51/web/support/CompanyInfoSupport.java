@@ -16,6 +16,7 @@ import com.yesibc.job51.model.ComContactInfo;
 import com.yesibc.job51.model.ComEmail;
 import com.yesibc.job51.model.Company;
 import com.yesibc.job51.model.sub.ComContactFax;
+import com.yesibc.job51.model.sub.ComContactMobile;
 import com.yesibc.job51.model.sub.ComContactTel;
 
 public class CompanyInfoSupport {
@@ -155,6 +156,7 @@ public class CompanyInfoSupport {
 		if (!have) {
 			List<ComContactHeader> comAddrs = new ArrayList<ComContactHeader>();
 			ComContactHeader ca = new ComContactHeader();
+			CompanyInfoSupport.setComContactHeaderCommon(ca);
 			comAddrs.add(ca);
 			ca.setCompany(company);
 			ca.setCompanyName(company.getCompanyName());
@@ -163,7 +165,7 @@ public class CompanyInfoSupport {
 	}
 
 	public static void setFax2CompanyHeaders(boolean have, Company company,
-			String fax, String tel) {
+			String fax, String tel,String mobile) {
 		setCompanyHeaders(have, company);
 		List<ComContactInfo> ccis = new ArrayList<ComContactInfo>();
 		if (!"".equals(fax)) {
@@ -172,6 +174,9 @@ public class CompanyInfoSupport {
 		if (!"".equals(tel)) {
 			setTel(tel, ccis);
 		}
+		if (!"".equals(tel)) {
+			setMobile(mobile, ccis);
+		}
 		company.getComContactHeaders().get(0).setComContactInfos(ccis);
 	}
 
@@ -179,6 +184,16 @@ public class CompanyInfoSupport {
 		String[] sa = tel.split(" ");
 		for (String s : sa) {
 			ComContactInfo cci = new ComContactTel();
+			cci.setContractNo(s);
+			setComContactInfoCommon(cci);
+			ccis.add(cci);
+		}
+	}
+
+	private static void setMobile(String mobile, List<ComContactInfo> ccis) {
+		String[] sa = mobile.split(" ");
+		for (String s : sa) {
+			ComContactInfo cci = new ComContactMobile();
 			cci.setContractNo(s);
 			setComContactInfoCommon(cci);
 			ccis.add(cci);

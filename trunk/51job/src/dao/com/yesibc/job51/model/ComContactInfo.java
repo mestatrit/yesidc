@@ -120,5 +120,14 @@ public class ComContactInfo implements java.io.Serializable {
 		this.fromWhereName = fromWhereName;
 	}
 
+	@Override
+	public String toString() {
+		return "ComContactInfo [contractNo=" + contractNo + ", createDate=" + createDate
+				+ ", createUser=" + createUser + ", fromWhere=" + fromWhere
+				+ ", fromWhereName=" + fromWhereName + ", id=" + id
+				+ ", updateDate=" + updateDate + ", updateUser=" + updateUser
+				+ "]";
+	}
+
 
 }

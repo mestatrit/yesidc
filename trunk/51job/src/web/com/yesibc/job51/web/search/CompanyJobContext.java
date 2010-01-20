@@ -31,6 +31,7 @@ public class CompanyJobContext {
 	public static Log LOG_MANUAL = LogFactory
 			.getLog(ClawerConstants.MANUAL_LOG);
 	private static Log log = LogFactory.getLog(CompanyJobContext.class);
+	private static Log logurls = LogFactory.getLog(ClawerConstants.LOG_URLS);
 
 	private static Map<String, Company> companies = new HashMap<String, Company>();
 	private static List<String> urlCompanies = new ArrayList<String>();
@@ -157,8 +158,8 @@ public class CompanyJobContext {
 				continue;
 			}
 
-			LogHandler.info(processContext.getLogTitle() + "Put [" + companyId
-					+ "," + name + "] to company map!");
+			logurls.info(processContext.getLogTitle() + "Put [" + companyId
+					+ "," + name + "] url=[" + url + "] to company map!");
 
 			urlCompanies.add(url);
 		}
@@ -255,7 +256,10 @@ public class CompanyJobContext {
 	 * @param urlJobs
 	 *            the urlJobs to set
 	 */
-	public static void setUrlJobs(String url) {
+	public static void setUrlJobs(String url, Company company) {
+		logurls.info("Put [" + company.getCompanyCode() + ","
+				+ company.getCompanyName() + "] job url=[" + url
+				+ "] to job map!");
 		urlJobs.add(url);
 	}
 
@@ -318,14 +322,29 @@ public class CompanyJobContext {
 	}
 
 	public synchronized static void doCount(String tag) {
+
+		if (ClawerConstants.TEST_WEB) {
+			return;
+		}
+
+		checkWebReconnecting(tag);
+
 		countLoaded++;
 		log.info(tag + "whether reconnect internet:" + countLoaded);
 		if ((countLoaded + 1) % ClawerConstants.COUNT_LOADED == 0) {
+
+			WebLinkSupport.checkRunningWeb(tag);
+
 			log.info(tag + "reconnect internet start!");
 			long start = System.currentTimeMillis();
 			WebLinkSupport.reconnectInternet(tag);
 			log.info(tag + "reconnect internet end! time is "
 					+ (System.currentTimeMillis() - start));
 		}
+	}
+
+	private static void checkWebReconnecting(String tag) {
+		// TODO Auto-generated method stub
+
 	}
 }

@@ -24,6 +24,7 @@ public class ParseEmailFromJobs {
 	public final static String[] mailStrs = { "mailto:" };
 	public final static String[] comStrs = { ClawerConstants.OTHER_POSITION };
 	private static Log log = LogFactory.getLog(ParseEmailFromJobs.class);
+	private static Integer synchronizeObject = new Integer(0);
 
 	public static void parseEmailFromJobs(ProcessContext processContext)
 			throws ApplicationException {
@@ -162,8 +163,7 @@ public class ParseEmailFromJobs {
 				for (ComContactHeader cch : tempContactHeaders) {
 					i++;
 					log.info(processContext.getLogTitle() + "Saving email ["
-							+ i + "]" + email
-							+ " to DB and ComContactHeader is new!");
+							+ i + "]" + email + " to DB!");
 					try {
 						companyInfoHandlerService.save(cch);
 					} catch (Exception e) {
@@ -173,26 +173,34 @@ public class ParseEmailFromJobs {
 								+ i
 								+ "]"
 								+ email
-								+ " to DB and ComContactHeader is new!", e);
+								+ " to DB!\n" + cch.toString(), e);
 					}
 				}
 			} else {
 				int i = 0;
 				for (ComContactHeader cch : tempContactHeaders) {
 					i++;
-					log.info(processContext.getLogTitle() + "Saving email ["
-							+ i + "]" + email
-							+ " to DB and ComContactHeader is old!");
+					log.info(processContext.getLogTitle() + "Updating email ["
+							+ i + "]" + email + " to DB!");
 					try {
-						companyInfoHandlerService.update(cch);
+						/**
+						 * check == two open session
+						 */
+						synchronized (synchronizeObject) {
+							log.info(processContext.getLogTitle()
+									+ "Updating email [" + i + "]" + email
+									+ " to DB!Synchronized times:"
+									+ (++synchronizeObject));
+							companyInfoHandlerService.update(cch);
+						}
 					} catch (Exception e) {
 						ErrorHandler.errorLogAndMail(processContext
 								.getLogTitle()
-								+ "Saving email ["
+								+ "Updating email ["
 								+ i
 								+ "]"
 								+ email
-								+ " to DB and ComContactHeader is old!", e);
+								+ " to DB!\n" + cch.toString(), e);
 					}
 				}
 			}
