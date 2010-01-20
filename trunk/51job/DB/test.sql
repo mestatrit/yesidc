@@ -1,3 +1,4 @@
+--您兑换过的账号为>>yoka238986 ,密码为 061482 
 select * from
 (
 select t.*, level from t_code t 
