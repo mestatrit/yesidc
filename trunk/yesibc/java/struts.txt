@@ -1,0 +1,24 @@
+1.通配符
+<action name="*Crud" class="example.Crud" method="{1}"> 
+这时，editCrud Action的引用将调用edit方法，同理，deleteCrud Action的引用将调用delete 方法。 
+<action name="Crud_*" class="example.Crud" method="{1}"> 
+这样当遇到如下调用的时候可以找到对应的方法"action=Crud_input" => input方法 "action=Crud_delete" => delete方法
+
+2. Action的method
+Action的method属性配置主要用于将Action类中的每一个处理方法都定义成一个逻辑Action方法
+<action name="userLogin" class="com.example.web.struts2.action.LoginAction" method="login">  
+<action name="userRegist" class="com.example.web.struts2.action.LoginAction" method="regist">  
+
+3.大杂烩
+<action name="*_*_*deptlist" method="{1}" class="/{3}"> 
+   <result name="success" >/{2}.jsp</result> 
+</action>
+
+<action name=”*/*” method=”{2}” class=”com.infoq.actions.{1}Action”>
+<result type=”redirect”>/{1}/view.action</result>
+<result name=”view”>/{1}/view.jsp</result>
+<result name=”input”>/{1}/edit.jsp</result>
+<result name=”home”>/{1}/home.jsp</result>
+</action>
+
+
