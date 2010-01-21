@@ -1,0 +1,37 @@
+银行分为： 
+bank - 就是普通的银行，什么Barclays, HSBC都在这里面 
+building society - 中文应该叫做信用社，也就是资金没有那么雄厚的'银行'，Nationwide，Yorkshire都属于这个行列 
+online banks - 没有真正的分店，都只是Call Center跟上网。像First Direct和Smile就是典型。 
+
+英国的银行卡按性质可以分为以下几种： 
+
+Cash card: 一般用这种卡的人都是在英国没有信用度的，这种卡只能到机子上提款，发这种卡的大部分是基本账户（basic account）， 但是也有一些银行的current account在你刚开户的时候给cash card，比如hsbc，rbs。有的Saving Account也是用这种卡的，例如说Citibank和 hsbc 的Web Saver，既方便你提现，也给高的利息。 
+
+debit card: 中文叫做借记卡，就是账户里面有钱才能用。当然，有透支不算。 
+
+credit card: 信用卡，简单点说就是先用钱，再还钱。你的信用卡都会有一个透支额（Limit），最多给你用多少，然后给你几十天不等的免息时间。按时还钱的话就不收你任何手续费，要不就按照APR(Annual Percentage Rate，一般在15.9%到20%左右)按照每天给你算利息。信用卡的好处是他们一般都给你Internet Shopping Security。你要是东西买了没有到，他们一般都会赔钱。 
+
+Charge card: 这个就是高级一点的信用卡，但是你必须得按时换钱，没有的拖欠。 
+
+Store Card: 这个也超过了我们的范围，不过还是说说，就是商店里面的信用卡，比方说Debenham或者是Top shop都有的，只能在他们店里用，不过有这张卡一般会给你更好的折扣什么的，不过就是利息太高了。 
+
+银行卡按种类可以为几种，最常见到的有分为Visa跟Master两大类，此外还有American Express 
+
+VISA卡类： 
+Visa Electron：就是最普通的Debit卡，跟Solo基本一样。但是网上收这个的比较少，不过还是要比Solo的多。好像Boots之前也只收这个不收Solo。 
+
+Delta：一般Delta是跟Visa在一起的，就像TSB跟Barclays一样。他们的Debit卡前面是VISA，但是后面就有一个Delta。确切说，这个不是VISA的卡，只是Delta Visa。好处在于收VISA的地方都收这卡，但是他不是信用卡。 
+
+VISA：上面已经概括说明了信用卡有关问题了。 
+
+Master卡类： 
+Solo：也是最低级的Debit Card。接受的地方少，特别是网上。 
+
+Maestro/Switch：感觉就跟Delta一样，一卡两用。功能上跟Delta基本相同。 
+
+MasterCard：等于Visa，但是有的地方用MasterCard有折扣啊什么的，有的地方用Master Card，他们还帮你Free Gift Wrapping。 
+
+American Express虽然在130多个国家都用的到，但是在英国由于接受visa和MasterCard比较多，但是有些商店也不接受，所以除了去美国用得到外，在英国还是不考虑。 
+还有一点要补充的是，有些卖飞机票的地方就算你是用visa debit card付款，但对方还是收取手续费，这时候可以用solo或electron来付款，避免这些额外的收费。所以个人建议最好钱包里面备有不同类别的卡最好。 
+
+最后要解释的是direct debit， 这是银行的一种付款方式，像你手机的付款方式一般都是direct debit，这个是要收款方来弄的，自己不能设立，你要让对方寄一张表格，自己填了签名，对方会联系银行，银行才能帮你设立，然后这个收款是可以不一样，比如这个月收你12镑，下个月收你13镑，这个可以自己取消。还有一张付款方式是standing order，这个可以自己在网络银行或者和银行讲，他们会帮你设立，这个每月的钱是固定的，适用转到存款户口，比如你每月要转50镑到一个什么saving account，就可以用这个功能。
