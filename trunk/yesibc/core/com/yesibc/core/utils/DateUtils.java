@@ -8,6 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -38,7 +40,7 @@ public class DateUtils {
 	public static final String DAY_YMD = "yyyyMMdd";
 
 	public static final String FULL_YMDM_LINE = "yyyy-MM-dd HH:mm:ss.SSS";
-	
+
 	public static final String FULL_SECOND_LINE = "yyyy-MM-dd HH:mm:ss";
 
 	 public static final String YMD_CN = "yyyy" + CoreUtils.getValByKey("year") + "MM" + CoreUtils.getValByKey("month")
@@ -50,7 +52,7 @@ public class DateUtils {
 	 * @param date1
 	 * @param mins
 	 * @param format1
-	 *            ����ʽ (yyyy-MM-dd HH:mm:ss)
+	 * (yyyy-MM-dd HH:mm:ss)
 	 * @return
 	 */
 	public static String dateAddMin(Date date1, String mins, String format1) {
@@ -106,6 +108,16 @@ public class DateUtils {
 	 * 
 	 * @return
 	 */
+	public static String getCurrentWeek() {
+		Calendar c = Calendar.getInstance();
+		return String.valueOf(c.get(Calendar.WEEK_OF_YEAR) + 1);
+	}
+
+	/**
+	 * Return current month
+	 * 
+	 * @return
+	 */
 	public static String getCurrentMonth() {
 		Calendar c = Calendar.getInstance();
 		return String.valueOf(c.get(Calendar.MONTH) + 1);
@@ -141,6 +153,14 @@ public class DateUtils {
 		return c.getTime();
 	}
 
+	public static Date getNextDay(Date date, int i) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(date);
+		gc.add(Calendar.DATE, i);
+
+		return gc.getTime();
+	}
+
 	/**
 	 * Return current day
 	 * 
@@ -152,14 +172,153 @@ public class DateUtils {
 	}
 
 	/**
-	 * Return current day
+	 * Return day
 	 * 
-	 * @return String
+	 * @return int
 	 */
 	public static int getDaysOfMonth(Date d) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(d);
-		return c.getActualMaximum(Calendar.DAY_OF_MONTH);
+		return c.get(Calendar.DAY_OF_MONTH);
+	}
+
+	public static Date getNextMonth(Date date, int i) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(date);
+		gc.add(Calendar.MONTH, i);
+
+		return gc.getTime();
+	}
+
+	public static Date getNextHour(Date date, int i) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(date);
+		gc.add(Calendar.HOUR, i);
+
+		return gc.getTime();
+	}
+
+	public static Date getNextYear(Date date, int i) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(date);
+		gc.add(Calendar.YEAR, i);
+
+		return gc.getTime();
+	}
+
+	public static Date setMonth(Date date,int i) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(date);
+		gc.set(Calendar.MONTH, i);
+		return gc.getTime();
+	}
+
+	public static Date setHour(Date date, int i) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(date);
+		gc.set(Calendar.HOUR_OF_DAY, i);
+		return gc.getTime();
+	}
+
+	public static Date setYear(Date date, int i) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(date);
+		gc.set(Calendar.YEAR, i);
+		return gc.getTime();
+	}
+	
+	public static Date setDay(Date date, int i) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(date);
+		gc.set(Calendar.DAY_OF_MONTH, i);
+		return gc.getTime();
+	}
+
+	public static Date setMinute(Date date, int i) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(date);
+		gc.set(Calendar.MINUTE, i);
+		return gc.getTime();
+	}
+
+	public static Date setSecond(Date date, int i) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(date);
+		gc.set(Calendar.SECOND, i);
+		return gc.getTime();
+	}
+
+	public static Date setMILLISECOND(Date date, int i) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(date);
+		gc.set(Calendar.MILLISECOND, i);
+		return gc.getTime();
+	}
+
+	/**
+	 * Return Hours
+	 * 
+	 * @return int
+	 */
+	public static int getHoursOfDay(Date d) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		return c.get(Calendar.HOUR_OF_DAY);
+	}
+
+	/**
+	 * Return YEAR
+	 * 
+	 * @return int
+	 */
+	public static int getYears(Date d) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		return c.get(Calendar.YEAR);
+	}
+
+	/**
+	 * Return YEAR
+	 * 
+	 * @return int
+	 */
+	public static int getMonths(Date d) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		return c.get(Calendar.MONTH);
+	}
+
+	/**
+	 * Return MINUTE
+	 * 
+	 * @return int
+	 */
+	public static int getMinutes(Date d) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		return c.get(Calendar.MINUTE);
+	}
+
+	/**
+	 * Return SECOND
+	 * 
+	 * @return int
+	 */
+	public static int getSeconds(Date d) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		return c.get(Calendar.SECOND);
+	}
+
+	/**
+	 * Return MILLISECOND
+	 * 
+	 * @return int
+	 */
+	public static int getMilliSeconds(Date d) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		return c.get(Calendar.MILLISECOND);
 	}
 
 	/**
@@ -246,18 +405,48 @@ public class DateUtils {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Calendar c =Calendar.getInstance();
-		c.set(Calendar.YEAR, 2015);
-		c.set(Calendar.MONTH, 1);
-		c.set(Calendar.DAY_OF_MONTH, 14);
+
+		Calendar c = Calendar.getInstance();
+		// c.set(Calendar.HOUR_OF_DAY, 17);
+		// c.set(Calendar.MINUTE, 0);
+		// c.set(Calendar.SECOND, 0);
+		// c.set(Calendar.MILLISECOND, 0);
+
+		System.out.println(getNextHour(c.getTime(), 1));
+		System.out.println(getNextMonth(c.getTime(), 1));
+		System.out.println(getYears(c.getTime()));
+		System.out.println(getMonths(c.getTime()));
+		System.out.println(getDaysOfMonth(c.getTime()));
+		System.out.println(getHoursOfDay(c.getTime()));
+		System.out.println(getMinutes(c.getTime()));
+		System.out.println(getSeconds(c.getTime()));
+		System.out.println(getMilliSeconds(c.getTime()));
+
+		System.out.println(dateToString(c.getTime(), FULL_SECOND_LINE));
+
+		System.out.println(getCurrentWeek());
+
+		c.set(Calendar.YEAR, 2009);
+		c.set(Calendar.MONTH, 0);
+		c.set(Calendar.DAY_OF_MONTH, 1);
 		c.set(Calendar.HOUR_OF_DAY, 0);
-		
+
+		System.out.println(c.toString());
+		System.out.println(c.get(Calendar.WEEK_OF_YEAR));
+
 		Date today = new Date();
-		
+		Date today1 = new Date();
+
 		Date date = DateUtils.getDateStart(today);
-		
+		Date date1 = DateUtils.getDateStart(today);
+
+		System.out.println(today1);
+		System.out.println(date.equals(date1));
+		System.out.println(today.after(date));
+		System.out.println(today.before(date));
 		System.out.println(!today.before(date));
-		
+
 		System.out.println(dateToString(date, FULL_YMDM_LINE));
+
 	}
 }
