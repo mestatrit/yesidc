@@ -206,3 +206,41 @@ emca -repos create
 emca -config dbcontrol db
 emctl start dbconsole
 
+==============================================================================
+查看用户的表空间使用情况。
+select t.*
+  from (SELECT D.TABLESPACE_NAME,
+               SPACE "SUM_SPACE(M)",
+               BLOCKS SUM_BLOCKS,
+               SPACE - NVL(FREE_SPACE, 0) "USED_SPACE(M)",
+               ROUND((1 - NVL(FREE_SPACE, 0) / SPACE) * 100, 2) "USED_RATE(%)",
+               FREE_SPACE "FREE_SPACE(M)"
+          FROM (SELECT TABLESPACE_NAME,
+                       ROUND(SUM(BYTES) / (1024 * 1024), 2) SPACE,
+                       SUM(BLOCKS) BLOCKS
+                  FROM DBA_DATA_FILES
+                 GROUP BY TABLESPACE_NAME) D,
+               (SELECT TABLESPACE_NAME,
+                       ROUND(SUM(BYTES) / (1024 * 1024), 2) FREE_SPACE
+                  FROM DBA_FREE_SPACE
+                 GROUP BY TABLESPACE_NAME) F
+         WHERE D.TABLESPACE_NAME = F.TABLESPACE_NAME(+)
+        UNION ALL --if have tempfile
+        SELECT D.TABLESPACE_NAME,
+               SPACE "SUM_SPACE(M)",
+               BLOCKS SUM_BLOCKS,
+               USED_SPACE "USED_SPACE(M)",
+               ROUND(NVL(USED_SPACE, 0) / SPACE * 100, 2) "USED_RATE(%)",
+               SPACE - USED_SPACE "FREE_SPACE(M)"
+          FROM (SELECT TABLESPACE_NAME,
+                       ROUND(SUM(BYTES) / (1024 * 1024), 2) SPACE,
+                       SUM(BLOCKS) BLOCKS
+                  FROM DBA_TEMP_FILES
+                 GROUP BY TABLESPACE_NAME) D,
+               (SELECT TABLESPACE,
+                       ROUND(SUM(BLOCKS * 8192) / (1024 * 1024), 2) USED_SPACE
+                  FROM V$SORT_USAGE
+                 GROUP BY TABLESPACE) F
+         WHERE D.TABLESPACE_NAME = F.TABLESPACE(+)) t
+ order by "USED_RATE(%)" desc;
+
