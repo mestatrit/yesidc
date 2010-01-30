@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="astu" class="org.nieweiguo.Stu" abstract="false"
+		singleton="true" lazy-init="default" autowire="constructor"
+		dependency-check="default">
+		<property name="stuName">
+			<value>阿猫</value>
+		</property>
+		<property name="stuAge">
+			<value>18</value>
+		</property>
+	</bean>
+	<bean id="astu2" class="org.nieweiguo.Stu" abstract="false"
+		singleton="true" lazy-init="default" autowire="constructor"
+		dependency-check="default">
+		<property name="stuName">
+			<value>阿狗</value>
+		</property>
+		<property name="stuAge">
+			<value>28</value>
+		</property>
+	</bean>
+
+	<bean id="user" class="org.nieweiguo.User" abstract="false"
+		singleton="true" lazy-init="default" autowire="constructor"
+		dependency-check="default">
+		<property name="userName">
+			<value>nieweiguo</value>
+		</property>
+		<property name="age">
+			<value>25</value>
+		</property>
+		<property name="stus1">
+			<list>
+				<ref bean="astu" />
+				<ref bean="astu" />
+				<ref bean="astu" />
+			</list>
+		</property>
+		<property name="stus2">
+			<list>
+				<ref bean="astu2" />
+				<ref bean="astu2" />
+				<ref bean="astu2" />
+			</list>
+		</property>
+		<property name="stus3">
+			<set>
+				<ref bean="astu" />
+				<ref bean="astu2" />
+			</set>
+		</property>
+		<property name="stus4">
+			<map>
+				<entry key="stu1">
+					<ref bean="astu" />
+				</entry>
+				<entry key="stu2">
+					<ref bean="astu2" />
+				</entry>
+			</map>
+
+		</property>
+	</bean>
+
+</beans>
+
