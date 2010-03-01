@@ -1,12 +1,14 @@
 1.bash
  /usr/ucb/ps -auxww|grep java
+ ./artifactory.sh >> log2010-03-10.log &
+ ./artifactory.sh > log2010-03-10.log &
 
 2.#cvs中设置可写
 chown -R jvm:jvm *
 
 3.几种查看Linux版本信息的方法：
 3.1. uname -a
-3.2. cat /proc/version 
+3.2. cat /proc/version
 3.3. cat /etc/issue
 3.4. lsb_release -a
 #Unix版本信息:
