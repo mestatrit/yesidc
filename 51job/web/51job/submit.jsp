@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<s:form action="clawer51Job">
+<s:form action="clawer51JobSearch">
     <s:textfield key="requestId"/>
     <s:submit/>
 </s:form>
