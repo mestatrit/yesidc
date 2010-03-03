@@ -24,12 +24,10 @@ import com.yesibc.job51.service.CompanyInfoHandlerService;
 import com.yesibc.job51.web.support.CompanyInfoSupport;
 import com.yesibc.job51.web.support.ErrorHandler;
 import com.yesibc.job51.web.support.JobSupport;
-import com.yesibc.job51.web.support.WebLinkSupport;
 
 public class CompanyJobContext {
 
-	public static Log LOG_MANUAL = LogFactory
-			.getLog(ClawerConstants.MANUAL_LOG);
+	public static Log LOG_MANUAL = LogFactory.getLog(ClawerConstants.MANUAL_LOG);
 	private static Log log = LogFactory.getLog(CompanyJobContext.class);
 	private static Log logurls = LogFactory.getLog(ClawerConstants.LOG_URLS);
 
@@ -41,7 +39,6 @@ public class CompanyJobContext {
 	private static List<String> searchingUrls = new ArrayList<String>();
 	private static List<String> searchResultUrls = new ArrayList<String>();
 
-	private static long countLoaded = 0;
 
 	static {
 		intSearchURLs();
@@ -54,8 +51,7 @@ public class CompanyJobContext {
 			return;
 		}
 
-		CompanyInfoHandlerService cih = (CompanyInfoHandlerService) SpringContext
-				.getBean("companyInfoHandlerService");
+		CompanyInfoHandlerService cih = (CompanyInfoHandlerService) SpringContext.getBean("companyInfoHandlerService");
 		try {
 			cih.initalCompanyInfo(companies, emails);
 		} catch (Exception e) {
@@ -63,8 +59,7 @@ public class CompanyJobContext {
 		}
 
 		if (companies != null && !companies.isEmpty()) {
-			LogHandler
-					.info("Init company map! map size is " + companies.size());
+			LogHandler.info("Init company map! map size is " + companies.size());
 		}
 		if (emails != null && !emails.isEmpty()) {
 			LogHandler.info("Init email map! map size is " + emails.size());
@@ -73,9 +68,7 @@ public class CompanyJobContext {
 
 	private static void intSearchURLs() {
 		try {
-			String path = StringUtils.getRealPath(CompanyJobContext.class,
-					null, null)
-					+ "searchurls.51job";
+			String path = StringUtils.getRealPath(CompanyJobContext.class, null, null) + "searchurls.51job";
 			File file = new File(path);
 			if (!file.exists() || file.isDirectory())
 				throw new FileNotFoundException();
@@ -99,9 +92,7 @@ public class CompanyJobContext {
 
 	private static void intResultURLs() {
 		try {
-			String path = StringUtils.getRealPath(CompanyJobContext.class,
-					null, null)
-					+ "resulturls.51job";
+			String path = StringUtils.getRealPath(CompanyJobContext.class, null, null) + "resulturls.51job";
 			File file = new File(path);
 			if (!file.exists() || file.isDirectory())
 				throw new FileNotFoundException();
@@ -122,16 +113,14 @@ public class CompanyJobContext {
 	public static String getNewUrlPage(String url, int page) {
 		String pageTag1 = "curr_page=";
 		String pageTag2 = "&lang=c";
-		String newPage = url.substring(0, url.indexOf(pageTag1)
-				+ pageTag1.length())
-				+ page + url.substring(url.indexOf(pageTag2));
+		String newPage = url.substring(0, url.indexOf(pageTag1) + pageTag1.length()) + page
+				+ url.substring(url.indexOf(pageTag2));
 		return newPage;
 	}
 
 	public static void putCompanyLinks2Context(ProcessContext processContext) {
-		List<IElement> elements = JobSupport.getElements(processContext
-				.getBrowser().getDocument().getAll(), "A", "href",
-				ClawerConstants.COMPANY_URL_TAG);
+		List<IElement> elements = JobSupport.getElements(processContext.getBrowser().getDocument().getAll(), "A",
+				"href", ClawerConstants.COMPANY_URL_TAG);
 		String name = "";
 		String companyId = "";
 		String url = "";
@@ -140,32 +129,29 @@ public class CompanyJobContext {
 			if (url.equals("")) {
 				continue;
 			}
-			name = ClawerUtils.removeSpace(ie.getInnerHTML());
+			name = StringUtils.parseOutHTML(ClawerUtils.removeSpace(ie.getInnerHTML()));
 			if (name.equals("")) {
 				continue;
 			}
-			companyId = ClawerConstants.FROM_WHERE_51JOB + "_"
-					+ CompanyInfoSupport.getCompanyCode(url);
+			companyId = ClawerConstants.FROM_WHERE_51JOB + "_" + CompanyInfoSupport.getCompanyCode(url);
 			Company com = new Company();
 			com.setCompanyName(name);
 			com.setUrl(url);
 			com.setCompanyCode(companyId);
 
 			if (filterCompany(companyId, com)) {
-				log.info(processContext.getLogTitle() + " Filtered:"
-						+ companyId + ",name=" + name);
+				log.debug(processContext.getLogTitle() + " Filtered:" + companyId + ",name=" + name);
 				com = null;
 				continue;
 			}
 
-			logurls.info(processContext.getLogTitle() + "Put [" + companyId
-					+ "," + name + "] url=[" + url + "] to company map!");
+			logurls.info(processContext.getLogTitle() + "Put [" + companyId + "," + name + "] url=[" + url
+					+ "] to company map!");
 
 			urlCompanies.add(url);
 		}
 		if (!companies.isEmpty()) {
-			LogHandler.info(processContext.getLogTitle()
-					+ "Company map size is " + companies.size());
+			LogHandler.info(processContext.getLogTitle() + "Company map size is " + companies.size());
 		}
 	}
 
@@ -179,9 +165,11 @@ public class CompanyJobContext {
 	}
 
 	public static void main(String[] args) {
-		while (true) {
-			doCount("test");
-		}
+		String url = "http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=4200,4300,0300&industrytype=22&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0%2C0&radius=-1&ord_field=0&list_type=1&fromType=14";
+		System.out.println(getNewUrlPage(url,99));
+		// while (true) {
+		// doCount("test");
+		// }
 	}
 
 	/**
@@ -257,8 +245,7 @@ public class CompanyJobContext {
 	 *            the urlJobs to set
 	 */
 	public static void setUrlJobs(String url, Company company) {
-		logurls.info("Put [" + company.getCompanyCode() + ","
-				+ company.getCompanyName() + "] job url=[" + url
+		logurls.info("Put [" + company.getCompanyCode() + "," + company.getCompanyName() + "] job url=[" + url
 				+ "] to job map!");
 		urlJobs.add(url);
 	}
@@ -321,30 +308,5 @@ public class CompanyJobContext {
 		searchResultUrls.add(url);
 	}
 
-	public synchronized static void doCount(String tag) {
 
-		if (ClawerConstants.TEST_WEB) {
-			return;
-		}
-
-		checkWebReconnecting(tag);
-
-		countLoaded++;
-		log.info(tag + "whether reconnect internet:" + countLoaded);
-		if ((countLoaded + 1) % ClawerConstants.COUNT_LOADED == 0) {
-
-			WebLinkSupport.checkRunningWeb(tag);
-
-			log.info(tag + "reconnect internet start!");
-			long start = System.currentTimeMillis();
-			WebLinkSupport.reconnectInternet(tag);
-			log.info(tag + "reconnect internet end! time is "
-					+ (System.currentTimeMillis() - start));
-		}
-	}
-
-	private static void checkWebReconnecting(String tag) {
-		// TODO Auto-generated method stub
-
-	}
 }

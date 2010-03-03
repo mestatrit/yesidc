@@ -68,7 +68,7 @@
 			type="java.lang.String">
 			<column length="50" name="UPDATE_USER" />
 		</property>
-		<bag lazy="false" name="children" table="T_CODE">
+		<bag lazy="false" name="children" table="T_CODE" fetch="join">
 			<key column="CODE_TYPE" />
 			<one-to-many class="Code" />
 		</bag>

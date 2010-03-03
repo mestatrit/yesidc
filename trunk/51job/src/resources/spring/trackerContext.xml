@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!-- $Id: trackerContext.xml,v 1.3 2009/05/12 09:59:35 abel Exp $ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx 
+           http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+	<bean id="sender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	
+		<property name="host" value="smtp.163.com" />
+		<property name="username" value="o_olle_e@163.com" />
+		<property name="password" value="981050" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.timeout">25000</prop>
+			</props>
+		</property>
+
+	</bean>
+
+	<bean id="alertService" class="cn.cetelem.track.alert.AlertService">
+		<property name="logHelper" ref="logHelper" />
+		<property name="mailHelper" ref="mailHelper" />
+	</bean>
+
+	<bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="10" />
+		<property name="maxPoolSize" value="30" />
+	</bean>
+
+	<bean id="logHelper" class="cn.cetelem.track.alert.util.LogHelper" />
+
+
+	<bean id="mailHelper" class="cn.cetelem.track.alert.util.MailHelper">
+		<property name="sender" ref="sender" />
+		<property name="taskExecutor" ref="taskExecutor" />
+
+		<property name="mailFrom" value="${alert.mail.from}" />
+		<property name="mailSubject" ref="subject" />
+	</bean>
+
+	<bean id="subject" class="com.yesibc.job51.common.SubjectFactoryBean">
+		<property name="subject" value="${alert.mail.subject}" />
+	</bean>
+
+
+	<bean id="auditor" class="cn.cetelem.track.log.AuditLogger">
+		<property name="mainAuditManager" ref="mainAuditManager" />
+	</bean>
+
+	<!--
+		Transaction declarations for business services. To apply a generic
+		transaction proxy to all managers, you might look into using the
+		BeanNameAutoProxyCreator
+	-->
+	<bean id="mainAuditManager" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="cn.cetelem.track.audit.service.impl.MainAuditManagerImpl">
+				<property name="mainAuditDao" ref="mainAuditDao" />
+			</bean>
+		</property>
+		<!-- Override default transaction attributes b/c of ExistsException -->
+		<property name="transactionAttributes">
+			<props>
+				<prop key="save*">
+					PROPAGATION_REQUIRED,-ExistsException
+				</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="txProxyTemplate" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!--
+		Generic manager that can be used to do basic CRUD operations on any
+		objects
+	-->
+	<bean id="baseManager" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="cn.cetelem.track.audit.service.impl.BaseManagerImpl">
+				<property name="baseDao" ref="baseDao" />
+			</bean>
+		</property>
+	</bean>
+
+	<!-- NativeJdbcExtractor for the C3P0 connection pool above -->
+	<!-- (just needed for oracleLobHandler) -->
+	<bean id="nativeJdbcExtractor"
+		class="org.springframework.jdbc.support.nativejdbc.C3P0NativeJdbcExtractor"
+		lazy-init="true" />
+
+
+	<!-- LobHandler for Oracle JDBC drivers -->
+	<!--
+		(refers to the NativeJdbcExtractor above to get access to native
+		OracleConnections)
+	-->
+	<bean id="oracleLobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler"
+		lazy-init="true">
+		<property name="nativeJdbcExtractor" ref="nativeJdbcExtractor" />
+	</bean>
+
+
+	<!-- LobHandler for well-behaved JDBC drivers -->
+	<!--
+		(simply delegating to corresponding PreparedStatement and ResultSet
+		methods)
+	-->
+	<bean id="defaultLobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler"
+		lazy-init="true" />
+
+
+	<bean name="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+
+	<!-- DAO -->
+	<bean id="baseDao" class="cn.cetelem.track.audit.dao.impl.BaseDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="mainAuditDao" class="cn.cetelem.track.audit.dao.impl.MainAuditDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+</beans>

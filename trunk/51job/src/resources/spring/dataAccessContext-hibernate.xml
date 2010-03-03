@@ -26,6 +26,9 @@
 				<value>
 					classpath:/com/yesibc/job51/model/
 				</value>
+				<value>
+					classpath:/com/yesibc/email/model/
+				</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
