@@ -5,6 +5,7 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="tools/download"/>
 	<classpathentry kind="src" path="track"/>
+	<classpathentry kind="src" path="src/email"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="Components/jboss/lib/jboss-cache.jar"/>
 	<classpathentry kind="lib" path="Components/jboss/lib/jboss-common.jar"/>
