@@ -9,7 +9,9 @@ import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.web.support.ErrorHandler;
+import com.yesibc.job51.web.support.JobSupport;
 import com.yesibc.job51.web.support.LogHandler;
+import com.yesibc.job51.web.support.WebLinkSupport;
 
 public class SearchCompanyLinksEngine extends Thread {
 
@@ -21,67 +23,66 @@ public class SearchCompanyLinksEngine extends Thread {
 
 	private IBrowserCanvas browser;
 	private boolean finish = false;
-	private String rid;
 	private String[] urls;
 	private ProcessContext processContext;
 	private int index;
 
 	public SearchCompanyLinksEngine(String rid, String[] urls, int index) {
-		this.rid = "[" + String.valueOf(rid) + "]";
 		this.urls = urls;
 		this.index = index;
 		browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
 		onDocumnetComplete();
-		processContext = setProcessContext();
+		processContext = JobSupport.setProcessContext(browser, companyTag);
 		if (ClawerConstants.SHOW_FRAME) {
-			WebrendererContext.WEBRENDER_ENTITIES.get(index).getFrame()
-					.setTitle(processContext.getLogTitle());
+			WebrendererContext.WEBRENDER_ENTITIES.get(index).getFrame().setTitle(processContext.getLogTitle());
 		}
-	}
-
-	private ProcessContext setProcessContext() {
-		ProcessContext processContext = new ProcessContext();
-		processContext.setBrowser(browser);
-		processContext.setLogTitle(rid + companyTag);
-		return processContext;
 	}
 
 	public void run() {
 		int i = 0;
 		for (String url : urls) {
-			CompanyJobContext.doCount(processContext.getLogTitle());
-			finish = false;
-			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(finish);
+			JobSupport.setCrIndex2Title(processContext, i);
+			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(false);
+			WebLinkSupport.doCount(processContext.getLogTitle());
 			try {
 				if (url == null || "".equals(url)) {
 					continue;
 				}
-				i++;
 				if (ClawerConstants.TEST_WEB) {
 					if (i == ClawerConstants.TEST_WEB_NUM) {
 						break;
 					}
 				}
+
+				finish = false;
 				l = System.currentTimeMillis();
+				log.info(processContext.getLogTitle() + "Start Loading " + url);
 				browser.loadURL(url);
-				waitingLoading();
-				log.info(processContext.getLogTitle() + "Load " + url
-						+ " complete OK!Time is "
+				boolean loadedOK = true;
+				if (!waitingLoading(index, url)) {
+					browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
+					browser.loadURL(url);
+					if (!waitingLoading(index, url)) {
+						loadedOK = false;
+						ErrorHandler.errorLogAndMail(processContext.getLogTitle()
+								+ "Two times refresh and waiting error!");
+					}
+				}
+				log.info(processContext.getLogTitle() + "End Loading " + url + "!Loaded[" + loadedOK + "]Time is "
 						+ (System.currentTimeMillis() - l));
 				l = System.currentTimeMillis();
 
 				ParseCompanyLinks.parseCompanyLinks(processContext);
 
-				log.info(processContext.getLogTitle() + "[" + i + "]Parsing ["
-						+ browser.getURL() + "] is OK!Time is "
+				log.info(processContext.getLogTitle() + "Parsing [" + browser.getURL() + "] is OK!Time is "
 						+ (System.currentTimeMillis() - l));
+				i++;
 			} catch (Exception e) {
-				CompanyJobContext.LOG_MANUAL.error(processContext.getLogTitle()
-						+ "[" + i + "]Parsing [" + browser.getURL()
-						+ "] is error=SearchCompanyEngine!" + e.getMessage()
-						+ "\n HTML contents:"
+				log.error(processContext.getLogTitle() + " Error Start!");
+				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " Parsing [" + browser.getURL()
+						+ "] is error=SearchCompanyLinksEngine!" + e.getMessage() + "\n HTML contents:"
 						+ browser.getDocument().getBody().getOuterHTML(), e);
-			}finally{
+			} finally {
 				WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(true);
 			}
 		}
@@ -100,21 +101,28 @@ public class SearchCompanyLinksEngine extends Thread {
 		});
 	}
 
-	public void waitingLoading() {
+	public boolean waitingLoading(int index, String url) {
 		int i = 0;
-		LogHandler.info(rid + "SearchCompanyEngine waiting loading start!");
+		LogHandler.info(processContext.getLogTitle() + " URL[" + url + "] waiting loading start!");
 		while (!finish) {
 			i++;
 			try {
 				Thread.sleep(ClawerConstants.WAITING_TIME);
 			} catch (InterruptedException e) {
-				ErrorHandler.error(rid + "SearchCompanyEngine:", e);
+				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " URL[" + url + "] :", e);
 			}
-			LogHandler.info(rid + "SearchCompanyEngine waiting loading……[" + i
-					* 10 + "]s");
+			if (i > 12) {
+				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " URL[" + url
+						+ "] waiting loading to long and exit to waiting now. Time is[" + i * 10 + "]s");
+				finish = true;
+				WebrendererContext.reFreshContext(index);
+				return false;
+			} else {
+				LogHandler.info(processContext.getLogTitle() + " URL[" + url + "] waiting loading……[" + i * 10 + "]s");
+			}
 		}
-		LogHandler.info(rid + "SearchCompanyEngine waiting loading end![" + i
-				* 10 + "]s");
+		LogHandler.info(processContext.getLogTitle() + " URL[" + url + "] waiting loading end![" + i * 10 + "]s");
+		return true;
 	}
 
 	public ProcessContext getProcessContext() {

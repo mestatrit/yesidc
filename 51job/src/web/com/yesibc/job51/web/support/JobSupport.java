@@ -15,22 +15,51 @@ import com.webrenderer.swing.event.PromptListener;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.common.ClawerUtils;
+import com.yesibc.job51.web.search.ProcessContext;
 
 public class JobSupport {
 
 	public static long WAITING = 0;
+
+	public static final String LEFT_TAG = "{";
+	public static final String RIGHT_TAG = "}";
+
+	public static void setCrIndex2Title(ProcessContext processContext, int index) {
+		String title = processContext.getLogTitle();
+		if (title.indexOf(LEFT_TAG) > -1) {
+			int i = title.indexOf(LEFT_TAG);
+			String temp = title.substring(0, i + LEFT_TAG.length());
+			title = temp + index + RIGHT_TAG;
+		} else {
+			title = title + LEFT_TAG + index + RIGHT_TAG;
+		}
+		processContext.setLogTitle(title);
+	}
+
+	public static void main(String[] args) {
+		String url = "#Paging#ToT-20[16]#CrToI[917]#CrToC-53";
+		ProcessContext processContext = new ProcessContext();
+		processContext.setLogTitle(url);
+		setCrIndex2Title(processContext, 1);
+		System.out.println(processContext.getLogTitle());
+	}
+
+	public static ProcessContext setProcessContext(IBrowserCanvas browser, String head) {
+		ProcessContext processContext = new ProcessContext();
+		processContext.setBrowser(browser);
+		processContext.setLogTitle(head);
+		return processContext;
+	}
 
 	public JobSupport() {
 		this.elementByLoop = null;
 		ieLMTs = new ArrayList<IElement>();
 	}
 
-	public static IElement getElement(IElementCollection ies, String attribute,
-			String attrVal) {
+	public static IElement getElement(IElementCollection ies, String attribute, String attrVal) {
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);
-			String name = ClawerUtils.removeSpace(current.getAttribute(
-					attribute, 0));
+			String name = ClawerUtils.removeSpace(current.getAttribute(attribute, 0));
 			LogHandler.debug("name=" + name);
 			if (name.indexOf(attrVal) > -1) {
 				return current;
@@ -39,13 +68,11 @@ public class JobSupport {
 		return null;
 	}
 
-	public static List<IElement> getElements(IElementCollection ies,
-			String attribute, String attrVal) {
+	public static List<IElement> getElements(IElementCollection ies, String attribute, String attrVal) {
 		List<IElement> elements = new ArrayList<IElement>();
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);
-			String name = ClawerUtils.removeSpace(current.getAttribute(
-					attribute, 0));
+			String name = ClawerUtils.removeSpace(current.getAttribute(attribute, 0));
 			LogHandler.debug("name=" + name);
 			if (name.indexOf(attrVal) > -1) {
 				elements.add(current);
@@ -54,8 +81,7 @@ public class JobSupport {
 		return elements;
 	}
 
-	public static List<IElement> getElements(IElementCollection ies,
-			String tag, String attribute, String attrVal) {
+	public static List<IElement> getElements(IElementCollection ies, String tag, String attribute, String attrVal) {
 		if (ies == null || ies.length() < 1) {
 			return null;
 		}
@@ -67,8 +93,7 @@ public class JobSupport {
 			if (!tag.equals(current.getTagName())) {
 				continue;
 			}
-			String name = ClawerUtils.removeSpace(current.getAttribute(
-					attribute, 0));
+			String name = ClawerUtils.removeSpace(current.getAttribute(attribute, 0));
 			if ("".equals(name)) {
 				continue;
 			}
@@ -85,8 +110,8 @@ public class JobSupport {
 		return elements;
 	}
 
-	public static List<IElement> getElements(IElementCollection ies,
-			String tag, String attribute, String attrVal, String innerTxt) {
+	public static List<IElement> getElements(IElementCollection ies, String tag, String attribute, String attrVal,
+			String innerTxt) {
 		if (ies == null || ies.length() < 1) {
 			return null;
 		}
@@ -99,8 +124,7 @@ public class JobSupport {
 			if (!tag.equals(current.getTagName())) {
 				continue;
 			}
-			String name = ClawerUtils.removeSpace(current.getAttribute(
-					attribute, 0));
+			String name = ClawerUtils.removeSpace(current.getAttribute(attribute, 0));
 			if ("".equals(name)) {
 				continue;
 			}
@@ -122,10 +146,9 @@ public class JobSupport {
 		return elements;
 	}
 
-	public static List<IElement> getElements(IElementCollection ies,
-			String attribute, String attrVal, String[] innerTxts) {
-		if (ies == null || ies.length() < 1 || innerTxts == null
-				|| innerTxts.length < 1) {
+	public static List<IElement> getElements(IElementCollection ies, String attribute, String attrVal,
+			String[] innerTxts) {
+		if (ies == null || ies.length() < 1 || innerTxts == null || innerTxts.length < 1) {
 			return null;
 		}
 
@@ -134,8 +157,7 @@ public class JobSupport {
 		List<IElement> elements = new ArrayList<IElement>();
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);
-			String name = ClawerUtils.removeSpace(current.getAttribute(
-					attribute, 0));
+			String name = ClawerUtils.removeSpace(current.getAttribute(attribute, 0));
 			if ("".equals(name)) {
 				continue;
 			}
@@ -158,8 +180,7 @@ public class JobSupport {
 		return elements;
 	}
 
-	public static List<IElement> getElementsByTxt(IElementCollection ies,
-			String[] innerTxts) {
+	public static List<IElement> getElementsByTxt(IElementCollection ies, String[] innerTxts) {
 		if (ies == null || ies.length() < 1) {
 			return new ArrayList<IElement>();
 		}
@@ -189,8 +210,7 @@ public class JobSupport {
 	private IElement elementByLoop = null;
 	private List<IElement> ieLMTs = null;
 
-	public IElement getElementByLoop(IElementCollection ies, String tag,
-			String attribute, String attrVal) {
+	public IElement getElementByLoop(IElementCollection ies, String tag, String attribute, String attrVal) {
 		if (elementByLoop != null) {
 			return elementByLoop;
 		}
@@ -202,8 +222,7 @@ public class JobSupport {
 					getElementByLoop(children, tag, attribute, attrVal);
 				}
 			} else {
-				String value = ClawerUtils.removeSpace(current.getAttribute(
-						attribute, 0));
+				String value = ClawerUtils.removeSpace(current.getAttribute(attribute, 0));
 				if (value.indexOf(attrVal) > -1) {
 					elementByLoop = current;
 					return current;
@@ -217,8 +236,7 @@ public class JobSupport {
 		return elementByLoop;
 	}
 
-	public IElement getElementByTxtAndLoop(IElementCollection ies, String tag,
-			String txt) {
+	public IElement getElementByTxtAndLoop(IElementCollection ies, String tag, String txt) {
 		if (elementByLoop != null) {
 			return elementByLoop;
 		}
@@ -260,8 +278,7 @@ public class JobSupport {
 		return ieLMTs;
 	}
 
-	public List<IElement> getElementsByTxtAndLoop(IElementCollection ies,
-			String tag, String txt) {
+	public List<IElement> getElementsByTxtAndLoop(IElementCollection ies, String tag, String txt) {
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);
 			// LogHandler.info(current.getOuterHTML());
@@ -296,12 +313,10 @@ public class JobSupport {
 			// of stopping the dialog from showing.
 			public void onPromptDialog(PromptEvent e) {
 				// Print out some info about the event we got
-				LogHandler.info("We got a Dialog with type:"
-						+ e.getDialogType());
-				LogHandler.info("Title: " + e.getDialogTitle() + "Text: "
-						+ e.getDialogText());
-				LogHandler.info("username=" + ClawerConstants.DIALOG_USERNAME
-						+ ",password=" + ClawerConstants.DIALOG_PASSWORD);
+				LogHandler.info("We got a Dialog with type:" + e.getDialogType());
+				LogHandler.info("Title: " + e.getDialogTitle() + "Text: " + e.getDialogText());
+				LogHandler.info("username=" + ClawerConstants.DIALOG_USERNAME + ",password="
+						+ ClawerConstants.DIALOG_PASSWORD);
 
 				if (6 == e.getDialogType()) {
 					e.setUserName(ClawerConstants.DIALOG_USERNAME);

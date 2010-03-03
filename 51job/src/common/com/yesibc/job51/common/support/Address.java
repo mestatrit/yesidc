@@ -8,8 +8,10 @@ import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.BaseCode;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.model.Code;
+import com.yesibc.job51.web.support.LogHandler;
 
-public class Address extends BaseCode {
+public class Address extends BaseCode 
+{
 
 	/**
 	 * @param str
@@ -30,7 +32,9 @@ public class Address extends BaseCode {
 		boolean have = false;
 		for (Map.Entry<String, Code> entry : CONTRIES.entrySet()) {
 			c = (Code) entry.getValue();
+			System.out.println("c.getCname()1!" + c.getCname());
 			if (str.indexOf(c.getCname()) > -1) {
+				System.out.println("c.getCname()1!" + c.getCname());
 				for (String filter : ClawerConstants.FILTERS_ADDRESS) {
 					if (str.indexOf(c.getCname() + filter) > -1) {
 						have = true;
@@ -46,7 +50,9 @@ public class Address extends BaseCode {
 		have = false;
 		for (Map.Entry<String, Code> entry : PROVINCES.entrySet()) {
 			c = (Code) entry.getValue();
+			System.out.println("c.getCname()2!" + c.getCname());
 			if (str.indexOf(c.getCname()) > -1) {
+				System.out.println("c.getCname()2!" + c.getCname());
 				for (String filter : ClawerConstants.FILTERS_ADDRESS) {
 					if (str.indexOf(c.getCname() + filter) > -1) {
 						have = true;
@@ -62,7 +68,9 @@ public class Address extends BaseCode {
 		have = false;
 		for (Map.Entry<String, Code> entry : CITIES.entrySet()) {
 			c = (Code) entry.getValue();
+			System.out.println("c.getCname()3!" + c.getCname());
 			if (str.indexOf(c.getCname()) > -1) {
+				System.out.println("c.getCname()3!" + c.getCname());
 				for (String filter : ClawerConstants.FILTERS_ADDRESS) {
 					if (str.indexOf(c.getCname() + filter) > -1) {
 						have = true;
@@ -108,8 +116,7 @@ public class Address extends BaseCode {
 					continue;
 				}
 				temp = code.getCname().substring(0, i);
-				temp1 = code.getCname().substring(0,
-						(code.getCname().length() - nation.length()));
+				temp1 = code.getCname().substring(0, (code.getCname().length() - nation.length()));
 
 				if (temp.equals(temp1)) {
 					code.setCname(temp);
@@ -117,11 +124,21 @@ public class Address extends BaseCode {
 			}
 
 			BaseCode.PROVINCES.put(code.getCode(), code);
+
+			LogHandler.info("Start put cities to Province:" + code.getCname());
 			put2cities(code.getChildren());
+			LogHandler.info("Endign put cities to Province:" + code.getCname());
 		}
 	}
 
 	private static void put2cities(List<Code> codes) {
+
+		if (codes == null) {
+			LogHandler.info("null cityes!");
+		} else {
+			LogHandler.info("codes=" + codes.size());
+		}
+
 		int i = 0;
 		String temp = null;
 		String temp1 = null;
@@ -130,6 +147,7 @@ public class Address extends BaseCode {
 				continue;
 			}
 
+			LogHandler.info("city=" + code.getCname());
 			for (String city : ClawerConstants.CITY_FILTERS) {
 				if (code.getCname().indexOf(city) < 0) {
 					continue;
@@ -140,8 +158,7 @@ public class Address extends BaseCode {
 					continue;
 				}
 				temp = code.getCname().substring(0, i);
-				temp1 = code.getCname().substring(0,
-						(code.getCname().length() - city.length()));
+				temp1 = code.getCname().substring(0, (code.getCname().length() - city.length()));
 
 				if (temp.equals(temp1)) {
 					code.setCname(temp);
@@ -162,7 +179,7 @@ public class Address extends BaseCode {
 	}
 
 	public static void main(String[] args) {
-
+		LogHandler.info("ttt");
 	}
 
 	@Override

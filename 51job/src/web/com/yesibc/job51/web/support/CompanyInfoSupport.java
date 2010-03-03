@@ -30,8 +30,7 @@ public class CompanyInfoSupport {
 	public static void setComContactInfoCommon(ComContactInfo company) {
 		if (ClawerConstants.FROM_WHERE_51JOB_CODE != null) {
 			company.setFromWhere(ClawerConstants.FROM_WHERE_51JOB_CODE);
-			company.setFromWhereName(ClawerConstants.FROM_WHERE_51JOB_CODE
-					.getCname());
+			company.setFromWhereName(ClawerConstants.FROM_WHERE_51JOB_CODE.getCname());
 		}
 
 		Date d = new Date();
@@ -44,8 +43,7 @@ public class CompanyInfoSupport {
 	public static void setComEmailCommon(ComEmail company) {
 		if (ClawerConstants.FROM_WHERE_51JOB_CODE != null) {
 			company.setFromWhere(ClawerConstants.FROM_WHERE_51JOB_CODE);
-			company.setFromWhereName(ClawerConstants.FROM_WHERE_51JOB_CODE
-					.getCname());
+			company.setFromWhereName(ClawerConstants.FROM_WHERE_51JOB_CODE.getCname());
 		}
 
 		Date d = new Date();
@@ -58,8 +56,7 @@ public class CompanyInfoSupport {
 	public static void setComContactHeaderCommon(ComContactHeader company) {
 		if (ClawerConstants.FROM_WHERE_51JOB_CODE != null) {
 			company.setFromWhere(ClawerConstants.FROM_WHERE_51JOB_CODE);
-			company.setFromWhereName(ClawerConstants.FROM_WHERE_51JOB_CODE
-					.getCname());
+			company.setFromWhereName(ClawerConstants.FROM_WHERE_51JOB_CODE.getCname());
 		}
 
 		Date d = new Date();
@@ -72,8 +69,7 @@ public class CompanyInfoSupport {
 	public static void setCompanyCommon(Company company) {
 		if (ClawerConstants.FROM_WHERE_51JOB_CODE != null) {
 			company.setFromWhere(ClawerConstants.FROM_WHERE_51JOB_CODE);
-			company.setFromWhereName(ClawerConstants.FROM_WHERE_51JOB_CODE
-					.getCname());
+			company.setFromWhereName(ClawerConstants.FROM_WHERE_51JOB_CODE.getCname());
 		}
 
 		Date d = new Date();
@@ -86,8 +82,7 @@ public class CompanyInfoSupport {
 	public static void setComAppendCommon(ComAppend company) {
 		if (ClawerConstants.FROM_WHERE_51JOB_CODE != null) {
 			company.setFromWhere(ClawerConstants.FROM_WHERE_51JOB_CODE);
-			company.setFromWhereName(ClawerConstants.FROM_WHERE_51JOB_CODE
-					.getCname());
+			company.setFromWhereName(ClawerConstants.FROM_WHERE_51JOB_CODE.getCname());
 		}
 
 		Date d = new Date();
@@ -98,56 +93,61 @@ public class CompanyInfoSupport {
 	}
 
 	public static boolean setAddress(Company company, String address) {
-		if (StringUtils.isEmpty(address)) {
+		if (ClawerConstants.TEST_DAO) {
 			return false;
 		}
-		
-		boolean have = false;
+
 		ComContactHeader ca = new ComContactHeader();
 		List<ComContactHeader> comAddrs = new ArrayList<ComContactHeader>();
 		comAddrs.add(ca);
 		ca.setCompany(company);
 		ca.setCompanyName(company.getCompanyName());
 		ca.setAddress1(address);
+		ca.setCountry(ClawerConstants.ADDRESS_CHINA);
+		ca.setCountryName(ClawerConstants.ADDRESS_CHINA.getCname());
 		CompanyInfoSupport.setComContactHeaderCommon(ca);
 		company.setComContactHeaders(comAddrs);
-		
-		if (ClawerConstants.TEST_DAO) {
+
+		boolean isCompanyName = false;
+		if (StringUtils.isEmpty(address)) {
+			address = company.getCompanyName();
+			isCompanyName = true;
+		}
+		if (StringUtils.isEmpty(address)) {
 			return false;
 		}
 
 		Map<Long, Code> map = Address.getAddress(address);
+		if ((map == null || map.isEmpty()) && !isCompanyName) {
+			map = Address.getAddress(company.getCompanyName());
+		}
+		if (map == null || map.isEmpty()) {
+			//ca = null;
+			return true;
+		}
+
 		Code code = map.get(BaseCode.CODE_LEVEL_SECOND);
 		if (code != null) {
-			have = true;
 			ca.setCountry(code);
 			ca.setCountryName(code.getCname());
 		}
 
 		code = map.get(BaseCode.CODE_LEVEL_THIRD);
 		if (code != null) {
-			have = true;
 			ca.setProvince(code);
 			ca.setProvinceName(code.getCname());
 		}
 
 		code = map.get(BaseCode.CODE_LEVEL_FOURTH);
 		if (code != null) {
-			have = true;
 			ca.setCity(code);
 			ca.setCityName(code.getCname());
-		}
-
-		if (!have) {
-			ca = null;
-			return false;
 		}
 
 		return true;
 	}
 
-	public static void setZip2CompanyHeaders(boolean have, Company company,
-			String zip) {
+	public static void setZip2CompanyHeaders(boolean have, Company company, String zip) {
 		setCompanyHeaders(have, company);
 		company.getComContactHeaders().get(0).setPostcode1(zip);
 	}
@@ -164,8 +164,7 @@ public class CompanyInfoSupport {
 		}
 	}
 
-	public static void setFax2CompanyHeaders(boolean have, Company company,
-			String fax, String tel,String mobile) {
+	public static void setFax2CompanyHeaders(boolean have, Company company, String fax, String tel, String mobile) {
 		setCompanyHeaders(have, company);
 		List<ComContactInfo> ccis = new ArrayList<ComContactInfo>();
 		if (!"".equals(fax)) {
@@ -210,14 +209,12 @@ public class CompanyInfoSupport {
 		}
 	}
 
-	public static void setLinkMan2CompanyHeaders(boolean have, Company company,
-			String linkman) {
+	public static void setLinkMan2CompanyHeaders(boolean have, Company company, String linkman) {
 		setCompanyHeaders(have, company);
 		company.getComContactHeaders().get(0).setDefaultName(linkman);
 	}
 
-	public static void setEmail2CompanyHeaders(boolean have, Company company,
-			String email) {
+	public static void setEmail2CompanyHeaders(boolean have, Company company, String email) {
 		setCompanyHeaders(have, company);
 		List<ComEmail> emails = new ArrayList<ComEmail>();
 		ComEmail ce = new ComEmail();
@@ -231,8 +228,7 @@ public class CompanyInfoSupport {
 		company.getComContactHeaders().get(0).setComEmails(emails);
 	}
 
-	public static void setCompanyIntroduction(Company company,
-			String description) {
+	public static void setCompanyIntroduction(Company company, String description) {
 		ComAppend ca = new ComAppend();
 		ca.setLobType(ComAppend.LOB_TYPE_CLOB);
 		ca.setContents(description);
@@ -245,6 +241,5 @@ public class CompanyInfoSupport {
 		cas.add(ca);
 		company.setComAppends(cas);
 	}
-
 
 }

@@ -6,6 +6,7 @@ import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
 import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
+import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.web.search.WebrendererContext;
 
@@ -13,31 +14,31 @@ public class WebLinkSupport {
 
 	private static boolean finish = false;
 	private static boolean going = false;
+	private static long COUNTLOADED = 0;
 
 	public static void reconnectInternet(String rid) {
 		going = true;
 		try {
-			WebRenderEntity wre = WebrendererContext.WEBRENDER_ENTITIES
-					.get(ClawerConstants.THREADS_NUMBER);
+			WebRenderEntity wre = WebrendererContext.WEBRENDER_ENTITIES.get(ClawerConstants.THREADS_NUMBER);
 			IBrowserCanvas browser = wre.getBrowser();
 			onDocumnetComplete(browser);
 			browser.loadURL("http://192.168.1.1/Status_Router.asp");
 			waitingLoading(rid + "|getCutButton!");
 
-			LogHandler.debug(rid
-					+ browser.getDocument().getBody().getOuterHTML());
+			LogHandler.debug(rid + browser.getDocument().getBody().getOuterHTML());
 
 			IElement ie = getCutButton(browser);
 
 			if (ie == null) {
-				ErrorHandler
-						.errorLogAndMail(rid
-								+ "reconnectInternet error:can not get cut button!First Step!");
+				ErrorHandler.errorLogAndMail(rid + "reconnectInternet error:can not get cut button!First Step!");
 				handleReconnect(rid, browser);
 				return;
 			}
 
 			LogHandler.debug(rid + ie.getOuterHTML());
+
+			// String IP = logIP(rid, browser);
+			// LogHandler.info(rid + " Old IP:[" + IP + "]");
 
 			setFinish(false);
 			ie.click();
@@ -45,9 +46,46 @@ public class WebLinkSupport {
 			waitingLoading(rid + "|getConnectButton!");
 
 			handleReconnect(rid, browser);
+
+			// IP = logIP(rid, browser);
+			// LogHandler.info(rid + " New IP:[" + IP + "]");
 		} finally {
 			going = false;
 		}
+	}
+
+	@SuppressWarnings("unused")
+	private static String logIP(String rid, IBrowserCanvas browser) {
+
+		IElement ieTable = browser.getDocument().getElementById("AutoNumber9");
+		if (ieTable == null) {
+			ErrorHandler.errorLogAndMail(rid + "Can not find IP Table!"
+					+ browser.getDocument().getBody().getOuterHTML());
+			return "";
+		}
+
+		JobSupport js = new JobSupport();
+		LogHandler.debug(rid + "!TR message:" + ieTable.getChildElements().item(1).getOuterHTML());
+		LogHandler.debug(rid + "!TR message1:"
+				+ ieTable.getChildElements().item(1).getChildElements().item(1).getOuterHTML());
+
+		IElement ieTR = js.getElementByTxtAndLoop(ieTable.getChildElements().item(1).getChildElements().item(1)
+				.getChildElements(), "TR", ClawerConstants.RECONNECT_IP_TAG);
+
+		if (ieTR == null) {
+			ErrorHandler.errorLogAndMail(rid + "Can not find IP TXT!" + browser.getDocument().getBody().getOuterHTML());
+			return "";
+		}
+
+		LogHandler.debug(rid + "!TR message:" + ieTR.getOuterHTML());
+
+		IElement ieTD = ieTR.getChildElements().item(5);
+
+		LogHandler.debug(rid + "!TD message:" + ieTD.getOuterHTML());
+
+		String IP = StringUtils.parseOutHTML(ieTD.getOuterHTML());
+
+		return IP;
 	}
 
 	public static boolean isGoing() {
@@ -61,9 +99,7 @@ public class WebLinkSupport {
 	private static void handleReconnect(String rid, IBrowserCanvas browser) {
 		IElement ie = getConnectButton(browser);
 		if (ie == null) {
-			ErrorHandler
-					.errorLogAndMail(rid
-							+ "reconnectInternet error:can not get connect button!Second Step!");
+			ErrorHandler.errorLogAndMail(rid + "reconnectInternet error:can not get connect button!Second Step!");
 			return;
 		}
 		setFinish(false);
@@ -71,22 +107,20 @@ public class WebLinkSupport {
 		waitingLoading(rid + "|getCutButton!");
 		ie = getCutButton(browser);
 		if (ie == null) {
-			ErrorHandler
-					.errorLogAndMail(rid
-							+ "reconnectInternet error:can not get cut button!Three Step!");
+			ErrorHandler.errorLogAndMail(rid + "reconnectInternet error:can not get cut button!Three Step!");
 		} else {
 			LogHandler.info(rid + "reconnectInternet OK!");
 		}
 	}
 
 	private static IElement getConnectButton(IBrowserCanvas browser) {
-		return JobSupport.getElement(browser.getDocument().getAll().tags(
-				"INPUT"), "ONCLICK", ClawerConstants.RECONNECT_RECONN_TAG);
+		return JobSupport.getElement(browser.getDocument().getAll().tags("INPUT"), "ONCLICK",
+				ClawerConstants.RECONNECT_RECONN_TAG);
 	}
 
 	private static IElement getCutButton(IBrowserCanvas browser) {
-		return JobSupport.getElement(browser.getDocument().getAll().tags(
-				"INPUT"), "ONCLICK", ClawerConstants.RECONNECT_CUT_TAG);
+		return JobSupport.getElement(browser.getDocument().getAll().tags("INPUT"), "ONCLICK",
+				ClawerConstants.RECONNECT_CUT_TAG);
 	}
 
 	public static void waitingLoading(String rid) {
@@ -99,11 +133,9 @@ public class WebLinkSupport {
 			} catch (InterruptedException e) {
 				ErrorHandler.error(rid + "reconnectInternet:", e);
 			}
-			LogHandler.info(rid + "reconnectInternet waiting loading……[" + i
-					* 1.5 + "]s");
+			LogHandler.info(rid + "reconnectInternet waiting loading……[" + i * 1.5 + "]s");
 		}
-		LogHandler.info(rid + "reconnectInternet waiting loading end![" + i
-				* 1.5 + "]s");
+		LogHandler.info(rid + "reconnectInternet waiting loading end![" + i * 1.5 + "]s");
 	}
 
 	private static void onDocumnetComplete(IBrowserCanvas browser) {
@@ -135,26 +167,53 @@ public class WebLinkSupport {
 
 	public static void checkRunningWeb(String tag) {
 		int i = 0;
-		for (Entry<Integer, WebRenderEntity> entry : WebrendererContext.WEBRENDER_ENTITIES
-				.entrySet()) {
+		for (Entry<Integer, WebRenderEntity> entry : WebrendererContext.WEBRENDER_ENTITIES.entrySet()) {
 
 			if (entry.getKey() == ClawerConstants.THREADS_NUMBER) {
+				LogHandler.info(tag + "Check running web waiting time:" + ClawerConstants.THREADS_NUMBER
+						+ " don't be checked.");
 				continue;
 			}
 
 			while (!entry.getValue().isLoaded()) {
 				try {
 					i++;
-					LogHandler.info(tag + "Check running web waiting time:"
-							+ ClawerConstants.WAITING_TIME * i);
+					LogHandler.info(tag + "Check running web waiting time:" + ClawerConstants.WAITING_TIME * i);
 					Thread.sleep(ClawerConstants.WAITING_TIME);
+
+					if (i > 12) {
+						entry.getValue().setLoaded(true);
+						ErrorHandler.errorLogAndMail(tag + "Check running web waiting error!Time:"
+								+ ClawerConstants.WAITING_TIME * i);
+					}
 				} catch (InterruptedException e) {
-					ErrorHandler.errorLogAndMail(
-							"Error when check running web!", e);
+					ErrorHandler.errorLogAndMail("Error when check running web!", e);
 				}
 			}
 
 		}
 
 	}
+
+	public synchronized static void doCount(String tag) {
+
+		if (ClawerConstants.TEST_WEB) {
+			return;
+		}
+
+		// checkWebReconnecting(tag);
+
+		COUNTLOADED++;
+		// log.info(tag + "whether reconnect internet:" + countLoaded);
+		if ((COUNTLOADED + 1) % ClawerConstants.COUNT_LOADED == 0) {
+
+			checkRunningWeb(tag);
+
+			LogHandler.info(tag + "reconnect internet start!" + COUNTLOADED);
+			long start = System.currentTimeMillis();
+			reconnectInternet(tag);
+			LogHandler.info(tag + "reconnect internet end! time is " + (System.currentTimeMillis() - start));
+		}
+	}
+
 }

@@ -7,5 +7,5 @@
 	<bean id="codeJobDao" class="com.yesibc.job51.dao.impl.CodeJobDaoImpl" />
 	<bean id="personDao" class="com.yesibc.job51.dao.impl.PersonDaoImpl" />
 	<bean id="companyDao" class="com.yesibc.job51.dao.impl.CompanyDaoImpl" />
-
+	<bean id="emailInfoDao" class="com.yesibc.email.dao.EmailInfoDaoImpl" />
 </beans>
