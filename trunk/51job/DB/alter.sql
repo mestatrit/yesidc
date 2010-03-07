@@ -1,5 +1,5 @@
-insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (1, null, 'address', 'address', '地址', null, 0, 0, sysdate, sysdate, 'YTB', 'YTB');
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (1, null, 'address', '', '', 'address', '地址', '', '', 0, 0,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (2, null, 'from.where', 'from where', '数据来源', null, 0, 1, sysdate, sysdate, 'YTB', 'YTB');
@@ -45,20 +45,20 @@ values (15, null, 'company.scale', 'company scale', '公司规模', null, 0, 1, 
 
 
 --address
-insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (101, 1, 'yazhou', '', 'Asia', 'Asia', '亚洲', '亞洲', null, 1, 1, sysdate,sysdate, 'YTB', 'YTB');
-insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (102, 1, 'feizhou', '', 'Afric', 'Afric', '非洲', '非洲', null, 1, 2, sysdate,sysdate, 'YTB', 'YTB');
-insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (103, 1, 'beimeizhou', '', 'North America', 'North America', '北美洲', '北美洲', null, 1, 3, sysdate,sysdate, 'YTB', 'YTB');
-insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (104, 1, 'nanmeizhou', '', 'South America', 'South America', '南美洲', '南美洲', null, 1, 4, sysdate,sysdate, 'YTB', 'YTB');
-insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (105, 1, 'ouzhou', '', 'Europe', 'Europe', '欧洲', '歐洲', null, 1, 5, sysdate,sysdate, 'YTB', 'YTB');
-insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (106, 1, 'dayangzhou', '', 'Oceania', 'Oceania', '大洋洲', '大洋洲', null, 1, 6, sysdate,sysdate, 'YTB', 'YTB');
-insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (107, 1, 'nanjizhou', '', 'Antarctica', 'Antarctica', '南极洲', '南極洲', null, 1, 7, sysdate,sysdate, 'YTB', 'YTB');
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (101, 1, 'yazhou', '', 'Asia', 'Asia', '亚洲', '亞洲', '', 1, 1,sysdate,sysdate, 'YTB', 'YTB');
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (102, 1, 'feizhou', '', 'Afric', 'Afric', '非洲', '非洲', '', 1, 2,sysdate,sysdate, 'YTB', 'YTB');
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (103, 1, 'beimeizhou', '', 'North America', 'North America', '北美洲', '北美洲', '', 1, 3,sysdate,sysdate, 'YTB', 'YTB');
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (104, 1, 'nanmeizhou', '', 'South America', 'South America', '南美洲', '南美洲', '', 1, 4,sysdate,sysdate, 'YTB', 'YTB');
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (105, 1, 'ouzhou', '', 'Europe', 'Europe', '欧洲', '歐洲', '', 1, 5,sysdate,sysdate, 'YTB', 'YTB');
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (106, 1, 'dayangzhou', '', 'Oceania', 'Oceania', '大洋洲', '大洋洲', '', 1, 6,sysdate,sysdate, 'YTB', 'YTB');
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (107, 1, 'nanjizhou', '', 'Antarctica', 'Antarctica', '南极洲', '南極洲', '', 1, 7,sysdate,sysdate, 'YTB', 'YTB');
 
 
 --From where
