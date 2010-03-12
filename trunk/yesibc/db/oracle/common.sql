@@ -133,6 +133,8 @@ select to_char(sysdate,'yyyymmddhhmiss') || lpad(round(dbms_random.value(1,99999
 select substr(to_char(systimestamp,'yyyymmddhhmissxff'),13)  from dual
 select lpad(to_char(sysdate,'yyyymmddhhmiss'),9,0)  from dual
 group by to_char(a.application_date_time,'yyyymm')
+select lpad(999,6,'0') from dual
+select to_char('999','FM0000000000') from dual
 
 --15.日志写到文件
   --需要用到utl_file包  
