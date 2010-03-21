@@ -178,7 +178,7 @@ public class Pinyin {
 	}
 
 	public static void main(String[] argv) {
-		System.out.println(getPinyin("李四 －－作，做，昨，艾，阿，尊，尊"));
+		System.out.println(getPinyin("东方"));
 		System.out.println(getPinyin("---汉字拼音转换问题,帮忙看一下--- Java / Web 开发- CSDN社区 ..."));
 		System.out.println(getPinyin("嘬"));
 	}
