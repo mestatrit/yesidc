@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.spring.SpringContext;
@@ -17,7 +18,6 @@ import com.yesibc.job51.web.support.CompanyInfoSupport;
 import com.yesibc.job51.web.support.ErrorHandler;
 import com.yesibc.job51.web.support.JobSupport;
 import com.yesibc.job51.web.support.LocateCompanyInfo;
-import com.yesibc.job51.web.support.WebLinkSupport;
 
 public class ParseCompanyNJobLinks {
 	private static Log log = LogFactory.getLog(ParseCompanyNJobLinks.class);
@@ -92,14 +92,52 @@ public class ParseCompanyNJobLinks {
 			return;
 		}
 
-		processContext.getSearchJobEngine().setFinish(false);
-		IElement ie50 = get50Button(processContext);
-		log.info(processContext.getLogTitle() + " for [" + company.getCompanyCode() + "," + company.getCompanyName()
-				+ "] 50 perpage [1] loading!");
+		String title = processContext.getLogTitle();
+		String url = processContext.getBrowser().getURL();
+		int positionOfURL = 1;
+		try {
+			IElement ie50 = get50Button(processContext);
+			log.info(processContext.getLogTitle() + " for [" + company.getCompanyCode() + ","
+					+ company.getCompanyName() + "] 50 perpage [1] loading!");
 
-		WebLinkSupport.doCount(processContext.getLogTitle() + "|| Sub-a ||");
-		ie50.click();
-		processContext.getSearchJobEngine().waitingLoading(index, processContext.getBrowser().getURL() + " || Sub ||");
+			IBrowserCanvas browser = JobSupport.initLoading(processContext, title + "|| Sub-1 [" + positionOfURL + "]",
+					index, false);
+			processContext.getSearchJobEngine().setFinish(false);
+			processContext.getSearchJobEngine().setBrowser(browser);
+			processContext.getSearchJobEngine().onDocumnetComplete();
+
+			ie50.click();
+
+			String subUrl = url;
+			String okUrl = null;
+			if (browser != null) {
+				if (browser.getURL() != null) {
+					okUrl = browser.getURL();
+					subUrl = subUrl + "||SUB1||" + okUrl;
+				} else {
+					subUrl = url + "||SUB1|| is null!";
+				}
+			}
+
+			boolean loaded = processContext.getSearchJobEngine().waitingLoading(index, subUrl);
+			if (!loaded) {
+				browser = JobSupport.initLoading(processContext, title + "|| Sub-1 [" + positionOfURL + "]", index,
+						true);
+				processContext.getSearchJobEngine().onDocumnetComplete();
+				log.info(processContext.getLogTitle() + "ReStart Loading error1 " + subUrl);
+				browser.loadURL(okUrl);
+				loaded = processContext.getSearchJobEngine().waitingLoading(index, subUrl);
+				if (!loaded) {
+					ErrorHandler.errorLogAndMail(processContext.getLogTitle() + "Two times refresh and waiting error1!"
+							+ subUrl);
+				}
+			}
+
+		} catch (Exception e) {
+			ErrorHandler.errorLogAndMail(processContext.getLogTitle() + "!parseJobLinks!putJobLinks2Context-1!", e);
+		} finally {
+			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(true);
+		}
 
 		urls = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"), "href",
 				ClawerConstants.JOB_URL_PREFIX);
@@ -107,18 +145,53 @@ public class ParseCompanyNJobLinks {
 			CompanyJobContext.setUrlJobs(ie.getAttribute("href", 0), company);
 		}
 
-		int i = 1;
 		int size = urls.size();
 		ies = JobSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags("A"), innerTxts);
 		while (ies != null && ies.size() > 0) {
-			i++;
-			processContext.getSearchJobEngine().setFinish(false);
-			log.info(processContext.getLogTitle() + " for [" + company.getCompanyCode() + ","
-					+ company.getCompanyName() + "] 50 perpage [" + i + "] loading!");
-			ies.get(0).click();
-			WebLinkSupport.doCount(processContext.getLogTitle() + "|| Sub-b [" + i + "]||");
-			processContext.getSearchJobEngine().waitingLoading(index,
-					processContext.getBrowser().getURL() + " || Sub ||");
+			positionOfURL++;
+			try {
+				IBrowserCanvas browser = JobSupport.initLoading(processContext, title + "|| Sub-2 [" + positionOfURL
+						+ "] ", index, false);
+				processContext.getSearchJobEngine().setFinish(false);
+				processContext.getSearchJobEngine().setBrowser(browser);
+				processContext.getSearchJobEngine().onDocumnetComplete();
+
+				log.info(processContext.getLogTitle() + " for [" + company.getCompanyCode() + ","
+						+ company.getCompanyName() + "] 50 perpage [" + positionOfURL + "] loading!");
+
+				ies.get(0).click();
+
+				String subUrl = url;
+				String okUrl = null;
+				if (browser != null) {
+					if (browser.getURL() != null) {
+						okUrl = browser.getURL();
+						subUrl = subUrl + "||SUB2||" + okUrl;
+					} else {
+						subUrl = url + "||SUB2|| is null!";
+					}
+				}
+
+				boolean loaded = processContext.getSearchJobEngine().waitingLoading(index, subUrl);
+				if (!loaded) {
+					browser = JobSupport.initLoading(processContext, title + "|| Sub-2 [" + positionOfURL + "] ",
+							index, true);
+					processContext.getSearchJobEngine().onDocumnetComplete();
+					log.info(processContext.getLogTitle() + "ReStart Loading error2 " + subUrl);
+					browser.loadURL(okUrl);
+					loaded = processContext.getSearchJobEngine().waitingLoading(index, subUrl);
+					if (!loaded) {
+						ErrorHandler.errorLogAndMail(processContext.getLogTitle()
+								+ "Two times refresh and waiting error2!" + subUrl);
+					}
+				}
+
+			} catch (Exception e) {
+				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + "!parseJobLinks!putJobLinks2Context-["
+						+ positionOfURL + "]!", e);
+			} finally {
+				WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(true);
+			}
 
 			urls = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"), "href",
 					ClawerConstants.JOB_URL_PREFIX);

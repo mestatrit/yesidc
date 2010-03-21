@@ -29,7 +29,7 @@ public class LocateCompanyInfo {
 		List<IElement> elements = JobSupport.getElements(browser.getDocument()
 				.getAll().tags("TABLE"), "id", COMPANY_LIST_ID);
 
-		errorHandle(elements, "Parse company list error!checkValidation!URL="
+		errorHandle(elements, "Parse company list error!checkValidation!Can't get Table!URL="
 				+ browser.getURL());
 
 		String innerHtml = elements.get(0).getInnerHTML();

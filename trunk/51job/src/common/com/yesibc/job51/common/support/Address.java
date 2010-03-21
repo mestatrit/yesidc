@@ -32,9 +32,7 @@ public class Address extends BaseCode
 		boolean have = false;
 		for (Map.Entry<String, Code> entry : CONTRIES.entrySet()) {
 			c = (Code) entry.getValue();
-			System.out.println("c.getCname()1!" + c.getCname());
 			if (str.indexOf(c.getCname()) > -1) {
-				System.out.println("c.getCname()1!" + c.getCname());
 				for (String filter : ClawerConstants.FILTERS_ADDRESS) {
 					if (str.indexOf(c.getCname() + filter) > -1) {
 						have = true;
@@ -50,9 +48,7 @@ public class Address extends BaseCode
 		have = false;
 		for (Map.Entry<String, Code> entry : PROVINCES.entrySet()) {
 			c = (Code) entry.getValue();
-			System.out.println("c.getCname()2!" + c.getCname());
 			if (str.indexOf(c.getCname()) > -1) {
-				System.out.println("c.getCname()2!" + c.getCname());
 				for (String filter : ClawerConstants.FILTERS_ADDRESS) {
 					if (str.indexOf(c.getCname() + filter) > -1) {
 						have = true;
@@ -68,9 +64,7 @@ public class Address extends BaseCode
 		have = false;
 		for (Map.Entry<String, Code> entry : CITIES.entrySet()) {
 			c = (Code) entry.getValue();
-			System.out.println("c.getCname()3!" + c.getCname());
 			if (str.indexOf(c.getCname()) > -1) {
-				System.out.println("c.getCname()3!" + c.getCname());
 				for (String filter : ClawerConstants.FILTERS_ADDRESS) {
 					if (str.indexOf(c.getCname() + filter) > -1) {
 						have = true;
@@ -125,19 +119,19 @@ public class Address extends BaseCode
 
 			BaseCode.PROVINCES.put(code.getCode(), code);
 
-			LogHandler.info("Start put cities to Province:" + code.getCname());
+			//LogHandler.info("Start put cities to Province:" + code.getCname());
 			put2cities(code.getChildren());
-			LogHandler.info("Endign put cities to Province:" + code.getCname());
+			//LogHandler.info("Endign put cities to Province:" + code.getCname());
 		}
 	}
 
 	private static void put2cities(List<Code> codes) {
 
-		if (codes == null) {
-			LogHandler.info("null cityes!");
-		} else {
-			LogHandler.info("codes=" + codes.size());
-		}
+		//if (codes == null) {
+		//	LogHandler.info("null cityes!");
+		//} else {
+		//	LogHandler.info("codes=" + codes.size());
+		//}
 
 		int i = 0;
 		String temp = null;

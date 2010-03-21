@@ -165,13 +165,15 @@ public class WebLinkSupport {
 		reconnectInternet("test");
 	}
 
-	public static void checkRunningWeb(String tag) {
+	public static void checkRunningWeb(String tag, int index) {
 		int i = 0;
+		int j = 0;
 		for (Entry<Integer, WebRenderEntity> entry : WebrendererContext.WEBRENDER_ENTITIES.entrySet()) {
 
-			if (entry.getKey() == ClawerConstants.THREADS_NUMBER) {
-				LogHandler.info(tag + "Check running web waiting time:" + ClawerConstants.THREADS_NUMBER
-						+ " don't be checked.");
+			if (entry.getKey() == ClawerConstants.THREADS_NUMBER || entry.getKey() == index) {
+				j++;
+				LogHandler.info(tag + "Check running web waiting time:" + entry.getKey()
+						+ " don't needed to be checked[" + j + "].");
 				continue;
 			}
 
@@ -195,20 +197,34 @@ public class WebLinkSupport {
 
 	}
 
-	public synchronized static void doCount(String tag) {
+	private static long current = System.currentTimeMillis();
+
+	public synchronized static void doCount(String tag, int index, boolean retry) {
 
 		if (ClawerConstants.TEST_WEB) {
 			return;
 		}
 
 		// checkWebReconnecting(tag);
-
 		COUNTLOADED++;
-		// log.info(tag + "whether reconnect internet:" + countLoaded);
-		if ((COUNTLOADED + 1) % ClawerConstants.COUNT_LOADED == 0) {
+		boolean rec = false;
+		long refreshTime = System.currentTimeMillis() - current;
 
-			checkRunningWeb(tag);
+		if (retry) {
+			if (refreshTime >= ClawerConstants.RECONNECT_INTERVAL) {
+				rec = true;
+			}
+		} else {
+			if ((COUNTLOADED + 1) % ClawerConstants.COUNT_LOADED == 0
+					&& refreshTime >= (ClawerConstants.RECONNECT_INTERVAL / 2)) {
+				rec = true;
+			}
+		}
 
+		if (rec) {
+			current = System.currentTimeMillis();
+			tag = tag + "[" + retry + "]";
+			checkRunningWeb(tag, index);
 			LogHandler.info(tag + "reconnect internet start!" + COUNTLOADED);
 			long start = System.currentTimeMillis();
 			reconnectInternet(tag);
