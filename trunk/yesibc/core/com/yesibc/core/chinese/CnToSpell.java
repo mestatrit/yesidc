@@ -8,6 +8,7 @@ import java.util.List;
 public class CnToSpell {
 
 	private static List<String> spells = new ArrayList<String>(400);
+	private static List<String> spellsByCapital = new ArrayList<String>(400);
 	private static List<Integer> asciiValues = new ArrayList<Integer>(400);
 
 	static {
@@ -407,11 +408,414 @@ public class CnToSpell {
 		spellPut("zui", -10260);
 		spellPut("zun", -10256);
 		spellPut("zuo", -10254);
+
+		spellsByCapital("A", -20319);
+		spellsByCapital("Ai", -20317);
+		spellsByCapital("An", -20304);
+		spellsByCapital("Ang", -20295);
+		spellsByCapital("Ao", -20292);
+		spellsByCapital("Ba", -20283);
+		spellsByCapital("Bai", -20265);
+		spellsByCapital("Ban", -20257);
+		spellsByCapital("Bang", -20242);
+		spellsByCapital("Bao", -20230);
+		spellsByCapital("Bei", -20051);
+		spellsByCapital("Ben", -20036);
+		spellsByCapital("Beng", -20032);
+		spellsByCapital("Bi", -20026);
+		spellsByCapital("Bian", -20002);
+		spellsByCapital("Biao", -19990);
+		spellsByCapital("Bie", -19986);
+		spellsByCapital("Bin", -19982);
+		spellsByCapital("Bing", -19976);
+		spellsByCapital("Bo", -19805);
+		spellsByCapital("Bu", -19784);
+		spellsByCapital("Ca", -19775);
+		spellsByCapital("Cai", -19774);
+		spellsByCapital("Can", -19763);
+		spellsByCapital("Cang", -19756);
+		spellsByCapital("Cao", -19751);
+		spellsByCapital("Ce", -19746);
+		spellsByCapital("Ceng", -19741);
+		spellsByCapital("Cha", -19739);
+		spellsByCapital("Chai", -19728);
+		spellsByCapital("Chan", -19725);
+		spellsByCapital("Chang", -19715);
+		spellsByCapital("Chao", -19540);
+		spellsByCapital("Che", -19531);
+		spellsByCapital("Chen", -19525);
+		spellsByCapital("Cheng", -19515);
+		spellsByCapital("Chi", -19500);
+		spellsByCapital("Chong", -19484);
+		spellsByCapital("Chou", -19479);
+		spellsByCapital("Chu", -19467);
+		spellsByCapital("Chuai", -19289);
+		spellsByCapital("Chuan", -19288);
+		spellsByCapital("Chuang", -19281);
+		spellsByCapital("Chui", -19275);
+		spellsByCapital("Chun", -19270);
+		spellsByCapital("Chuo", -19263);
+		spellsByCapital("Ci", -19261);
+		spellsByCapital("Cong", -19249);
+		spellsByCapital("Cou", -19243);
+		spellsByCapital("Cu", -19242);
+		spellsByCapital("Cuan", -19238);
+		spellsByCapital("Cui", -19235);
+		spellsByCapital("Cun", -19227);
+		spellsByCapital("Cuo", -19224);
+		spellsByCapital("Da", -19218);
+		spellsByCapital("Dai", -19212);
+		spellsByCapital("Dan", -19038);
+		spellsByCapital("Dang", -19023);
+		spellsByCapital("Dao", -19018);
+		spellsByCapital("De", -19006);
+		spellsByCapital("Deng", -19003);
+		spellsByCapital("Di", -18996);
+		spellsByCapital("Dian", -18977);
+		spellsByCapital("Diao", -18961);
+		spellsByCapital("Die", -18952);
+		spellsByCapital("Ding", -18783);
+		spellsByCapital("Diu", -18774);
+		spellsByCapital("Dong", -18773);
+		spellsByCapital("Dou", -18763);
+		spellsByCapital("Du", -18756);
+		spellsByCapital("Duan", -18741);
+		spellsByCapital("Dui", -18735);
+		spellsByCapital("Dun", -18731);
+		spellsByCapital("Duo", -18722);
+		spellsByCapital("E", -18710);
+		spellsByCapital("En", -18697);
+		spellsByCapital("Er", -18696);
+		spellsByCapital("Fa", -18526);
+		spellsByCapital("Fan", -18518);
+		spellsByCapital("Fang", -18501);
+		spellsByCapital("Fei", -18490);
+		spellsByCapital("Fen", -18478);
+		spellsByCapital("Feng", -18463);
+		spellsByCapital("Fo", -18448);
+		spellsByCapital("Fou", -18447);
+		spellsByCapital("Fu", -18446);
+		spellsByCapital("Ga", -18239);
+		spellsByCapital("Gai", -18237);
+		spellsByCapital("Gan", -18231);
+		spellsByCapital("Gang", -18220);
+		spellsByCapital("Gao", -18211);
+		spellsByCapital("Ge", -18201);
+		spellsByCapital("Gei", -18184);
+		spellsByCapital("Gen", -18183);
+		spellsByCapital("Geng", -18181);
+		spellsByCapital("Gong", -18012);
+		spellsByCapital("Gou", -17997);
+		spellsByCapital("Gu", -17988);
+		spellsByCapital("Gua", -17970);
+		spellsByCapital("Guai", -17964);
+		spellsByCapital("Guan", -17961);
+		spellsByCapital("Guang", -17950);
+		spellsByCapital("Gui", -17947);
+		spellsByCapital("Gun", -17931);
+		spellsByCapital("Guo", -17928);
+		spellsByCapital("Ha", -17922);
+		spellsByCapital("Hai", -17759);
+		spellsByCapital("Han", -17752);
+		spellsByCapital("Hang", -17733);
+		spellsByCapital("Hao", -17730);
+		spellsByCapital("He", -17721);
+		spellsByCapital("Hei", -17703);
+		spellsByCapital("Hen", -17701);
+		spellsByCapital("Heng", -17697);
+		spellsByCapital("Hong", -17692);
+		spellsByCapital("Hou", -17683);
+		spellsByCapital("Hu", -17676);
+		spellsByCapital("Hua", -17496);
+		spellsByCapital("Huai", -17487);
+		spellsByCapital("Huan", -17482);
+		spellsByCapital("Huang", -17468);
+		spellsByCapital("Hui", -17454);
+		spellsByCapital("Hun", -17433);
+		spellsByCapital("Huo", -17427);
+		spellsByCapital("Ji", -17417);
+		spellsByCapital("Jia", -17202);
+		spellsByCapital("Jian", -17185);
+		spellsByCapital("Jiang", -16983);
+		spellsByCapital("Jiao", -16970);
+		spellsByCapital("Jie", -16942);
+		spellsByCapital("Jin", -16915);
+		spellsByCapital("Jing", -16733);
+		spellsByCapital("Jiong", -16708);
+		spellsByCapital("Jiu", -16706);
+		spellsByCapital("Ju", -16689);
+		spellsByCapital("Juan", -16664);
+		spellsByCapital("Jue", -16657);
+		spellsByCapital("Jun", -16647);
+		spellsByCapital("Ka", -16474);
+		spellsByCapital("Kai", -16470);
+		spellsByCapital("Kan", -16465);
+		spellsByCapital("Kang", -16459);
+		spellsByCapital("Kao", -16452);
+		spellsByCapital("Ke", -16448);
+		spellsByCapital("Ken", -16433);
+		spellsByCapital("Keng", -16429);
+		spellsByCapital("Kong", -16427);
+		spellsByCapital("Kou", -16423);
+		spellsByCapital("Ku", -16419);
+		spellsByCapital("Kua", -16412);
+		spellsByCapital("Kuai", -16407);
+		spellsByCapital("Kuan", -16403);
+		spellsByCapital("Kuang", -16401);
+		spellsByCapital("Kui", -16393);
+		spellsByCapital("Kun", -16220);
+		spellsByCapital("Kuo", -16216);
+		spellsByCapital("La", -16212);
+		spellsByCapital("Lai", -16205);
+		spellsByCapital("Lan", -16202);
+		spellsByCapital("Lang", -16187);
+		spellsByCapital("Lao", -16180);
+		spellsByCapital("Le", -16171);
+		spellsByCapital("Lei", -16169);
+		spellsByCapital("Leng", -16158);
+		spellsByCapital("Li", -16155);
+		spellsByCapital("Lia", -15959);
+		spellsByCapital("Lian", -15958);
+		spellsByCapital("Liang", -15944);
+		spellsByCapital("Liao", -15933);
+		spellsByCapital("Lie", -15920);
+		spellsByCapital("Lin", -15915);
+		spellsByCapital("Ling", -15903);
+		spellsByCapital("Liu", -15889);
+		spellsByCapital("Long", -15878);
+		spellsByCapital("Lou", -15707);
+		spellsByCapital("Lu", -15701);
+		spellsByCapital("Lv", -15681);
+		spellsByCapital("Luan", -15667);
+		spellsByCapital("Lue", -15661);
+		spellsByCapital("Lun", -15659);
+		spellsByCapital("Luo", -15652);
+		spellsByCapital("Ma", -15640);
+		spellsByCapital("Mai", -15631);
+		spellsByCapital("Man", -15625);
+		spellsByCapital("Mang", -15454);
+		spellsByCapital("Mao", -15448);
+		spellsByCapital("Me", -15436);
+		spellsByCapital("Mei", -15435);
+		spellsByCapital("Men", -15419);
+		spellsByCapital("Meng", -15416);
+		spellsByCapital("Mi", -15408);
+		spellsByCapital("Mian", -15394);
+		spellsByCapital("Miao", -15385);
+		spellsByCapital("Mie", -15377);
+		spellsByCapital("Min", -15375);
+		spellsByCapital("Ming", -15369);
+		spellsByCapital("Miu", -15363);
+		spellsByCapital("Mo", -15362);
+		spellsByCapital("Mou", -15183);
+		spellsByCapital("Mu", -15180);
+		spellsByCapital("Na", -15165);
+		spellsByCapital("Nai", -15158);
+		spellsByCapital("Nan", -15153);
+		spellsByCapital("Nang", -15150);
+		spellsByCapital("Nao", -15149);
+		spellsByCapital("Ne", -15144);
+		spellsByCapital("Nei", -15143);
+		spellsByCapital("Nen", -15141);
+		spellsByCapital("Neng", -15140);
+		spellsByCapital("Ni", -15139);
+		spellsByCapital("Nian", -15128);
+		spellsByCapital("Niang", -15121);
+		spellsByCapital("Niao", -15119);
+		spellsByCapital("Nie", -15117);
+		spellsByCapital("Nin", -15110);
+		spellsByCapital("Ning", -15109);
+		spellsByCapital("Niu", -14941);
+		spellsByCapital("Nong", -14937);
+		spellsByCapital("Nu", -14933);
+		spellsByCapital("Nv", -14930);
+		spellsByCapital("Nuan", -14929);
+		spellsByCapital("Nue", -14928);
+		spellsByCapital("Nuo", -14926);
+		spellsByCapital("O", -14922);
+		spellsByCapital("Ou", -14921);
+		spellsByCapital("Pa", -14914);
+		spellsByCapital("Pai", -14908);
+		spellsByCapital("Pan", -14902);
+		spellsByCapital("Pang", -14894);
+		spellsByCapital("Pao", -14889);
+		spellsByCapital("Pei", -14882);
+		spellsByCapital("Pen", -14873);
+		spellsByCapital("Peng", -14871);
+		spellsByCapital("Pi", -14857);
+		spellsByCapital("Pian", -14678);
+		spellsByCapital("Piao", -14674);
+		spellsByCapital("Pie", -14670);
+		spellsByCapital("Pin", -14668);
+		spellsByCapital("Ping", -14663);
+		spellsByCapital("Po", -14654);
+		spellsByCapital("Pu", -14645);
+		spellsByCapital("Qi", -14630);
+		spellsByCapital("Qia", -14594);
+		spellsByCapital("Qian", -14429);
+		spellsByCapital("Qiang", -14407);
+		spellsByCapital("Qiao", -14399);
+		spellsByCapital("Qie", -14384);
+		spellsByCapital("Qin", -14379);
+		spellsByCapital("Qing", -14368);
+		spellsByCapital("Qiong", -14355);
+		spellsByCapital("Qiu", -14353);
+		spellsByCapital("Qu", -14345);
+		spellsByCapital("Quan", -14170);
+		spellsByCapital("Que", -14159);
+		spellsByCapital("Qun", -14151);
+		spellsByCapital("Ran", -14149);
+		spellsByCapital("Rang", -14145);
+		spellsByCapital("Rao", -14140);
+		spellsByCapital("Re", -14137);
+		spellsByCapital("Ren", -14135);
+		spellsByCapital("Reng", -14125);
+		spellsByCapital("Ri", -14123);
+		spellsByCapital("Rong", -14122);
+		spellsByCapital("Rou", -14112);
+		spellsByCapital("Ru", -14109);
+		spellsByCapital("Ruan", -14099);
+		spellsByCapital("Rui", -14097);
+		spellsByCapital("Run", -14094);
+		spellsByCapital("Ruo", -14092);
+		spellsByCapital("Sa", -14090);
+		spellsByCapital("Sai", -14087);
+		spellsByCapital("San", -14083);
+		spellsByCapital("Sang", -13917);
+		spellsByCapital("Sao", -13914);
+		spellsByCapital("Se", -13910);
+		spellsByCapital("Sen", -13907);
+		spellsByCapital("Seng", -13906);
+		spellsByCapital("Sha", -13905);
+		spellsByCapital("Shai", -13896);
+		spellsByCapital("Shan", -13894);
+		spellsByCapital("Shang", -13878);
+		spellsByCapital("Shao", -13870);
+		spellsByCapital("She", -13859);
+		spellsByCapital("Shen", -13847);
+		spellsByCapital("Sheng", -13831);
+		spellsByCapital("Shi", -13658);
+		spellsByCapital("Shou", -13611);
+		spellsByCapital("Shu", -13601);
+		spellsByCapital("Shua", -13406);
+		spellsByCapital("Shuai", -13404);
+		spellsByCapital("Shuan", -13400);
+		spellsByCapital("Shuang", -13398);
+		spellsByCapital("Shui", -13395);
+		spellsByCapital("Shun", -13391);
+		spellsByCapital("Shuo", -13387);
+		spellsByCapital("Si", -13383);
+		spellsByCapital("Song", -13367);
+		spellsByCapital("Sou", -13359);
+		spellsByCapital("Su", -13356);
+		spellsByCapital("Suan", -13343);
+		spellsByCapital("Sui", -13340);
+		spellsByCapital("Sun", -13329);
+		spellsByCapital("Suo", -13326);
+		spellsByCapital("Ta", -13318);
+		spellsByCapital("Tai", -13147);
+		spellsByCapital("Tan", -13138);
+		spellsByCapital("Tang", -13120);
+		spellsByCapital("Tao", -13107);
+		spellsByCapital("Te", -13096);
+		spellsByCapital("Teng", -13095);
+		spellsByCapital("Ti", -13091);
+		spellsByCapital("Tian", -13076);
+		spellsByCapital("Tiao", -13068);
+		spellsByCapital("Tie", -13063);
+		spellsByCapital("Ting", -13060);
+		spellsByCapital("Tong", -12888);
+		spellsByCapital("Tou", -12875);
+		spellsByCapital("Tu", -12871);
+		spellsByCapital("Tuan", -12860);
+		spellsByCapital("Tui", -12858);
+		spellsByCapital("Tun", -12852);
+		spellsByCapital("Tuo", -12849);
+		spellsByCapital("Wa", -12838);
+		spellsByCapital("Wai", -12831);
+		spellsByCapital("Wan", -12829);
+		spellsByCapital("Wang", -12812);
+		spellsByCapital("Wei", -12802);
+		spellsByCapital("Wen", -12607);
+		spellsByCapital("Weng", -12597);
+		spellsByCapital("Wo", -12594);
+		spellsByCapital("Wu", -12585);
+		spellsByCapital("Xi", -12556);
+		spellsByCapital("Xia", -12359);
+		spellsByCapital("Xian", -12346);
+		spellsByCapital("Xiang", -12320);
+		spellsByCapital("Xiao", -12300);
+		spellsByCapital("Xie", -12120);
+		spellsByCapital("Xin", -12099);
+		spellsByCapital("Xing", -12089);
+		spellsByCapital("Xiong", -12074);
+		spellsByCapital("Xiu", -12067);
+		spellsByCapital("Xu", -12058);
+		spellsByCapital("Xuan", -12039);
+		spellsByCapital("Xue", -11867);
+		spellsByCapital("Xun", -11861);
+		spellsByCapital("Ya", -11847);
+		spellsByCapital("Yan", -11831);
+		spellsByCapital("Yang", -11798);
+		spellsByCapital("Yao", -11781);
+		spellsByCapital("Ye", -11604);
+		spellsByCapital("Yi", -11589);
+		spellsByCapital("Yin", -11536);
+		spellsByCapital("Ying", -11358);
+		spellsByCapital("Yo", -11340);
+		spellsByCapital("Yong", -11339);
+		spellsByCapital("You", -11324);
+		spellsByCapital("Yu", -11303);
+		spellsByCapital("Yuan", -11097);
+		spellsByCapital("Yue", -11077);
+		spellsByCapital("Yun", -11067);
+		spellsByCapital("Za", -11055);
+		spellsByCapital("Zai", -11052);
+		spellsByCapital("Zan", -11045);
+		spellsByCapital("Zang", -11041);
+		spellsByCapital("Zao", -11038);
+		spellsByCapital("Ze", -11024);
+		spellsByCapital("Zei", -11020);
+		spellsByCapital("Zen", -11019);
+		spellsByCapital("Zeng", -11018);
+		spellsByCapital("Zha", -11014);
+		spellsByCapital("Zhai", -10838);
+		spellsByCapital("Zhan", -10832);
+		spellsByCapital("Zhang", -10815);
+		spellsByCapital("Zhao", -10800);
+		spellsByCapital("Zhe", -10790);
+		spellsByCapital("Zhen", -10780);
+		spellsByCapital("Zheng", -10764);
+		spellsByCapital("Zhi", -10587);
+		spellsByCapital("Zhong", -10544);
+		spellsByCapital("Zhou", -10533);
+		spellsByCapital("Zhu", -10519);
+		spellsByCapital("Zhua", -10331);
+		spellsByCapital("Zhuai", -10329);
+		spellsByCapital("Zhuan", -10328);
+		spellsByCapital("Zhuang", -10322);
+		spellsByCapital("Zhui", -10315);
+		spellsByCapital("Zhun", -10309);
+		spellsByCapital("Zhuo", -10307);
+		spellsByCapital("Zi", -10296);
+		spellsByCapital("Zong", -10281);
+		spellsByCapital("Zou", -10274);
+		spellsByCapital("Zu", -10270);
+		spellsByCapital("Zuan", -10262);
+		spellsByCapital("Zui", -10260);
+		spellsByCapital("Zun", -10256);
+		spellsByCapital("Zuo", -10254);
+	
+	
 	}
 
 	private static void spellPut(String spell, int ascii) {
 		spells.add(spell);
 		asciiValues.add(ascii);
+	}
+
+	private static void spellsByCapital(String spell, int ascii) {
+		spellsByCapital.add(spell);
 	}
 
 	/**
@@ -421,7 +825,7 @@ public class CnToSpell {
 	 *            char 汉字字符
 	 * @return int 错误返回 0,否则返回ascii
 	 */
-	public static int getCnAscii(char cn) throws UnsupportedEncodingException {
+	private static int getCnAscii(char cn) throws UnsupportedEncodingException {
 
 		byte[] bytes = (String.valueOf(cn)).getBytes("GBK");
 		if (bytes.length == 1) { // 英文字符
@@ -431,7 +835,7 @@ public class CnToSpell {
 		return (bytes[0] << 8) | (bytes[1] & 0xff);
 	}
 
-	public static String cnToSpell(char cn) {
+	private static String cnToSpell(char cn) {
 		try {
 			int ascii = getCnAscii(cn);
 			if (ascii < -20319 || ascii > -10247) { // 非常用汉字
@@ -448,6 +852,23 @@ public class CnToSpell {
 		}
 	}
 
+	private static String cnToSpellByCapital(char cn) {
+		try {
+			int ascii = getCnAscii(cn);
+			if (ascii < -20319 || ascii > -10247) { // 非常用汉字
+				return String.valueOf(cn);
+			}
+			int index = Collections.binarySearch(asciiValues, ascii);
+			if (index < 0) {
+				index = (~index) - 1;
+			}
+			return spellsByCapital.get(index);
+		} catch (UnsupportedEncodingException e) {
+			// should never happen
+			throw new RuntimeException(e);
+		}
+	}
+
 	public static String cnToSpell(String str) {
 		StringBuffer ret = new StringBuffer();
 		for (int i = 0; i < str.length(); i++) {
@@ -455,8 +876,36 @@ public class CnToSpell {
 		}
 		return ret.toString();
 	}
+	
+	public static String cnToSpellByCapital(String str) {
+		StringBuffer ret = new StringBuffer();
+		for (int i = 0; i < str.length(); i++) {
+			ret.append(cnToSpellByCapital(str.charAt(i)));
+		}
+		return ret.toString();
+	}
 
 	public static void main(String[] argv) {
+		try {
+			int i = 1;
+			System.out.println("1="+ (~i));
+			i = 2;
+			System.out.println("2="+ (~i));
+			i = -1;
+			System.out.println("-1="+ (~i));
+			i = -2;
+			System.out.println("-2="+ (~i));
+			
+			System.out.println(""+ getCnAscii("坻".charAt(0)));
+			System.out.println(""+ getCnAscii("地".charAt(0)));
+			System.out.println(""+ getCnAscii("第".charAt(0)));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println(cnToSpellByCapital("东地第阿，尊"));
+		System.out.println(cnToSpell("东方"));
+		test("东方");
 		test("李四 －－作，做，昨，艾，阿，尊，尊");
 		test("---汉字拼音转换问题,帮忙看一下--- Java / Web 开发- CSDN社区 ...");
 		test("嘬");
