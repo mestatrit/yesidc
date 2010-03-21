@@ -2,6 +2,8 @@ package com.yesibc.job51.test.importer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -17,22 +19,78 @@ import com.yesibc.job51.model.Code;
 
 public class AreaImporter {
 
-	public static String str = "0100,±±¾©,0200,ÉÏº£,0300,¹ã¶«Ê¡,0302,¹ãÖİ,0303,»İÖİ,0304,ÉÇÍ·,0305,Öéº£,0306,·ğÉ½,0307,ÖĞÉ½,0308,¶«İ¸,0314,ÉØ¹Ø,0315,½­ÃÅ,0317,Õ¿½­,0318,ÕØÇì,0319,ÇåÔ¶,0320,³±Öİ,0321,ºÓÔ´,0322,½ÒÑô,0323,Ã¯Ãû,0324,ÉÇÎ²,0325,Ë³µÂ,0326,Ã·Öİ,0327,¿ªÆ½,0328,Ñô½­,0329,ÔÆ¸¡,0400,ÉîÛÚ,0500,Ìì½ò,0600,ÖØÇì,0700,½­ËÕÊ¡,0702,ÄÏ¾©,0703,ËÕÖİ,0704,ÎŞÎı,0705,³£Öİ,0706,À¥É½,0707,³£Êì,0708,ÑïÖİ,0709,ÄÏÍ¨,0710,Õò½­,0711,ĞìÖİ,0712,Á¬ÔÆ¸Û,0713,ÑÎ³Ç,0714,ÕÅ¼Ò¸Û,0715,½­Òõ,0716,Ì«²Ö,0717,Îâ½­,0718,Ì©Öİ,0719,»´°²,0720,ËŞÇ¨,0721,µ¤Ñô,0722,äàÑô,0723,Ì©ĞË,0724,ÒËĞË,0800,Õã½­Ê¡,0802,º¼Öİ,0803,Äş²¨,0804,ÎÂÖİ,0805,ÉÜĞË,0806,½ğ»ª,0807,¼ÎĞË,0808,Ì¨Öİ,0809,ºşÖİ,0810,ÀöË®,0811,ÖÛÉ½,0812,áéÖİ,0813,ÏôÉ½,0814,ÒåÎÚ,0815,´ÈÏª,0816,º£Äş,0900,ËÄ´¨Ê¡,0902,³É¶¼,0903,ÃàÑô,0904,ÀÖÉ½,0905,ãòÖİ,0906,µÂÑô,0907,ÒË±ö,0908,×Ô¹±,0909,ÄÚ½­,0910,ÅÊÖ¦»¨,0911,ÄÏ³ä,0912,Ã¼É½,1000,º£ÄÏÊ¡,1002,º£¿Ú,1003,ÈıÑÇ,1100,¸£½¨Ê¡,1102,¸£Öİ,1103,ÏÃÃÅ,1104,ÈªÖİ,1105,ÕÄÖİ,1106,ÆÎÌï,1107,ÈıÃ÷,1108,ÄÏÆ½,1109,ÄşµÂ,1110,ÁúÑÒ,1200,É½¶«Ê¡,1202,¼ÃÄÏ,1203,Çàµº,1204,ÑÌÌ¨,1205,Î«·»,1206,Íşº£,1207,×Í²©,1208,ÁÙÒÊ,1209,¼ÃÄş,1210,¶«Óª,1211,Ì©°²,1212,ÈÕÕÕ,1213,µÂÖİ,1214,ºÊÔó,1215,±õÖİ,1216,Ôæ×¯,1217,ÁÄ³Ç,1218,À³Îß,1300,½­Î÷Ê¡,1302,ÄÏ²ı,1303,¾Å½­,1400,¹ãÎ÷,1402,ÄÏÄş,1403,¹ğÁÖ,1404,ÁøÖİ,1405,±±º£,1406,ÓñÁÖ,1500,°²»ÕÊ¡,1502,ºÏ·Ê,1503,Îßºş,1504,°²Çì,1505,Âí°°É½,1506,°ö²º,1507,¸·Ñô,1508,Í­Áê,1509,³üÖİ,1510,»ÆÉ½,1511,»´ÄÏ,1512,Áù°²,1513,³²ºş,1514,Ğû³Ç,1515,³ØÖİ,1516,ËŞÖİ,1600,ºÓ±±Ê¡,1602,Ê¯¼Ò×¯,1603,ÀÈ·»,1604,±£¶¨,1605,ÌÆÉ½,1606,ÇØ»Êµº,1607,ºªµ¦,1608,²×Öİ,1609,ÕÅ¼Ò¿Ú,1610,³ĞµÂ,1700,ºÓÄÏÊ¡,1702,Ö£Öİ,1703,ÂåÑô,1704,¿ª·â,1705,½¹×÷,1706,ÄÏÑô,1707,ĞÂÏç,1708,ÖÜ¿Ú,1709,°²Ñô,1800,ºş±±Ê¡,1802,Îäºº,1803,ÒË²ı,1804,»ÆÊ¯,1805,Ïå·®,1806,Ê®Ñß,1807,¾£Öİ,1808,¾£ÃÅ,1809,Ğ¢¸Ğ,1810,¶õÖİ,1811,»Æ¸Ô,1812,ËæÖİ,1900,ºşÄÏÊ¡,1902,³¤É³,1903,ÖêÖŞ,1904,ÏæÌ¶,1905,ºâÑô,1906,ÔÀÑô,1907,³£µÂ,1908,ÒæÑô,1909,³»Öİ,1910,ÉÛÑô,1911,»³»¯,1912,Â¦µ×,1913,ÓÀÖİ,1914,ÕÅ¼Ò½ç,2000,ÉÂÎ÷Ê¡,2002,Î÷°²,2003,ÏÌÑô,2004,±¦¼¦,2005,Í­´¨,2006,ÑÓ°²,2007,Î¼ÄÏ,2008,ÓÜÁÖ,2009,ººÖĞ,2010,°²¿µ,2011,ÉÌÂå,2012,ÑîÁè,2100,É½Î÷Ê¡,2102,Ì«Ô­,2103,ÔË³Ç,2104,´óÍ¬,2105,ÁÙ·Ú,2200,ºÚÁú½­Ê¡,2202,¹ş¶û±õ,2203,ÒÁ´º,2204,Ëç»¯,2205,´óÇì,2206,ÆëÆë¹ş¶û,2207,Äµµ¤½­,2208,¼ÑÄ¾Ë¹,2300,ÁÉÄşÊ¡,2302,ÉòÑô,2303,´óÁ¬,2304,°°É½,2305,Óª¿Ú,2306,¸§Ë³,2307,½õÖİ,2308,µ¤¶«,2309,ºùÂ«µº,2310,±¾Ïª,2311,ÁÉÑô,2312,ÌúÁë,2400,¼ªÁÖÊ¡,2402,³¤´º,2403,¼ªÁÖ,2404,ÁÉÔ´,2405,Í¨»¯,2406,ËÄÆ½,2407,ËÉÔ­,2408,ÑÓ¼ª,2500,ÔÆÄÏÊ¡,2502,À¥Ã÷,2503,Çú¾¸,2504,ÓñÏª,2505,´óÀí,2506,Àö½­,2507,ÃÉ×Ô,2508,¿ªÔ¶,2509,¸ö¾É,2510,ºìºÓÖİ,2600,¹óÖİÊ¡,2602,¹óÑô,2603,×ñÒå,2700,¸ÊËàÊ¡,2702,À¼Öİ,2703,½ğ²ı,2800,ÄÚÃÉ¹Å,2802,ºôºÍºÆÌØ,2803,³à·å,2804,°üÍ·,2805,¼ÎÓø¹Ø,2806,¾ÆÈª,2900,ÄşÏÄ,2902,Òø´¨,3000,Î÷²Ø,3002,À­Èø,3003,ÈÕ¿¦Ôò,3100,ĞÂ½®,3102,ÎÚÂ³Ä¾Æë,3103,¿ËÀ­ÂêÒÀ,3104,¿¦Ê²µØÇø,3105,ÒÁÀç,3200,Çàº£Ê¡,3202,Î÷Äş,3300,Ïã¸Û,3400,°ÄÃÅ,3500,Ì¨Íå";
-	private static BaseCodeDao baseCodeDao = (BaseCodeDao) SpringContext
-			.getBean("baseCodeDao");
-	
+	public static String str = "0100,åŒ—äº¬,0200,ä¸Šæµ·,0300,å¹¿ä¸œçœ,0302,å¹¿å·,0303,æƒ å·,0304,æ±•å¤´,0305,ç æµ·,0306,ä½›å±±,0307,ä¸­å±±,0308,ä¸œè,0314,éŸ¶å…³,0315,æ±Ÿé—¨,0317,æ¹›æ±Ÿ,0318,è‚‡åº†,0319,æ¸…è¿œ,0320,æ½®å·,0321,æ²³æº,0322,æ­é˜³,0323,èŒ‚å,0324,æ±•å°¾,0325,é¡ºå¾·,0326,æ¢…å·,0327,å¼€å¹³,0328,é˜³æ±Ÿ,0329,äº‘æµ®,0400,æ·±åœ³,0500,å¤©æ´¥,0600,é‡åº†,0700,æ±Ÿè‹çœ,0702,å—äº¬,0703,è‹å·,0704,æ— é”¡,0705,å¸¸å·,0706,æ˜†å±±,0707,å¸¸ç†Ÿ,0708,æ‰¬å·,0709,å—é€š,0710,é•‡æ±Ÿ,0711,å¾å·,0712,è¿äº‘æ¸¯,0713,ç›åŸ,0714,å¼ å®¶æ¸¯,0715,æ±Ÿé˜´,0716,å¤ªä»“,0717,å´æ±Ÿ,0718,æ³°å·,0719,æ·®å®‰,0720,å®¿è¿,0721,ä¸¹é˜³,0722,æº§é˜³,0723,æ³°å…´,0724,å®œå…´,0800,æµ™æ±Ÿçœ,0802,æ­å·,0803,å®æ³¢,0804,æ¸©å·,0805,ç»å…´,0806,é‡‘å,0807,å˜‰å…´,0808,å°å·,0809,æ¹–å·,0810,ä¸½æ°´,0811,èˆŸå±±,0812,è¡¢å·,0813,è§å±±,0814,ä¹‰ä¹Œ,0815,æ…ˆæºª,0816,æµ·å®,0900,å››å·çœ,0902,æˆéƒ½,0903,ç»µé˜³,0904,ä¹å±±,0905,æ³¸å·,0906,å¾·é˜³,0907,å®œå®¾,0908,è‡ªè´¡,0909,å†…æ±Ÿ,0910,æ”€æèŠ±,0911,å—å……,0912,çœ‰å±±,1000,æµ·å—çœ,1002,æµ·å£,1003,ä¸‰äºš,1100,ç¦å»ºçœ,1102,ç¦å·,1103,å¦é—¨,1104,æ³‰å·,1105,æ¼³å·,1106,è†ç”°,1107,ä¸‰æ˜,1108,å—å¹³,1109,å®å¾·,1110,é¾™å²©,1200,å±±ä¸œçœ,1202,æµå—,1203,é’å²›,1204,çƒŸå°,1205,æ½åŠ,1206,å¨æµ·,1207,æ·„åš,1208,ä¸´æ²‚,1209,æµå®,1210,ä¸œè¥,1211,æ³°å®‰,1212,æ—¥ç…§,1213,å¾·å·,1214,èæ³½,1215,æ»¨å·,1216,æ£åº„,1217,èŠåŸ,1218,è±èŠœ,1300,æ±Ÿè¥¿çœ,1302,å—æ˜Œ,1303,ä¹æ±Ÿ,1400,å¹¿è¥¿,1402,å—å®,1403,æ¡‚æ—,1404,æŸ³å·,1405,åŒ—æµ·,1406,ç‰æ—,1500,å®‰å¾½çœ,1502,åˆè‚¥,1503,èŠœæ¹–,1504,å®‰åº†,1505,é©¬éå±±,1506,èšŒåŸ ,1507,é˜œé˜³,1508,é“œé™µ,1509,æ»å·,1510,é»„å±±,1511,æ·®å—,1512,å…­å®‰,1513,å·¢æ¹–,1514,å®£åŸ,1515,æ± å·,1516,å®¿å·,1600,æ²³åŒ—çœ,1602,çŸ³å®¶åº„,1603,å»ŠåŠ,1604,ä¿å®š,1605,å”å±±,1606,ç§¦çš‡å²›,1607,é‚¯éƒ¸,1608,æ²§å·,1609,å¼ å®¶å£,1610,æ‰¿å¾·,1700,æ²³å—çœ,1702,éƒ‘å·,1703,æ´›é˜³,1704,å¼€å°,1705,ç„¦ä½œ,1706,å—é˜³,1707,æ–°ä¹¡,1708,å‘¨å£,1709,å®‰é˜³,1800,æ¹–åŒ—çœ,1802,æ­¦æ±‰,1803,å®œæ˜Œ,1804,é»„çŸ³,1805,è¥„æ¨Š,1806,åå °,1807,è†å·,1808,è†é—¨,1809,å­æ„Ÿ,1810,é„‚å·,1811,é»„å†ˆ,1812,éšå·,1900,æ¹–å—çœ,1902,é•¿æ²™,1903,æ ªæ´²,1904,æ¹˜æ½­,1905,è¡¡é˜³,1906,å²³é˜³,1907,å¸¸å¾·,1908,ç›Šé˜³,1909,éƒ´å·,1910,é‚µé˜³,1911,æ€€åŒ–,1912,å¨„åº•,1913,æ°¸å·,1914,å¼ å®¶ç•Œ,2000,é™•è¥¿çœ,2002,è¥¿å®‰,2003,å’¸é˜³,2004,å®é¸¡,2005,é“œå·,2006,å»¶å®‰,2007,æ¸­å—,2008,æ¦†æ—,2009,æ±‰ä¸­,2010,å®‰åº·,2011,å•†æ´›,2012,æ¨å‡Œ,2100,å±±è¥¿çœ,2102,å¤ªåŸ,2103,è¿åŸ,2104,å¤§åŒ,2105,ä¸´æ±¾,2200,é»‘é¾™æ±Ÿçœ,2202,å“ˆå°”æ»¨,2203,ä¼Šæ˜¥,2204,ç»¥åŒ–,2205,å¤§åº†,2206,é½é½å“ˆå°”,2207,ç‰¡ä¸¹æ±Ÿ,2208,ä½³æœ¨æ–¯,2300,è¾½å®çœ,2302,æ²ˆé˜³,2303,å¤§è¿,2304,éå±±,2305,è¥å£,2306,æŠšé¡º,2307,é”¦å·,2308,ä¸¹ä¸œ,2309,è‘«èŠ¦å²›,2310,æœ¬æºª,2311,è¾½é˜³,2312,é“å²­,2400,å‰æ—çœ,2402,é•¿æ˜¥,2403,å‰æ—,2404,è¾½æº,2405,é€šåŒ–,2406,å››å¹³,2407,æ¾åŸ,2408,å»¶å‰,2500,äº‘å—çœ,2502,æ˜†æ˜,2503,æ›²é–,2504,ç‰æºª,2505,å¤§ç†,2506,ä¸½æ±Ÿ,2507,è’™è‡ª,2508,å¼€è¿œ,2509,ä¸ªæ—§,2510,çº¢æ²³å·,2600,è´µå·çœ,2602,è´µé˜³,2603,éµä¹‰,2700,ç”˜è‚ƒçœ,2702,å…°å·,2703,é‡‘æ˜Œ,2800,å†…è’™å¤,2802,å‘¼å’Œæµ©ç‰¹,2803,èµ¤å³°,2804,åŒ…å¤´,2805,å˜‰å³ªå…³,2806,é…’æ³‰,2900,å®å¤,2902,é“¶å·,3000,è¥¿è—,3002,æ‹‰è¨,3003,æ—¥å–€åˆ™,3100,æ–°ç–†,3102,ä¹Œé²æœ¨é½,3103,å…‹æ‹‰ç›ä¾,3104,å–€ä»€åœ°åŒº,3105,ä¼ŠçŠ,3200,é’æµ·çœ,3202,è¥¿å®,3300,é¦™æ¸¯,3400,æ¾³é—¨,3500,å°æ¹¾";
+	private static BaseCodeDao baseCodeDao = (BaseCodeDao) SpringContext.getBean("baseCodeDao");
+
+	// private static BaseCodeDao baseCodeDao = null;
+
 	public static void main(String[] args) {
-		updateProvinces();
+		updateDistricts1();
 	}
 
+	private static void updateDistricts1() {
+		List<Code> codes = baseCodeDao.findAll(Code.class);
+		Map<String, Code> map = new HashMap<String, Code>();
+		for (Code c : codes) {
+			map.put(c.getCode(), c);
+		}
+
+		JXLlUtil jxl = new JXLlUtil("H:/YesITC/yesidc/51job/html/documents/city.xls");
+		jxl.getRs(1);
+		int x = jxl.getTotalX();
+		int y = jxl.getTotalY();
+		System.out.println("x=" + x + ",y=" + y);
+		for (int i = 1; i < x; i++) {
+			String str1 = (jxl.getCell(i, 0).getContents()).trim();
+			String str3 = (jxl.getCell(i, 1).getContents()).trim();
+			String str2 = (jxl.getCell(i, 2).getContents()).trim();
+			Code code1 = map.get(str1);
+			// Code code2 = map.get(str2);
+			// code1.setParent(code2);
+			code1.setEname(CnToSpell.cnToSpellByCapital(code1.getCname()));
+			// code2.setEname(CnToSpell.cnToSpellByCapital(code2.getCname()));
+			baseCodeDao.update(code1);
+			// baseCodeDao.update(code2);
+			System.out.println("i=" + str1 + ",b=" + str3 + ",y=" + str2);
+			// break;
+		}
+	}
+
+	private static void updateCities() {
+		List<Code> codes = baseCodeDao.findAll(Code.class);
+		Map<String, Code> map = new HashMap<String, Code>();
+		for (Code c : codes) {
+			map.put(c.getCode(), c);
+		}
+
+		JXLlUtil jxl = new JXLlUtil("H:/YesITC/yesidc/51job/html/documents/city.xls");
+		int x = jxl.getTotalX();
+		int y = jxl.getTotalY();
+		System.out.println("x=" + x + ",y=" + y);
+		for (int i = 1; i < x; i++) {
+			String str1 = (jxl.getCell(i, 0).getContents()).trim();
+			String str3 = (jxl.getCell(i, 1).getContents()).trim();
+			String str2 = (jxl.getCell(i, 2).getContents()).trim();
+			Code code1 = map.get(str1);
+			Code code2 = map.get(str2);
+			// code1.setParent(code2);
+			code1.setEname(CnToSpell.cnToSpellByCapital(code1.getCname()));
+			code2.setEname(CnToSpell.cnToSpellByCapital(code2.getCname()));
+			baseCodeDao.update(code1);
+			baseCodeDao.update(code2);
+			System.out.println("i=" + str1 + ",b=" + str3 + ",y=" + str2);
+			// break;
+		}
+
+	}
 
 	private static void updateProvinces() {
 		Date d = new Date();
-		
-		for(Map.Entry<String, Code> entry : BaseCode.PROVINCES.entrySet()){   
-			Code value = entry.getValue();   
+
+		for (Map.Entry<String, Code> entry : BaseCode.PROVINCES.entrySet()) {
+			Code value = entry.getValue();
 			value.setEname(Pinyin.getPinyin(value.getCname()));
-			
+
 			Code n = new Code();
 			try {
 				BeanUtils.copyProperties(n, value);
@@ -44,35 +102,34 @@ public class AreaImporter {
 			n.setChildren(null);
 			n.setParent(value.getParent());
 			n.setUpdateDate(d);
-			
-			baseCodeDao.update(n);
-		}  
-		
-	}
 
+			baseCodeDao.update(n);
+		}
+
+	}
 
 	public static void importDistricts() {
 		JXLlUtil jxl = new JXLlUtil("D:/yesibc/51job/documents/district.xls");
 		int x = jxl.getTotalX();
 		int y = jxl.getTotalY();
-		System.out.println("x="+x+",y="+y);
-		
+		System.out.println("x=" + x + ",y=" + y);
+
 		String pcode = null;
 		Code code = null;
 		Long sort = null;
 		Date d = new Date();
-		String temp= null;
-		for(int i=1;i<x;i++){
+		String temp = null;
+		for (int i = 1; i < x; i++) {
 			pcode = (jxl.getCell(i, 2).getContents()).trim();
-			//System.out.println(i+"pcode="+pcode);
+			// System.out.println(i+"pcode="+pcode);
 			code = BaseCode.CITIES.get(pcode);
-			if(code==null){
-				System.out.println("When x="+i+",null!");
+			if (code == null) {
+				System.out.println("When x=" + i + ",null!");
 				continue;
 			}
-			code.setEname(Pinyin.getPinyin(code.getCname()));
-			//baseCodeDao.update(code);
-			
+			code.setEname(CnToSpell.cnToSpellByCapital(code.getCname()));
+			// baseCodeDao.update(code);
+
 			Code newCode = new Code();
 			newCode.setParent(code);
 			newCode.setCname(jxl.getCell(i, 1).getContents().trim());
@@ -83,42 +140,42 @@ public class AreaImporter {
 			newCode.setUpdateDate(d);
 			newCode.setCreateUser(ClawerConstants.CREATE_USER);
 			newCode.setUpdateUser(ClawerConstants.UPDATE_USER);
-			
-			if(!pcode.equals(temp)){
-				temp = pcode; 
+
+			if (!pcode.equals(temp)) {
+				temp = pcode;
 				sort = new Long(1);
-			}else{
+			} else {
 				sort++;
 			}
-			
+
 			newCode.setSortList(sort);
 			baseCodeDao.save(newCode);
-			
+
 		}
 	}
-	
+
 	public static void importCities() {
 		JXLlUtil jxl = new JXLlUtil("D:/yesibc/51job/documents/city.xls");
 		int x = jxl.getTotalX();
 		int y = jxl.getTotalY();
-		System.out.println("x="+x+",y="+y);
-		
+		System.out.println("x=" + x + ",y=" + y);
+
 		String pcode = null;
 		Code code = null;
 		Long sort = null;
 		Date d = new Date();
-		String temp= null;
-		for(int i=1;i<x;i++){
+		String temp = null;
+		for (int i = 1; i < x; i++) {
 			pcode = (jxl.getCell(i, 2).getContents()).trim();
-			System.out.println(i+"pcode="+pcode);
+			System.out.println(i + "pcode=" + pcode);
 			code = BaseCode.PROVINCES.get(pcode);
-			if(code==null){
-				System.out.println("When x="+i+",null!");
+			if (code == null) {
+				System.out.println("When x=" + i + ",null!");
 				continue;
 			}
 			code.setEname(Pinyin.getPinyin(code.getCname()));
-			//baseCodeDao.update(code);
-			
+			// baseCodeDao.update(code);
+
 			Code newCode = new Code();
 			newCode.setParent(code);
 			newCode.setCname(jxl.getCell(i, 1).getContents().trim());
@@ -129,27 +186,27 @@ public class AreaImporter {
 			newCode.setUpdateDate(d);
 			newCode.setCreateUser(ClawerConstants.CREATE_USER);
 			newCode.setUpdateUser(ClawerConstants.UPDATE_USER);
-			
-			if(!pcode.equals(temp)){
-				temp = pcode; 
+
+			if (!pcode.equals(temp)) {
+				temp = pcode;
 				sort = new Long(1);
-			}else{
+			} else {
 				sort++;
 			}
-			
+
 			newCode.setSortList(sort);
 			baseCodeDao.save(newCode);
-			
+
 		}
 	}
-	
+
 	/**
 	 * @param args
 	 */
 	public static void main1(String[] args) {
 		Date d = new Date();
 		Code top = new Code();
-		top.setCname("µØÖ·");
+		top.setCname("åœ°å€");
 		top.setCode("address");
 		top.setCodeLevel(new Long("0"));
 		top.setCreateDate(d);
@@ -159,9 +216,9 @@ public class AreaImporter {
 		top.setEname("address");
 		top.setSortList(new Long("1"));
 
-		//baseCodeDao.save(top);
+		// baseCodeDao.save(top);
 		Code country = new Code();
-		country.setCname("ÖĞ¹ú");
+		country.setCname("ä¸­å›½");
 		country.setCode("China");
 		country.setCodeLevel(new Long("1"));
 		country.setCreateDate(d);
@@ -170,10 +227,10 @@ public class AreaImporter {
 		country.setUpdateUser(ClawerConstants.UPDATE_USER);
 		country.setEname("China");
 		country.setSortList(new Long("1"));
-		//baseCodeDao.save(country);
-		
+		// baseCodeDao.save(country);
+
 		Code out = new Code();
-		out.setCname("ÖĞ¹ú");
+		country.setCname("ä¸­å›½");
 		out.setCode("China");
 		out.setCodeLevel(new Long("1"));
 		out.setCreateDate(d);
@@ -182,9 +239,9 @@ public class AreaImporter {
 		out.setUpdateUser(ClawerConstants.UPDATE_USER);
 		out.setEname("China");
 		out.setSortList(new Long("1"));
-		//baseCodeDao.save(out);
-		//,3600,¹úÍâ
-		
+		// baseCodeDao.save(out);
+		// ,3600,å›½å¤–
+
 		String[] s = str.split(",");
 		int province = 0;
 		int city = 0;
@@ -210,8 +267,8 @@ public class AreaImporter {
 				c.setCodeLevel(new Long(2));
 				c.setSortList(new Long(city++));
 			}
-			//baseCodeDao.save(c);
-			if(i == (s.length-2)){
+			// baseCodeDao.save(c);
+			if (i == (s.length - 2)) {
 				break;
 			}
 			i++;
