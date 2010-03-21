@@ -12,8 +12,8 @@ import com.yesibc.core.web.BaseAction2Support;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.web.search.CompanyJobContext;
 import com.yesibc.job51.web.search.SearchCompanyLinksEngine;
-import com.yesibc.job51.web.search.SearchJobDetailEngine;
 import com.yesibc.job51.web.search.SearchCompanyNJobLinksEngine;
+import com.yesibc.job51.web.search.SearchJobDetailEngine;
 import com.yesibc.job51.web.search.SearchPagesEngine;
 import com.yesibc.job51.web.support.ErrorHandler;
 
@@ -28,13 +28,13 @@ public class Clawer51JobAction extends BaseAction2Support {
 	private static long callTimes = System.currentTimeMillis();
 	long i = 0;
 
-	//总线程
+	// 总线程
 	private String totalThreadTag = "ToT-";
-	
-	//总任务/当前任务
+
+	// 总任务/当前任务
 	private String currentOfToI = "]#CrToI[";
-	
-	//某一线程总任务/当前任务
+
+	// 某一线程总任务/当前任务
 	private String currentOfToC = "]#CrToC-";
 
 	public String refresh() {
@@ -169,11 +169,11 @@ public class Clawer51JobAction extends BaseAction2Support {
 		}
 
 		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse job detail links submit OK!Times[" + l + "]");
+		log.info(reqLog + "Parse job detail links submit OK!Times[" + l / (1000 * 60) + "s]");
 
 		waitingParseJobDetailLinks(jobs);
 		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse job links OK!Times[" + l + "]");
+		log.info(reqLog + "Parse job links OK!Times[" + l / (1000 * 60) + "s]");
 	}
 
 	private void parseJobLinks(String requestId, String reqLog, int threadNumber) {
@@ -223,11 +223,11 @@ public class Clawer51JobAction extends BaseAction2Support {
 		}
 
 		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse job links submit OK!Times[" + l + "]");
+		log.info(reqLog + "Parse job links submit OK!Times[" + l / (1000 * 60) + "s]");
 
 		waitingParseJobLinks(jobs);
 		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse job links OK!Times[" + l + "]");
+		log.info(reqLog + "Parse job links OK!Times[" + l / (1000 * 60) + "s]");
 	}
 
 	private void parseCompanyLinks(String requestId, String reqLog, int threadNumber) {
@@ -245,7 +245,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 		Collections.shuffle(CompanyJobContext.getUrlPages());
 		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Company links shffle!Times[" + l + "]");
+		log.info(reqLog + "Company links shffle!Times[" + l / (1000 * 60) + "s]");
 
 		int k = 0;
 		List<SearchCompanyLinksEngine> sces = new ArrayList<SearchCompanyLinksEngine>();
@@ -279,11 +279,11 @@ public class Clawer51JobAction extends BaseAction2Support {
 		}
 
 		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse company links submit OK!Times[" + l + "]");
+		log.info(reqLog + "Parse company links submit OK!Times[" + l / (1000 * 60) + "s]");
 
 		waitingParseCompanyLinks(sces);
 		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse company links OK!Times[" + l + "]");
+		log.info(reqLog + "Parse company links OK!Times[" + l / (1000 * 60) + "s]");
 	}
 
 	private void parsePageLinks(int threadNumber, String requestId, String reqLog) {
@@ -330,12 +330,12 @@ public class Clawer51JobAction extends BaseAction2Support {
 		}
 
 		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse pages links submit OK!Times[" + l + "]");
+		log.info(reqLog + "Parse pages links submit OK!Times[" + l / (1000 * 60) + "s]");
 
 		waitingPageLinkThreads(spes);
 
 		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse pages links OK!Times[" + l + "]");
+		log.info(reqLog + "Parse pages links OK!Times[" + l / (1000 * 60) + "s]");
 	}
 
 	private void waitingPageLinkThreads(List<SearchPagesEngine> spes) {
@@ -345,24 +345,24 @@ public class Clawer51JobAction extends BaseAction2Support {
 			for (Iterator<SearchPagesEngine> it = spes.iterator(); it.hasNext();) {
 				spe = it.next();
 				if (!spe.isAlive()) {
-					log.info(spe.getProcessContext().getLogTitle() + " thread was removed OK.");
+					log.info(spe.getTitle() + " thread was removed OK.");
 					it.remove();
 				} else {
 					i++;
-					log.info(spe.getProcessContext().getLogTitle() + " Waiting thread runing end! ");
+					log.info(spe.getTitle() + " Waiting thread runing end!  URL|" + spe.getCrUrl());
 					try {
 						Thread.sleep(60000);
 					} catch (InterruptedException e) {
-						log.error(spe.getProcessContext().getLogTitle() + "Waiting thread exception!", e);
+						log.error(spe.getTitle() + "Waiting thread exception!", e);
 					}
-					log.info(spe.getProcessContext().getLogTitle() + " Waiting thread runing [" + i * 60 + "]s.");
+					log.info(spe.getTitle() + " Waiting thread runing [" + i * 60 + "]s. URL|" + spe.getCrUrl());
 				}
 			}
-			if (spes.isEmpty()) {
+			if (spes == null || spes.isEmpty()) {
 				break;
 			}
 		}
-		log.info(spe.getProcessContext().getLogTitle() + " Waiting thread runing end![" + i * 60000 + "].");
+		log.info(spe.getTitle() + " Waiting thread runing end![" + i * 60 + "]s. URL|" + spe.getCrUrl());
 	}
 
 	private void waitingParseJobDetailLinks(List<SearchJobDetailEngine> jobs) {
@@ -372,24 +372,24 @@ public class Clawer51JobAction extends BaseAction2Support {
 			for (Iterator<SearchJobDetailEngine> it = jobs.iterator(); it.hasNext();) {
 				spe = it.next();
 				if (!spe.isAlive()) {
-					log.info(spe.getProcessContext().getLogTitle() + " thread was removed OK.");
+					log.info(spe.getTitle() + " thread was removed OK.");
 					it.remove();
 				} else {
 					i++;
-					log.info(spe.getProcessContext().getLogTitle() + " Waiting thread runing end! ");
+					log.info(spe.getTitle() + " Waiting thread runing end!  URL|" + spe.getCrUrl());
 					try {
 						Thread.sleep(60000);
 					} catch (InterruptedException e) {
-						log.error(spe.getProcessContext().getLogTitle() + "Waiting thread exception!", e);
+						log.error(spe.getTitle() + "Waiting thread exception!", e);
 					}
-					log.info(spe.getProcessContext().getLogTitle() + " Waiting thread runing [" + i * 60 + "]s.");
+					log.info(spe.getTitle() + " Waiting thread runing [" + i * 60 + "]s. URL|" + spe.getCrUrl());
 				}
 			}
-			if (jobs.isEmpty()) {
+			if (jobs == null || jobs.isEmpty()) {
 				break;
 			}
 		}
-		log.info(spe.getProcessContext().getLogTitle() + " Waiting thread runing end![" + i * 60000 + "].");
+		log.info(spe.getTitle() + " Waiting thread runing end![" + i * 60 + "]s. URL|" + spe.getCrUrl());
 	}
 
 	private void waitingParseJobLinks(List<SearchCompanyNJobLinksEngine> jobs) {
@@ -399,24 +399,24 @@ public class Clawer51JobAction extends BaseAction2Support {
 			for (Iterator<SearchCompanyNJobLinksEngine> it = jobs.iterator(); it.hasNext();) {
 				spe = it.next();
 				if (!spe.isAlive()) {
-					log.info(spe.getProcessContext().getLogTitle() + " thread was removed OK.");
+					log.info(spe.getTitle() + " thread was removed OK.");
 					it.remove();
 				} else {
 					i++;
-					log.info(spe.getProcessContext().getLogTitle() + " Waiting thread runing end! ");
+					log.info(spe.getTitle() + " Waiting thread runing end!  URL|" + spe.getCrUrl());
 					try {
 						Thread.sleep(60000);
 					} catch (InterruptedException e) {
-						log.error(spe.getProcessContext().getLogTitle() + "Waiting thread exception!", e);
+						log.error(spe.getTitle() + "Waiting thread exception!", e);
 					}
-					log.info(spe.getProcessContext().getLogTitle() + " Waiting thread runing [" + i * 60 + "]s.");
+					log.info(spe.getTitle() + " Waiting thread runing [" + i * 60 + "]s. URL|" + spe.getCrUrl());
 				}
 			}
-			if (jobs.isEmpty()) {
+			if (jobs == null || jobs.isEmpty()) {
 				break;
 			}
 		}
-		log.info(spe.getProcessContext().getLogTitle() + " Waiting thread runing end![" + i * 60000 + "].");
+		log.info(spe.getTitle() + " Waiting thread runing end![" + i * 60 + "]. URL|" + spe.getCrUrl());
 	}
 
 	private void waitingParseCompanyLinks(List<SearchCompanyLinksEngine> jobs) {
@@ -426,23 +426,23 @@ public class Clawer51JobAction extends BaseAction2Support {
 			for (Iterator<SearchCompanyLinksEngine> it = jobs.iterator(); it.hasNext();) {
 				spe = it.next();
 				if (!spe.isAlive()) {
-					log.info(spe.getProcessContext().getLogTitle() + " thread was removed OK.");
+					log.info(spe.getTitle() + " thread was removed OK.");
 					it.remove();
 				} else {
 					i++;
-					log.info(spe.getProcessContext().getLogTitle() + " Waiting thread runing end! ");
+					log.info(spe.getTitle() + " Waiting thread runing end!  URL|" + spe.getCrUrl());
 					try {
 						Thread.sleep(60000);
 					} catch (InterruptedException e) {
-						log.error(spe.getProcessContext().getLogTitle() + "Waiting thread exception!", e);
+						log.error(spe.getTitle() + "Waiting thread exception!", e);
 					}
-					log.info(spe.getProcessContext().getLogTitle() + " Waiting thread runing [" + i * 60 + "]s.");
+					log.info(spe.getTitle() + " Waiting thread runing [" + i * 60 + "]s. URL|" + spe.getCrUrl());
 				}
 			}
-			if (jobs.isEmpty()) {
+			if (jobs == null || jobs.isEmpty()) {
 				break;
 			}
 		}
-		log.info(spe.getProcessContext().getLogTitle() + " Waiting thread runing end![" + i * 60000 + "].");
+		log.info(spe.getTitle() + " Waiting thread runing end![" + i * 60 + "]. URL|" + spe.getCrUrl());
 	}
 }

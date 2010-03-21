@@ -6,7 +6,6 @@ import org.apache.commons.logging.LogFactory;
 import cn.cetelem.track.AlertUtils;
 
 import com.webrenderer.swing.dom.IElement;
-import com.yesibc.email.model.MailSender;
 import com.yesibc.job51.common.Clawer51JobMailContext;
 import com.yesibc.job51.common.ClawerConstants;
 

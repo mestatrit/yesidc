@@ -13,6 +13,13 @@ public class ClawerConstants {
 
 	public final static int TEST_WEB_NUM = 4;
 
+	public static int THREADS_NUMBER = TEST_WEB_NUM;
+	static {
+		if (!TEST_WEB) {
+			THREADS_NUMBER = Integer.parseInt(ClawerUtils.getServerConfByKey("threads.number"));
+		}
+	}
+
 	public final static String PROC_LOG = "*process*";
 
 	public final static String FROM_WHERE_51JOB = "51job";
@@ -73,6 +80,7 @@ public class ClawerConstants {
 	public final static String RECONNECT_CUT_TAG = "Connect(this.form,'Disconnect_pppoe')";
 	public final static String RECONNECT_RECONN_TAG = "Connect(this.form,'Connect_pppoe')";
 	public final static String RECONNECT_RECONN_NAME = ClawerUtils.getValByKey("reconnect.reconn");
+	public final static long RECONNECT_INTERVAL = Long.valueOf(ClawerUtils.getValByKey("reReconnect.interval")) * 1000 * 60;
 	public final static String VAL = "_val";
 	public final static String RECONNECT_IP_TAG = ClawerUtils.getValByKey("reconnect.ip.tag");
 
@@ -190,7 +198,7 @@ public class ClawerConstants {
 	public final static int PAGESIZE_COMPANY = 30;
 	public final static String WEBRENDERER_ID = ClawerUtils.getServerConfByKey("webrenderer.id");
 	public final static String WEBRENDERER_SN = ClawerUtils.getServerConfByKey("webrenderer.sn");
-	public static int THREADS_NUMBER = Integer.parseInt(ClawerUtils.getServerConfByKey("threads.number"));
+
 	public final static long COUNT_LOADED = Long.parseLong(ClawerUtils.getServerConfByKey("count.loaded.reconnect"));
 	public final static String DIALOG_USERNAME = ClawerUtils.getServerConfByKey("dialog.username");
 	public final static String DIALOG_PASSWORD = ClawerUtils.getServerConfByKey("dialog.password");

@@ -11,7 +11,6 @@ import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.web.support.ErrorHandler;
 import com.yesibc.job51.web.support.JobSupport;
 import com.yesibc.job51.web.support.LogHandler;
-import com.yesibc.job51.web.support.WebLinkSupport;
 
 public class SearchCompanyLinksEngine extends Thread {
 
@@ -24,43 +23,47 @@ public class SearchCompanyLinksEngine extends Thread {
 	private IBrowserCanvas browser;
 	private boolean finish = false;
 	private String[] urls;
-	private ProcessContext processContext;
+	private String crUrl;
+	private String title;
 	private int index;
+	private ProcessContext processContext;
 
 	public SearchCompanyLinksEngine(String rid, String[] urls, int index) {
 		this.urls = urls;
 		this.index = index;
-		browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
-		onDocumnetComplete();
-		processContext = JobSupport.setProcessContext(browser, companyTag);
-		if (ClawerConstants.SHOW_FRAME) {
-			WebrendererContext.WEBRENDER_ENTITIES.get(index).getFrame().setTitle(processContext.getLogTitle());
-		}
+		this.title = JobSupport.getCrIndex2Title(companyTag + rid, 1);
 	}
 
 	public void run() {
 		int i = 0;
 		for (String url : urls) {
-			JobSupport.setCrIndex2Title(processContext, i);
-			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(false);
-			WebLinkSupport.doCount(processContext.getLogTitle());
-			try {
-				if (url == null || "".equals(url)) {
-					continue;
-				}
-				if (ClawerConstants.TEST_WEB) {
-					if (i == ClawerConstants.TEST_WEB_NUM) {
-						break;
-					}
-				}
 
+			if (url == null || "".equals(url)) {
+				continue;
+			}
+			if (ClawerConstants.TEST_WEB) {
+				if (i == ClawerConstants.TEST_WEB_NUM) {
+					break;
+				}
+			}
+			setCrUrl(url);
+			
+			i++;
+			processContext = new ProcessContext();
+			browser = JobSupport.initLoading(processContext, title, index, i, false);
+			onDocumnetComplete();
+
+			try {
 				finish = false;
 				l = System.currentTimeMillis();
 				log.info(processContext.getLogTitle() + "Start Loading " + url);
 				browser.loadURL(url);
 				boolean loadedOK = true;
+
 				if (!waitingLoading(index, url)) {
-					browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
+					browser = JobSupport.initLoading(processContext, title, index, i, false);
+					onDocumnetComplete();
+					log.info(processContext.getLogTitle() + "ReStart Loading error1 " + url);
 					browser.loadURL(url);
 					if (!waitingLoading(index, url)) {
 						loadedOK = false;
@@ -76,7 +79,6 @@ public class SearchCompanyLinksEngine extends Thread {
 
 				log.info(processContext.getLogTitle() + "Parsing [" + browser.getURL() + "] is OK!Time is "
 						+ (System.currentTimeMillis() - l));
-				i++;
 			} catch (Exception e) {
 				log.error(processContext.getLogTitle() + " Error Start!");
 				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " Parsing [" + browser.getURL()
@@ -115,7 +117,7 @@ public class SearchCompanyLinksEngine extends Thread {
 				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " URL[" + url
 						+ "] waiting loading to long and exit to waiting now. Time is[" + i * 10 + "]s");
 				finish = true;
-				WebrendererContext.reFreshContext(index);
+				WebrendererContext.reFreshContext(index, processContext);
 				return false;
 			} else {
 				LogHandler.info(processContext.getLogTitle() + " URL[" + url + "] waiting loading……[" + i * 10 + "]s");
@@ -127,6 +129,18 @@ public class SearchCompanyLinksEngine extends Thread {
 
 	public ProcessContext getProcessContext() {
 		return processContext;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public String getCrUrl() {
+		return crUrl;
+	}
+
+	public void setCrUrl(String crUrl) {
+		this.crUrl = crUrl;
 	}
 
 }

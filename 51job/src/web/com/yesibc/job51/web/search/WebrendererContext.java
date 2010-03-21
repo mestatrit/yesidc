@@ -32,7 +32,7 @@ public class WebrendererContext {
 
 	}
 
-	public synchronized static void reFreshContext(int index) {
+	public synchronized static void reFreshContext(int index, ProcessContext processContext) {
 
 		WebRenderEntity wre = WEBRENDER_ENTITIES.get(index);
 		try {
@@ -56,7 +56,20 @@ public class WebrendererContext {
 		}
 		WEBRENDER_ENTITIES.put(index, wre);
 
+		reconnectByRefreshConext(processContext, index);
 		log.info("reFreshContext: " + index + " BROWSERS OK!");
+	}
+
+	private static void reconnectByRefreshConext(ProcessContext processContext, int index) {
+		long temp = (System.currentTimeMillis() - l);
+		if (temp < ClawerConstants.RECONNECT_INTERVAL) {
+			ErrorHandler.errorLogAndMail("reFreshContext reconnecting:[" + index + "]" + processContext.getLogTitle()
+					+ "@interval:" + temp / (1000 * 60));
+			return;
+		}
+		
+		
+		
 	}
 
 	public static Map<Integer, WebRenderEntity> initContext() {
@@ -95,9 +108,5 @@ public class WebrendererContext {
 	}
 
 	public static void main(String[] args) {
-		for (int i = 0; i < 20; i++) {
-			System.out.println(WEBRENDER_ENTITIES.get(i).toString());
-		}
-		System.out.println("dddddddddddd" + WEBRENDER_ENTITIES.get(2).toString());
 	}
 }

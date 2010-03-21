@@ -16,6 +16,7 @@ import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.common.ClawerUtils;
 import com.yesibc.job51.web.search.ProcessContext;
+import com.yesibc.job51.web.search.WebrendererContext;
 
 public class JobSupport {
 
@@ -24,31 +25,53 @@ public class JobSupport {
 	public static final String LEFT_TAG = "{";
 	public static final String RIGHT_TAG = "}";
 
-	public static void setCrIndex2Title(ProcessContext processContext, int index) {
-		String title = processContext.getLogTitle();
+	public static IBrowserCanvas initLoading(ProcessContext processContext, String title, int index, int positionOfURL,
+			boolean retry) {
+		title = getCrIndex2Title(title, positionOfURL);
+		WebLinkSupport.doCount(title, index, retry);
+
+		IBrowserCanvas browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
+		setProcessContext(browser, processContext, title);
+		if (ClawerConstants.SHOW_FRAME) {
+			WebrendererContext.WEBRENDER_ENTITIES.get(index).getFrame().setTitle(processContext.getLogTitle());
+		}
+		WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(false);
+
+		return browser;
+	}
+
+	public static IBrowserCanvas initLoading(ProcessContext processContext, String title, int index, boolean retry) {
+		WebLinkSupport.doCount(title, index, retry);
+
+		IBrowserCanvas browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
+		setProcessContext(browser, processContext, title);
+		if (ClawerConstants.SHOW_FRAME) {
+			WebrendererContext.WEBRENDER_ENTITIES.get(index).getFrame().setTitle(processContext.getLogTitle());
+		}
+		WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(false);
+
+		return browser;
+	}
+
+	public static String getCrIndex2Title(String title, int positionOfURL) {
 		if (title.indexOf(LEFT_TAG) > -1) {
 			int i = title.indexOf(LEFT_TAG);
 			String temp = title.substring(0, i + LEFT_TAG.length());
-			title = temp + index + RIGHT_TAG;
+			title = temp + positionOfURL + RIGHT_TAG;
 		} else {
-			title = title + LEFT_TAG + index + RIGHT_TAG;
+			title = title + LEFT_TAG + positionOfURL + RIGHT_TAG;
 		}
-		processContext.setLogTitle(title);
+		return title;
 	}
 
 	public static void main(String[] args) {
 		String url = "#Paging#ToT-20[16]#CrToI[917]#CrToC-53";
-		ProcessContext processContext = new ProcessContext();
-		processContext.setLogTitle(url);
-		setCrIndex2Title(processContext, 1);
-		System.out.println(processContext.getLogTitle());
+		System.out.println(getCrIndex2Title(url, 1));
 	}
 
-	public static ProcessContext setProcessContext(IBrowserCanvas browser, String head) {
-		ProcessContext processContext = new ProcessContext();
+	private static void setProcessContext(IBrowserCanvas browser, ProcessContext processContext, String head) {
 		processContext.setBrowser(browser);
 		processContext.setLogTitle(head);
-		return processContext;
 	}
 
 	public JobSupport() {
