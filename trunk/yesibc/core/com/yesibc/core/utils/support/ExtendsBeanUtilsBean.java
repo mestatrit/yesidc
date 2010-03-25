@@ -24,16 +24,10 @@ import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.yesibc.core.utils.XFireUtils;
-
-
-import javax.xml.bind.JAXBElement;
-import javax.xml.namespace.QName;
-
 /**
- * @author David.ye o_olle_e@hotmail.com create time: Oct 21, 2007 11:01:19 AM
+ * @author David.ye o_olle_e@hotmail.com create time: Oct 21, 2007 11:01:19 AM,
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings( { "unchecked", "deprecation" })
 public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 
 	static int DEPTH = 8;
@@ -43,8 +37,8 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 			.getLog(ExtendsBeanUtilsBean.class);
 
 	/**
-	 * Creates the default instance used when the context classloader is unavailable
-	 * ContextClassLoaderLocal:beansByClassLoader
+	 * Creates the default instance used when the context classloader is
+	 * unavailable ContextClassLoaderLocal:beansByClassLoader
 	 */
 	private static final ContextClassLoaderLocal beansByClassLoader = new ContextClassLoaderLocal() {
 		protected Object initialValue() {
@@ -63,19 +57,21 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 		super(new ConvertUtilsBean(), new PropertyUtilsBean());
 	}
 
-
 	/**
 	 * Copy between Xfire stub object and common object.
+	 * 
 	 * @param dest
 	 * @param orig
-	 * @param qnameURI  QName's url. It can be null. 
+	 * @param qnameURI
+	 *            QName's url. It can be null.
 	 * @param depth
 	 * @return Object.
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
-	public Object extendCopyPropertiesForXFire(Object dest, Object orig, String qnameURI,
-			int depth) throws IllegalAccessException, InvocationTargetException {
+	public Object extendCopyPropertiesForXFire(Object dest, Object orig,
+			String qnameURI, int depth) throws IllegalAccessException,
+			InvocationTargetException {
 		if (depth > DEPTH) {
 			return dest;
 		}
@@ -100,14 +96,7 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 				String name = origDescriptors[i].getName();
 				if (getPropertyUtils().isWriteable(dest, name)) {
 					Object value = ((DynaBean) orig).get(name);
-					Object ov = null;
-					if (value != null && value instanceof JAXBElement) {
-						JAXBElement v = (JAXBElement) value;
-						ov = XFireUtils.getValue(v);
-						copyProperty(qnameURI,dest, name, ov, depth + 1);
-					} else {
-						copyProperty(qnameURI,dest, name, value, depth + 1);
-					}
+					copyProperty(qnameURI, dest, name, value, depth + 1);
 				}
 			}
 		} else if (orig instanceof Map) {
@@ -116,14 +105,8 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 				String name = (String) names.next();
 				if (getPropertyUtils().isWriteable(dest, name)) {
 					Object value = ((Map) orig).get(name);
-					Object ov = null;
-					if (value != null && value instanceof JAXBElement) {
-						JAXBElement v = (JAXBElement) value;
-						ov = XFireUtils.getValue(v);
-						copyProperty(qnameURI,dest, name, ov, depth + 1);
-					} else {
-						copyProperty(qnameURI,dest, name, value, depth + 1);
-					}
+					copyProperty(qnameURI, dest, name, value, depth + 1);
+
 				} else if (dest instanceof Map) {
 					Object value = ((Map) orig).get(name);
 					Object destInMap = null;
@@ -133,14 +116,8 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 										"java.lang")) {
 							destInMap = value;
 						} else {
-							Object ov = null;
-							if (value != null && value instanceof JAXBElement) {
-								JAXBElement v = (JAXBElement) value;
-								ov = XFireUtils.getValue(v);
-								destInMap = copyProperties(ov,qnameURI, depth + 1);
-							} else {
-								destInMap = copyProperties(value,qnameURI, depth + 1);
-							}
+							destInMap = copyProperties(value, qnameURI,
+									depth + 1);
 						}
 						((Map) dest).put(name, destInMap);
 					} catch (Exception ex) {
@@ -159,15 +136,8 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 				Object copyItem = null;
 				try {
 					copyItem = item.getClass().newInstance();
-
-					Object ov = null;
-					if (item != null && item instanceof JAXBElement) {
-						JAXBElement v = (JAXBElement) item;
-						ov = XFireUtils.getValue(v);
-						extendCopyPropertiesForXFire(copyItem, ov, qnameURI,depth + 1);
-					} else {
-						extendCopyPropertiesForXFire(copyItem, item,qnameURI, depth + 1);
-					}
+					extendCopyPropertiesForXFire(copyItem, item, qnameURI,
+							depth + 1);
 					values.add(copyItem);
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -189,15 +159,7 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 					try {
 						Object value = getPropertyUtils().getSimpleProperty(
 								orig, name);
-
-						Object ov = null;
-						if (value != null && value instanceof JAXBElement) {
-							JAXBElement v = (JAXBElement) value;
-							ov = XFireUtils.getValue(v);
-							copyProperty(qnameURI,dest, name, ov, depth + 1);
-						} else {
-							copyProperty(qnameURI,dest, name, value, depth + 1);
-						}
+						copyProperty(qnameURI, dest, name, value, depth + 1);
 
 					} catch (NoSuchMethodException e) {
 						// Should not happen
@@ -212,6 +174,7 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 
 	/**
 	 * Copy value to object's name.
+	 * 
 	 * @param qnameURI
 	 * @param bean
 	 * @param name
@@ -220,8 +183,9 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
-	public void copyProperty(String qnameURI, Object bean, String name, Object value, int depth)
-			throws IllegalAccessException, InvocationTargetException {
+	public void copyProperty(String qnameURI, Object bean, String name,
+			Object value, int depth) throws IllegalAccessException,
+			InvocationTargetException {
 		if (depth > DEPTH || value == null) {
 			return;
 		}
@@ -236,24 +200,14 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				extendCopyPropertiesForXFire(copyItem, item,qnameURI, depth + 1);
+				extendCopyPropertiesForXFire(copyItem, item, qnameURI,
+						depth + 1);
 				values.add(copyItem);
 			}
 			value = values;
 			log("replace with java.util.ArrayList.");
 		}
-		// try {
-		// if (value.getClass().getName().startsWith("cn.cetelem")) {
-		// Object dest = this.copyProperties(value, depth + 1);
-		// setProperty(bean, name, dest);
-		// return;
-		// }
-		// } catch (Exception ex) {
-		// ex.printStackTrace();
-		// log("value=" + value);
-		// }
-		// log(depth + " value=" + value);
-		// Trace logging (if enabled)
+
 		if (log.isTraceEnabled()) {
 			StringBuffer sb = new StringBuffer("  copyProperty(");
 			sb.append(bean);
@@ -326,7 +280,7 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 			}
 			propName = propName.substring(0, j);
 		}
-		
+
 		// Calculate the target property type
 		if (target instanceof DynaBean) {
 			DynaClass dynaClass = ((DynaBean) target).getDynaClass();
@@ -355,15 +309,13 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 				}
 				return;
 			}
-		
+
 		}
 		if (log.isTraceEnabled()) {
 			log.trace("    target propName=" + propName + ", type=" + type
 					+ ", index=" + index + ", key=" + key);
 		}
 
-
-		
 		Object finalValue = null;
 		// Convert the specified value to the required type and store it
 		if (index >= 0) { // Destination must be indexed
@@ -374,13 +326,7 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 				value = converter.convert(type, value);
 			}
 			try {
-				if(type!=null && type.getName().indexOf("JAXBElement")>-1){
-					QName qn = new QName(qnameURI,propName);
-					JAXBElement jaxbElement = new JAXBElement(qn, value.getClass(), value);
-					finalValue = jaxbElement;
-				}else{
-					finalValue = value;
-				}	
+				finalValue = value;
 				getPropertyUtils().setIndexedProperty(target, propName, index,
 						finalValue);
 			} catch (NoSuchMethodException e) {
@@ -390,13 +336,7 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 			// Maps do not know what the preferred data type is,
 			// so perform no conversions at all
 			try {
-				if(type!=null && type.getName().indexOf("JAXBElement")>-1){
-					QName qn = new QName(qnameURI,propName);
-					JAXBElement jaxbElement = new JAXBElement(qn, value.getClass(), value);
-					finalValue = jaxbElement;
-				}else{
-					finalValue = value;
-				}					
+				finalValue = value;
 				getPropertyUtils().setMappedProperty(target, propName, key,
 						value);
 			} catch (NoSuchMethodException e) {
@@ -409,14 +349,9 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 				value = converter.convert(type, value);
 			}
 			try {
-				if(type!=null && type.getName().indexOf("JAXBElement")>-1){
-					QName qn = new QName(qnameURI,propName);
-					JAXBElement jaxbElement = new JAXBElement(qn, value.getClass(), value);
-					finalValue = jaxbElement;
-				}else{
-					finalValue = value;
-				}				
-				getPropertyUtils().setSimpleProperty(target, propName, finalValue);
+				finalValue = value;
+				getPropertyUtils().setSimpleProperty(target, propName,
+						finalValue);
 			} catch (NoSuchMethodException e) {
 				throw new InvocationTargetException(e, "Cannot set " + propName);
 			}
@@ -426,13 +361,15 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 
 	/**
 	 * Nested copy.
+	 * 
 	 * @param orig
 	 * @param qnameURI
 	 * @param depth
 	 * @return
 	 * @throws Exception
 	 */
-	public Object copyProperties(Object orig,String qnameURI, int depth) throws Exception {
+	public Object copyProperties(Object orig, String qnameURI, int depth)
+			throws Exception {
 
 		Object dest = null;
 		try {
@@ -442,7 +379,7 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 		}
 		try {
 			dest = ExtendsBeanUtilsBean.getInstance()
-					.extendCopyPropertiesForXFire(dest, orig, qnameURI,depth);
+					.extendCopyPropertiesForXFire(dest, orig, qnameURI, depth);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new Exception(ex.getMessage());
@@ -452,6 +389,7 @@ public class ExtendsBeanUtilsBean extends BeanUtilsBean {
 
 	/**
 	 * log only for this class
+	 * 
 	 * @param message
 	 */
 	private void log(String message) {
