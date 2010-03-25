@@ -1,10 +1,5 @@
 package jdk;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import com.yesibc.core.utils.CommonLog;
 
 public class CollectionTest {
 	public static boolean isNum(String str) {
