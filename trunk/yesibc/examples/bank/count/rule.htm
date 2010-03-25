@@ -1,0 +1,449 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+	
+        等额本息还款和等额本金还款计算公式的推导
+        -
+        海的声音
+        - CSDN博客
+</title>
+
+    <script type="text/javascript">
+        try { document.domain = "csdn.net"; } catch (ex) { }
+    </script>
+
+    <script src="/js/jquery.js" type="text/javascript"></script>
+
+    <script src="/js/SyntaxHighlighter/jquery.highlighter.js?v=20091222" type="text/javascript"></script>
+
+    <script src="/js/SyntaxHighlighter/highlighter.js?v=20091222" type="text/javascript"></script>
+
+    <script src="/js/common.js?v=20091222" type="text/javascript"></script>
+
+    <script src="http://counter.csdn.net/a/js/AreaCounter.js?v=20091222" type="text/javascript"></script>
+
+    <script type="text/javascript" src="/js/feedback.js?v=200912233"></script>
+
+    <script type="text/javascript" src="/js/relatedarticle.js?v=20091222"></script>
+
+    <link href="/css/skin/Cogitation/Cogitation_1.css?v=20091223" type="text/css" rel="stylesheet" media="all"/><link href="/css/csdn_favbykimi.css" type="text/css" rel="stylesheet" media="all" /><link rel="Shortcut Icon" href="http://profile.csdn.net/xiaotao_liu/picture/1.ico"/><link href="http://feeds.feedsky.com/csdn.net/xiaotao_liu" title="RSS" type="application/rss+xml" rel="alternate" /></head>
+<body id="defaultuser">
+    <div id="csdnblog_allwrap">
+        <div id="csdnblog_midwrap">
+            
+<div id="csdnblog_header">
+    <h1><a href="http://blog.csdn.net/xiaotao_liu">海的声音</a></h1><h2></h2>
+    <ul id="personalnav">
+		<li style="display:none;"><a id="a_login" href="http://passport.csdn.net/UserLogin.aspx">登录</a></li>
+		<li style="display:none;"><a id="a_register" href="http://passport.csdn.net/CSDNUserRegister.aspx" target="_blank">注册</a></li>
+		<li style="display:none;"><a id="a_welcome" href="http://hi.csdn.net/" target="_blank">欢迎</a></li>
+		<li style="display:none;"><a id="a_exit" href="http://writeblog.csdn.net/Signout.aspx">退出</a></li>
+		<li style="display:none;"><a id="a_myblog" href="http://blog.csdn.net/">我的博客</a></li>
+		<li style="display:none;"><a id="a_configure" href="http://writeblog.csdn.net/configure.aspx" target="_blank">配置</a></li>
+		<li style="display:none;"><a id="a_postedit" href="http://writeblog.csdn.net/PostEdit.aspx" target="_blank">写文章</a></li>
+		<li style="display:none;"><a id="a_postlist" href="http://writeblog.csdn.net/PostList.aspx" target="_blank">文章管理</a></li>
+		<li style="display:none;"><a id="a_bloghome" href="http://blog.csdn.net" target="_blank">博客首页</a></li>
+	</ul>
+    <ul id="blogsearchsty">
+		<li><input id="inputSearch" type="text" class="bolgsearch"/></li>
+		<li class="selectsty">
+			<select name="Search:ddlSearchScope" id="Search_ddlSearchScope">
+				<option value="all">全站</option>
+				<option value="xiaotao_liu">当前博客</option>
+			</select>
+		</li>
+		<li><input type="button" id="buttonSearch" value="搜索" class="bolggobtn" /></li>
+	</ul>
+    <ul id="menu">
+		<li><a href="http://hi.csdn.net/xiaotao_liu" target="_blank">空间</a></li>
+		<li><a class="on" href="http://blog.csdn.net/xiaotao_liu">博客</a></li>
+		<li><a href="http://hi.csdn.net/!s/friend/list/xiaotao_liu" target="_blank">好友</a></li>
+		<li><a href="http://hi.csdn.net/!s/album/list/xiaotao_liu" target="_blank">相册</a></li>
+		<li><a class="last" href="http://hi.csdn.net/!s/wall/to/xiaotao_liu" target="_blank">留言</a></li>
+	</ul>
+</div>
+<script type="text/javascript">
+	var CurrentUserName = 'xiaotao_liu';
+</script>
+            
+<div id="csdnblog_sidebar">
+	<div class="gutter">
+		<div class="aboutauthor">
+			<dl>
+				<dt>用户操作</dt>
+				<dd class="middle">
+					<a href="http://hi.csdn.net/!s/wall/to/xiaotao_liu" target="_blank">[留言]</a>&nbsp;
+					<a href="http://hi.csdn.net/!s/msg/to/xiaotao_liu" target="_blank">[发消息]</a>&nbsp;
+					<a href="http://hi.csdn.net/!s/friend/add/xiaotao_liu" target="_blank">[加为好友]</a>&nbsp;
+				</dd>
+				<span id="userInfo"></span>
+				<span id="SubscriptionList">
+					<dt>订阅我的博客</dt>
+					<dd>
+						<a href="http://feeds.feedsky.com/csdn.net/xiaotao_liu">
+							<img border="0" alt="XML聚合" src="http://img.feedsky.com/feeds/csdn.net/xiaotao_liu/sc/gif"/>
+						</a>&nbsp;&nbsp;
+						<a href="http://feeds.feedsky.com/csdn.net/xiaotao_liu" target="_blank">
+							<img border="0" alt="FeedSky" src="/images/feedsky.gif"/>
+						</a>
+					</dd>
+					<dd>
+						<a href="http://www.xianguo.com/subscribe.php?url=http://feeds.feedsky.com/csdn.net/xiaotao_liu" target="_blank">
+							<img border="0" alt="订阅到鲜果" src="/images/rss_xianguo.jpg"/>
+						</a>
+					</dd>
+					<dd>
+						<a href="http://fusion.google.com/add?feedurl=http://feeds.feedsky.com/csdn.net/xiaotao_liu" target="_blank">
+							<img border="0" alt="订阅到Google" src="/images/rss_google.gif"/>
+						</a>
+					</dd>
+					<dd>
+						<a href="http://www.zhuaxia.com/add_channel.php?url=http://feeds.feedsky.com/csdn.net/xiaotao_liu" target="_blank">
+							<img border="0" alt="订阅到抓虾" src="/images/rss_zhuaxia.gif"/>
+						</a>
+					</dd>
+				</span>
+				<dt>
+					<span class="floatright" style="display:none;"><a class="a_edit" href="http://writeblog.csdn.net/configure.aspx" target="_blank">[编辑]</a></span>xiaotao_liu的公告
+				</dt>
+				<dd></dd>
+				<dt><span class="floatright" style="display:none;"><a class="a_edit" href="http://writeblog.csdn.net/EditCategories.aspx?catID=1" target="_blank">[编辑]</a></span>文章分类</dt>
+				<dd>
+					<div class="publiclist_sidebar">
+						<ul><li><a href="/xiaotao_liu/category/367299.aspx/rss"><img src="/images/rss.gif" alt="(RSS)"></a><a href="/xiaotao_liu/category/367299.aspx">C++</a></li><li><a href="/xiaotao_liu/category/367305.aspx/rss"><img src="/images/rss.gif" alt="(RSS)"></a><a href="/xiaotao_liu/category/367305.aspx">Common sense</a></li><li><a href="/xiaotao_liu/category/367301.aspx/rss"><img src="/images/rss.gif" alt="(RSS)"></a><a href="/xiaotao_liu/category/367301.aspx">CSS</a></li><li><a href="/xiaotao_liu/category/367554.aspx/rss"><img src="/images/rss.gif" alt="(RSS)"></a><a href="/xiaotao_liu/category/367554.aspx">Database</a></li><li><a href="/xiaotao_liu/category/367308.aspx/rss"><img src="/images/rss.gif" alt="(RSS)"></a><a href="/xiaotao_liu/category/367308.aspx">English</a></li><li><a href="/xiaotao_liu/category/367302.aspx/rss"><img src="/images/rss.gif" alt="(RSS)"></a><a href="/xiaotao_liu/category/367302.aspx">HTML</a></li><li><a href="/xiaotao_liu/category/367298.aspx/rss"><img src="/images/rss.gif" alt="(RSS)"></a><a href="/xiaotao_liu/category/367298.aspx">Java</a></li><li><a href="/xiaotao_liu/category/367303.aspx/rss"><img src="/images/rss.gif" alt="(RSS)"></a><a href="/xiaotao_liu/category/367303.aspx">JAVAScript</a></li><li><a href="/xiaotao_liu/category/367310.aspx/rss"><img src="/images/rss.gif" alt="(RSS)"></a><a href="/xiaotao_liu/category/367310.aspx">Knowledge</a></li><li><a href="/xiaotao_liu/category/367306.aspx/rss"><img src="/images/rss.gif" alt="(RSS)"></a><a href="/xiaotao_liu/category/367306.aspx">News</a></li><li><a href="/xiaotao_liu/category/377181.aspx/rss"><img src="/images/rss.gif" alt="(RSS)"></a><a href="/xiaotao_liu/category/377181.aspx">Others</a></li><li><a href="/xiaotao_liu/category/367300.aspx/rss"><img src="/images/rss.gif" alt="(RSS)"></a><a href="/xiaotao_liu/category/367300.aspx">Smalltalk</a></li><li><a href="/xiaotao_liu/category/367304.aspx/rss"><img src="/images/rss.gif" alt="(RSS)"></a><a href="/xiaotao_liu/category/367304.aspx">VBA</a></li></ul>
+					</div>
+				</dd>
+				
+				<dt><span class="floatright" style="display:none;"><a class="a_edit" href="http://writeblog.csdn.net/EditLinks.aspx" target="_blank">[编辑]</a></span>English</dt><dd><a href="http://www.listeningexpress.com/download/#VOASEMP3" target="_blank">VOA Special English download(VOA慢速英语下载)</a></dd>
+				<dt>存档</dt>
+				<dd>
+					<div class="publiclist_sidebar">
+						<ul><li><a href="/xiaotao_liu/archive/2009/01.aspx">2009年01月(1)</a></li><li><a href="/xiaotao_liu/archive/2008/09.aspx">2008年09月(6)</a></li><li><a href="/xiaotao_liu/archive/2008/07.aspx">2008年07月(2)</a></li><li><a href="/xiaotao_liu/archive/2008/06.aspx">2008年06月(1)</a></li><li><a href="/xiaotao_liu/archive/2008/03.aspx">2008年03月(3)</a></li><li><a href="/xiaotao_liu/archive/2008/02.aspx">2008年02月(10)</a></li><li><a href="/xiaotao_liu/archive/2008/01.aspx">2008年01月(11)</a></li><li><a href="/xiaotao_liu/archive/2007/12.aspx">2007年12月(1)</a></li><li><a href="/xiaotao_liu/archive/2007/11.aspx">2007年11月(5)</a></li></ul>
+					</div>
+				</dd>
+			</dl>
+		</div>
+	</div>
+</div>
+
+            
+<div id="csdnblog_content">
+    <div class="gutter">
+        <div class="default_contents">
+            <div class="user_article">
+
+                <script type="text/javascript" src="/js/feedbackcount.js"></script>
+
+                <h1 class="title_txt">
+                    
+                    等额本息还款和等额本金还款计算公式的推导
+                    <cite class="fav_csdnstylebykimi"><a href="JavaScript:d=document;t=d.selection?(d.selection.type!='None'?d.selection.createRange().text:''):(d.getSelection?d.getSelection():'');void(saveit=window.open('http://wz.csdn.net/storeit.aspx?t='+escape(d.title)+'&u='+escape(d.location.href)+'&c='+escape(t),'saveit','scrollbars=no,width=590,height=300,left=75,top=20,status=no,resizable=yes'));saveit.focus();"
+                        class="fav_csdnstylebykimi" title="收藏到我的网摘中，并分享给我的朋友">收藏</a> </cite>
+                    
+                </h1>
+                <div class="blogstory">
+
+                    <script type="text/javascript">
+                        document.body.oncopy = function() {
+                            if (window.clipboardData) {
+                                setTimeout(function() {
+                                    var text = clipboardData.getData("text");
+                                    if (text && text.length > 300) {
+                                        text = text + "\r\n\n本文来自CSDN博客，转载请标明出处：" + location.href;
+                                        clipboardData.setData("text", text);
+                                    }
+                                }, 100);
+                            }
+                        }
+					</script>
+
+                    <script type="text/javascript">                        function StorePage() { d = document; t = d.selection ? (d.selection.type != 'None' ? d.selection.createRange().text : '') : (d.getSelection ? d.getSelection() : ''); void (keyit = window.open('http://www.365key.com/storeit.aspx?t=' + escape(d.title) + '&u=' + escape(d.location.href) + '&c=' + escape(t), 'keyit', 'scrollbars=no,width=475,height=575,left=75,top=20,status=no,resizable=yes')); keyit.focus(); }</script>
+
+                    <P><IFRAME marginWidth=0 marginHeight=0 src="http://blog.csdn.net/dounile8/archive/2008/09/01/2862316.aspx" frameBorder=0 width=0 scrolling=no height=0></IFRAME>VBA代码实现：<A href="http://blog.csdn.net/xiaotao_liu/archive/2008/02/27/2124452.aspx">http://blog.csdn.net/xiaotao_liu/archive/2008/02/27/2124452.aspx</A></P>
+<P>&nbsp;</P>
+<P>众所周知，银行住房贷款的分期付款方式分为等额本息付款和等额本金方式付款两种方式。两种付款方式的月付款额各不相同，计算方式也不一样。网上分别有着两种还款方式的计算公式。然而，对于这两个公式的来源却很少有解释，或者解释是粗略的或错误的。本人经过一段时间的思考，终于整明白了其中的原理，并且运用高中数学理论推导出了这两个计算公式。本文将从原理上解释一下着两种还款方式的原理及计算公式的推导过程。 </P>
+<P>无论哪种还款方式，都有一个共同点，就是每月的还款额（也称月供）中包含两个部分：本金还款和利息还款： </P>
+<P>月还款额=当月本金还款+当月利息 式1 </P>
+<P>其中本金还款是真正偿还贷款的。每月还款之后，贷款的剩余本金就相应减少： </P>
+<P>当月剩余本金=上月剩余本金-当月本金还款 </P>
+<P>直到最后一个月，全部本金偿还完毕。 </P>
+<P>利息还款是用来偿还剩余本金在本月所产生的利息的。每月还款中必须将本月本金所产生的利息付清： </P>
+<P>当月利息=上月剩余本金×月利率 式2 </P>
+<P>其中月利率=年利率÷12。据传工商银行等某些银行在进行本金等额还款的计算方法中，月利率用了一个挺孙子的算法，这里暂且不提。 </P>
+<P>由上面利息偿还公式中可见，月利息是与上月剩余本金成正比的，由于在贷款初期，剩余本金较多，所以可见，贷款初期每月的利息较多，月还款额中偿还利息的份额较重。随着还款次数的增多，剩余本金将逐渐减少，月还款的利息也相应减少，直到最后一个月，本金全部还清，利息付最后一次，下个月将既无本金又无利息，至此，全部贷款偿还完毕。 </P>
+<P>两种贷款的偿还原理就如上所述。上述两个公式是月还款的基本公式，其他公式都可由此导出。下面我们就基于这两个公式推导一下两种还款方式的具体计算公式。 </P>
+<P>1.等额本金还款方式 </P>
+<P>等额本金还款方式比较简单。顾名思义，这种方式下，每次还款的本金还款数是一样的。因此： </P>
+<P>当月本金还款=总贷款数÷还款次数 </P>
+<P>当月利息=上月剩余本金×月利率 </P>
+<P>=总贷款数×（1－（还款月数-1）÷还款次数）×月利率</P>
+<P>当月月还款额=当月本金还款＋当月利息 </P>
+<P>=总贷款数×（1÷还款次数＋（1－（还款月数-1）÷还款次数）×月利率） </P>
+<P>总利息＝所有利息之和 </P>
+<P>=总贷款数×月利率×（还款次数－（１＋２＋３＋。。。＋还款次数－1）÷还款次数） </P>
+<P>其中1+2+3+…+还款次数－１是一个等差数列，其和为（1＋还款次数－１）×（还款次数－１）／2＝还款次数×（还款次数－１）／２ </P>
+<P>所以，经整理后可以得出： </P>
+<P>总利息=总贷款数×月利率×（还款次数＋1）÷2 </P>
+<P>由于等额本金还款每个月的本金还款额是固定的，而每月的利息是递减的，因此，等额本金还款每个月的还款额是不一样的。开始还得多，而后逐月递减。 </P>
+<P>2.等额本息还款方式 </P>
+<P>等额本息还款方式的公式推导比较复杂，不过也不必担心，只要具备高中数列知识就可以推导出来了。 </P>
+<P>等额本金还款，顾名思义就是每个月的还款额是固定的。由于还款利息是逐月减少的，因此反过来说，每月还款中的本金还款额是逐月增加的。 </P>
+<P>首先，我们先进行一番设定： </P>
+<P>设：总贷款额＝Ａ </P>
+<P>还款次数＝Ｂ </P>
+<P>还款月利率＝Ｃ </P>
+<P>月还款额＝Ｘ </P>
+<P>当月本金还款＝Ｙｎ（ｎ＝还款月数） </P>
+<P>先说第一个月，当月本金为全部贷款额＝Ａ，因此： </P>
+<P>第一个月的利息＝Ａ×Ｃ </P>
+<P>第一个月的本金还款额 </P>
+<P>Ｙ１＝Ｘ－第一个月的利息 </P>
+<P>＝Ｘ－Ａ×Ｃ </P>
+<P>第一个月剩余本金＝总贷款额－第一个月本金还款额 </P>
+<P>＝Ａ－（Ｘ－Ａ×Ｃ） </P>
+<P>＝Ａ×（１＋Ｃ）－Ｘ </P>
+<P>再说第二个月，当月利息还款额＝上月剩余本金×月利率 </P>
+<P>第二个月的利息＝（Ａ×（１＋Ｃ）－Ｘ）×Ｃ </P>
+<P>第二个月的本金还款额 </P>
+<P>Ｙ２＝Ｘ－第二个月的利息 </P>
+<P>＝Ｘ－（Ａ×（１＋Ｃ）－Ｘ）×Ｃ </P>
+<P>第二个月剩余本金＝第一个月剩余本金－第二个月本金还款额 </P>
+<P>＝Ａ×（１＋Ｃ）－Ｘ－（Ｘ－（Ａ×（１＋Ｃ）－Ｘ）×Ｃ） </P>
+<P>＝Ａ×（１＋Ｃ）－Ｘ－Ｘ＋（Ａ×（１＋Ｃ）－Ｘ）×Ｃ </P>
+<P>＝Ａ×（１＋Ｃ）×（１＋Ｃ）－［Ｘ＋（１＋Ｃ）×Ｘ］ </P>
+<P>＝Ａ×（１＋Ｃ）^２－［Ｘ＋（１＋Ｃ）×Ｘ］ </P>
+<P>(1+C)^2表示(1+C)的2次方 </P>
+<P>第三个月， </P>
+<P>第三个月的利息＝第二个月剩余本金×月利率 </P>
+<P>第三个月的利息＝（Ａ×（１＋Ｃ）^２－［Ｘ＋（１＋Ｃ）×Ｘ］）×Ｃ </P>
+<P>第三个月的本金还款额 </P>
+<P>Ｙ３＝Ｘ－第三个月的利息 </P>
+<P>＝Ｘ－（Ａ×（１＋Ｃ）^２－［Ｘ＋（１＋Ｃ）×Ｘ］）×Ｃ </P>
+<P>第三个月剩余本金＝第二个月剩余本金－第三个月的本金还款额 </P>
+<P>＝Ａ×（１＋Ｃ）^２－［Ｘ＋（１＋Ｃ）×Ｘ］ </P>
+<P>－（Ｘ－（Ａ×（１＋Ｃ）^２－［Ｘ＋（１＋Ｃ）×Ｘ］）×Ｃ） </P>
+<P>＝Ａ×（１＋Ｃ）^２－［Ｘ＋（１＋Ｃ）×Ｘ］ </P>
+<P>－（Ｘ－（Ａ×（１＋Ｃ）^２×Ｃ＋［Ｘ＋（１＋Ｃ）×Ｘ］）×Ｃ） </P>
+<P>＝Ａ×（１＋Ｃ）^２×（１＋Ｃ） </P>
+<P>－（Ｘ＋［Ｘ＋（１＋Ｃ）×Ｘ］×（１＋Ｃ）） </P>
+<P>＝Ａ×（１＋Ｃ）^３　－［Ｘ＋（１＋Ｃ）×Ｘ＋（１＋Ｃ）^２×Ｘ］ </P>
+<P>上式可以分成两个部分 </P>
+<P>第一部分：Ａ×（１＋Ｃ）^３。 </P>
+<P>第二部分：［Ｘ＋（１＋Ｃ）×Ｘ＋（１＋Ｃ）^２×Ｘ］ </P>
+<P>＝Ｘ×［１＋（１＋Ｃ）＋（１＋Ｃ）^２］ </P>
+<P>通过对前三个月的剩余本金公式进行总结，我们可以看到其中的规律： </P>
+<P>剩余本金中的第一部分＝总贷款额×（１＋月利率）的ｎ次方，（其中ｎ＝还款月数） </P>
+<P>剩余本金中的第二部分是一个等比数列，以（１＋月利率）为比例系数，月还款额为常数系数，项数为还款月数ｎ。 </P>
+<P>推广到任意月份： </P>
+<P>第ｎ月的剩余本金＝Ａ×（１＋Ｃ）^ｎ　－Ｘ×Ｓｎ（Ｓｎ为（１＋Ｃ）的等比数列的前ｎ项和） </P>
+<P>根据等比数列的前ｎ项和公式： </P>
+<P>１＋Ｚ＋Ｚ２＋Ｚ３＋．．．＋Ｚｎ－１＝（１－Ｚ^ｎ）／（１－Ｚ） </P>
+<P>可以得出 </P>
+<P>Ｘ×Ｓｎ＝Ｘ×（１－（１＋Ｃ）^ｎ）／（１－（１＋Ｃ）） </P>
+<P>＝Ｘ×（（１＋Ｃ）^ｎ－１）／Ｃ </P>
+<P>所以，第ｎ月的剩余本金＝Ａ×（１＋Ｃ）^ｎ－Ｘ×（（１＋Ｃ）^ｎ－１）／Ｃ </P>
+<P>由于最后一个月本金将全部还完，所以当ｎ等于还款次数时，剩余本金为零。 </P>
+<P>设ｎ＝Ｂ（还款次数） </P>
+<P>剩余本金＝Ａ×（１＋Ｃ）^Ｂ－Ｘ×（（１＋Ｃ）^Ｂ－１）／Ｃ＝０ </P>
+<P>从而得出 </P>
+<P>月还款额 </P>
+<P>Ｘ＝Ａ×Ｃ×（１＋Ｃ）^Ｂ÷（（１＋Ｃ）^Ｂ－１） </P>
+<P>＝　　总贷款额×月利率×（１＋月利率）^还款次数÷[（１＋月利率）^还款次数－１] </P>
+<P>将Ｘ值带回到第ｎ月的剩余本金公式中 </P>
+<P>第ｎ月的剩余本金＝Ａ×（１＋Ｃ）^ｎ－［Ａ×Ｃ×（１＋Ｃ）^Ｂ／（（１＋Ｃ）^Ｂ－１）］×（（１＋Ｃ）^ｎ－１）／Ｃ </P>
+<P>＝Ａ×［（１＋Ｃ）^ｎ－（１＋Ｃ）^Ｂ×（（１＋Ｃ）^ｎ－１）／（（１＋Ｃ）^Ｂ－１）］ </P>
+<P>＝Ａ×［（１＋Ｃ）^Ｂ－（１＋Ｃ）^ｎ］／（（１＋Ｃ）^Ｂ－１） </P>
+<P>第ｎ月的利息＝第ｎ－１月的剩余本金×月利率 </P>
+<P>＝Ａ×Ｃ×［（１＋Ｃ）^Ｂ－（１＋Ｃ）^(ｎ－１)］／（（１＋Ｃ）^Ｂ－１） </P>
+<P>第ｎ月的本金还款额＝Ｘ－第ｎ月的利息 </P>
+<P>＝Ａ×Ｃ×（１＋Ｃ）^Ｂ／（（１＋Ｃ）^Ｂ－１）－Ａ×Ｃ×［（１＋Ｃ）^Ｂ－（１＋Ｃ）^(ｎ－１)］／（（１＋Ｃ）^Ｂ－１） </P>
+<P>＝Ａ×Ｃ×（１＋Ｃ）^(ｎ－１)／（（１＋Ｃ）^Ｂ－１） </P>
+<P>总还款额＝Ｘ×Ｂ </P>
+<P>＝Ａ×Ｂ×Ｃ×（１＋Ｃ）^Ｂ÷（（１＋Ｃ）^Ｂ－１） </P>
+<P>总利息＝总还款额－总贷款额＝Ｘ×Ｂ－Ａ </P>
+<P>＝Ａ×［（Ｂ×Ｃ－１）×（１＋Ｃ）^Ｂ＋１］／（（１＋Ｃ）^Ｂ－１） </P>
+<P>等额本息还款，每个月的还款额是固定的。由于还款初期利息较大，因此初期的本金还款额很小。相对于等额本金方式，还款的总利息要多。&nbsp;</P>
+                    <p class="right articalinfo">
+                        发表于 @
+                        2008年02月27日　13:38:00&nbsp;&#124; <a id="a_comment" href="#FeedBack" title="评论">评论( <span
+                            id="FeedbackCount_2124420">loading...</span>
+
+                            <script type="text/javascript">
+                                AddFeedbackCountStack("2124420")
+							</script>
+
+                            ) </a>&#124; <span style="display: none;"><a class="a_edit" href="http://writeblog.csdn.net/PostEdit.aspx?entryId=2124420"
+                                title="编辑">编辑</a>&#124</span> <a href='m&#97;ilto&#58;webmaster&#64;csdn&#46;net?subject=Article%20Report!!!&body=Author:xiaotao_liu%0D%0AURL:http://blog.csdn.net/ArticleContent.aspx?UserName=xiaotao_liu&Entryid=2124420'>
+                                    举报</a>&#124; <cite class="fav_csdnstylebykimi"><a href="JavaScript:d=document;t=d.selection?(d.selection.type!='None'?d.selection.createRange().text:''):(d.getSelection?d.getSelection():'');void(saveit=window.open('http://wz.csdn.net/storeit.aspx?t='+escape(d.title)+'&u='+escape(d.location.href)+'&c='+escape(t),'saveit','scrollbars=no,width=590,height=300,left=75,top=20,status=no,resizable=yes'));saveit.focus();"
+                                        class="fav_csdnstylebykimi" title="收藏到我的网摘中，并分享给我的朋友">收藏</a> </cite>
+                    </p>
+                    <span id="Post.ascx_ViewPost_PreviousAndNextEntriesDown">
+                        <h3 class="pagego">
+                            <a href="/xiaotao_liu/archive/2008/02/27/2124366.aspx">旧一篇:新劳动法</a>&nbsp;|&nbsp;<a href="/xiaotao_liu/archive/2008/02/27/2124452.aspx">新一篇:贷款计算器的VBA实现代码</a></h3>
+                    </span>
+                    <div class="mutualitys">
+                        <dl>
+                            <dt>相关文章<span><a onclick="LogClickCount(this,183)" target="_blank" href="#"></a></span></dt>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <a name="FeedBack"></a>
+
+            <script type="text/javascript">
+                var CurrentEntryId = '2124420';
+            </script>
+
+            <div class="commentslist" id="commentslist">
+            </div>
+
+            <script type="text/javascript" src="/js/CsdnDialog.js"></script>
+
+            <script type="text/javascript">
+                function ChangeIdentifyingCode() {
+                    var url = $('#imgValidationCode').attr('src');
+                    if (!(/&d=[\d\.]+$/).test(url)) url += "&d=1";
+                    url = url.replace(/&d=[\d\.]+$/, "&d=" + Math.random());
+                    $('#imgValidationCode').attr('src', url);
+                }
+
+                function openLoginDialog(element) {
+                    var elementPosition = absolutePoint(element);
+                    showWindow({ url: 'http://passport.csdn.net/UserLogin.aspx?show=replyLogin&from=http%3a%2f%2fblog.csdn.net%2f!tools%2fLoginSussess.aspx'
+                        , title: '登录'
+                        , top: elementPosition.y - 400
+                        , left: elementPosition.x - 220
+                        , width: 435
+                        , height: 420
+                    });
+                }
+                
+                function closeDialog(needRefresh) {
+                    closeWindow();
+                    if (needRefresh) {
+                        var url = location.href;
+                        if ((/\?/g).test(url))
+                            url = url.replace(/\?.*$/g, ("?" + Math.random()).replace(/\./g, ""));
+                        else url += ("?" + Math.random()).replace(/\./g, "");
+                        location.href = url;
+                    }
+                }
+                
+                function absolutePoint(element) {
+                    var result = { x: element.offsetLeft, y: element.offsetTop };
+                    element = element.offsetParent;
+                    while (element) {
+                        result.x += element.offsetLeft;
+                        result.y += element.offsetTop;
+                        element = element.offsetParent;
+                    }
+                    return result;
+                }
+            </script>
+
+            <div class="commentnew">
+                <dl>
+                    <dt>
+                        <ul>
+                            <li class="left">发表评论</li>
+                            <script type="text/javascript" src="http://ping.csdn.net/rsscache.aspx?rssurl=http://temp.csdn.net/Feed.aspx?Column=20ae1eea-93f5-4b2e-b86f-e7e9b1b4b738&count=1" ></script>
+                        </ul>
+                    </dt>
+                    <dd>
+                        <ul>
+                            <li class="lefttop">表 情：</li>
+                            <li class="right"><a href="#" onclick="return false;">
+                                <img title="顶" alt="顶" class="brow" src="/images/emotions/e01.gif" /></a> <a href="#"
+                                    onclick="return false;">
+                                    <img title="砸" alt="砸" class="brow" src="/images/emotions/e02.gif" /></a> <a href="#"
+                                        onclick="return false;">
+                                        <img title="棒" alt="棒" class="brow" src="/images/emotions/e03.gif" /></a>
+                                <a href="#" onclick="return false;">
+                                    <img title="大笑" alt="大笑" class="brow" src="/images/emotions/e04.gif" /></a>
+                                <a href="#" onclick="return false;">
+                                    <img title="愤怒" alt="愤怒" class="brow" src="/images/emotions/e05.gif" /></a>
+                                <a href="#" onclick="return false;">
+                                    <img title="大哭" alt="大哭" class="brow" src="/images/emotions/e06.gif" /></a>
+                                <a href="#" onclick="return false;">
+                                    <img title="疑问" alt="疑问" class="brow" src="/images/emotions/e07.gif" /></a>
+                                <a href="#" onclick="return false;">
+                                    <img title="汗" alt="汗" class="brow" src="/images/emotions/e08.gif" /></a> <a href="#"
+                                        onclick="return false;">
+                                        <img title="呕吐" alt="呕吐" class="brow" src="/images/emotions/e09.gif" /></a>
+                                <a href="#" onclick="return false;">
+                                    <img title="送花" alt="送花" class="brow" src="/images/emotions/e10.gif" /></a>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li class="left">评论内容：</li>
+                            <li class="right">
+                                <textarea id="content" class="textarea"></textarea>
+                            </li>
+                        </ul>
+                        <div>
+                            <ul>
+                                <li class="left">用 户 名：</li>
+                                <li class="right"><span id="loginTips" class="right" style="display:none;"><a href="javascript:void(0);"
+                                    onclick="openLoginDialog(this);return false;" class="red">登录</a> <a href="http://passport.csdn.net/CSDNUserRegister.aspx"
+                                        target="_blank" class="red">注册</a> </span><span  class="right">
+                                        <input type="checkbox" id="anonymous" class="checkbox"/>匿名评论
+                                    </span><span id="commentUser" class="left"></span></li>
+                            </ul>
+                        </div>
+                        <ul style="display:none;">
+                            <li class="left">验 证 码：</li>
+                            <li class="right">
+                                <input id="code" type="text" class="input" />
+                                <a href="javascript:ChangeIdentifyingCode()">
+                                    <img id="imgValidationCode" alt="验证码" style="vertical-align: middle;" src="http://comments.blog.csdn.net/AntiBotImage.ashx?entryId=2124420" /></a>
+                                <a href="javascript:ChangeIdentifyingCode()">重新获得验证码</a> </li>
+                        </ul>
+                        <ul>
+                            <li class="left">&nbsp;</li>
+                            <li class="right"><a href="#" onclick="return false;">
+                                <img id="SubmitFeedback" class="btn" style="vertical-align: middle;" src="/images/comment_btn.gif" /></a>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+
+            <script type="text/javascript">
+                LoadFeedbackCount();
+                document.write("<img src='http://counter.csdn.net/pv.aspx?id=24' border=0 width=0 height=0>");
+			</script>
+
+        </div>
+    </div>
+</div>
+
+            
+<div id="pubfooter">
+    <dl>
+        <dt></dt>
+        <dd>
+            Copyright &copy;
+            xiaotao_liu</dd>
+        <dd>
+            Powered by CSDN Blog</dd>
+    </dl>
+</div>
+
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+
+<script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+
+<script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-2688088-9");
+        pageTracker._trackPageview();
+    } catch (err) { }
+</script>
+
+
+        </div>
+    </div>
+    <img src='/!handler/count.aspx?blogid=262043&entryid=2124420&title=等额本息还款和等额本金还款计算公式的推导&url=http://www.google.com/search?ie=GB2312&oe=GB2312&hl=zh-CN&q=%B5ȶϢ%BC%C6%CB㷽&sitesearch=' height=0 width=0>
+</body>
+</html>

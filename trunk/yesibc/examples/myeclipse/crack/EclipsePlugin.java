@@ -88,5 +88,7 @@ public class EclipsePlugin {
 		new EclipsePlugin("D:/Java/eclipse-plugin/toString/eclipse/plugins").print();
 		new EclipsePlugin("D:/Java/eclipse-plugin/Jadclipse").print();
 		new EclipsePlugin("D:/Java/eclipse-plugin/jad3.3/eclipse/plugins").print();
+		new EclipsePlugin("D:/Java/eclipse-plugin/m2/plugins").print();
+		new EclipsePlugin("D:/Java/eclipse-plugin/m2/features").print();
 	}
 }
