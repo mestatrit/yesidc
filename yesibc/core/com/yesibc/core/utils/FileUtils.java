@@ -279,69 +279,68 @@ public class FileUtils {
 		}
 	}
 
-    /**  
-     * 追加文件：使用FileOutputStream，在构造FileOutputStream时，把第二个参数设为true  
-     *   
-     * @param fileName  
-     * @param content  
-     */  
-    public static void bufferWriteByAppend(String file, String conent) {   
-        BufferedWriter out = null;   
-        try {   
-            out = new BufferedWriter(new OutputStreamWriter(   
-                    new FileOutputStream(file, true)));   
-            out.write(conent);   
-        } catch (Exception e) {   
-            e.printStackTrace();   
-        } finally {   
-            try {   
-                out.close();   
-            } catch (Exception e) {   
-                e.printStackTrace();   
-            }   
-        }   
-    }   
-  
-    /**  
-     * 追加文件：使用FileWriter  
-     *   
-     * @param fileName  
-     * @param content  
-     */  
-    public static void fileWriterByAppend(String fileName, String content) {   
-        try {   
-            // 打开一个写文件器，构造函数中的第二个参数true表示以追加形式写文件   
-            FileWriter writer = new FileWriter(fileName, true);   
-            writer.write(content);   
-            writer.close();   
-        } catch (IOException e) {   
-            e.printStackTrace();   
-        }   
-    }   
-  
-    /**  
-     * 追加文件：使用RandomAccessFile  
-     *   
-     * @param fileName  
-     *            文件名  
-     * @param content  
-     *            追加的内容  
-     */  
-    public static void fileRandomWriterByAppend(String fileName, String content) {   
-        try {   
-            // 打开一个随机访问文件流，按读写方式   
-            RandomAccessFile randomFile = new RandomAccessFile(fileName, "rw");   
-            // 文件长度，字节数   
-            long fileLength = randomFile.length();   
-            // 将写文件指针移到文件尾。   
-            randomFile.seek(fileLength);   
-            randomFile.writeBytes(content);   
-            randomFile.close();   
-        } catch (IOException e) {   
-            e.printStackTrace();   
-        }   
-    }   
-    
+	/**
+	 * 追加文件：使用FileOutputStream，在构造FileOutputStream时，把第二个参数设为true
+	 * 
+	 * @param fileName
+	 * @param content
+	 */
+	public static void bufferWriteByAppend(String file, String conent) {
+		BufferedWriter out = null;
+		try {
+			out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true)));
+			out.write(conent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				out.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * 追加文件：使用FileWriter
+	 * 
+	 * @param fileName
+	 * @param content
+	 */
+	public static void fileWriterByAppend(String fileName, String content) {
+		try {
+			// 打开一个写文件器，构造函数中的第二个参数true表示以追加形式写文件
+			FileWriter writer = new FileWriter(fileName, true);
+			writer.write(content);
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 追加文件：使用RandomAccessFile
+	 * 
+	 * @param fileName
+	 *            文件名
+	 * @param content
+	 *            追加的内容
+	 */
+	public static void fileRandomWriterByAppend(String fileName, String content) {
+		try {
+			// 打开一个随机访问文件流，按读写方式
+			RandomAccessFile randomFile = new RandomAccessFile(fileName, "rw");
+			// 文件长度，字节数
+			long fileLength = randomFile.length();
+			// 将写文件指针移到文件尾。
+			randomFile.seek(fileLength);
+			randomFile.writeBytes(content);
+			randomFile.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static String readByEncode(String filePath, String encode) {
 		StringBuffer buffer = new StringBuffer();
 		try {
@@ -427,8 +426,7 @@ public class FileUtils {
 	 *            后缀
 	 * @return
 	 */
-	public Vector<String> checkFolder(String folderPath, String tag) {
-		// TODO Auto-generated method stub
+	public static Vector<String> checkFolder(String folderPath, String tag) {
 		Vector<String> output = new Vector<String>();
 		LinkedList<File> list = new LinkedList<File>();
 		File dir = new File(folderPath);
@@ -703,7 +701,7 @@ public class FileUtils {
 	 * @param oldPath
 	 * @param newPath
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void moveFile(String oldPath, String newPath) throws IOException {
 		copyFile(oldPath, newPath);
@@ -723,19 +721,9 @@ public class FileUtils {
 	}
 
 	public static void main(String[] args) {
-		try {
-			System.out.println(getFileSize(new File("D:/backup/fetion")));
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		String filePath = "D:/Cetelem/test/test.txt";
-		try {
-			for (int i = 0; i < 10; i++) {
-				WriteByFOS(filePath, "测试一下abc\n");
-				// WriteByPrintStream(filePath, "测试一下abc");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		Vector<String> vs = FileUtils.checkFolder("H:/opensource/webrender/4.2/examples/", ".java");
+		for (String str : vs) {
+			System.out.println(str);
 		}
 	}
 
