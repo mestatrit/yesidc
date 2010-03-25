@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.ExpectedException;
+import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.annotation.NotTransactional;
 import org.springframework.test.annotation.Repeat;
 import org.springframework.test.annotation.Timed;
@@ -185,4 +186,34 @@ public class Junit4CommonTest extends Assert {
 	public class CustomTestExecutionListenerTests {
 		// class body...
 	}
+
+	/**
+	 * 类级别注解用来指定当通过@IfProfileValue注解获取已配置的profile值时使用何种ProfileValueSource。
+	 * 如果@ProfileValueSourceConfiguration没有在测试中声明，将默认使用SystemProfileValueSource。
+	 */
+	// @ProfileValueSourceConfiguration(CustomProfileValueSource.class)
+	public class CustomProfileValueSourceTests {
+		// class body…
+
+		/**
+		 * 注解测试只针对特定的测试环境。 如果配置的ProfileValueSource类返回对应的提供者的名称值，
+		 * 这个测试就可以启动。这个注解可以应用到一个类或者单独的方法。
+		 */
+		@IfProfileValue(name = "java.vendor", value = "Sun Microsystems Inc.")
+		public void testProcessWhichRunsOnlyOnSunJvm() {
+			// some logic that should run only on Java VMs from Sun Microsystems
+		}
+
+		/**
+		 * 同时@IfProfileValue可配置一个值列表 (使用OR 语义) 来在JUnit环境中获得TestNG的测试组支持。 看下面的例子：
+		 */
+		// @IfProfileValue(name = "test-groups", values = { "unit-tests",
+		// "integration-tests" })
+		public void testProcessWhichRunsForUnitOrIntegrationTestGroups() {
+			// some logic that should run only for unit and integration test
+			// groups
+		}
+
+	}
+
 }
