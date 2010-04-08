@@ -15,7 +15,6 @@ import org.apache.commons.logging.LogFactory;
 
 import com.yesibc.core.CoreUtils;
 
-
 /**
  * @author David.Ye create time: 2006-7-10 14:30:37
  */
@@ -43,7 +42,7 @@ public class DateUtils {
 
 	public static final String FULL_SECOND_LINE = "yyyy-MM-dd HH:mm:ss";
 
-	 public static final String YMD_CN = "yyyy" + CoreUtils.getValByKey("year") + "MM" + CoreUtils.getValByKey("month")
+	public static final String YMD_CN = "yyyy" + CoreUtils.getValByKey("year") + "MM" + CoreUtils.getValByKey("month")
 			+ "dd" + CoreUtils.getValByKey("day");
 
 	/**
@@ -52,7 +51,7 @@ public class DateUtils {
 	 * @param date1
 	 * @param mins
 	 * @param format1
-	 * (yyyy-MM-dd HH:mm:ss)
+	 *            (yyyy-MM-dd HH:mm:ss)
 	 * @return
 	 */
 	public static String dateAddMin(Date date1, String mins, String format1) {
@@ -68,6 +67,20 @@ public class DateUtils {
 		}
 		return resultDate;
 
+	}
+
+	/**
+	 * Days between two date.
+	 * 
+	 * @param date1
+	 * @param date2
+	 * @return
+	 */
+	public static long substractDate(Date date1, Date date2) {
+		long day = (date1.getTime() - date2.getTime()) / (24 * 60 * 60 * 1000) > 0 ? (date1.getTime() - date2.getTime())
+				/ (24 * 60 * 60 * 1000)
+				: (date2.getTime() - date1.getTime()) / (24 * 60 * 60 * 1000);
+		return day;
 	}
 
 	/**
@@ -206,7 +219,7 @@ public class DateUtils {
 		return gc.getTime();
 	}
 
-	public static Date setMonth(Date date,int i) {
+	public static Date setMonth(Date date, int i) {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTime(date);
 		gc.set(Calendar.MONTH, i);
@@ -226,7 +239,7 @@ public class DateUtils {
 		gc.set(Calendar.YEAR, i);
 		return gc.getTime();
 	}
-	
+
 	public static Date setDay(Date date, int i) {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTime(date);
