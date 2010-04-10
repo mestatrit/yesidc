@@ -369,6 +369,7 @@ rlim_fd_max /D
 另外：还有个问题，就是我ping一个地址的时候，提示不是返回ttl值，而是提示(hostname)is alive.这个是为什么呢？ 
 请大家帮忙，我刚接触solaris 
 
+
 A：请在安装之后，建一个/reconfigura文件，或使用devfsadm来创建新的设备树，你的原因在没有创建新的设备 树，而是手工的启用网卡，故重启之后，设备即停用了我使用从新装了，先Install然后touch /reconfigure 
 系统自检的时候看见网卡了，但是进系统了以后还是一样，只看见lo0 
 如何解决？ 
@@ -428,5 +429,11 @@ heihe-cache1:vold(pid394)       /vol    nfs     ignore,noquota,dev=5980001      
 # umount /vol
 umount: 警告：/vol 不在 mnttab 中
 到此/etc/mnttab里已没有nfs文件的相关信息.
+
+28)solaris操作系统下，如何查看以太网卡地址
+方法一，在本机上可以用ifconfig －a来看，但是要注意这时你必须是root才能看到MAC地址，否则看不到。 
+方法二，你一到和你相连的pc上（windows）用arp -a ipaddress-of-sun来看。
+
+
 
 
