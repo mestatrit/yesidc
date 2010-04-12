@@ -94,3 +94,7 @@ cd /etc/ssh
 vi sshd_config
 找到PermitRootLogin这一行,把no改为yes.保存退出.
 
+导入证书~~
+目录：C:\jdk1.5\jre\lib\security
+命令：keytool -import -alias nciic -keystore nciic -file /app/apache/uat2/cat02/nciic_web.cer -trustcacerts 
+密码：changeit
