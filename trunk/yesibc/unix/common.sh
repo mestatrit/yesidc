@@ -96,5 +96,5 @@ vi sshd_config
 
 导入证书~~
 目录：C:\jdk1.5\jre\lib\security
-命令：keytool -import -alias nciic -keystore nciic -file /app/apache/uat2/cat02/nciic_web.cer -trustcacerts 
+命令：keytool -import -alias nciic2010 -keystore cacerts -file /app/apache/uat2/cat02/ncicc201004.cer -trustcacerts 
 密码：changeit
