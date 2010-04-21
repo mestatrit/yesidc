@@ -1,0 +1,159 @@
+1.1. Maven2 体验
+声明:本节内容来源于blogjava网站jbob的blog 本节的版权归原作者所有，不适用本手册的版权申明。
+maven是一个java项目管理工具，深化了ant，但又有自己一整套的项目集成策略。目前的版本是2.0.2。
+  1.     maven网站 下载maven2，解压缩
+  2.     配置环境变量:maven_home、path
+  3.     cmd-> mvn --version 检查是否安装成功 [显示版本号，则说明安装成功]
+  4.     配置,Maven的配置分为三个层次:
+      *         - pom.xml:针对某个项目的配置
+    *         Installation
+      *         User -针对某个用户的配置
+    我们首先配置主要是user级别的，主要包括两点:设置本地的资源库和代理服务器[如果需要的话] 在%maven_home%/conf/setting.xml中配置:
+              <localRepository>d:/repo</localRepository>
+                <proxy>
+                    <id>proxy1</id>
+                    <active>true</active>
+                    <protocol>http</protocol>
+                    <username></username>
+                    <password></password>
+                    <host>222.136.91.1</host>
+                    <port>80</port>
+                    <nonProxyHosts></nonProxyHosts>
+                </proxy>
+    修改之后copy一份到${home}/.m2
+  5.   建立新的项目
+mvn archetype:create -DgroupId=com.mycompany.app -DartifactId=my-app
+      *     首先，程序会从远程下载必要的jar包到你的localRepository,即我们刚刚设置的[d:/repo]
+      *     然后，会在当前目录下面生成my-app文件夹，包括简单的包结构[java,test]和一个HelloWorld程序及测试,以及pom.xml文件。
+注意：pom.xml contains the Project Object Model (POM) for this project.The POM is the basic unit of work in Maven。
+  6.     编译
+    mvn compile
+    第一次运行会下载很多jar包,而且机器负荷会很重。运行这个命令需要在pom.xml相同目录下面, 这个编译只编译主程序，不会编译test下面的程序。如果需要单独编译test,请运行：
+    mvn test-compile
+    compile之后会生成target文件夹，主程序编译在classes下面，测试程序放在test-classes下
+  7.     测试
+    mvn test
+    会自动先编译再运行测试
+  8.     打包
+    mvn package
+    打包之前会进行编译，测试
+  9.     安装
+    mvn install
+    会将package之后的jar包copy到
+    <local-repository>/com/mycompany/app/my-app/1.0-SNAPSHOT/my-app-1.0-SNAPSHOT.jar
+10.     其他
+    mvn site
+    注意,还可以:   deploy site
+    在pom.xml中加入
+    <distributionManagement>
+      <site>
+        <id> website </id>
+          < url> scp://www.mycompany.com/www/docs/project/ </url>
+      </site>
+    </distributionManagement>
+    当然你需要设置server
+    mvn site-deploy
+    mvn clean
+    mvn idea:idea [为IDE工具idea生成项目文件]
+11.     Resource
+    ${basedir}/src/main/resources都会编译到jar文件中,而且该目录下的内容将直接位于jar文件的顶部。
+    测试用资源文件-> ${basedir}/src/test/resources，引用时如下例：
+    InputStream is = getClass().getResourceAsStream( "/test.properties" );
+    文件位于 ${basedir}/src/test/resources/test.properties。
+12.     如何filter我们的资源文件
+      < build >
+      < resources >
+        < resource >
+          < directory > src/main/resources </ directory >
+          < filtering > true </ filtering >
+        </ resource >
+      </ resources >
+      </ build >
+    因为原来默认的filter为false所以要加上上面的代码
+    eg:我们在src/main/resources下面建立application.properties文件
+    # application.properties
+    application.name=${pom.name}
+    application.version=${pom.version}
+    运行：mvn process-resources 在target/classes下面的application.properties结果为：
+    # application.properties
+    application.name=Maven Quick Start Archetype
+    application.version=1.0-SNAPSHOT
+    这就是所谓的filter。当然filter还可以用其他的外部文件，不一定来自pom.xml[ ${pom.name} ]以及setting.xml[ ${settings.localRepository }]
+  e.g src/main/filters/filter.properties:
+    # filter.properties
+    my.filter.value=hello!
+    pom.xml:
+    < build >
+      < filters >
+        < filter > src/main/filters/filter.properties </ filter >
+      </ filters >
+      < resources >
+        < resource >
+          < directory > src/main/resources </ directory >
+          < filtering > true </ filtering >
+        </ resource >
+      </ resources >
+      </ build > 
+    # application.properties
+    application.name=${pom.name}
+    application.version=${pom.version}
+    message=${my.filter.value}
+    这样在运行mvn process-resources 会得到类似的效果,当然我们也可以直接在pom.xml中定义：
+    < build >
+      < resources >
+        < resource >
+          < directory > src/main/resources </ directory >
+          < filtering > true </ filtering >
+        </ resource >
+      </ resources >
+      </ build >
+      < properties >
+      < my .filter.value > hello </ my.filter.value >
+      </ properties > 
+    效果同样，这样就不需要外部文件了。另外filter还可以来自系统设置以及可以自定义：
+    # application.properties
+    java.version=${java.version}
+    command.line.prop=${command.line.prop}
+13.     jar包依赖
+    我们在mvn install后在local repo中生成的jar包也可以被其他项目所引用
+    <dependency>
+        <groupId>com.mycompany.app</groupId>
+        <artifactId>my-app</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <scope>compile</scope>
+    </dependency>
+    注意scope,这里是compile,如果使用junit，scope是test。
+    举例说明：如果我们的project需要用到log4j包，那么我们可以 先google--"site:www.ibiblio.org maven2 log4j"。Index of /maven2/log4j/log4j 下面有maven-metadata.xml 描述了groupId,artifactId,version等等。获取了这些信息之后，你 就可以在pom.xml中添加依赖
+    <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.12</version>
+        <scope>compile</scope>
+    </dependency>
+14.   如何发布我的jar包到我的remote repository
+    你需要在setting.xml中间设置server:
+    <servers>
+      <server>
+        <id>mycompany-repository</id>
+        <username>jvanzyl</username>
+        <!-- Default value is ~/.ssh/id_dsa -->
+      <privateKey>/path/to/identity</privateKey>
+          <passphrase>my_key_passphrase</passphrase>
+      </server>
+    </servers>
+    然后在pom.xml中设置远程url:
+    <distributionManagement>
+      <repository>
+        <id>mycompany-repository</id>
+        <name>MyCompany Repository</name>
+      <url>scp://repository.mycompany.com/repository/maven2</url>
+      </repository>
+    </distributionManagement>
+1.2. Maven2的Eclipse插件安装和使用
+1.2.1. 安装
+你可以从http://m2eclipse.codehaus.orgupdate安装Maven2的Eclipse插件，具体 安装步骤请看该网站提供的Flash Demo: http://m2eclipse.codehaus.org/Installing_Maven_2.0_plugin_for_Eclipse.html
+1.2.2. 使用
+该插件的使用请看该网站提供的Flash Demo: http://m2eclipse.codehaus.org/Maven_2.0_Plugin_for_Eclipse.html
+关于openfan项目的Maven操作请参看后续章节。
+1.3. 更多的Maven2的参考
+    Maven 网站
