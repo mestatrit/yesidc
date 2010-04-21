@@ -1,0 +1,63 @@
+一、Maven
+1.建立项目
+mvn archetype:create -DgroupId=com.mycompany.app -DartifactId=my-app
+2.设置代理
+    <proxy>
+      <id>optional</id>
+      <active>true</active>
+      <protocol>http</protocol>
+      <host>10.164.144.41</host>
+      <port>3128</port>
+      <nonProxyHosts>10.164.150.13|localhost</nonProxyHosts>
+   </proxy>
+
+3.设置私服：
+   3.1 上传Jar包
+        先在settings.xml中
+	<server>
+          <id>organisation-internal</id>
+          <username>admin</username>
+          <password>password</password>
+    </server>
+           然后使用命令:
+     mvn deploy:deploy-file -DrepositoryId=organisation-internal -Durl=http://10.164.150.13:8081/artifactory/private-internal-repository  -DgroupId=copo-common -DartifactId=copo-common -Dversion=2010 -Dpackaging=jar -Dfile=copo-common.jar       
+    3.2从私服下载 
+      <profile>
+            <id>dev</id>
+            <!--properties>
+                  <tomcat5x.home>C:/InstalledPrograms/apache-tomcat-5.5.20</tomcat5x.home>
+            </properties-->
+            <repositories>
+                  <repository>
+                        <id>central</id>
+                        <url>http://10.164.150.13:8081/artifactory/repo</url>
+                        <snapshots>
+                              <enabled>false</enabled>
+                        </snapshots>
+                  </repository>
+                  <repository>
+                        <id>snapshots</id>
+                        <url>http://10.164.150.13:8081/artifactory/repo</url>
+                        <releases>
+                              <enabled>false</enabled>
+                        </releases>
+                  </repository>
+            </repositories>
+            <pluginRepositories>
+                  <pluginRepository>
+                        <id>central</id>
+                        <url>http://10.164.150.13:8081/artifactory/repo</url>
+                        <snapshots>
+                              <enabled>false</enabled>
+                        </snapshots>
+                  </pluginRepository>
+                  <pluginRepository>
+                        <id>snapshots</id>
+                        <url>http://10.164.150.13:8081/artifactory/repo</url>
+                        <releases>
+                              <enabled>false</enabled>
+                        </releases>
+                  </pluginRepository>
+            </pluginRepositories>
+      </profile>  
+
