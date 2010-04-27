@@ -98,3 +98,11 @@ vi sshd_config
 目录：C:\jdk1.5\jre\lib\security
 命令：keytool -import -alias nciic2010 -keystore cacerts -file /app/apache/uat2/cat02/ncicc201004.cer -trustcacerts 
 密码：changeit
+
+#CUT命令
+cut命令有5个参数，其中-c,-b,-f分别表示"character", "byte"以及"field"截取方式。当采用field模式截取时，需要用"-d"参数指定一个分隔符，分割符只能为单个字符。另外还有一个"- s"，suppress，表示如果行中没有给出的分割符则不输出该行（默认为如果没有分隔符则将该行原封不动输出）
+以下为几个例子：
+按字符截取：echo hello, world | cut -c 8-12 则输出"world"（截取字符串中从第8到第12个共12个字符） 
+按分隔符截取：echo hello, world | cut -f 2 -d " "则输出"world"（截取以空格分割的第二部分） 
+echo Long, long ago | cut -f 2,3 -d " "则输出" Long, ago"（截取以空格分割的第2、3部分，注意输出的结果也以-d指定的分隔符分割） 
+使用"-s"安静地忽略没有给出地分隔符地行：echo hello |cut -d "!" -f 1 -s则什么也不输出（因为行中没有"!"字符）
