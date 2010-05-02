@@ -4,7 +4,11 @@
 
 package com.yesibc.core.utils;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,25 +30,21 @@ import org.apache.commons.lang.ArrayUtils;
 @SuppressWarnings("unchecked")
 public final class StringUtils {
 
-	public static String[] SPECIAL_CHAR_ARRAY = { ".", "*", "+", "|", "(", ")",
-			"[" };
+	public static String[] SPECIAL_CHAR_ARRAY = { ".", "*", "+", "|", "(", ")", "[" };
 
 	/**
 	 * The constants is used to number change.
 	 */
-	public static String[] STANDARD_STR = { "分", "角", "", "", "拾", "佰", "仟",
-			"萬", "拾", "佰", "仟", "億", "拾", "佰", "仟", "萬", "拾", "佰", "仟", "億",
-			"拾", "佰" };
+	public static String[] STANDARD_STR = { "分", "角", "", "", "拾", "佰", "仟", "萬", "拾", "佰", "仟", "億", "拾", "佰", "仟",
+			"萬", "拾", "佰", "仟", "億", "拾", "佰" };
 
-	public static String[] NUMBER_STR = { "元", "零", "壹", "貳", "叁", "肆", "伍",
-			"陆", "柒", "捌", "玖" };
+	public static String[] NUMBER_STR = { "元", "零", "壹", "貳", "叁", "肆", "伍", "陆", "柒", "捌", "玖" };
 
-	public static String[] KEY_STR = { "零拾", "零佰", "零仟", "零零零", "零零", "零角零分",
-			"零分", "零角", "零億零萬零元", "億零萬零元", "零億零萬", "零萬零元", "萬零元", "零億", "零萬",
-			"零元", "零零" };
+	public static String[] KEY_STR = { "零拾", "零佰", "零仟", "零零零", "零零", "零角零分", "零分", "零角", "零億零萬零元", "億零萬零元", "零億零萬",
+			"零萬零元", "萬零元", "零億", "零萬", "零元", "零零" };
 
-	public static String[] MAP_STR = { "零", "零", "零", "零", "零", "正", "正", "零",
-			"億元", "億元", "億", "萬元", "萬元", "億", "萬", "元", "零" };
+	public static String[] MAP_STR = { "零", "零", "零", "零", "零", "正", "正", "零", "億元", "億元", "億", "萬元", "萬元", "億", "萬",
+			"元", "零" };
 
 	public static double MAX_VALUE = Long.MAX_VALUE / 100.0;
 
@@ -70,12 +70,9 @@ public final class StringUtils {
 		for (int i = 0; i < C.length(); i++) {
 			temp = C.charAt(i);
 			if (cStr.indexOf(String.valueOf(temp)) >= 0) {
-				result = result
-						+ String.valueOf(nStr.charAt(cStr.indexOf(String
-								.valueOf(temp))));
+				result = result + String.valueOf(nStr.charAt(cStr.indexOf(String.valueOf(temp))));
 			} else if (String.valueOf(temp).equals("十")) {
-				if (i >= C.length() - 1
-						|| cStr.indexOf(String.valueOf(C.charAt(i + 1))) < 0) {
+				if (i >= C.length() - 1 || cStr.indexOf(String.valueOf(C.charAt(i + 1))) < 0) {
 					result += "0";
 				}
 				if (i == 0 || cStr.indexOf(String.valueOf(C.charAt(i - 1))) < 0) {
@@ -106,9 +103,7 @@ public final class StringUtils {
 		for (int i = 0; i < N.length(); i++) {
 			temp = N.charAt(i);
 			if (nStr.indexOf(String.valueOf(temp)) >= 0) {
-				result = result
-						+ String.valueOf(cStr.charAt(nStr.indexOf(String
-								.valueOf(temp))));
+				result = result + String.valueOf(cStr.charAt(nStr.indexOf(String.valueOf(temp))));
 			} else {
 				result += temp;
 			}
@@ -472,8 +467,7 @@ public final class StringUtils {
 	 * @return int
 	 */
 	public static int getCharNum(String sList, String splitChar) {
-		if (sList == null || sList.equals("") || splitChar == null
-				|| splitChar.equals("")) {
+		if (sList == null || sList.equals("") || splitChar == null || splitChar.equals("")) {
 			return -1;
 		}
 		int StringAtLocal = sList.indexOf(splitChar);
@@ -512,8 +506,7 @@ public final class StringUtils {
 	 *                返回"-1"
 	 * @return 则返回字符串，否则返回-1
 	 */
-	public static String getChangeFormatString(String str1, int length,
-			int increase) {
+	public static String getChangeFormatString(String str1, int length, int increase) {
 		try {
 			if (length < 1) {
 				return str1;
@@ -619,8 +612,7 @@ public final class StringUtils {
 	 * @param ObjCharset
 	 * @return String
 	 */
-	public static String charsetChange(String str, String srcCharset,
-			String ObjCharset) {
+	public static String changeCharset(String str, String srcCharset, String ObjCharset) {
 		try {
 			if (str != null) {
 				str = new String(str.getBytes(srcCharset), ObjCharset);
@@ -629,6 +621,30 @@ public final class StringUtils {
 			e.printStackTrace();
 		}
 		return str;
+	}
+
+	/**
+	 * 字符串编码转换的实现方法
+	 * 
+	 * @param str
+	 *            待转换编码的字符串
+	 * @param newCharset
+	 *            目标编码
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	public static String changeCharset(String str, String newCharset) {
+		try {
+			if (str != null) {
+				// 用默认字符编码解码字符串。
+				byte[] bs = str.getBytes();
+				// 用新的字符编码生成字符串
+				return new String(bs, newCharset);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -658,10 +674,8 @@ public final class StringUtils {
 							break;
 						case (char) 32:
 							if (i < length) {
-								if (str.charAt(i + 1) == ((char) 32)
-										|| str.charAt(i + 1) == ((char) 9)
-										|| str.charAt(i - 1) == ((char) 32)
-										|| str.charAt(i - 1) == ((char) 9)) {
+								if (str.charAt(i + 1) == ((char) 32) || str.charAt(i + 1) == ((char) 9)
+										|| str.charAt(i - 1) == ((char) 32) || str.charAt(i - 1) == ((char) 9)) {
 									temp = temp + "&nbsp;";
 								} else {
 									temp = temp + " ";
@@ -892,8 +906,7 @@ public final class StringUtils {
 		try {
 			Class clzObj = clz.newInstance().getClass();
 			String strClassName = clzObj.getName();
-			String strClassFileName = strClassName.substring(strClassName
-					.lastIndexOf(".") + 1, strClassName.length());
+			String strClassFileName = strClassName.substring(strClassName.lastIndexOf(".") + 1, strClassName.length());
 			URL url = null;
 			url = clzObj.getResource(strClassFileName + ".class");
 			String strURL = url.toString();
@@ -930,8 +943,7 @@ public final class StringUtils {
 	 * @return String
 	 */
 	public static String addFlagsToStr(String data, int intervals, String flag) {
-		if (data == null || data.length() <= intervals || intervals < 1
-				|| flag == null || "".equals(flag)) {
+		if (data == null || data.length() <= intervals || intervals < 1 || flag == null || "".equals(flag)) {
 			return data;
 		}
 		String result = "";
@@ -941,16 +953,12 @@ public final class StringUtils {
 		if (prix > 0) {
 			result = data.substring(0, prix);
 			for (; len > i * intervals; i++) {
-				result = result
-						+ flag
-						+ data.substring((i - 1) * intervals + prix, i
-								* intervals + prix);
+				result = result + flag + data.substring((i - 1) * intervals + prix, i * intervals + prix);
 			}
 		} else {
 			result = data.substring(0, intervals);
 			for (; len > i * intervals; i++) {
-				result = result + flag
-						+ data.substring(i * intervals, (i + 1) * intervals);
+				result = result + flag + data.substring(i * intervals, (i + 1) * intervals);
 			}
 		}
 		return result;
@@ -960,15 +968,12 @@ public final class StringUtils {
 	 * 函数名称： 数字金额转换成中外大写金额
 	 * 
 	 */
-	public static String addCommasToDecimalStr(String data, int intervals,
-			String flag) {
+	public static String addCommasToDecimalStr(String data, int intervals, String flag) {
 		if (data.indexOf(".") < 0) {
 			return addFlagsToStr(data, intervals, flag);
 		}
 		StringBuffer buff = new StringBuffer();
-		buff.append(
-				addFlagsToStr(data.substring(0, data.indexOf(".")), intervals,
-						flag)).append(".").append(
+		buff.append(addFlagsToStr(data.substring(0, data.indexOf(".")), intervals, flag)).append(".").append(
 				data.substring(data.indexOf(".") + 1, data.length()));
 		return buff.toString();
 	}
@@ -998,16 +1003,14 @@ public final class StringUtils {
 			sb.append("0/00".substring(0, 5 - length)).append(str).toString();
 			length = 4;
 		} else {
-			sb.append(str.substring(0, length - 3)).append("/").append(
-					str.substring(length - 3)).toString();
+			sb.append(str.substring(0, length - 3)).append("/").append(str.substring(length - 3)).toString();
 		}
 
 		StringBuffer resultBuffer = new StringBuffer(64);
 		char a;
 		for (int i = 0; i < length; i++) {
 			a = sb.charAt(i);
-			resultBuffer.append(NUMBER_STR[a - '/']).append(
-					STANDARD_STR[length - i - 1]);
+			resultBuffer.append(NUMBER_STR[a - '/']).append(STANDARD_STR[length - i - 1]);
 		}
 
 		result = resultBuffer.toString();
@@ -1183,8 +1186,7 @@ public final class StringUtils {
 
 		Pattern p = Pattern.compile("[.,\"\\?!:']");// 增加对应的标点
 
-		Matcher m = p
-				.matcher("I am a, I am \"Hello\" I. ok? hello! hello: ok.");
+		Matcher m = p.matcher("I am a, I am \"Hello\" I. ok? hello! hello: ok.");
 
 		String first = m.replaceAll(" ");
 
@@ -1213,8 +1215,7 @@ public final class StringUtils {
 	 * @return sub string
 	 * 
 	 */
-	public static String subStringByByte(String str, int byteBeginIndex,
-			int byteEndIndex) {
+	public static String subStringByByte(String str, int byteBeginIndex, int byteEndIndex) {
 
 		if (str == null || "".equals(str) || byteBeginIndex > byteEndIndex) {
 			return "";
@@ -1243,8 +1244,7 @@ public final class StringUtils {
 				}
 			}
 
-			charEndIndex = charEndIndex == -1 ? (charBeginIndex == -1 ? 0 : str
-					.length()) : charEndIndex;
+			charEndIndex = charEndIndex == -1 ? (charBeginIndex == -1 ? 0 : str.length()) : charEndIndex;
 			charBeginIndex = charBeginIndex == -1 ? 0 : charBeginIndex;
 			result = str.substring(charBeginIndex, charEndIndex);
 		}
@@ -1413,8 +1413,7 @@ public final class StringUtils {
 		return flag;
 	}
 
-	public static String gbToUtf8(String str)
-			throws UnsupportedEncodingException {
+	public static String gbToUtf8(String str) throws UnsupportedEncodingException {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < str.length(); i++) {
 			String s = str.substring(i, i + 1);
@@ -1472,10 +1471,269 @@ public final class StringUtils {
 		if (input == null || input.trim().equals("")) {
 			return "";
 		}
-		String str = input.replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll(
-				"<[^>]*>", "");
+		String str = input.replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "");
 		str = str.replaceAll("[(/>)<]", "");
 		return str;
+	}
+
+	/**
+	 * 将一个字符串转化为输入流
+	 */
+	public static InputStream getString2Stream(String sInputString) {
+		if (sInputString != null && !sInputString.trim().equals("")) {
+			try {
+				ByteArrayInputStream tInputStringStream = new ByteArrayInputStream(sInputString.getBytes());
+				return tInputStringStream;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 将一个输入流转化为字符串
+	 */
+	public static String getStream2String(InputStream tInputStream) {
+		if (tInputStream != null) {
+			try {
+				BufferedReader tBufferedReader = new BufferedReader(new InputStreamReader(tInputStream));
+				StringBuffer tStringBuffer = new StringBuffer();
+				String sTempOneLine = new String("");
+				while ((sTempOneLine = tBufferedReader.readLine()) != null) {
+					tStringBuffer.append(sTempOneLine);
+				}
+				return tStringBuffer.toString();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * native2ascii -encoding gbk temp.properties application_zh_CN.properties
+	 * 
+	 * @param ascii
+	 * @return
+	 */
+	public static String ascii2Str(String ascii) {// ASCII转换为字符串
+		if (isEmpty(ascii)) {
+			return "";
+		}
+		String[] chars = ascii.split(" ");
+		String str = "";
+		for (int i = 0; i < chars.length; i++) {
+			str = str + (char) Integer.parseInt(chars[i]);
+		}
+		return str;
+	}
+
+	public static String str2Ascii(String str) {// 字符串转换为ASCII码
+		if (isEmpty(str)) {
+			return "";
+		}
+		String ascii = "";
+		for (int i = 0; i < str.length(); i++) {
+			ascii = ascii + str.charAt(i);
+		}
+		return ascii;
+	}
+
+	public static String toUnicode(String strText) throws UnsupportedEncodingException {
+		if (isEmpty(strText)) {
+			return "";
+		}
+		try {
+			char c;
+			String strRet = "";
+			int intAsc;
+			String strHex;
+			for (int i = 0; i < strText.length(); i++) {
+				c = strText.charAt(i);
+				intAsc = (int) c;
+				if (intAsc > 128) {
+					strHex = Integer.toHexString(intAsc);
+					strRet += "\\u" + strHex;
+				} else {
+					strRet = strRet + c;
+				}
+			}
+			return strRet;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	private static final char[] hexDigit = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+			'F' };
+
+	private static char toHex(int nibble) {
+		return hexDigit[(nibble & 0xF)];
+	}
+
+	/**
+	 * 将字符串编码成 Unicode 。
+	 * 
+	 * @param theString
+	 *            待转换成Unicode编码的字符串。
+	 * @param escapeSpace
+	 *            是否忽略空格。
+	 * @return 返回转换后Unicode编码的字符串。
+	 */
+	public static String toUnicode(String theString, boolean escapeSpace) {
+		int len = theString.length();
+		int bufLen = len * 2;
+		if (bufLen < 0) {
+			bufLen = Integer.MAX_VALUE;
+		}
+		StringBuffer outBuffer = new StringBuffer(bufLen);
+
+		for (int x = 0; x < len; x++) {
+			char aChar = theString.charAt(x);
+			// Handle common case first, selecting largest block that
+			// avoids the specials below
+			if ((aChar > 61) && (aChar < 127)) {
+				if (aChar == '\\') {
+					outBuffer.append('\\');
+					outBuffer.append('\\');
+					continue;
+				}
+				outBuffer.append(aChar);
+				continue;
+			}
+			switch (aChar) {
+			case ' ':
+				if (x == 0 || escapeSpace)
+					outBuffer.append('\\');
+				outBuffer.append(' ');
+				break;
+			case '\t':
+				outBuffer.append('\\');
+				outBuffer.append('t');
+				break;
+			case '\n':
+				outBuffer.append('\\');
+				outBuffer.append('n');
+				break;
+			case '\r':
+				outBuffer.append('\\');
+				outBuffer.append('r');
+				break;
+			case '\f':
+				outBuffer.append('\\');
+				outBuffer.append('f');
+				break;
+			case '=': // Fall through
+			case ':': // Fall through
+			case '#': // Fall through
+			case '!':
+				outBuffer.append('\\');
+				outBuffer.append(aChar);
+				break;
+			default:
+				if ((aChar < 0x0020) || (aChar > 0x007e)) {
+					outBuffer.append('\\');
+					outBuffer.append('u');
+					outBuffer.append(toHex((aChar >> 12) & 0xF));
+					outBuffer.append(toHex((aChar >> 8) & 0xF));
+					outBuffer.append(toHex((aChar >> 4) & 0xF));
+					outBuffer.append(toHex(aChar & 0xF));
+				} else {
+					outBuffer.append(aChar);
+				}
+			}
+		}
+		return outBuffer.toString();
+	}
+
+	/**
+	 * 从 Unicode 码转换成编码前的特殊字符串。
+	 * 
+	 * @param in
+	 *            Unicode编码的字符数组。
+	 * @param off
+	 *            转换的起始偏移量。
+	 * @param len
+	 *            转换的字符长度。
+	 * @param convtBuf
+	 *            转换的缓存字符数组。
+	 * @return 完成转换，返回编码前的特殊字符串。
+	 */
+	public static String fromUnicode(char[] in, int off, int len, char[] convtBuf) {
+		if (convtBuf.length < len) {
+			int newLen = len * 2;
+			if (newLen < 0) {
+				newLen = Integer.MAX_VALUE;
+			}
+			convtBuf = new char[newLen];
+		}
+		char aChar;
+		char[] out = convtBuf;
+		int outLen = 0;
+		int end = off + len;
+
+		while (off < end) {
+			aChar = in[off++];
+			if (aChar == '\\') {
+				aChar = in[off++];
+				if (aChar == 'u') {
+					// Read the xxxx
+					int value = 0;
+					for (int i = 0; i < 4; i++) {
+						aChar = in[off++];
+						switch (aChar) {
+						case '0':
+						case '1':
+						case '2':
+						case '3':
+						case '4':
+						case '5':
+						case '6':
+						case '7':
+						case '8':
+						case '9':
+							value = (value << 4) + aChar - '0';
+							break;
+						case 'a':
+						case 'b':
+						case 'c':
+						case 'd':
+						case 'e':
+						case 'f':
+							value = (value << 4) + 10 + aChar - 'a';
+							break;
+						case 'A':
+						case 'B':
+						case 'C':
+						case 'D':
+						case 'E':
+						case 'F':
+							value = (value << 4) + 10 + aChar - 'A';
+							break;
+						default:
+							throw new IllegalArgumentException("Malformed \\uxxxx encoding.");
+						}
+					}
+					out[outLen++] = (char) value;
+				} else {
+					if (aChar == 't') {
+						aChar = '\t';
+					} else if (aChar == 'r') {
+						aChar = '\r';
+					} else if (aChar == 'n') {
+						aChar = '\n';
+					} else if (aChar == 'f') {
+						aChar = '\f';
+					}
+					out[outLen++] = aChar;
+				}
+			} else {
+				out[outLen++] = (char) aChar;
+			}
+		}
+		return new String(out, 0, outLen);
 	}
 
 	/**
@@ -1488,13 +1746,18 @@ public final class StringUtils {
 		// String s = m.replaceAll("");
 		// System.out.print(s);
 		// testReg();
-
-		System.out.println("1="+isEmail("sdf@163.com"));
-		System.out.println("2="+isEmail("2sdf@163.com"));
-		System.out.println("3="+isEmail("sdf@163.3com"));
-		System.out.println("4="+isEmail("sdf@163..com"));
-		System.out.println("5="+isEmail("sdf@163.com"));
-		System.out.println("6="+isEmail("sdf@@163.com"));
+		System.out.println("1=" + str2Ascii("新年快乐"));
+		System.out.println("1=" + ascii2Str("26032 24180 24555 20048"));
+		System.out.println("1=" + toUnicode("【新年快乐"));
+		System.out.println("1=" + toUnicode("【新年 快 乐",true));
+		System.out.println("1=" + toUnicode("【新年 快 乐",false));
+		String temp = "\u3010\u65B0\u5E74 \u5FEB     \u4E50";
+		char[] cs = temp.toCharArray();
+		System.out.println("1=" + fromUnicode(cs,0,cs.length,new char[100]));
+		temp = "\u3010\u65B0\u5E74\\     \u5FEB\\ \u4E50";
+		cs = temp.toCharArray();
+		System.out.println("2=" + fromUnicode(cs,0,cs.length,new char[100]));
+		System.out.println("6=" + isEmail("sdf@@163.com"));
 		System.out.println(padLeft("1", 3, '0'));
 		System.out.println(isNums("a-43.342"));
 		String s = "ab度度";
