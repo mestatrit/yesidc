@@ -8,10 +8,10 @@
 
     <session-factory>
         <!--property name="hbm2ddl.auto">update</property-->
-        <property name="dialect">org.hibernate.dialect.Oracle9Dialect</property>
-        <property name="connection.url">jdbc:oracle:thin:@localhost:1521:abel</property>
-        <property name="connection.username">fish</property>
-        <property name="connection.password">fish</property>
+        <property name="dialect">org.hibernate.dialect.OracleDialect</property>
+        <property name="connection.url">jdbc:oracle:thin:@192.168.1.99:1521:orcl</property>
+        <property name="connection.username">itc</property>
+        <property name="connection.password">itc</property>
         <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
         <property name="myeclipse.connection.profile">orale_locale</property>
     

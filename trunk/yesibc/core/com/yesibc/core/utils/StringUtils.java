@@ -919,7 +919,7 @@ public final class StringUtils {
 				strURL = strURL.substring(0, strURL.lastIndexOf(cutPath));
 			}
 
-			if (makePath != null) {
+			if (makePath != null && !"".equals(makePath)) {
 				strURL = strURL + makePath + "/";
 			}
 
@@ -1494,10 +1494,10 @@ public final class StringUtils {
 	/**
 	 * 将一个输入流转化为字符串
 	 */
-	public static String getStream2String(InputStream tInputStream) {
+	public static String getStream2String(InputStream tInputStream, String charSet) {
 		if (tInputStream != null) {
 			try {
-				BufferedReader tBufferedReader = new BufferedReader(new InputStreamReader(tInputStream));
+				BufferedReader tBufferedReader = new BufferedReader(new InputStreamReader(tInputStream, charSet));
 				StringBuffer tStringBuffer = new StringBuffer();
 				String sTempOneLine = new String("");
 				while ((sTempOneLine = tBufferedReader.readLine()) != null) {
@@ -1749,14 +1749,14 @@ public final class StringUtils {
 		System.out.println("1=" + str2Ascii("新年快乐"));
 		System.out.println("1=" + ascii2Str("26032 24180 24555 20048"));
 		System.out.println("1=" + toUnicode("【新年快乐"));
-		System.out.println("1=" + toUnicode("【新年 快 乐",true));
-		System.out.println("1=" + toUnicode("【新年 快 乐",false));
+		System.out.println("1=" + toUnicode("【新年 快 乐", true));
+		System.out.println("1=" + toUnicode("【新年 快 乐", false));
 		String temp = "\u3010\u65B0\u5E74 \u5FEB     \u4E50";
 		char[] cs = temp.toCharArray();
-		System.out.println("1=" + fromUnicode(cs,0,cs.length,new char[100]));
+		System.out.println("1=" + fromUnicode(cs, 0, cs.length, new char[100]));
 		temp = "\u3010\u65B0\u5E74\\     \u5FEB\\ \u4E50";
 		cs = temp.toCharArray();
-		System.out.println("2=" + fromUnicode(cs,0,cs.length,new char[100]));
+		System.out.println("2=" + fromUnicode(cs, 0, cs.length, new char[100]));
 		System.out.println("6=" + isEmail("sdf@@163.com"));
 		System.out.println(padLeft("1", 3, '0'));
 		System.out.println(isNums("a-43.342"));
