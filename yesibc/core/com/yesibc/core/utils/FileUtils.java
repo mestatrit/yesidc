@@ -345,7 +345,7 @@ public class FileUtils {
 		StringBuffer buffer = new StringBuffer();
 		try {
 			FileInputStream fis = new FileInputStream(filePath);
-			InputStreamReader isr = new InputStreamReader(fis, encode);
+			InputStreamReader isr = new InputStreamReader(fis);
 			Reader in = new BufferedReader(isr);
 			int ch;
 			while ((ch = in.read()) > -1) {
@@ -389,14 +389,13 @@ public class FileUtils {
 	 *            文本文件打开的编码方式
 	 * @return 返回文本文件的内容
 	 */
-	public String readTxt(String filePathAndName, String encoding) throws IOException {
-		encoding = encoding.trim();
+	public static String readTxt(String filePathAndName, String encoding) throws IOException {
 		StringBuffer str = new StringBuffer("");
 		String st = "";
 		try {
 			FileInputStream fs = new FileInputStream(filePathAndName);
 			InputStreamReader isr;
-			if (encoding.equals("")) {
+			if (encoding == null || encoding.equals("")) {
 				isr = new InputStreamReader(fs);
 			} else {
 				isr = new InputStreamReader(fs, encoding);
