@@ -7,87 +7,82 @@ import com.webrenderer.swing.BrowserFactory;
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
-import com.yesibc.core.spring.SpringContext;
 import com.yesibc.job51.common.ClawerConstants;
-import com.yesibc.job51.dao.WebPagesDao;
-import com.yesibc.job51.model.WebPages;
 import com.yesibc.job51.web.support.ErrorHandler;
 import com.yesibc.job51.web.support.JobSupport;
 import com.yesibc.job51.web.support.LogHandler;
 
-public class SearchJobDetailEngine extends Thread {
+public class SearchListEngine extends Thread {
 
-	private static Log log = LogFactory.getLog(SearchJobDetailEngine.class);
+	private static Log log = LogFactory.getLog(SearchListEngine.class);
 
-	public final static String jobTag = "#Job Detail#";
+	public final static String pageTag = "#Paging#";
 
 	static long l = 0;
-
 	private IBrowserCanvas browser;
 	private boolean finish = false;
 	private String url;
 	private String title;
 	private int index;
 	private ProcessContext processContext;
-	private WebPages wp;
 
-	public SearchJobDetailEngine(String title, WebPages wp, int index) {
-		this.url = wp.getUrl();
+	public SearchListEngine(String rid, String url, int index) {
+		this.url = url;
 		this.index = index;
-		this.wp = wp;
-		this.title = title;
+		this.title = rid;
 		processContext = new ProcessContext();
 	}
 
-	public void run() {
-		if (url == null || "".equals(url)) {
-			return;
-		}
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		String[] strs = new String[2];
+		strs[0] = CompanyJobContext.getSearchList().get(0);
+		strs[1] = CompanyJobContext.getSearchList().get(1);
+	}
 
-		processContext = new ProcessContext();
+	public void run() {
+
 		browser = JobSupport.initLoading(processContext, title, index);
 		onDocumnetComplete();
 
 		try {
 			finish = false;
 			l = System.currentTimeMillis();
-			log.info(processContext.getLogTitle() + "Start Loading " + url);
 			browser.loadURL(url);
 			boolean loadedOK = true;
 			if (!waitingLoading(index, url)) {
+				finish = false;
 				browser = JobSupport.reLoading(processContext, title, index);
 				onDocumnetComplete();
-				log.info(processContext.getLogTitle() + "ReStart Loading error1 " + url);
 				browser.loadURL(url);
 				if (!waitingLoading(index, url)) {
 					loadedOK = false;
 					ErrorHandler.errorLogAndMail(processContext.getLogTitle() + "Two times refresh and waiting error!");
+					return;
 				}
 			}
-			
+
 			finish = false;
 			log.info(processContext.getLogTitle() + "End Loading " + url + "!Loaded[" + loadedOK + "]Time is "
 					+ (System.currentTimeMillis() - l));
 			l = System.currentTimeMillis();
 
-			ParseEmailFromJobs.parseEmailFromJobs(processContext);
+			ParsePagesLinks.parsePagesLinks(processContext);
 
-			if (!ClawerConstants.TEST_DAO) {
-				CompanyJobContext.getComListPages().remove(wp);
-				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
-				wp.setStatus(WebPages.STATUS_OK);
-				webPagesDao.update(wp);
-			}
+			CompanyJobContext.getSearchList().remove(url);
 
 			log.info(processContext.getLogTitle() + "Parsing [" + browser.getURL() + "] is OK!Time is "
 					+ (System.currentTimeMillis() - l));
 		} catch (Exception e) {
 			ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " Parsing [" + browser.getURL()
-					+ "] is error=SerchJobDetailEngine!" + e.getMessage() + "\n HTML contents:"
+					+ "] is error=SearchPagesEngine!" + e.getMessage() + "\n HTML contents:"
 					+ browser.getDocument().getBody().getOuterHTML(), e);
 		} finally {
 			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(true);
 		}
+
 	}
 
 	public IBrowserCanvas getBrowser() {
@@ -108,46 +103,29 @@ public class SearchJobDetailEngine extends Thread {
 		while (!finish) {
 			i++;
 			try {
-				Thread.sleep(10000);
+				Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
 			} catch (InterruptedException e) {
 				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " URL[" + url + "] :", e);
 			}
-			if (i > 12) {
+			if (i > 15) {
 				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " URL[" + url
-						+ "] waiting loading to long and exit to waiting now. Time is[" + i * 10 + "]s");
-				finish = true;
+						+ "] waiting loading to long and exit to waiting now. Time is[" + i
+						* ClawerConstants.WAITING_TIME_SECONDS + "]s");
+				// finish = true;
 				WebrendererContext.reFreshContext(index, processContext);
 				return false;
 			} else {
-				LogHandler.info(processContext.getLogTitle() + " URL[" + url + "] waiting loading……[" + i * 10 + "]s");
+				LogHandler.debug(processContext.getLogTitle() + " URL[" + url + "] waiting loading……[" + i
+						* ClawerConstants.WAITING_TIME_LOADING + "]s");
 			}
 		}
 		LogHandler.info(processContext.getLogTitle() + " URL[" + url + "] waiting loading end![" + i * 10 + "]s");
 		return true;
-	}
 
-	public boolean isFinish() {
-		return finish;
-	}
-
-	public void setFinish(boolean finish) {
-		this.finish = finish;
 	}
 
 	public ProcessContext getProcessContext() {
 		return processContext;
-	}
-
-	public static void main(String[] args) {
-		// String[] urls = { "http://search.51job.com/job/38792100,c.html" };
-		// SearchJobDetailEngine sce = new SearchJobDetailEngine("abc" + "," +
-		// urls.toString(), urls, 0);
-		// sce.start();
-
-	}
-
-	public static String getJobtag() {
-		return jobTag;
 	}
 
 	public String getTitle() {
@@ -162,4 +140,7 @@ public class SearchJobDetailEngine extends Thread {
 		this.url = url;
 	}
 
+	public void setTitle(String title) {
+		this.title = title;
+	}
 }
