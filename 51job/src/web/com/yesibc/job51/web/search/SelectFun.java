@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.webrenderer.swing.dom.IElement;
+import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.job51.web.support.FunctionDIV;
 import com.yesibc.job51.web.support.LocateMainElements;
 import com.yesibc.job51.web.support.LogHandler;
@@ -25,8 +26,9 @@ public class SelectFun {
 	 * 
 	 * @param processContext
 	 * @param times
+	 * @throws ApplicationException 
 	 */
-	public static void doFunClick(ProcessContext processContext, int times) {
+	public static void doFunClick(ProcessContext processContext, int times) throws ApplicationException {
 		log.info("SelectInd times=" + times);
 		long l = System.currentTimeMillis();
 		IElement funIE = LocateMainElements.locateFunBtn(processContext

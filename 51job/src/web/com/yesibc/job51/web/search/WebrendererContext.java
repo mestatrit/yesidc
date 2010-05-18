@@ -60,6 +60,33 @@ public class WebrendererContext {
 		log.info("reFreshContext: " + index + " BROWSERS OK!");
 	}
 
+	public synchronized static void reFreshContext1(int index, String title) {
+
+		WebRenderEntity wre = WEBRENDER_ENTITIES.get(index);
+		try {
+			BrowserFactory.destroyBrowser(wre.getBrowser());
+			if (ClawerConstants.SHOW_FRAME) {
+				wre.getFrame().dispose();
+			}
+		} catch (Exception e) {
+			ErrorHandler.errorLogAndMail(title + " Destory Browser Error!", e);
+		}
+		wre.setBrowser(null);
+
+		IBrowserCanvas browser = BrowserFactory.spawnMozilla();
+		browser.enableImageLoading(false);
+		JobSupport.addListener(browser);
+		wre.setLoaded(true);
+		wre.setBrowser(browser);
+		if (ClawerConstants.SHOW_FRAME) {
+			JFrame frame = JobSupport.showFrame(browser, title);
+			wre.setFrame(frame);
+		}
+		WEBRENDER_ENTITIES.put(index, wre);
+
+		log.info("reFreshContext: " + index + " BROWSERS OK!");
+	}
+
 	private static void reconnectByRefreshConext(ProcessContext processContext, int index) {
 		long temp = (System.currentTimeMillis() - l);
 		if (temp < ClawerConstants.RECONNECT_INTERVAL) {
@@ -67,9 +94,7 @@ public class WebrendererContext {
 					+ "@interval:" + temp / (1000 * 60));
 			return;
 		}
-		
-		
-		
+
 	}
 
 	public static Map<Integer, WebRenderEntity> initContext() {
