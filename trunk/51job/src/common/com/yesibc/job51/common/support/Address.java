@@ -18,6 +18,9 @@ public class Address extends BaseCode
 	 * @return
 	 */
 	public static Map<Long, Code> getAddress(String str) {
+		if(TOP_CODES == null){
+			refreshAll();
+		}
 		if (StringUtils.isEmpty(str)) {
 			return null;
 		}
@@ -141,7 +144,7 @@ public class Address extends BaseCode
 				continue;
 			}
 
-			LogHandler.info("city=" + code.getCname());
+			//LogHandler.info("city=" + code.getCname());
 			for (String city : ClawerConstants.CITY_FILTERS) {
 				if (code.getCname().indexOf(city) < 0) {
 					continue;
@@ -178,11 +181,11 @@ public class Address extends BaseCode
 
 	@Override
 	public Code getCode(String code, Long level) {
-		if (CODE_LEVEL_FIRST.equals(level)) {
+		if (CODE_LEVEL_SECOND.equals(level)) {
 			return CONTRIES.get(code);
-		} else if (CODE_LEVEL_SECOND.equals(level)) {
-			return PROVINCES.get(code);
 		} else if (CODE_LEVEL_THIRD.equals(level)) {
+			return PROVINCES.get(code);
+		} else if (CODE_LEVEL_FOURTH.equals(level)) {
 			return CITIES.get(code);
 		}
 		return null;

@@ -1,5 +1,6 @@
 package com.yesibc.job51.common;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +15,6 @@ import com.yesibc.job51.dao.BaseCodeDao;
 import com.yesibc.job51.model.Code;
 
 public abstract class BaseCode {
-
-	public static BaseCodeDao baseCodeDao = (BaseCodeDao) SpringContext
-			.getBean("baseCodeDao");
 
 	public final static String ADDRESS = "address";
 	public final static String WORK_YEAR = "work.year";
@@ -40,7 +38,7 @@ public abstract class BaseCode {
 	public static final Long CODE_LEVEL_THIRD = new Long(3);
 	public static final Long CODE_LEVEL_FOURTH = new Long(4);
 	public static final Long CODE_LEVEL_FIFTH = new Long(5);
-	
+
 	public static Map<String, Code> TOPS = new HashMap<String, Code>();
 	public static Map<String, Code> CONTINENTS = new HashMap<String, Code>();
 	public static Map<String, Code> CONTRIES = new HashMap<String, Code>();
@@ -49,36 +47,46 @@ public abstract class BaseCode {
 	public static Map<String, Code> DISTRICTS = new HashMap<String, Code>();
 	public static Map<String, Code> FROM_WHERES = new HashMap<String, Code>();
 
-	public static List<Code> TOP_CODES = refreshAll();
+	public static List<Code> TOP_CODES = null;
 
-	public static int i = 0;
+	public static boolean loaded = false;
 
-	private static List<Code> refreshAll() {
-		// System.out.println("456");
-		// TOP_CODES=new ArrayList<Code>();
-		// TOP_CODES.add(new Code());
-		// if(true){
-		// return TOP_CODES;
-		// }else{
-		// return null;
-		// }
+	public static Integer i = 0;
 
-		LogHandler.info("Refresh:" + (++i) + "times.");
-
-		List<Code> codes = baseCodeDao.findByNameValue(Code.class, "codeLevel",
-				CODE_LEVEL_TOP, "sortList", true);
-		if (codes == null || codes.isEmpty()) {
-			ErrorHandler.errorLogAndMail("Error failed!getTop");
-			throw new NestedRuntimeException("Error failed!getTop");
+	public BaseCode() {
+		if (!loaded) {
+			synchronized (i) {
+				if (!loaded) {
+					refreshAll();
+				}
+			}
 		}
-
-		put2Maps(codes);
-
-		return codes;
 	}
 
-	private static void put2Maps(List<Code> codes) {
-		for (Code code : codes) {
+	protected static void refreshAll() {
+
+		LogHandler.info("Refresh i:" + (++i) + "times.");
+
+		if (ClawerConstants.TEST_DAO) {
+			TOP_CODES = new ArrayList<Code>();
+			TOP_CODES.add(new Code());
+			loaded = true;
+		} else {
+
+			BaseCodeDao baseCodeDao = (BaseCodeDao) SpringContext.getBean("baseCodeDao");
+
+			TOP_CODES = baseCodeDao.findByNameValue(Code.class, "codeLevel", CODE_LEVEL_TOP, "sortList", true);
+			if (TOP_CODES == null || TOP_CODES.isEmpty()) {
+				ErrorHandler.errorLogAndMail("Error failed!getTop");
+				throw new NestedRuntimeException("Error failed!getTop");
+			}
+			put2Maps();
+			loaded = true;
+		}
+	}
+
+	private static void put2Maps() {
+		for (Code code : TOP_CODES) {
 			TOPS.put(code.getCode(), code);
 			if (ADDRESS.equals(code.getCode())) {
 				Address.put2Continents(code.getChildren());
@@ -88,11 +96,17 @@ public abstract class BaseCode {
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	public static void main(String[] args) {
 		try {
-			System.out.println(TOP_CODES.size());
-			System.out.println(TOP_CODES.size());
-			System.out.println(TOP_CODES.size());
+			for (int o = 0; o < 50; o++) {
+				new Thread() {
+					public void run() {
+						BaseCode b = new Address();
+						System.out.println(b.getTopCode("tt"));
+					}
+				}.start();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
