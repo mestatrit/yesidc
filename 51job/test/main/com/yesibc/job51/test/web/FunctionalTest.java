@@ -36,7 +36,7 @@ public class FunctionalTest extends SearchTest {
 
 			waitingLoading(url);
 
-			int i = LocateCompanyInfo.checkValidation(browser);
+			int i = LocateCompanyInfo.validationTableOfJobList(browser);
 			System.out.println("i===" + i);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -58,7 +58,7 @@ public class FunctionalTest extends SearchTest {
 		while (!loaded) {
 			i++;
 			try {
-				Thread.sleep(ClawerConstants.WAITING_TIME);
+				Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
 			} catch (InterruptedException e) {
 				ErrorHandler.error(processContext.getLogTitle() + " URL[" + url + "] SearchCompanyEngine:", e);
 			}

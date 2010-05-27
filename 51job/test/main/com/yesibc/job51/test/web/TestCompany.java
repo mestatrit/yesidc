@@ -3,6 +3,7 @@ package com.yesibc.job51.test.web;
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
+import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.web.search.CompanyJobContext;
 import com.yesibc.job51.web.search.ProcessContext;
@@ -19,8 +20,9 @@ public class TestCompany {
 
 	/**
 	 * @param args
+	 * @throws ApplicationException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ApplicationException {
 		processContext = new ProcessContext();
 		WebRenderEntity en = WebrendererContext.WEBRENDER_ENTITIES.get(1);
 
@@ -54,7 +56,7 @@ public class TestCompany {
 		while (!loaded) {
 			i++;
 			try {
-				Thread.sleep(ClawerConstants.WAITING_TIME);
+				Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
 			} catch (InterruptedException e) {
 				ErrorHandler.error(processContext.getLogTitle() + " URL[" + url + "] SearchCompanyEngine:", e);
 			}

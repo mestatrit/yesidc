@@ -2,18 +2,16 @@ package com.yesibc.alibaba.company;
 
 public class CompanyMain {
 
-	private final static String ALIBABA_HOMEPAGE = "http://china.alibaba.com/";
-	
-	
+	//private final static String ALIBABA_HOMEPAGE = "http://china.alibaba.com/";
+
 	/**
-	 * prepare: 1. address  2.Category
-	 * error: 1. system exit 2.IP error 3.page error
-	 * filter: "@315cq.com"
-	 * 1.ÏÈËÑË÷¹«Ë¾Ö÷Ò³.ÅĞ¶ÏÊÇ·ñÕæÎª¹«Ë¾Ö÷Ò³£¬Èç¹ûÖ÷Ò³Ã»ÓĞ£¬ÔòËÑ"ÁªÏµÎÒÃÇ","ÁªÏµ·½Ê½","Contact"µÈÁ´½Ó
-	 * 2.ËÑË÷»ÆÒ³µÄÁªÏµĞÅÏ¢
-	 * 3.ËÑË÷¹Ø¼ü×ÖÎª¹«Ë¾Ãû×Ö£¬Èç¹ûÓĞ,cut; ¼Óe-mailÔÙËÑ£¬Ã»ÓĞend.
-	 * 4.ÔÚ½á¹ûÖĞÓÃ"e-mail:","email:","email£º","email ","e-mail ","ÓÊÏä:","ÓÊÏä£º","ÓÊÏä "
-	 * ×÷ÎªÇ°×º£¬ÇÒ²»·Ö´óĞ¡Ğ´
+	 * prepare: 1. address 2.Category error: 1. system exit 2.IP error 3.page
+	 * error filter: "@315cq.com"
+	 * 1.å…ˆæœç´¢å…¬å¸ä¸»é¡µ.åˆ¤æ–­æ˜¯å¦çœŸä¸ºå…¬å¸ä¸»é¡µï¼Œå¦‚æœä¸»é¡µæ²¡æœ‰ï¼Œåˆ™æœ"è”ç³»æˆ‘ä»¬","è”ç³»æ–¹å¼","Contact"ç­‰é“¾æ¥ 2.æœç´¢é»„é¡µçš„è”ç³»ä¿¡æ¯
+	 * 3.æœç´¢å…³é”®å­—ä¸ºå…¬å¸åå­—ï¼Œå¦‚æœæœ‰,cut; åŠ e-mailå†æœï¼Œæ²¡æœ‰end.
+	 * 4.åœ¨ç»“æœä¸­ç”¨"e-mail:","email:","emailï¼š","email ","e-mail ","é‚®ç®±:","é‚®ç®±ï¼š","é‚®ç®± "
+	 * ä½œä¸ºå‰ç¼€ï¼Œä¸”ä¸åˆ†å¤§å°å†™
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -26,22 +24,22 @@ public class CompanyMain {
 
 	private static void loadCompanyByPages() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private static void loadCompanyListByAddress() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private static void loadSecondCategory() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private static void loadMainCategory() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

@@ -5,8 +5,10 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.yesibc.core.spring.SpringContext;
 import com.yesibc.job51.common.BaseCode;
 import com.yesibc.job51.common.support.Address;
+import com.yesibc.job51.dao.BaseCodeDao;
 import com.yesibc.job51.model.Code;
 
 public class TestAddress {
@@ -33,11 +35,25 @@ public class TestAddress {
 			code = map.get(BaseCode.CODE_LEVEL_THIRD);
 			if (code != null) {
 				System.out.println("name=CODE_LEVEL_THIRD!" + code.getCname());
+				Code co = new Code();
+				Long lo = new Long(11011);
+				co.setId(lo);
+				System.out.println("1==");
+				System.out.println(code == co);
+				BaseCodeDao baseCodeDao = (BaseCodeDao) SpringContext.getBean("baseCodeDao");
+				co = baseCodeDao.getById(lo);
+				System.out.println("2==");
+				System.out.println(code == co);
+				System.out.println("3==");
+				System.out.println(code.getId().equals(lo));
+				System.out.println("4==");
 			}
 
 			code = map.get(BaseCode.CODE_LEVEL_FOURTH);
 			if (code != null) {
 				System.out.println("name=CODE_LEVEL_FOURTH!" + code.getCname());
+				System.out.println("name=CODE_LEVEL_FOURTH1!" + code.getParent().getCname());
+				System.out.println("name=CODE_LEVEL_FOURTH2!" + code.getParent().getParent().getCname());
 			}
 
 		}
