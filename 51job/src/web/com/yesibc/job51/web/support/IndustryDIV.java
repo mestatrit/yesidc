@@ -23,7 +23,7 @@ public class IndustryDIV {
 			{ "28", "政府" }, { "57", "非盈利机构" }, { "20", "环保" }, { "29", "农业/渔业/林业" }, { "58", "多元化业务集团公司" },
 			{ "30", "其他行业" }, };
 
-	public static int SELECT_PER_TIMES = 1;
+	public static int SELECT_PER_TIMES = 3;
 
 	public static int SELECT_TIMES = IND_ARRAY.length % SELECT_PER_TIMES == 0 ? IND_ARRAY.length / SELECT_PER_TIMES
 			: (IND_ARRAY.length / SELECT_PER_TIMES + 1);

@@ -5,17 +5,19 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.yesibc.core.utils.StringUtils;
 import com.yesibc.core.web.BaseAction2Support;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.web.search.CompanyJobContext;
-import com.yesibc.job51.web.search.SearchCompanyLinksEngine;
-import com.yesibc.job51.web.search.SearchCompanyNJobLinksEngine;
 import com.yesibc.job51.web.search.SearchJobDetailEngine;
+import com.yesibc.job51.web.search.SearchListEngine;
 import com.yesibc.job51.web.search.SearchPagesEngine;
 import com.yesibc.job51.web.support.ErrorHandler;
+import com.yesibc.job51.web.support.WebLinkSupport;
 
 public class Clawer51JobAction extends BaseAction2Support {
 
@@ -29,13 +31,13 @@ public class Clawer51JobAction extends BaseAction2Support {
 	long i = 0;
 
 	// 总线程
-	private String totalThreadTag = "ToT-";
+	private String totalThreadTag = "ToT-[";
 
 	// 总任务/当前任务
-	private String currentOfToI = "]#CrToI[";
+	private String currentOfToI = "]#All-Cur[";
 
 	// 某一线程总任务/当前任务
-	private String currentOfToC = "]#CrToC-";
+	// private String currentOfToC = "]#CrToC-";
 
 	public String refresh() {
 		i = (System.currentTimeMillis() - callTimes) / (1000 * 60);
@@ -54,395 +56,425 @@ public class Clawer51JobAction extends BaseAction2Support {
 	public String companySearch() {
 
 		long start = System.currentTimeMillis();
-		String requestId = getParameter("requestId");
+		String failedOrNot = null;
+		if (ClawerConstants.TEST_WEB) {
+			failedOrNot = "0";
+		} else {
+			failedOrNot = getParameter("failedOrNot");
+		}
+		if (failedOrNot == null || !StringUtils.isNumberString(failedOrNot)) {
+			setMessage("failedOrNot is error!");
+			return SUCCESS;
+		}
+		// 0-default=OK;1-search type list;2-search pages list;3-job list;
+		int[] tags = { 0, 1, 2, 3 };
+		int failedOrNotInt = Integer.parseInt(failedOrNot);
+		if (ArrayUtils.indexOf(tags, failedOrNotInt) < 0) {
+			setMessage("failedOrNot is not digit!");
+			return SUCCESS;
+		}
+
+		String requestId = null;
+		if (ClawerConstants.TEST_WEB) {
+			requestId = String.valueOf(start);
+		} else {
+			requestId = getParameter("requestId");
+		}
 		if (requestId == null) {
 			requestId = String.valueOf(start);
 			log.info("Request id from client is null.Generate:" + requestId);
-		} else {
-			log.info("Request id from client is:" + requestId);
 		}
+
+		ClawerConstants.REQUEST_ID = requestId;
 		String reqLog = "requestId[" + requestId + "]";
 
 		int threadNumber = ClawerConstants.THREADS_NUMBER;
-		String mainThreadsStr = getParameter("mainThreads");
-		if (mainThreadsStr != null) {
-			try {
-				threadNumber = Integer.parseInt(mainThreadsStr);
-				ClawerConstants.THREADS_NUMBER = threadNumber;
-			} catch (Exception e) {
-				log.error("Parse threadNumber error:" + mainThreadsStr, e);
+		if (ClawerConstants.TEST_WEB) {
+			threadNumber = ClawerConstants.THREADS_NUMBER;
+		} else {
+			String mainThreadsStr = getParameter("mainThreads");
+			if (mainThreadsStr != null) {
+				try {
+					threadNumber = Integer.parseInt(mainThreadsStr);
+					ClawerConstants.THREADS_NUMBER = threadNumber;
+				} catch (Exception e) {
+					log.error("Parse threadNumber error:" + mainThreadsStr, e);
+				}
 			}
 		}
 
-		/**
-		 * get all the page urls.
-		 */
-		try {
-			parsePageLinks(threadNumber, requestId, reqLog);
-		} catch (Exception e) {
-			ErrorHandler.errorLogAndMail("ParsePageLinks error in Action:", e);
-		}
-		log.info("parsePageLinks URL_COMPANIES=" + CompanyJobContext.getUrlCompaniesLength() + ",URL_PAGES="
-				+ CompanyJobContext.getUrlPagesLength() + ",COMPANY=" + CompanyJobContext.getCompaniesLength());
+		doing(failedOrNotInt, requestId, reqLog, threadNumber);
 
-		/**
-		 * get all the company urls according to page urls.
-		 */
-		try {
-			parseCompanyLinks(requestId, reqLog, threadNumber);
-		} catch (Exception e) {
-			ErrorHandler.errorLogAndMail("parseCompanyLinks error in Action:", e);
-		}
-		log.info("parseCompanyLinks URL_COMPANIES=" + CompanyJobContext.getUrlCompaniesLength() + ",URL_PAGES="
-				+ CompanyJobContext.getUrlPagesLength() + ",COMPANY=" + CompanyJobContext.getCompaniesLength());
+		checking(failedOrNotInt, requestId, reqLog, threadNumber);
 
-		/**
-		 * save company to DB and get all jobs urls according to company urls.
-		 */
-		try {
-			parseJobLinks(requestId, reqLog, threadNumber);
-		} catch (Exception e) {
-			ErrorHandler.errorLogAndMail("parseJobLinks error in Action:", e);
-		}
-		log.info("parseCompanyLinks URL_COMPANIES=" + CompanyJobContext.getUrlCompaniesLength() + ",URL_JOBS="
-				+ CompanyJobContext.getUrlJobsLength() + ",COMPANY=" + CompanyJobContext.getCompaniesLength());
-
-		/**
-		 * get email from job detail pages.
-		 */
-		try {
-			parseEmailFromJobs(requestId, reqLog, threadNumber);
-		} catch (Exception e) {
-			ErrorHandler.errorLogAndMail("parseEmailFromJobs error in Action:", e);
-		}
 		log.info(reqLog + " is END!Time is [" + (System.currentTimeMillis() - start) / (1000 * 60) + "]m.");
 		finishTag = "true";
 		return SUCCESS;
 	}
 
-	private void parseEmailFromJobs(String requestId, String reqLog, int threadNumber) {
-		long l = System.currentTimeMillis();
-		int size = CompanyJobContext.getUrlJobsLength();
-		int circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
-
-		int totalThreads = threadNumber;
-		if (size < threadNumber) {
-			totalThreads = size;
+	private void checking(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
+		log.info(reqLog + " Start checking!==========");
+		int size = CompanyJobContext.getSearchListSize();
+		reqLog = reqLog + "(retry)";
+		if (size > 0 && failedOrNotInt < 1) {
+			parseSearchList(threadNumber, requestId, reqLog);
 		}
 
-		log.info(reqLog + "Parse job detail links start!threadNumber[" + threadNumber + "]job links size[" + size
-				+ "]circleTimes[" + circleTimes + "]");
-
-		Collections.shuffle(CompanyJobContext.getUrlJobs());
-		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Job detail links shffle!Times[" + l + "]");
-
-		int k = 0;
-		List<SearchJobDetailEngine> jobs = new ArrayList<SearchJobDetailEngine>();
-
-		if (ClawerConstants.TEST_WEB) {
-			circleTimes = ClawerConstants.TEST_WEB_NUM;
+		size = CompanyJobContext.getSearchPagesSize();
+		if (size > 0 && failedOrNotInt < 2) {
+			parseSearchPages(requestId, reqLog, threadNumber);
 		}
 
-		boolean end = false;
-		for (int i = 0; i < threadNumber; i++) {
-			String[] urls = new String[circleTimes];
-			int temp = 0;
-			for (int j = 0; j < circleTimes; j++) {
-				k = i * circleTimes + j;
-				if ((k + 1) > size) {
-					end = true;
-					break;
-				}
-				urls[j] = CompanyJobContext.getUrlJobs().get(k);
-				temp = j;
-			}
-			SearchJobDetailEngine sce = new SearchJobDetailEngine(totalThreadTag + totalThreads + "[" + i
-					+ currentOfToI + size + "-" + k + currentOfToC + temp,
-			// requestId + ",parse email from jobs [" + k + "].",
-					urls, i);
-			sce.start();
-			jobs.add(sce);
-			if (end) {
-				break;
-			}
+		size = CompanyJobContext.getJobsWPLength();
+		if (size > 0 && failedOrNotInt < 3) {
+			parseJobsDetail(requestId, reqLog, threadNumber);
 		}
-
-		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse job detail links submit OK!Times[" + l / (1000 * 60) + "s]");
-
-		waitingParseJobDetailLinks(jobs);
-		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse job links OK!Times[" + l / (1000 * 60) + "s]");
+		log.info(reqLog + " End checking!Results:SearchListSize=" + CompanyJobContext.getSearchListSize()
+				+ ",SearchPagesSize=" + CompanyJobContext.getSearchPagesSize() + ",JobsWPLength="
+				+ CompanyJobContext.getJobsWPLength());
 	}
 
-	private void parseJobLinks(String requestId, String reqLog, int threadNumber) {
-		long l = System.currentTimeMillis();
-		int size = CompanyJobContext.getUrlCompaniesLength();
-		int circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
-
-		int totalThreads = threadNumber;
-		if (size < threadNumber) {
-			totalThreads = size;
+	private void doing(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
+		/**
+		 * get all the page urls.
+		 */
+		if (failedOrNotInt < 1) {
+			parseSearchList(threadNumber, requestId, reqLog);
+		} else {
+			log.warn("Start to parse failed search list!");
+			parseSearchList(threadNumber, requestId, reqLog);
+			log.warn("End to parse failed search list!");
 		}
 
-		log.info(reqLog + "Parse job links start!threadNumber[" + threadNumber + "]job links size[" + size
-				+ "]circleTimes[" + circleTimes + "]");
-
-		Collections.shuffle(CompanyJobContext.getUrlCompanies());
-		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Job links shffle!Times[" + l + "]");
-
-		int k = 0;
-		List<SearchCompanyNJobLinksEngine> jobs = new ArrayList<SearchCompanyNJobLinksEngine>();
-
-		if (ClawerConstants.TEST_WEB) {
-			circleTimes = ClawerConstants.TEST_WEB_NUM;
+		/**
+		 * get all the company urls according to page urls.
+		 */
+		if (failedOrNotInt < 2) {
+			parseSearchPages(requestId, reqLog, threadNumber);
+		} else {
+			log.warn("Start to parse failed search pages!");
+			parseSearchPages(requestId, reqLog, threadNumber);
+			log.warn("End to parse failed search pages!");
 		}
 
-		boolean end = false;
-		for (int i = 0; i < threadNumber; i++) {
-			String[] urls = new String[circleTimes];
-			int temp = 0;
-			for (int j = 0; j < circleTimes; j++) {
-				k = i * circleTimes + j;
-				if ((k + 1) > size) {
-					end = true;
-					break;
-				}
-				urls[j] = CompanyJobContext.getUrlCompanies().get(k);
-				temp = j;
-			}
-			SearchCompanyNJobLinksEngine sce = new SearchCompanyNJobLinksEngine(totalThreadTag + totalThreads + "[" + i
-					+ currentOfToI + size + "-" + k + currentOfToC + temp, urls, i);
-			sce.start();
-			jobs.add(sce);
-			if (end) {
-				break;
-			}
+		/**
+		 * parse job detail pages.
+		 */
+		if (failedOrNotInt < 3) {
+			parseJobsDetail(requestId, reqLog, threadNumber);
+		} else {
+			log.warn("Start to parse failed job detail!");
+			parseJobsDetail(requestId, reqLog, threadNumber);
+			log.warn("End to parse failed job detail!");
 		}
-
-		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse job links submit OK!Times[" + l / (1000 * 60) + "s]");
-
-		waitingParseJobLinks(jobs);
-		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse job links OK!Times[" + l / (1000 * 60) + "s]");
 	}
 
-	private void parseCompanyLinks(String requestId, String reqLog, int threadNumber) {
+	private void parseJobsDetail(String requestId, String reqLog, int threadNumber) {
+		try {
+			WebLinkSupport.refreshContext(ClawerConstants.PROC_LOG + "REC By parseJobsPages!0!");
+		} catch (Exception e) {
+			log.error(ClawerConstants.PROC_LOG + "REC By parseJobsPages!0!ERROR!");
+		}
 		long l = System.currentTimeMillis();
-		int size = CompanyJobContext.getUrlPagesLength();
-		int circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
+		int error = 0;
+		try {
+			int size = CompanyJobContext.getJobsWPLength();
+			if (ClawerConstants.TEST_WEB) {
+				size = ClawerConstants.TEST_WEB_NUM;
+			}
+			int circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
 
-		int totalThreads = threadNumber;
-		if (size < threadNumber) {
-			totalThreads = size;
-		}
+			int totalThreads = threadNumber;
+			if (size < threadNumber) {
+				totalThreads = size;
+			}
 
-		log.info(reqLog + "Parse company links start!threadNumber[" + threadNumber + "]company links size[" + size
-				+ "]circleTimes[" + circleTimes + "]");
+			log.info(reqLog + "Parse job detail links start!threadNumber[" + threadNumber + "]job links size[" + size
+					+ "]circleTimes[" + circleTimes + "]");
 
-		Collections.shuffle(CompanyJobContext.getUrlPages());
-		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Company links shffle!Times[" + l / (1000 * 60) + "s]");
+			Collections.shuffle(CompanyJobContext.getJobsWP());
 
-		int k = 0;
-		List<SearchCompanyLinksEngine> sces = new ArrayList<SearchCompanyLinksEngine>();
-
-		if (ClawerConstants.TEST_WEB) {
-			circleTimes = ClawerConstants.TEST_WEB_NUM;
-		}
-
-		boolean end = false;
-		for (int i = 0; i < threadNumber; i++) {
-			String[] urls = new String[circleTimes];
-			int temp = 0;
-			for (int j = 0; j < circleTimes; j++) {
-				k = i * circleTimes + j;
-				if ((k + 1) > size) {
-					end = true;
-					break;
+			int current = 0;
+			int circleTime = 0;
+			int recTimes = 0;
+			List<SearchJobDetailEngine> sjdes = new ArrayList<SearchJobDetailEngine>();
+			while (current < size) {
+				circleTime++;
+				for (int thread = 0; thread < threadNumber; thread++) {
+					if (current >= size) {
+						break;
+					}
+					// doing
+					SearchJobDetailEngine sce = new SearchJobDetailEngine("JobDetails#" + totalThreadTag + totalThreads
+							+ "-" + thread + "].CircleTimes[" + circleTimes + "-" + circleTime + currentOfToI + size
+							+ "-" + current, CompanyJobContext.getJobsWP().get(current), thread);
+					sce.start();
+					sjdes.add(sce);
+					current++;
 				}
-				urls[j] = CompanyJobContext.getUrlPages().get(k);
-				temp = j;
+
+				waitingParseJobDetailLinks(sjdes);
+
+				if (current % (ClawerConstants.REFRESH_INTERVAL_TIMES) == 0) {
+					recTimes++;
+					try {
+						WebLinkSupport.refreshContext(ClawerConstants.PROC_LOG + "REC By parseJobDetails!" + recTimes
+								+ "!");
+					} catch (Exception e) {
+						log.error(ClawerConstants.PROC_LOG + "REC By parseJobDetails!ERROR!recTimes=" + recTimes + ".");
+					}
+				}
 			}
-			SearchCompanyLinksEngine sce = new SearchCompanyLinksEngine(totalThreadTag + totalThreads + "[" + i
-					+ currentOfToI + size + "-" + k + currentOfToC + temp,
-			// requestId + ",parse company links [" + k + "].",
-					urls, i);
-			sce.start();
-			sces.add(sce);
-			if (end) {
-				break;
-			}
+
+		} catch (Exception e) {
+			error++;
+			ErrorHandler.errorLogAndMail("parseJobsDetails error in Action:", e);
 		}
-
 		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse company links submit OK!Times[" + l / (1000 * 60) + "s]");
-
-		waitingParseCompanyLinks(sces);
-		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse company links OK!Times[" + l / (1000 * 60) + "s]");
+		log.info("parse parseJobsDetails.Times[" + l / (1000 * 60) + "s]. Error[" + error + "]. URL_COMPANIES="
+				+ CompanyJobContext.getCompaniesLength() + ",URL_JOBS=" + CompanyJobContext.getJobsWPLength()
+				+ ",COMPANY=" + CompanyJobContext.getCompaniesLength() + ",Email="
+				+ CompanyJobContext.getEmailsLength() + ".");
 	}
 
-	private void parsePageLinks(int threadNumber, String requestId, String reqLog) {
+	private void parseSearchPages(String requestId, String reqLog, int threadNumber) {
+		try {
+			WebLinkSupport.refreshContext(ClawerConstants.PROC_LOG + "REC By SearchPages!0!");
+		} catch (Exception e) {
+			log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!");
+		}
 		long l = System.currentTimeMillis();
+		int error = 0;
+		try {
+			int size = CompanyJobContext.getSearchPagesSize();
+			if (ClawerConstants.TEST_WEB) {
+				size = ClawerConstants.TEST_WEB_NUM;
+			}
 
-		int size = CompanyJobContext.getSearchResultUrlsLength();
-		int circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
+			int circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
 
-		int totalThreads = threadNumber;
-		if (size < threadNumber) {
-			totalThreads = size;
-		}
+			int totalThreads = threadNumber;
+			if (size < threadNumber) {
+				totalThreads = size;
+			}
 
-		log.info(reqLog + "Parse pages links start!threadNumber[" + threadNumber + "]page size[" + size
-				+ "]circleTimes[" + circleTimes + "]");
+			log.info(reqLog + "Parse SearchPages start!threadNumber[" + threadNumber + "]company links size[" + size
+					+ "]circleTimes[" + circleTimes + "]");
 
-		int k = 0;
-		List<SearchPagesEngine> spes = new ArrayList<SearchPagesEngine>();
+			Collections.shuffle(CompanyJobContext.getSearchPagesWP());
+			l = System.currentTimeMillis() - l;
+			log.info(reqLog + "SearchPages shffle!Times[" + l / (1000 * 60) + "s]");
 
-		if (ClawerConstants.TEST_WEB) {
-			circleTimes = ClawerConstants.TEST_WEB_NUM;
-		}
-
-		boolean end = false;
-		for (int i = 0; i < threadNumber; i++) {
-			String[] urls = new String[circleTimes];
-			int temp = 0;
-			for (int j = 0; j < circleTimes; j++) {
-				k = i * circleTimes + j;
-				if ((k + 1) > size) {
-					end = true;
-					break;
+			int current = 0;
+			int circleTime = 0;
+			int recTimes = 0;
+			List<SearchPagesEngine> sces = new ArrayList<SearchPagesEngine>();
+			while (current < size) {
+				circleTime++;
+				for (int thread = 0; thread < threadNumber; thread++) {
+					if (current >= size) {
+						break;
+					}
+					// doing
+					SearchPagesEngine sce = new SearchPagesEngine("SearchPages#" + totalThreadTag + totalThreads + "-"
+							+ thread + "].CircleTimes[" + circleTimes + "-" + circleTime + currentOfToI + size + "-"
+							+ current, CompanyJobContext.getSearchPagesWP().get(current), thread);
+					sce.start();
+					sces.add(sce);
+					current++;
 				}
-				urls[j] = CompanyJobContext.getSearchResultUrls().get(k);
-				temp = j;
+
+				waitingSearchPages(sces);
+
+				if (current % (ClawerConstants.REFRESH_INTERVAL_TIMES) == 0) {
+					recTimes++;
+					try {
+						WebLinkSupport
+								.refreshContext(ClawerConstants.PROC_LOG + "REC By SearchPages!" + recTimes + "!");
+					} catch (Exception e) {
+						log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!recTimes=" + recTimes + ".");
+					}
+				}
 			}
-			SearchPagesEngine spe = new SearchPagesEngine(totalThreadTag + totalThreads + "[" + i + currentOfToI + size
-					+ "-" + k + currentOfToC + temp, urls, i);
-			spe.start();
-			spes.add(spe);
-			if (end) {
-				break;
-			}
+		} catch (Exception e) {
+			error++;
+			ErrorHandler.errorLogAndMail("SearchPages error in Action:", e);
 		}
-
 		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse pages links submit OK!Times[" + l / (1000 * 60) + "s]");
-
-		waitingPageLinkThreads(spes);
-
-		l = System.currentTimeMillis() - l;
-		log.info(reqLog + "Parse pages links OK!Times[" + l / (1000 * 60) + "s]");
+		log.info("parseSearchPages OK.Times[" + l / (1000 * 60) + "s]. Error[" + error + "]Search List="
+				+ CompanyJobContext.getSearchListSize() + ",Search Pages=" + CompanyJobContext.getSearchPagesSize()
+				+ ",Jobs=" + CompanyJobContext.getJobsWPLength() + ",Companies="
+				+ CompanyJobContext.getCompaniesLength());
 	}
 
-	private void waitingPageLinkThreads(List<SearchPagesEngine> spes) {
-		SearchPagesEngine spe = null;
-		int i = 0;
-		while (true) {
-			for (Iterator<SearchPagesEngine> it = spes.iterator(); it.hasNext();) {
-				spe = it.next();
+	private void parseSearchList(int threadNumber, String requestId, String reqLog) {
+		long l = System.currentTimeMillis();
+		int error = 0;
+		try {
+
+			int size = CompanyJobContext.getSearchListSize();
+			if (ClawerConstants.TEST_WEB) {
+				size = ClawerConstants.TEST_WEB_NUM;
+			}
+			int circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
+
+			int totalThreads = threadNumber;
+			if (size < threadNumber) {
+				totalThreads = size;
+			}
+
+			Collections.shuffle(CompanyJobContext.getSearchList());
+
+			log.info(reqLog + "Parse search list start!threadNumber[" + threadNumber + "]page size[" + size
+					+ "]circleTimes[" + circleTimes + "]");
+
+			int current = 0;
+			int circleTime = 0;
+			int recTimes = 0;
+			List<SearchListEngine> spes = new ArrayList<SearchListEngine>();
+			while (current < size) {
+				circleTime++;
+				for (int thread = 0; thread < threadNumber; thread++) {
+					if (current >= size) {
+						break;
+					}
+					// doing
+					SearchListEngine sce = new SearchListEngine("SearchList#" + totalThreadTag + totalThreads + "-"
+							+ thread + "].CircleTimes[" + circleTimes + "-" + circleTime + currentOfToI + size + "-"
+							+ current, CompanyJobContext.getSearchList().get(current), thread);
+					sce.start();
+					spes.add(sce);
+					current++;
+				}
+
+				waitingSearchList(spes);
+
+				if (current % (ClawerConstants.REFRESH_INTERVAL_TIMES) == 0) {
+					recTimes++;
+					try {
+						WebLinkSupport.refreshContext(ClawerConstants.PROC_LOG + "REC By SearchList!" + recTimes + "!");
+					} catch (Exception e) {
+						log.error(ClawerConstants.PROC_LOG + "REC By SearchList!ERROR!recTimes=" + recTimes + ".");
+					}
+				}
+			}
+
+			l = System.currentTimeMillis() - l;
+			log.info(reqLog + "Parse search list submit OK!Times[" + l / (1000 * 60) + "s]");
+		} catch (Exception e) {
+			error++;
+			ErrorHandler.errorLogAndMail("Parse search list error in Action:", e);
+		}
+
+		l = System.currentTimeMillis() - l;
+		log.info("parse search list OK.Times[" + l / (1000 * 60) + "s]. Error[" + error + "]Search List="
+				+ CompanyJobContext.getSearchListSize() + ",Search Pages=" + CompanyJobContext.getSearchPagesSize()
+				+ ",Jobs=" + CompanyJobContext.getJobsWPLength() + ",Companies="
+				+ CompanyJobContext.getCompaniesLength());
+	}
+
+	private void waitingSearchList(List<SearchListEngine> spes) {
+		SearchListEngine spe = null;
+		for (Iterator<SearchListEngine> it = spes.iterator(); it.hasNext();) {
+			int i = 0;
+			spe = it.next();
+			while (true) {
 				if (!spe.isAlive()) {
 					log.info(spe.getTitle() + " thread was removed OK.");
 					it.remove();
+					spe = null;
+					break;
 				} else {
 					i++;
-					log.info(spe.getTitle() + " Waiting thread runing end!  URL|" + spe.getCrUrl());
+					log.debug(spe.getTitle() + " Waiting thread runing!  URL|" + spe.getUrl());
 					try {
-						Thread.sleep(60000);
+						Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
 					} catch (InterruptedException e) {
 						log.error(spe.getTitle() + "Waiting thread exception!", e);
 					}
-					log.info(spe.getTitle() + " Waiting thread runing [" + i * 60 + "]s. URL|" + spe.getCrUrl());
+					log.debug(spe.getTitle() + " Waiting thread runing [" + i * ClawerConstants.WAITING_TIME_SECONDS
+							+ "]s. URL|" + spe.getUrl());
+				}
+
+				if (i > ClawerConstants.WAITING_TIMES + 1) {
+					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing [" + i
+							* ClawerConstants.WAITING_TIME_SECONDS + "]s. OverTime!. URL|" + spe.getUrl());
+					it.remove();
+					spe = null;
+					break;
 				}
 			}
-			if (spes == null || spes.isEmpty()) {
-				break;
-			}
 		}
-		log.info(spe.getTitle() + " Waiting thread runing end![" + i * 60 + "]s. URL|" + spe.getCrUrl());
+		log.info("WaitingPageLinkThreads waiting end OK.");
 	}
 
 	private void waitingParseJobDetailLinks(List<SearchJobDetailEngine> jobs) {
 		SearchJobDetailEngine spe = null;
-		int i = 0;
-		while (true) {
-			for (Iterator<SearchJobDetailEngine> it = jobs.iterator(); it.hasNext();) {
-				spe = it.next();
+		for (Iterator<SearchJobDetailEngine> it = jobs.iterator(); it.hasNext();) {
+			int i = 0;
+			spe = it.next();
+			while (true) {
 				if (!spe.isAlive()) {
 					log.info(spe.getTitle() + " thread was removed OK.");
 					it.remove();
+					spe = null;
+					break;
 				} else {
 					i++;
-					log.info(spe.getTitle() + " Waiting thread runing end!  URL|" + spe.getCrUrl());
+					log.info(spe.getTitle() + " Waiting thread runing end!  URL|" + spe.getUrl());
 					try {
-						Thread.sleep(60000);
+						Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
 					} catch (InterruptedException e) {
 						log.error(spe.getTitle() + "Waiting thread exception!", e);
 					}
-					log.info(spe.getTitle() + " Waiting thread runing [" + i * 60 + "]s. URL|" + spe.getCrUrl());
+					log.debug(spe.getTitle() + " Waiting thread runing [" + i * ClawerConstants.WAITING_TIME_SECONDS
+							+ "]s. URL|" + spe.getUrl());
+				}
+
+				if (i > ClawerConstants.WAITING_TIMES + 1) {
+					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing [" + i
+							* ClawerConstants.WAITING_TIME_SECONDS + "]s. OverTime!. URL|" + spe.getUrl());
+					it.remove();
+					spe = null;
+					break;
 				}
 			}
-			if (jobs == null || jobs.isEmpty()) {
-				break;
-			}
 		}
-		log.info(spe.getTitle() + " Waiting thread runing end![" + i * 60 + "]s. URL|" + spe.getCrUrl());
+		log.info("waitingParseJobDetailLinks waiting end OK.");
 	}
 
-	private void waitingParseJobLinks(List<SearchCompanyNJobLinksEngine> jobs) {
-		SearchCompanyNJobLinksEngine spe = null;
-		int i = 0;
-		while (true) {
-			for (Iterator<SearchCompanyNJobLinksEngine> it = jobs.iterator(); it.hasNext();) {
-				spe = it.next();
+	private void waitingSearchPages(List<SearchPagesEngine> sles) {
+		SearchPagesEngine spe = null;
+		for (Iterator<SearchPagesEngine> it = sles.iterator(); it.hasNext();) {
+			int i = 0;
+			spe = it.next();
+			while (true) {
 				if (!spe.isAlive()) {
 					log.info(spe.getTitle() + " thread was removed OK.");
 					it.remove();
+					spe = null;
+					break;
 				} else {
 					i++;
-					log.info(spe.getTitle() + " Waiting thread runing end!  URL|" + spe.getCrUrl());
+					log.debug(spe.getTitle() + " Waiting thread runing!  URL|" + spe.getUrl());
 					try {
-						Thread.sleep(60000);
+						Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
 					} catch (InterruptedException e) {
 						log.error(spe.getTitle() + "Waiting thread exception!", e);
 					}
-					log.info(spe.getTitle() + " Waiting thread runing [" + i * 60 + "]s. URL|" + spe.getCrUrl());
+					log.debug(spe.getTitle() + " Waiting thread runing [" + i * ClawerConstants.WAITING_TIME_SECONDS
+							+ "]s. URL|" + spe.getUrl());
 				}
-			}
-			if (jobs == null || jobs.isEmpty()) {
-				break;
-			}
-		}
-		log.info(spe.getTitle() + " Waiting thread runing end![" + i * 60 + "]. URL|" + spe.getCrUrl());
-	}
 
-	private void waitingParseCompanyLinks(List<SearchCompanyLinksEngine> jobs) {
-		SearchCompanyLinksEngine spe = null;
-		int i = 0;
-		while (true) {
-			for (Iterator<SearchCompanyLinksEngine> it = jobs.iterator(); it.hasNext();) {
-				spe = it.next();
-				if (!spe.isAlive()) {
-					log.info(spe.getTitle() + " thread was removed OK.");
+				if (i > ClawerConstants.WAITING_TIMES + 1) {
+					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing [" + i
+							* ClawerConstants.WAITING_TIME_SECONDS + "]s. OverTime!. URL|" + spe.getUrl());
 					it.remove();
-				} else {
-					i++;
-					log.info(spe.getTitle() + " Waiting thread runing end!  URL|" + spe.getCrUrl());
-					try {
-						Thread.sleep(60000);
-					} catch (InterruptedException e) {
-						log.error(spe.getTitle() + "Waiting thread exception!", e);
-					}
-					log.info(spe.getTitle() + " Waiting thread runing [" + i * 60 + "]s. URL|" + spe.getCrUrl());
+					spe = null;
+					break;
 				}
 			}
-			if (jobs == null || jobs.isEmpty()) {
-				break;
-			}
 		}
-		log.info(spe.getTitle() + " Waiting thread runing end![" + i * 60 + "]. URL|" + spe.getCrUrl());
+		log.info("SearchPages waiting end OK.");
 	}
 }

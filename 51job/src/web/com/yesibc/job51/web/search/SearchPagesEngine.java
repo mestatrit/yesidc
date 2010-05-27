@@ -1,7 +1,11 @@
 package com.yesibc.job51.web.search;
 
+import java.util.Date;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import cn.cetelem.track.AlertUtils;
 
 import com.webrenderer.swing.BrowserFactory;
 import com.webrenderer.swing.IBrowserCanvas;
@@ -19,7 +23,7 @@ public class SearchPagesEngine extends Thread {
 
 	private static Log log = LogFactory.getLog(SearchPagesEngine.class);
 
-	public final static String companyTag = "#Company#";
+	public final static String companyTag = "#SearchPages#";
 
 	static long l = 0;
 
@@ -51,12 +55,6 @@ public class SearchPagesEngine extends Thread {
 			finish = false;
 			l = System.currentTimeMillis();
 
-			// File file = new File("C:/Users/Abel/Desktop/1.html");
-			// String html = FileUtils.readFileToString(file,"GBK");
-			// File f = new File(".");
-			// browser.loadHTML(html, f.toURL().toString());
-
-			
 			browser.loadURL(url);
 			boolean loadedOK = true;
 
@@ -70,28 +68,29 @@ public class SearchPagesEngine extends Thread {
 					ErrorHandler.errorLogAndMail(processContext.getLogTitle() + "Two times refresh and waiting error!");
 				}
 			}
-			
-			finish = false;
+
 			log.info(processContext.getLogTitle() + "End Loading " + url + "!Loaded[" + loadedOK + "]Time is "
 					+ (System.currentTimeMillis() - l));
 			l = System.currentTimeMillis();
 
-			ParseCompanyLinks.parseCompanyLinks(processContext);
+			ParseSearchPages.parseSearchPages(processContext);
 
 			if (!ClawerConstants.TEST_DAO) {
 				CompanyJobContext.getSearchPagesWP().remove(wp);
 				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
 				wp.setStatus(WebPages.STATUS_OK);
+				wp.setUpdateDate(new Date());
 				webPagesDao.update(wp);
 			}
 
 			log.info(processContext.getLogTitle() + "Parsing [" + browser.getURL() + "] is OK!Time is "
 					+ (System.currentTimeMillis() - l));
 		} catch (Exception e) {
-			log.error(processContext.getLogTitle() + " Error Start!");
-			ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " Parsing [" + browser.getURL()
-					+ "] is error=SearchCompanyLinksEngine!" + e.getMessage() + "\n HTML contents Start===========\n:"
-					+ browser.getDocument().getBody().getOuterHTML() + "HTML contents End===========\n", e);
+			String str = AlertUtils.getErrString(e);
+			log.error(processContext.getLogTitle() + " Error Start!\n Loaded[" + finish + "]\n" + str);
+			ErrorHandler.error(processContext.getLogTitle() + " Parsing [" + browser.getURL()
+					+ "] is error=SearchPagesEngine!" + e.getMessage() + "\n HTML contents Start===========\n:"
+					+ browser.getDocument().getBody().getOuterHTML() + "\n HTML contents End===========\n" + str);
 		} finally {
 			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(true);
 		}

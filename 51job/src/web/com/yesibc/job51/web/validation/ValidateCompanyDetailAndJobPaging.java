@@ -1,4 +1,4 @@
-package com.yesibc.job51.web.search;
+package com.yesibc.job51.web.validation;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -7,17 +7,17 @@ import com.webrenderer.swing.BrowserFactory;
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
-import com.yesibc.core.spring.SpringContext;
+import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.job51.common.ClawerConstants;
-import com.yesibc.job51.dao.WebPagesDao;
-import com.yesibc.job51.model.WebPages;
+import com.yesibc.job51.model.Company;
+import com.yesibc.job51.web.search.WebrendererContext;
 import com.yesibc.job51.web.support.ErrorHandler;
 import com.yesibc.job51.web.support.JobSupport;
 import com.yesibc.job51.web.support.LogHandler;
 
-public class SearchCompanyLinksEngine extends Thread {
+public class ValidateCompanyDetailAndJobPaging {
 
-	private static Log log = LogFactory.getLog(SearchCompanyLinksEngine.class);
+	private static Log log = LogFactory.getLog(ValidateCompanyDetailAndJobPaging.class);
 
 	public final static String companyTag = "#Company#";
 
@@ -26,72 +26,50 @@ public class SearchCompanyLinksEngine extends Thread {
 	private IBrowserCanvas browser;
 	private boolean finish = false;
 	private String url;
-	private WebPages wp;
 	private String title;
 	private int index;
-	private ProcessContext processContext;
+	private TestProcessContext processContext;
+	private Company com;
 
-	public SearchCompanyLinksEngine(String title, WebPages wp, int index) {
-		this.url = wp.getUrl();
+	public ValidateCompanyDetailAndJobPaging(String title, Company com, int index) {
+		this.com = com;
+		url = com.getUrl();
 		this.index = index;
 		this.title = title;
-		this.wp = wp;
-		processContext = new ProcessContext();
+		processContext = new TestProcessContext();
 	}
 
-	public void run() {
-		if (url == null || "".equals(url)) {
-			return;
-		}
+	public void validateCompanyDetailAndJobPaging() throws ApplicationException {
+		run();
+	}
 
-		browser = JobSupport.initLoading(processContext, title, index);
-		onDocumnetComplete();
-
+	public void run() throws ApplicationException {
 		try {
+			browser = JobSupport.initLoading(processContext, title, 0);
+			onDocumnetComplete();
 			finish = false;
 			l = System.currentTimeMillis();
+			log.info(processContext.getLogTitle() + "Start Loading " + url);
 
-			// File file = new File("C:/Users/Abel/Desktop/1.html");
-			// String html = FileUtils.readFileToString(file,"GBK");
-			// File f = new File(".");
-			// browser.loadHTML(html, f.toURL().toString());
-
-			
 			browser.loadURL(url);
 			boolean loadedOK = true;
 
 			if (!waitingLoading(index, url)) {
-				browser = JobSupport.reLoading(processContext, title, index);
-				onDocumnetComplete();
-				log.info(processContext.getLogTitle() + "ReStart Loading " + url);
-				browser.loadURL(url);
-				if (!waitingLoading(index, url)) {
-					loadedOK = false;
-					ErrorHandler.errorLogAndMail(processContext.getLogTitle() + "Two times refresh and waiting error!");
-				}
+				throw new ApplicationException("ValidateCompanyDetailAndJobPaging waiting error:" + url);
 			}
 			
 			finish = false;
+
 			log.info(processContext.getLogTitle() + "End Loading " + url + "!Loaded[" + loadedOK + "]Time is "
 					+ (System.currentTimeMillis() - l));
 			l = System.currentTimeMillis();
 
-			ParseCompanyLinks.parseCompanyLinks(processContext);
-
-			if (!ClawerConstants.TEST_DAO) {
-				CompanyJobContext.getComListPages().remove(wp);
-				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
-				wp.setStatus(WebPages.STATUS_OK);
-				webPagesDao.update(wp);
-			}
+			// 因为还有子窗口的工作列表要翻页.
+			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(true);
+			ParseCompanyDetailSupport.parseJobLinks(index, com, processContext);
 
 			log.info(processContext.getLogTitle() + "Parsing [" + browser.getURL() + "] is OK!Time is "
 					+ (System.currentTimeMillis() - l));
-		} catch (Exception e) {
-			log.error(processContext.getLogTitle() + " Error Start!");
-			ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " Parsing [" + browser.getURL()
-					+ "] is error=SearchCompanyLinksEngine!" + e.getMessage() + "\n HTML contents Start===========\n:"
-					+ browser.getDocument().getBody().getOuterHTML() + "HTML contents End===========\n", e);
 		} finally {
 			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(true);
 		}
@@ -101,7 +79,7 @@ public class SearchCompanyLinksEngine extends Thread {
 		return BrowserFactory.spawnMozilla();
 	}
 
-	private void onDocumnetComplete() {
+	public void onDocumnetComplete() {
 		browser.addNetworkListener(new NetworkAdapter() {
 			public void onDocumentComplete(NetworkEvent e) {
 				finish = true;
@@ -111,7 +89,7 @@ public class SearchCompanyLinksEngine extends Thread {
 
 	public boolean waitingLoading(int index, String url) {
 		int i = 0;
-		LogHandler.info(processContext.getLogTitle() + " URL[" + url + "] waiting loading start!");
+		LogHandler.debug(processContext.getLogTitle() + " URL[" + url + "] waiting loading start!");
 		while (!finish) {
 			i++;
 			try {
@@ -128,14 +106,14 @@ public class SearchCompanyLinksEngine extends Thread {
 				return false;
 			} else {
 				LogHandler.debug(processContext.getLogTitle() + " URL[" + url + "] waiting loading……[" + i
-						* ClawerConstants.WAITING_TIME_SECONDS + "]s");
+						* ClawerConstants.WAITING_TIME_LOADING + "]s");
 			}
 		}
 		LogHandler.info(processContext.getLogTitle() + " URL[" + url + "] waiting loading end![" + i * 10 + "]s");
 		return true;
 	}
 
-	public ProcessContext getProcessContext() {
+	public TestProcessContext getProcessContext() {
 		return processContext;
 	}
 
@@ -149,6 +127,18 @@ public class SearchCompanyLinksEngine extends Thread {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public boolean isFinish() {
+		return finish;
+	}
+
+	public void setFinish(boolean finish) {
+		this.finish = finish;
+	}
+
+	public void setBrowser(IBrowserCanvas browser) {
+		this.browser = browser;
 	}
 
 }

@@ -6,6 +6,7 @@ import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
 import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
+import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.web.search.WebrendererContext;
@@ -13,11 +14,11 @@ import com.yesibc.job51.web.search.WebrendererContext;
 public class WebLinkSupport {
 
 	private static boolean finish = false;
-	private static boolean going = false;
 	private static long COUNTLOADED = 0;
+	private static long WAITING_CONNECTION = 20000;
 
-	public static void reconnectInternet(String rid) {
-		going = true;
+	public synchronized static void reconnectInternet(String rid) throws ApplicationException {
+		finish = false;
 		try {
 			WebRenderEntity wre = WebrendererContext.WEBRENDER_ENTITIES.get(ClawerConstants.THREADS_NUMBER);
 			IBrowserCanvas browser = wre.getBrowser();
@@ -30,7 +31,8 @@ public class WebLinkSupport {
 			IElement ie = getCutButton(browser);
 
 			if (ie == null) {
-				ErrorHandler.errorLogAndMail(rid + "reconnectInternet error:can not get cut button!First Step!");
+				ErrorHandler.errorLogAndMail(rid + "reconnectInternet error:can not get cut button!First Step!\n" + rid
+						+ browser.getDocument().getBody().getOuterHTML());
 				handleReconnect(rid, browser);
 				return;
 			}
@@ -40,17 +42,23 @@ public class WebLinkSupport {
 			// String IP = logIP(rid, browser);
 			// LogHandler.info(rid + " Old IP:[" + IP + "]");
 
-			setFinish(false);
+			finish = false;
 			ie.click();
-
 			waitingLoading(rid + "|getConnectButton!");
 
+			try {
+				Thread.sleep(WAITING_CONNECTION);
+			} catch (InterruptedException e) {
+				throw new ApplicationException("ReconnectInternet error Thread.sleep!", e);
+			}
+
+			finish = false;
 			handleReconnect(rid, browser);
 
 			// IP = logIP(rid, browser);
 			// LogHandler.info(rid + " New IP:[" + IP + "]");
 		} finally {
-			going = false;
+			finish = false;
 		}
 	}
 
@@ -88,26 +96,24 @@ public class WebLinkSupport {
 		return IP;
 	}
 
-	public static boolean isGoing() {
-		return going;
-	}
-
-	public static void setGoing(boolean going) {
-		WebLinkSupport.going = going;
-	}
 
 	private static void handleReconnect(String rid, IBrowserCanvas browser) {
 		IElement ie = getConnectButton(browser);
 		if (ie == null) {
-			ErrorHandler.errorLogAndMail(rid + "reconnectInternet error:can not get connect button!Second Step!");
+			ErrorHandler.errorLogAndMail(rid + "reconnectInternet error:can not get connect button!Second Step!\n"
+					+ rid + browser.getDocument().getBody().getOuterHTML());
 			return;
 		}
-		setFinish(false);
+
+		finish = false;
 		ie.click();
 		waitingLoading(rid + "|getCutButton!");
+		finish = false;
+
 		ie = getCutButton(browser);
 		if (ie == null) {
-			ErrorHandler.errorLogAndMail(rid + "reconnectInternet error:can not get cut button!Three Step!");
+			ErrorHandler.errorLogAndMail(rid + "reconnectInternet error:can not get cut button!Three Step!\n" + rid
+					+ browser.getDocument().getBody().getOuterHTML());
 		} else {
 			LogHandler.info(rid + "reconnectInternet OK!");
 		}
@@ -124,18 +130,22 @@ public class WebLinkSupport {
 	}
 
 	public static void waitingLoading(String rid) {
-		int i = 0;
-		LogHandler.info(rid + "reconnectInternet waiting loading start!");
-		while (!finish) {
-			i++;
-			try {
-				Thread.sleep(1500);
-			} catch (InterruptedException e) {
-				ErrorHandler.error(rid + "reconnectInternet:", e);
+		try {
+			int i = 0;
+			LogHandler.info(rid + "reconnectInternet waiting loading start!");
+			while (!finish) {
+				i++;
+				Thread.sleep(2000);
+				LogHandler.debug(rid + "reconnectInternet waiting loading……[" + i * 2 + "]s");
+				if (i > 20) {
+					ErrorHandler.error(rid + " Error waitingLoading@!");
+					break;
+				}
 			}
-			LogHandler.info(rid + "reconnectInternet waiting loading……[" + i * 1.5 + "]s");
+			LogHandler.info(rid + "reconnectInternet waiting loading end![" + i * 2 + "]s");
+		} catch (InterruptedException e) {
+			ErrorHandler.error(rid + "reconnectInternet:", e);
 		}
-		LogHandler.info(rid + "reconnectInternet waiting loading end![" + i * 1.5 + "]s");
 	}
 
 	private static void onDocumnetComplete(IBrowserCanvas browser) {
@@ -162,7 +172,11 @@ public class WebLinkSupport {
 	}
 
 	public static void main(String[] args) {
-		reconnectInternet("test");
+		try {
+			reconnectInternet("test");
+		} catch (ApplicationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void checkRunningWeb(String tag, int index) {
@@ -180,13 +194,13 @@ public class WebLinkSupport {
 			while (!entry.getValue().isLoaded()) {
 				try {
 					i++;
-					LogHandler.info(tag + "Check running web waiting time:" + ClawerConstants.WAITING_TIME * i);
-					Thread.sleep(ClawerConstants.WAITING_TIME);
+					LogHandler.info(tag + "Check running web waiting time:" + ClawerConstants.WAITING_TIME_LOADING * i);
+					Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
 
 					if (i > 12) {
 						entry.getValue().setLoaded(true);
 						ErrorHandler.errorLogAndMail(tag + "Check running web waiting error!Time:"
-								+ ClawerConstants.WAITING_TIME * i);
+								+ ClawerConstants.WAITING_TIME_LOADING * i);
 					}
 				} catch (InterruptedException e) {
 					ErrorHandler.errorLogAndMail("Error when check running web!", e);
@@ -199,7 +213,7 @@ public class WebLinkSupport {
 
 	private static long current = System.currentTimeMillis();
 
-	public synchronized static void doCount(String tag, int index, boolean retry) {
+	public synchronized static void doCount(String tag, int index, boolean retry) throws ApplicationException {
 
 		if (ClawerConstants.TEST_WEB) {
 			return;
@@ -225,11 +239,27 @@ public class WebLinkSupport {
 			current = System.currentTimeMillis();
 			tag = tag + "[" + retry + "]";
 			checkRunningWeb(tag, index);
+
+			int size = WebrendererContext.WEBRENDER_ENTITIES.size();
+			for (int i = 0; i < size; i++) {
+				WebrendererContext.reFreshContext1(i, "Rec " + COUNTLOADED + "-" + i);
+			}
+
 			LogHandler.info(tag + "reconnect internet start!" + COUNTLOADED);
 			long start = System.currentTimeMillis();
 			reconnectInternet(tag);
 			LogHandler.info(tag + "reconnect internet end! time is " + (System.currentTimeMillis() - start));
 		}
+	}
+
+	public static void refreshContext(String title) throws ApplicationException {
+		LogHandler.info(title + " start!");
+		int sizeOfWRE = WebrendererContext.WEBRENDER_ENTITIES.size();
+		for (int i = 0; i < sizeOfWRE; i++) {
+			WebrendererContext.reFreshContext1(i, title + "-" + i);
+		}
+		WebLinkSupport.reconnectInternet(title);
+		LogHandler.info(title + " End!");
 	}
 
 }

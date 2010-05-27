@@ -1,7 +1,5 @@
-package com.yesibc.job51.web.search;
+package com.yesibc.job51.web.validation;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -10,20 +8,17 @@ import org.apache.commons.logging.LogFactory;
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
 import com.yesibc.core.exception.ApplicationException;
-import com.yesibc.core.spring.SpringContext;
-import com.yesibc.core.utils.StringUtils;
+import com.yesibc.core.utils.CollectionUtils;
 import com.yesibc.job51.common.ClawerConstants;
-import com.yesibc.job51.dao.WebPagesDao;
 import com.yesibc.job51.model.Company;
-import com.yesibc.job51.model.WebPages;
-import com.yesibc.job51.service.CompanyInfoHandlerService;
+import com.yesibc.job51.web.search.WebrendererContext;
 import com.yesibc.job51.web.support.CompanyInfoSupport;
 import com.yesibc.job51.web.support.ErrorHandler;
 import com.yesibc.job51.web.support.JobSupport;
 import com.yesibc.job51.web.support.LocateCompanyInfo;
 
-public class ParseCompanyNJobLinks {
-	private static Log log = LogFactory.getLog(ParseCompanyNJobLinks.class);
+public class ParseCompanyDetailSupport {
+	private static Log log = LogFactory.getLog(ParseCompanyDetailSupport.class);
 
 	/**
 	 * @param args
@@ -32,7 +27,7 @@ public class ParseCompanyNJobLinks {
 
 	}
 
-	public static void parseJobLinks(int index, Company company, ProcessContext processContext)
+	public static void parseJobLinks(int index, Company company, TestProcessContext processContext)
 			throws ApplicationException {
 
 		log.info(processContext.getLogTitle() + "Parsing web paging to company object for [" + company.getCompanyCode()
@@ -40,55 +35,28 @@ public class ParseCompanyNJobLinks {
 
 		parseToCompany(company, processContext);
 
-		if (!ClawerConstants.TEST_DAO) {
-			try {
-				CompanyInfoHandlerService companyInfoHandlerService = (CompanyInfoHandlerService) SpringContext
-						.getBean("companyInfoHandlerService");
-				companyInfoHandlerService.update(company);
-				// companyInfoHandlerService.logHibernateStat();
-
-				log.info(processContext.getLogTitle() + "Update company to DB for [" + company.getCompanyCode() + ","
-						+ company.getCompanyName() + "] OK.");
-			} catch (Exception e) {
-				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + ",url="
-						+ processContext.getBrowser().getURL() + " Update company to DB error! " + company.toString(),
-						e);
-			}
-		}
-
 		putJobLinks2Context(index, processContext, company);
+
 		log.info(processContext.getLogTitle() + "Get all job links to context for [" + company.getCompanyCode() + ","
 				+ company.getCompanyName() + "]");
 	}
 
-	private static void onePage(ProcessContext processContext, Company company) {
+	private static void onePage(TestProcessContext processContext, Company company) throws ApplicationException {
 		List<IElement> urls = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"),
 				"href", ClawerConstants.JOB_URL_PREFIX);
 		String url = null;
-		List<WebPages> wps = new ArrayList<WebPages>();
 		for (IElement ie : urls) {
 			url = ie.getAttribute("href", 0);
-			if(CompanyJobContext.getJobsURL().contains(url)){
+			if (ValidateWorkFLow.testJobsURL.contains(url)) {
 				continue;
 			}
-			WebPages wp = new WebPages();
-			wp.setUrl(url);
-			wp.setPageType(WebPages.PAGE_TYPE_JOB_LIST);
-			wp.setRequestId(ClawerConstants.REQUEST_ID);
-			wp.setStatus(WebPages.STATUS_KO);
-			wp.setUpdateDate(new Date());
-			CompanyJobContext.setUrlJob(wp);
-			wps.add(wp);
-		}
-		if (!ClawerConstants.TEST_DAO) {
-			WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
-			webPagesDao.saveByBatch(wps);
+			ValidateWorkFLow.testJobsURL.add(url);
 		}
 		log.info(processContext.getLogTitle() + "One page - Jobs size " + urls.size() + " for ["
 				+ company.getCompanyCode() + "," + company.getCompanyName() + "] and save 2 DB.");
 	}
 
-	private static int byClick50(ProcessContext processContext, Company company, int index) {
+	private static int byClick50(TestProcessContext processContext, Company company, int index) throws ApplicationException {
 		String title = processContext.getLogTitle();
 		String url = processContext.getBrowser().getURL();
 		int positionOfURL = 1;
@@ -99,9 +67,9 @@ public class ParseCompanyNJobLinks {
 
 			IBrowserCanvas browser = JobSupport.initLoading(processContext, title + "|| Sub-1 [" + positionOfURL + "]",
 					index);
-			processContext.getSearchJobEngine().setFinish(false);
-			processContext.getSearchJobEngine().setBrowser(browser);
-			processContext.getSearchJobEngine().onDocumnetComplete();
+			processContext.getCompanyDetailAndJobPaging().setFinish(false);
+			processContext.getCompanyDetailAndJobPaging().setBrowser(browser);
+			processContext.getCompanyDetailAndJobPaging().onDocumnetComplete();
 
 			ie50.click();
 
@@ -116,18 +84,19 @@ public class ParseCompanyNJobLinks {
 				}
 			}
 
-			boolean loaded = processContext.getSearchJobEngine().waitingLoading(index, subUrl);
+			boolean loaded = processContext.getCompanyDetailAndJobPaging().waitingLoading(index, subUrl);
 			if (!loaded) {
 				browser = JobSupport.reLoading(processContext, title + "|| Sub-1 [" + positionOfURL + "]", index);
-				processContext.getSearchJobEngine().onDocumnetComplete();
+				processContext.getCompanyDetailAndJobPaging().onDocumnetComplete();
 				log.info(processContext.getLogTitle() + "ReStart Loading  " + subUrl);
 				browser.loadURL(okUrl);
-				loaded = processContext.getSearchJobEngine().waitingLoading(index, subUrl);
+				loaded = processContext.getCompanyDetailAndJobPaging().waitingLoading(index, subUrl);
 				if (!loaded) {
 					ErrorHandler.errorLogAndMail(processContext.getLogTitle() + "Two times refresh and waiting error1!"
 							+ subUrl);
 				}
 			}
+			processContext.getCompanyDetailAndJobPaging().setFinish(true);
 
 		} catch (Exception e) {
 			ErrorHandler.errorLogAndMail(processContext.getLogTitle() + "!parseJobLinks!putJobLinks2Context-1!", e);
@@ -137,21 +106,12 @@ public class ParseCompanyNJobLinks {
 
 		List<IElement> urls = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"),
 				"href", ClawerConstants.JOB_URL_PREFIX);
-		List<WebPages> wps = new ArrayList<WebPages>();
 		for (IElement ie : urls) {
 			url = ie.getAttribute("href", 0);
-			WebPages wp = new WebPages();
-			wp.setUrl(url);
-			wp.setPageType(WebPages.PAGE_TYPE_JOB_LIST);
-			wp.setRequestId(ClawerConstants.REQUEST_ID);
-			wp.setStatus(WebPages.STATUS_KO);
-			wp.setUpdateDate(new Date());
-			CompanyJobContext.setUrlJob(wp);
-			wps.add(wp);
-		}
-		if (!ClawerConstants.TEST_DAO) {
-			WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
-			webPagesDao.saveByBatch(wps);
+			if (ValidateWorkFLow.testJobsURL.contains(url)) {
+				continue;
+			}
+			ValidateWorkFLow.testJobsURL.add(url);
 		}
 		log.info(processContext.getLogTitle() + "By Click 50 button 1 - Jobs size " + urls.size() + " for ["
 				+ company.getCompanyCode() + "," + company.getCompanyName() + "] and save 2 DB.");
@@ -173,8 +133,9 @@ public class ParseCompanyNJobLinks {
 	 * </pre>
 	 * 
 	 * @param processContext
+	 * @throws ApplicationException 
 	 */
-	private static void putJobLinks2Context(int index, ProcessContext processContext, Company company) {
+	private static void putJobLinks2Context(int index, TestProcessContext processContext, Company company) throws ApplicationException {
 		String[] innerTxts = { ClawerConstants.NEXT_PAGE_IMG };
 		String title = processContext.getLogTitle();
 		List<IElement> ies = JobSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags("A"),
@@ -192,7 +153,7 @@ public class ParseCompanyNJobLinks {
 		paging(index, title, processContext, company);
 	}
 
-	private static void paging(int index, String title, ProcessContext processContext, Company company) {
+	private static void paging(int index, String title, TestProcessContext processContext, Company company) throws ApplicationException {
 		int positionOfURL = 1;
 		String[] innerTxts = { ClawerConstants.NEXT_PAGE_IMG };
 		List<IElement> ies = JobSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags("A"),
@@ -205,9 +166,9 @@ public class ParseCompanyNJobLinks {
 			try {
 				IBrowserCanvas browser = JobSupport.initLoading(processContext, title + "|| Sub-2 [" + positionOfURL
 						+ "] ", index);
-				processContext.getSearchJobEngine().setFinish(false);
-				processContext.getSearchJobEngine().setBrowser(browser);
-				processContext.getSearchJobEngine().onDocumnetComplete();
+				processContext.getCompanyDetailAndJobPaging().setFinish(false);
+				processContext.getCompanyDetailAndJobPaging().setBrowser(browser);
+				processContext.getCompanyDetailAndJobPaging().onDocumnetComplete();
 
 				log.info(processContext.getLogTitle() + " for [" + company.getCompanyCode() + ","
 						+ company.getCompanyName() + "] 50 perpage [" + positionOfURL + "] loading!");
@@ -225,19 +186,20 @@ public class ParseCompanyNJobLinks {
 					}
 				}
 
-				boolean loaded = processContext.getSearchJobEngine().waitingLoading(index, subUrl);
+				boolean loaded = processContext.getCompanyDetailAndJobPaging().waitingLoading(index, subUrl);
 				if (!loaded) {
 					browser = JobSupport.reLoading(processContext, title + "|| Sub-2 [" + positionOfURL + "] ", index);
-					processContext.getSearchJobEngine().onDocumnetComplete();
+					processContext.getCompanyDetailAndJobPaging().onDocumnetComplete();
 					log.info(processContext.getLogTitle() + "ReStart Loading error2 " + subUrl);
 					browser.loadURL(okUrl);
-					loaded = processContext.getSearchJobEngine().waitingLoading(index, subUrl);
+					loaded = processContext.getCompanyDetailAndJobPaging().waitingLoading(index, subUrl);
 					if (!loaded) {
 						ErrorHandler.errorLogAndMail(processContext.getLogTitle()
 								+ "Two times refresh and waiting error2!" + subUrl);
 					}
 				}
 
+				processContext.getCompanyDetailAndJobPaging().setFinish(true);
 			} catch (Exception e) {
 				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + "!parseJobLinks!putJobLinks2Context-["
 						+ positionOfURL + "]!", e);
@@ -247,21 +209,12 @@ public class ParseCompanyNJobLinks {
 
 			urls = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"), "href",
 					ClawerConstants.JOB_URL_PREFIX);
-			List<WebPages> wps = new ArrayList<WebPages>();
 			for (IElement ie : urls) {
 				url = ie.getAttribute("href", 0);
-				WebPages wp = new WebPages();
-				wp.setUrl(url);
-				wp.setPageType(WebPages.PAGE_TYPE_JOB_LIST);
-				wp.setRequestId(ClawerConstants.REQUEST_ID);
-				wp.setStatus(WebPages.STATUS_KO);
-				wp.setUpdateDate(new Date());
-				CompanyJobContext.setUrlJob(wp);
-				wps.add(wp);
-			}
-			if (!ClawerConstants.TEST_DAO) {
-				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
-				webPagesDao.saveByBatch(wps);
+				if (ValidateWorkFLow.testJobsURL.contains(url)) {
+					continue;
+				}
+				ValidateWorkFLow.testJobsURL.add(url);
 			}
 
 			size = size + urls.size();
@@ -272,18 +225,18 @@ public class ParseCompanyNJobLinks {
 				+ "] By Click 50 button 2 - Jobs size is [" + size + "]");
 	}
 
-	private static IElement get50Button(ProcessContext processContext) {
+	private static IElement get50Button(TestProcessContext processContext) {
 		String[] innerTxts = { ">50<" };
 		List<IElement> ies = JobSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags("A"),
 				innerTxts);
 		return ies.get(0);
 	}
 
-	public static void parseToCompany(Company company, ProcessContext processContext) {
+	public static void parseToCompany(Company company, TestProcessContext processContext) throws ApplicationException {
 
 		LocateCompanyInfo.checkCompanyDetail(processContext);
 
-		CompanyInfoSupport.setCompanyCommon(company);
+		CompanyInfoSupport.setCompanyCommon(company,true);
 
 		String[] industryTypeScale = LocateCompanyInfo.getComIndustryTypeScale(processContext);
 		company.setCompanyIndustry1Name(industryTypeScale[0]);
@@ -314,41 +267,9 @@ public class ParseCompanyNJobLinks {
 			CompanyInfoSupport.setLinkMan2CompanyHeaders(position, company, linkman);
 		}
 
-		String email = LocateCompanyInfo.getEmail(processContext);
-		if (!"".equals(email)) {
-			boolean isSplit = false;
-			String[] emails = null;
-			for (String temp : ClawerConstants.EMAIL_SPLITS) {
-				if (email.indexOf(temp) > 0) {
-					isSplit = true;
-					emails = email.split(temp);
-					break;
-				}
-			}
-
-			if (isSplit) {
-				for (String em : emails) {
-					if (!StringUtils.isEmail(em)) {
-						CompanyJobContext.LOG_MANUAL.info(processContext.getLogTitle() + "Email is error![" + email
-								+ "]. URL is " + processContext.getBrowser().getURL());
-					} else {
-						if (!CompanyJobContext.getEmails().contains(em)) {
-							CompanyInfoSupport.setEmail2CompanyHeaders(processContext, position, company, em);
-							CompanyJobContext.setEmails(em);
-						}
-					}
-				}
-			} else {
-				if (!StringUtils.isEmail(email)) {
-					CompanyJobContext.LOG_MANUAL.info(processContext.getLogTitle() + "Email is error![" + email
-							+ "]. URL is " + processContext.getBrowser().getURL());
-				} else {
-					if (!CompanyJobContext.getEmails().contains(email)) {
-						CompanyInfoSupport.setEmail2CompanyHeaders(processContext, position, company, email);
-						CompanyJobContext.setEmails(email);
-					}
-				}
-			}
+		List<String> emails = LocateCompanyInfo.getEmails(processContext);
+		if (!CollectionUtils.isEmpty(emails)) {
+			CompanyInfoSupport.setEmail2CompanyHeaders(position, company, emails);
 		}
 
 		String description = LocateCompanyInfo.getDescription(processContext);

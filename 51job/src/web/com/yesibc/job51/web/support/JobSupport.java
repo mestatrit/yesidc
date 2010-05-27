@@ -7,11 +7,15 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
 import com.webrenderer.swing.dom.IElementCollection;
 import com.webrenderer.swing.event.PromptEvent;
 import com.webrenderer.swing.event.PromptListener;
+import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.common.ClawerUtils;
@@ -27,8 +31,8 @@ public class JobSupport {
 
 	public static IBrowserCanvas initLoading(ProcessContext processContext, String title, int index, int positionOfURL,
 			boolean retry) {
-		title = getCrIndex2Title(title, positionOfURL);
-		WebLinkSupport.doCount(title, index, retry);
+		// title = getCrIndex2Title(title, positionOfURL);
+		// WebLinkSupport.doCount(title, index, retry);
 
 		IBrowserCanvas browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
 		setProcessContext(browser, processContext, title);
@@ -40,8 +44,22 @@ public class JobSupport {
 		return browser;
 	}
 
-	public static IBrowserCanvas initLoading(ProcessContext processContext, String title, int index, boolean retry) {
-		WebLinkSupport.doCount(title, index, retry);
+	public static IBrowserCanvas initLoading(ProcessContext processContext, String title, int index) {
+		// WebLinkSupport.doCount(title, index, retry);
+
+		IBrowserCanvas browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
+		setProcessContext(browser, processContext, title);
+		if (ClawerConstants.SHOW_FRAME) {
+			WebrendererContext.WEBRENDER_ENTITIES.get(index).getFrame().setTitle(processContext.getLogTitle());
+		}
+		WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(false);
+
+		return browser;
+	}
+
+	public static IBrowserCanvas reLoading(ProcessContext processContext, String title, int index) {
+
+		WebrendererContext.reFreshContext1(index, title + "-" + index);
 
 		IBrowserCanvas browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
 		setProcessContext(browser, processContext, title);
@@ -79,6 +97,38 @@ public class JobSupport {
 		ieLMTs = new ArrayList<IElement>();
 	}
 
+	public static IElement getElement(IElementCollection ies, String[] attributes, String[] attrVals, String[] txts) {
+		for (int i = 0; i < ies.length(); i++) {
+			IElement current = ies.item(i);
+			int j = 0;
+			boolean have = true;
+			for (String attribute : attributes) {
+				String name = current.getAttribute(attribute, 0);
+				if (name.indexOf(attrVals[j]) < 0) {
+					have = false;
+					break;
+				}
+				j++;
+			}
+			if (have) {
+				boolean ko = false;
+				if (txts != null) {
+					String html = current.getOuterHTML();
+					for (String txt : txts) {
+						if (html.indexOf(txt) < 0) {
+							ko = true;
+							break;
+						}
+					}
+				}
+				if (!ko) {
+					return current;
+				}
+			}
+		}
+		return null;
+	}
+
 	public static IElement getElement(IElementCollection ies, String attribute, String attrVal) {
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);
@@ -91,12 +141,19 @@ public class JobSupport {
 		return null;
 	}
 
-	public static List<IElement> getElements(IElementCollection ies, String attribute, String attrVal) {
+	private static Log log = LogFactory.getLog(JobSupport.class);
+
+	public static List<IElement> getElements(IElementCollection ies, String attribute, String attrVal)
+			throws ApplicationException {
+		if (ies == null || ies.length() < 1) {
+			log.info("IES is null!");
+			return null;
+		}
 		List<IElement> elements = new ArrayList<IElement>();
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);
 			String name = ClawerUtils.removeSpace(current.getAttribute(attribute, 0));
-			LogHandler.debug("name=" + name);
+			LogHandler.info("name=" + name);
 			if (name.indexOf(attrVal) > -1) {
 				elements.add(current);
 			}
@@ -117,6 +174,7 @@ public class JobSupport {
 				continue;
 			}
 			String name = ClawerUtils.removeSpace(current.getAttribute(attribute, 0));
+
 			if ("".equals(name)) {
 				continue;
 			}

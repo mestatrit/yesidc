@@ -1,0 +1,1 @@
+<select  name="cotype"  ><option value="99"  selected  >--请选择--</option><option value="01"  >外资(欧美)</option><option value="02"  >外资(非欧美)</option><option value="03"  >合资(欧美)</option><option value="04"  >合资(非欧美)</option><option value="05"  >国企</option><option value="06"  >民营公司</option><option value="07"  >外企代表处</option><option value="08"  >其它性质</option></select>

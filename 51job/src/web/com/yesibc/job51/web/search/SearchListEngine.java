@@ -3,6 +3,8 @@ package com.yesibc.job51.web.search;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import cn.cetelem.track.AlertUtils;
+
 import com.webrenderer.swing.BrowserFactory;
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.event.NetworkAdapter;
@@ -16,7 +18,7 @@ public class SearchListEngine extends Thread {
 
 	private static Log log = LogFactory.getLog(SearchListEngine.class);
 
-	public final static String pageTag = "#Paging#";
+	public final static String pageTag = "#SearchList#";
 
 	static long l = 0;
 	private IBrowserCanvas browser;
@@ -48,8 +50,8 @@ public class SearchListEngine extends Thread {
 		onDocumnetComplete();
 
 		try {
-			finish = false;
 			l = System.currentTimeMillis();
+			finish = false;
 			browser.loadURL(url);
 			boolean loadedOK = true;
 			if (!waitingLoading(index, url)) {
@@ -64,21 +66,22 @@ public class SearchListEngine extends Thread {
 				}
 			}
 
-			finish = false;
 			log.info(processContext.getLogTitle() + "End Loading " + url + "!Loaded[" + loadedOK + "]Time is "
 					+ (System.currentTimeMillis() - l));
 			l = System.currentTimeMillis();
 
-			ParsePagesLinks.parsePagesLinks(processContext);
+			ParseSearchList.parseSearchList(processContext);
 
 			CompanyJobContext.getSearchList().remove(url);
 
 			log.info(processContext.getLogTitle() + "Parsing [" + browser.getURL() + "] is OK!Time is "
 					+ (System.currentTimeMillis() - l));
 		} catch (Exception e) {
-			ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " Parsing [" + browser.getURL()
-					+ "] is error=SearchPagesEngine!" + e.getMessage() + "\n HTML contents:"
-					+ browser.getDocument().getBody().getOuterHTML(), e);
+			String str = AlertUtils.getErrString(e);
+			log.error(processContext.getLogTitle() + " Error Start!\n Loaded[" + finish + "]\n" + str);
+			ErrorHandler.error(processContext.getLogTitle() + " Parsing [" + browser.getURL()
+					+ "] is error=SearchListEngine!" + e.getMessage() + "\n HTML contents Start===========\n:"
+					+ browser.getDocument().getBody().getOuterHTML() + "\n HTML contents End===========\n" + str);
 		} finally {
 			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(true);
 		}
