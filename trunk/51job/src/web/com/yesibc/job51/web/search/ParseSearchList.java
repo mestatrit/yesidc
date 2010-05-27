@@ -27,22 +27,19 @@ public class ParseSearchList {
 
 	}
 
-	public static void parsePagesLinks(ProcessContext processContext) throws ApplicationException {
+	public static void parseSearchList(ProcessContext processContext) throws ApplicationException {
 		long l = System.currentTimeMillis();
-		if (LocateCompanyInfo.checkValidation(processContext.getBrowser()) < 1) {
-			return;
+
+		int total = LocateCompanyInfo.getTotal(processContext);
+
+		int size = CompanyJobContext.putCompanyLinks2Context(processContext);
+		int jobSize = 0;
+		if (size > -1) {
+			jobSize = CompanyJobContext.putJobsURL2Context(processContext);
 		}
-		log.info(processContext.getLogTitle() + "Check Company List!Time is " + (System.currentTimeMillis() - l));
-		l = System.currentTimeMillis();
 
-		int total = LocateCompanyInfo.getTotal(processContext.getBrowser().getDocument());
-
-		CompanyJobContext.putCompanyLinks2Context(processContext);
-
-		CompanyJobContext.putJObsURL2Context(processContext);
-
-		log.info(processContext.getLogTitle() + "Get Total and parse company in first page " + "to context!Time is "
-				+ (System.currentTimeMillis() - l));
+		log.info(processContext.getLogTitle() + " Company size " + size + ",job size " + jobSize
+				+ " to context!Time is " + (System.currentTimeMillis() - l));
 		l = System.currentTimeMillis();
 
 		if (total > ClawerConstants.PAGESIZE_JOBS) {
@@ -66,12 +63,12 @@ public class ParseSearchList {
 		List<WebPages> wps = new ArrayList<WebPages>();
 		for (int i = 2; i <= pages; i++) {
 			url = CompanyJobContext.getNewUrlPage(url, i);
-			if (CompanyJobContext.getComListPagesURL().contains(url)) {
+			if (CompanyJobContext.getPagesURL().contains(url)) {
 				continue;
 			}
 			WebPages wp = new WebPages();
 			wp.setUrl(url);
-			wp.setPageType(WebPages.PAGE_TYPE_SEARCH_PAGES_LIST);
+			wp.setPageType(WebPages.PAGE_TYPE_SEARCH_PAGES);
 			wp.setRequestId(ClawerConstants.REQUEST_ID);
 			wp.setStatus(WebPages.STATUS_KO);
 			wp.setUpdateDate(new Date());

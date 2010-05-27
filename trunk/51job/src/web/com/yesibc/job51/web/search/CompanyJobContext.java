@@ -37,10 +37,10 @@ public class CompanyJobContext {
 	private static Log logurls = LogFactory.getLog(ClawerConstants.LOG_URLS);
 
 	private static Map<String, Company> companies = new HashMap<String, Company>();
-	private static List<Company> urlCompanies = new ArrayList<Company>();
 	private static List<WebPages> searchPagesWP = new ArrayList<WebPages>();
-	private static List<String> comListPagesURL = new ArrayList<String>();
 	private static List<WebPages> jobsWP = new ArrayList<WebPages>();
+	private static List<String> pagesURL = new ArrayList<String>();
+	private static List<String> jobsURL = new ArrayList<String>();
 	private static List<String> emails = new ArrayList<String>();
 	private static List<String> searchList = new ArrayList<String>();
 
@@ -59,16 +59,12 @@ public class CompanyJobContext {
 				cih.initalCompanyInfo(companies, emails);
 			}
 		} catch (Exception e) {
-			throw new NestedRuntimeException("IntCompanies:", e);
+			e.printStackTrace();
+			throw new NestedRuntimeException("IntCompanies error!");
 		}
 
 		if (companies != null && !companies.isEmpty()) {
 			LogHandler.info("Init company map! map size is " + companies.size());
-			for (Map.Entry<String, Company> entry : companies.entrySet()) {
-				if (Company.LOAD_KO.equals(entry.getValue().getLoadOK())) {
-					urlCompanies.add(entry.getValue());
-				}
-			}
 		}
 		if (emails != null && !emails.isEmpty()) {
 			LogHandler.info("Init email map! map size is " + emails.size());
@@ -79,7 +75,7 @@ public class CompanyJobContext {
 		try {
 			if (!ClawerConstants.TEST_DAO) {
 				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
-				searchPagesWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_SEARCH_PAGES_LIST, WebPages.STATUS_KO);
+				searchPagesWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_SEARCH_PAGES, WebPages.STATUS_KO);
 				jobsWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_JOB_LIST, WebPages.STATUS_KO);
 			}
 		} catch (Exception e) {
@@ -88,11 +84,14 @@ public class CompanyJobContext {
 
 		if (searchPagesWP != null && !searchPagesWP.isEmpty()) {
 			for (WebPages wp : searchPagesWP) {
-				comListPagesURL.add(wp.getUrl());
+				pagesURL.add(wp.getUrl());
 			}
-			LogHandler.info("Init company List pages! webpages size is " + searchPagesWP.size());
+			LogHandler.info("Init pages List pages! webpages size is " + searchPagesWP.size());
 		}
 		if (jobsWP != null && !jobsWP.isEmpty()) {
+			for (WebPages wp : jobsWP) {
+				jobsURL.add(wp.getUrl());
+			}
 			LogHandler.info("Init Job List pages! webpages size is " + jobsWP.size());
 		}
 	}
@@ -125,11 +124,11 @@ public class CompanyJobContext {
 		return newPage;
 	}
 
-	public static void putJObsURL2Context(ProcessContext processContext) throws ApplicationException {
+	public static int putJobsURL2Context(ProcessContext processContext) throws ApplicationException {
 		List<IElement> elements = JobSupport.getElements(processContext.getBrowser().getDocument().getAll(), "A",
 				"href", ClawerConstants.JOB_URL_PREFIX);
 		if (elements == null || elements.isEmpty()) {
-			throw new ApplicationException("FirstPagesValidation elements error!");
+			return -1;
 		}
 
 		String name = "";
@@ -140,9 +139,13 @@ public class CompanyJobContext {
 		List<WebPages> wps = new ArrayList<WebPages>();
 		for (IElement ie : elements) {
 			url = ClawerUtils.removeSpace(ie.getAttribute("href", 0));
-			if (!url.endsWith(ClawerConstants.JOB_URL_POSTFIX)) {
+
+			if (jobsURL.contains(url)) {
 				continue;
+			} else {
+				jobsURL.add(url);
 			}
+
 			name = StringUtils.parseOutHTML(ClawerUtils.removeSpace(ie.getInnerHTML()));
 			if (name.equals("")) {
 				continue;
@@ -170,11 +173,17 @@ public class CompanyJobContext {
 		} catch (Exception e) {
 			ErrorHandler.errorLogAndMail("Save Pages of WebPages error!size=" + wps.size(), e);
 		}
+		return wps.size();
 	}
 
-	public static void putCompanyLinks2Context(ProcessContext processContext) {
+	public static int putCompanyLinks2Context(ProcessContext processContext) throws ApplicationException {
 		List<IElement> elements = JobSupport.getElements(processContext.getBrowser().getDocument().getAll(), "A",
 				"href", ClawerConstants.COMPANY_URL_TAG);
+
+		if (elements == null || elements.size() < 1) {
+			return -1;
+		}
+
 		String name = "";
 		String companyId = "";
 		String url = "";
@@ -202,12 +211,12 @@ public class CompanyJobContext {
 				continue;
 			}
 
+			CompanyInfoSupport.setCompanyCommon(com, true);
 			com.setLoadOK(Company.LOAD_KO);
 			size++;
 			logurls.info(processContext.getLogTitle() + "Put [" + companyId + "," + name + "] url=[" + url
 					+ "] to company map!");
 
-			urlCompanies.add(com);
 			try {
 				if (!ClawerConstants.TEST_DAO) {
 					CompanyInfoHandlerService companyInfoHandlerService = (CompanyInfoHandlerService) SpringContext
@@ -215,10 +224,12 @@ public class CompanyJobContext {
 					companyInfoHandlerService.save(com);
 				}
 			} catch (Exception e) {
-				ErrorHandler.errorLogAndMail("Save company error!" + com.getCompanyName() + "," + com.getUrl(), e);
+				throw new ApplicationException("Save company error!" + com.getCompanyName() + "," + com.getUrl(), e);
 			}
 
 		}
+
+		return size;
 
 	}
 
@@ -303,24 +314,16 @@ public class CompanyJobContext {
 		return searchPagesWP.size();
 	}
 
-	public static List<Company> getUrlCompanies() {
-		return urlCompanies;
+	public static List<String> getJobsURL() {
+		return jobsURL;
 	}
 
-	public static void setUrlCompanies(List<Company> urlCompanies) {
-		CompanyJobContext.urlCompanies = urlCompanies;
+	public static List<String> getPagesURL() {
+		return pagesURL;
 	}
 
-	public static int getUrlCompaniesLength() {
-		return urlCompanies.size();
-	}
-
-	public static List<String> getComListPagesURL() {
-		return comListPagesURL;
-	}
-
-	public static void setComListPagesURL(List<String> comListPagesURL) {
-		CompanyJobContext.comListPagesURL = comListPagesURL;
+	public static int getJobsURLSize() {
+		return jobsURL.size();
 	}
 
 	public static List<WebPages> getJobsWP() {

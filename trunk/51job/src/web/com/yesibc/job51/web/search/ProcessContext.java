@@ -6,7 +6,6 @@ public class ProcessContext {
 	
 	private String logTitle;
 	private IBrowserCanvas browser;
-	private SearchCompanyNJobLinksEngine searchJobEngine;
 
 	public String getLogTitle() {
 		return logTitle;
@@ -22,14 +21,6 @@ public class ProcessContext {
 
 	public void setBrowser(IBrowserCanvas browser) {
 		this.browser = browser;
-	}
-
-	public SearchCompanyNJobLinksEngine getSearchJobEngine() {
-		return searchJobEngine;
-	}
-
-	public void setSearchJobEngine(SearchCompanyNJobLinksEngine searchJobEngine) {
-		this.searchJobEngine = searchJobEngine;
 	}
 
 }
