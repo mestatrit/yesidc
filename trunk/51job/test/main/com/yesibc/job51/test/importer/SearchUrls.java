@@ -37,7 +37,7 @@ public class SearchUrls {
 
 		String http1 = "http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=";
 		String http2 = "&industrytype=";
-		String http3 = "&issuedate=9&providesalary=99&keywordtype=2&curr_page=7&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0%2C0&radius=-1&ord_field=0&list_type=1&fromType=14";
+		String http3 = "&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14";
 		String funTemp = "";
 
 		int i = 3;

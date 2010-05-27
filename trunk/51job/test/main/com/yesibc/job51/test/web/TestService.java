@@ -27,39 +27,39 @@ public class TestService extends TestCase {
 	public void testSaveNewMail() {
 		ComEmail ce = new ComEmail();
 		ce.setEmail("test@test.com");
-		CompanyInfoSupport.setComEmailCommon(ce);
+		CompanyInfoSupport.setComEmailCommon(ce, true);
 		companyInfoHandlerService.save(ce);
 	}
 
 	public void testSaveNewHeader() {
 		Company com = CompanyJobContext.getCompanies("51job_2286609");
 		List<ComContactHeader> comContactHeaders = com.getComContactHeaders();
-		
+
 		if (comContactHeaders == null || comContactHeaders.isEmpty()) {
 			comContactHeaders = new ArrayList<ComContactHeader>();
 			com.setComContactHeaders(comContactHeaders);
 		}
-		
+
 		ComContactHeader ch = new ComContactHeader();
 		ch.setAddress1("tttt");
 		ch.setCompanyName("ttttt");
 		ch.setCompany(com);
 		ch.setCompanyName(com.getCompanyName());
-		comContactHeaders.add(ch);		
-		CompanyInfoSupport.setComContactHeaderCommon(ch);
-		
+		comContactHeaders.add(ch);
+		CompanyInfoSupport.setComContactHeaderCommon(ch, false);
+
 		List<ComContactHeader> temp = new ArrayList<ComContactHeader>();
 		temp.add(ch);
-			
+
 		ComEmail ce = new ComEmail();
 		ce.setEmail("test@test.com");
 		ce.setComContactHeaders(temp);
-		CompanyInfoSupport.setComEmailCommon(ce);
+		CompanyInfoSupport.setComEmailCommon(ce, true);
 
-		List<ComEmail> ces  = new ArrayList<ComEmail>();
+		List<ComEmail> ces = new ArrayList<ComEmail>();
 		ces.add(ce);
-		ch.setComEmails(ces);			
-		
+		ch.setComEmails(ces);
+
 		companyInfoHandlerService.update(com);
 	}
 
@@ -74,10 +74,8 @@ public class TestService extends TestCase {
 		List<ComContactHeader> comContactHeaders = com.getComContactHeaders();
 		List<ComContactHeader> tempContactHeaders = new ArrayList<ComContactHeader>();
 		if (comContactHeaders == null || comContactHeaders.isEmpty()) {
-			log.info("==No comcontact header found.==Company Code["
-					+ com.getCompanyCode() + "] Company Name["
-					+ com.getCompanyName() + "] Company URL[" + com.getUrl()
-					+ "].");
+			log.info("==No comcontact header found.==Company Code[" + com.getCompanyCode() + "] Company Name["
+					+ com.getCompanyName() + "] Company URL[" + com.getUrl() + "].");
 			tempContactHeaders = getNewCCHs(com);
 
 		} else {
@@ -85,8 +83,7 @@ public class TestService extends TestCase {
 				if (cch.getFromWhere() == null) {
 					continue;
 				}
-				if (cch.getFromWhere().getCode().equals(
-						ClawerConstants.FROM_WHERE_51JOB)) {
+				if (cch.getFromWhere().getCode().equals(ClawerConstants.FROM_WHERE_51JOB)) {
 					tempContactHeaders.add(cch);
 				}
 			}
@@ -99,7 +96,7 @@ public class TestService extends TestCase {
 		ComEmail ce = new ComEmail();
 		ce.setEmail(email);
 		ce.setComContactHeaders(tempContactHeaders);
-		CompanyInfoSupport.setComEmailCommon(ce);
+		CompanyInfoSupport.setComEmailCommon(ce, true);
 
 		for (ComContactHeader cch : tempContactHeaders) {
 			List<ComEmail> ces = cch.getComEmails();
@@ -127,7 +124,7 @@ public class TestService extends TestCase {
 		ch.setCompany(com);
 		ch.setCompanyName(com.getCompanyName());
 		comContactHeaders.add(ch);
-		CompanyInfoSupport.setComContactHeaderCommon(ch);
+		CompanyInfoSupport.setComContactHeaderCommon(ch, false);
 		return comContactHeaders;
 	}
 

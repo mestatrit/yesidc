@@ -17,7 +17,7 @@ import com.yesibc.job51.company.search1.LocateMainElements;
 public class JobMain {
 
 	public final static String URL_SEARCH = "http://search.51job.com/jobsearch/advance_search.php";
-	public final static String URL_SEARCH_BAK = "file:///D:/yesibc/51job/51JOB/jobsearch/advance_search.html";
+	public final static String URL_SEARCH_BAK = "http://search.51job.com/jobsearch/advance_search.php?stype=2";
 	private static Log log = LogFactory.getLog(JobMain.class);
 
 	public static long WAITING = 0;
@@ -204,7 +204,7 @@ public class JobMain {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			LogHandler.debug("Job Main waiting loading¡­¡­[" + i * 0.5 + "]s");
+			LogHandler.debug("Job Main waiting loadingï¿½ï¿½ï¿½ï¿½[" + i * 0.5 + "]s");
 		}
 	}
 
