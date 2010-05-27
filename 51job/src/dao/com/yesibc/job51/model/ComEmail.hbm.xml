@@ -32,6 +32,12 @@
 				<comment>邮件地址</comment>
 			</column>
 		</property>
+		
+		<property name="reciever" type="java.lang.String">
+			<column name="RECIEVER" length="50" >
+				<comment>收件人称呼</comment>
+			</column>
+		</property>
 
 		<bag name="comContactHeaders" table="TC_CONTACT_EMAIL" lazy="false"
 			inverse="true">

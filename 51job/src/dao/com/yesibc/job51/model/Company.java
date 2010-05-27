@@ -83,6 +83,13 @@ public class Company implements java.io.Serializable {
 	private String exportsAmountName;
 	private Long exportsAmount;
 
+	private String loadOK; // 1-KO;2-OK
+
+	public final static String LOAD_OK = "2";
+	public final static String LOAD_KO = "1";
+
+	public final static long UPDATE_DAYS = 30;
+
 	private Company parent;
 	private List<Company> children;
 	private List<ComContactHeader> comContactHeaders;
@@ -494,8 +501,7 @@ public class Company implements java.io.Serializable {
 		return this.registeredCapitalAmountName;
 	}
 
-	public void setRegisteredCapitalAmountName(
-			String registeredCapitalAmountName) {
+	public void setRegisteredCapitalAmountName(String registeredCapitalAmountName) {
 		this.registeredCapitalAmountName = registeredCapitalAmountName;
 	}
 
@@ -645,56 +651,42 @@ public class Company implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "Company [bankAccount=" + bankAccount + ", bankAccountOpen="
-				+ bankAccountOpen + ", brandName=" + brandName
-				+ ", businessOperation=" + businessOperation
-				+ ", businessOperationName=" + businessOperationName
-				+ ", companyCode=" + companyCode + ", companyDomain1="
-				+ companyDomain1 + ", companyDomain2=" + companyDomain2
-				+ ", companyIndustry1=" + companyIndustry1
-				+ ", companyIndustry1Name=" + companyIndustry1Name
-				+ ", companyIndustry2=" + companyIndustry2
-				+ ", companyIndustry2Name=" + companyIndustry2Name
-				+ ", companyIndustry3=" + companyIndustry3
-				+ ", companyIndustry3Name=" + companyIndustry3Name
-				+ ", companyMemo=" + companyMemo + ", companyName="
-				+ companyName + ", companyNameEn=" + companyNameEn
-				+ ", companyNameSimple=" + companyNameSimple
-				+ ", companyNameSimpleEn=" + companyNameSimpleEn
-				+ ", companyScale=" + companyScale + ", companyScaleName="
-				+ companyScaleName + ", companyType=" + companyType
-				+ ", companyTypeName=" + companyTypeName
-				+ ", coporateRepresentative=" + coporateRepresentative
-				+ ", createDate=" + createDate + ", createUser=" + createUser
-				+ ", establishmentTime=" + establishmentTime
-				+ ", exportsAmount=" + exportsAmount + ", exportsAmountName="
-				+ exportsAmountName + ", factorySpace=" + factorySpace
-				+ ", fromWhere=" + fromWhere + ", fromWhereName="
-				+ fromWhereName + ", homepage1=" + homepage1 + ", homepage2="
-				+ homepage2 + ", homepage3=" + homepage3 + ", homepage4="
-				+ homepage4 + ", homepage5=" + homepage5 + ", id=" + id
-				+ ", importsAmount=" + importsAmount + ", importsAmountName="
-				+ importsAmountName + ", isOem=" + isOem
-				+ ", mainBusinessAddress=" + mainBusinessAddress
-				+ ", mainCustomer=" + mainCustomer + ", mainMarket="
-				+ mainMarket + ", mainProducts=" + mainProducts
-				+ ", mngSysAuth=" + mngSysAuth + ", outputMonthlyAmount="
-				+ outputMonthlyAmount + ", outputMonthlyAmountName="
-				+ outputMonthlyAmountName + ", outputMonthlyUnit="
-				+ outputMonthlyUnit + ", outputMonthlyUnitName="
-				+ outputMonthlyUnitName + ", qulityControl=" + qulityControl
-				+ ", registerAddr=" + registerAddr
-				+ ", registeredCapitalAmount=" + registeredCapitalAmount
-				+ ", registeredCapitalAmountName="
-				+ registeredCapitalAmountName + ", registeredCapitalUnit="
-				+ registeredCapitalUnit + ", registeredCapitalUnitName="
-				+ registeredCapitalUnitName + ", researchDptAmount="
-				+ researchDptAmount + ", researchDptAmountName="
-				+ researchDptAmountName + ", staffAmount=" + staffAmount
-				+ ", staffAmountName=" + staffAmountName + ", turnoverYearly="
-				+ turnoverYearly + ", turnoverYearlyName=" + turnoverYearlyName
-				+ ", updateDate=" + updateDate + ", updateUser=" + updateUser
-				+ ", url=" + url + "]";
+		return "Company [bankAccount=" + bankAccount + ", bankAccountOpen=" + bankAccountOpen + ", brandName="
+				+ brandName + ", businessOperation=" + businessOperation + ", businessOperationName="
+				+ businessOperationName + ", companyCode=" + companyCode + ", companyDomain1=" + companyDomain1
+				+ ", companyDomain2=" + companyDomain2 + ", companyIndustry1=" + companyIndustry1
+				+ ", companyIndustry1Name=" + companyIndustry1Name + ", companyIndustry2=" + companyIndustry2
+				+ ", companyIndustry2Name=" + companyIndustry2Name + ", companyIndustry3=" + companyIndustry3
+				+ ", companyIndustry3Name=" + companyIndustry3Name + ", companyMemo=" + companyMemo + ", companyName="
+				+ companyName + ", companyNameEn=" + companyNameEn + ", companyNameSimple=" + companyNameSimple
+				+ ", companyNameSimpleEn=" + companyNameSimpleEn + ", companyScale=" + companyScale
+				+ ", companyScaleName=" + companyScaleName + ", companyType=" + companyType + ", companyTypeName="
+				+ companyTypeName + ", coporateRepresentative=" + coporateRepresentative + ", createDate=" + createDate
+				+ ", createUser=" + createUser + ", establishmentTime=" + establishmentTime + ", exportsAmount="
+				+ exportsAmount + ", exportsAmountName=" + exportsAmountName + ", factorySpace=" + factorySpace
+				+ ", fromWhere=" + fromWhere + ", fromWhereName=" + fromWhereName + ", homepage1=" + homepage1
+				+ ", homepage2=" + homepage2 + ", homepage3=" + homepage3 + ", homepage4=" + homepage4 + ", homepage5="
+				+ homepage5 + ", id=" + id + ", importsAmount=" + importsAmount + ", importsAmountName="
+				+ importsAmountName + ", isOem=" + isOem + ", mainBusinessAddress=" + mainBusinessAddress
+				+ ", mainCustomer=" + mainCustomer + ", mainMarket=" + mainMarket + ", mainProducts=" + mainProducts
+				+ ", mngSysAuth=" + mngSysAuth + ", outputMonthlyAmount=" + outputMonthlyAmount
+				+ ", outputMonthlyAmountName=" + outputMonthlyAmountName + ", outputMonthlyUnit=" + outputMonthlyUnit
+				+ ", outputMonthlyUnitName=" + outputMonthlyUnitName + ", qulityControl=" + qulityControl
+				+ ", registerAddr=" + registerAddr + ", registeredCapitalAmount=" + registeredCapitalAmount
+				+ ", registeredCapitalAmountName=" + registeredCapitalAmountName + ", registeredCapitalUnit="
+				+ registeredCapitalUnit + ", registeredCapitalUnitName=" + registeredCapitalUnitName
+				+ ", researchDptAmount=" + researchDptAmount + ", researchDptAmountName=" + researchDptAmountName
+				+ ", staffAmount=" + staffAmount + ", staffAmountName=" + staffAmountName + ", turnoverYearly="
+				+ turnoverYearly + ", turnoverYearlyName=" + turnoverYearlyName + ", updateDate=" + updateDate
+				+ ", updateUser=" + updateUser + ", url=" + url + "]";
+	}
+
+	public String getLoadOK() {
+		return loadOK;
+	}
+
+	public void setLoadOK(String loadOK) {
+		this.loadOK = loadOK;
 	}
 
 }

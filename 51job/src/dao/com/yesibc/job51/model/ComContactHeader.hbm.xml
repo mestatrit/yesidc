@@ -12,16 +12,16 @@
 			</generator>
 		</id>
 
-		<many-to-one name="country" class="Code" cascade="save-update" 
-			fetch="select" foreign-key="FK_CONTACT_HEADER_COUNTRY">
+		<many-to-one name="country" class="Code" cascade="none" 
+			fetch="join" foreign-key="FK_CONTACT_HEADER_COUNTRY">
 			<column name="COUNTRY_ID" />
 		</many-to-one>
 		<many-to-one name="province" class="Code" cascade="none"
-			fetch="select" foreign-key="FK_CONTACT_HEADER_PROVINCE">
+			fetch="join" foreign-key="FK_CONTACT_HEADER_PROVINCE">
 			<column name="PROVINCE_ID" />
 		</many-to-one>
 		<many-to-one name="city" class="Code" cascade="none"
-			fetch="select" foreign-key="FK_CONTACT_HEADER_CITY">
+			fetch="join" foreign-key="FK_CONTACT_HEADER_CITY">
 			<column name="CITY_ID" />
 		</many-to-one>
 		
@@ -61,8 +61,8 @@
 			<many-to-many class="ComEmail" column="COM_EMAIL_ID"/>
 		</bag>
 
-		<many-to-one name="fromWhere" class="Code" lazy="false"
-			foreign-key="FK_C_CONTACT_HEADER_FROM_WHERE">
+		<many-to-one name="fromWhere" class="Code" lazy="false" cascade="none"
+		fetch="join" foreign-key="FK_C_CONTACT_HEADER_FROM_WHERE">
 			<column name="FROM_WHERE">
 				<comment>数据来源代码</comment>
 			</column>

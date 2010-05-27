@@ -101,8 +101,8 @@
 				<comment>公司备注</comment>
 			</column>
 		</property>
-		<many-to-one name="fromWhere" class="Code"
-			foreign-key="FK_COMPANY_FROM_WHERE">
+		<many-to-one name="fromWhere" class="Code" fetch="join"
+			foreign-key="FK_COMPANY_FROM_WHERE" cascade="none">
 			<column name="FROM_WHERE">
 				<comment>数据来源代码</comment>
 			</column>
@@ -357,6 +357,11 @@
 			</column>
 		</property>
 
+		<property name="loadOK" type="java.lang.String">
+			<column name="LOAD_OK" length="1">
+				<comment>是否已经从网站更新信息成功.1-KO;2-OK</comment>
+			</column>
+		</property>
 
     </class>
 </hibernate-mapping>

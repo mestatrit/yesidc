@@ -12,7 +12,7 @@
 				<param name="parameters">START WITH 10000</param>
 			</generator>
 		</id>
-		<many-to-one class="Code" fetch="select" foreign-key="FK_CODE_TYPE"
+		<many-to-one class="Code" fetch="join" foreign-key="FK_CODE_TYPE"
 			name="parent">
 			<column name="CODE_TYPE" scale="0" unique-key="unique-code" />
 		</many-to-one>
