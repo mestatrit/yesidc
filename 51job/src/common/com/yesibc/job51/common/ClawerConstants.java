@@ -4,14 +4,14 @@ import com.yesibc.job51.model.Code;
 
 public class ClawerConstants {
 
-	// public final static boolean TEST = true;
-	public final static boolean TEST_DAO = false;
+	// public final static boolean TEST = false;
+	public static boolean TEST_DAO = true;
 
-	public final static boolean TEST_WEB = false;
+	public static boolean TEST_WEB = true;
 
-	public final static boolean SHOW_FRAME = false;
+	public static boolean SHOW_FRAME = true;
 
-	public final static int TEST_WEB_NUM = 4;
+	public static int TEST_WEB_NUM = 2;
 
 	public static int THREADS_NUMBER = TEST_WEB_NUM;
 	static {
@@ -20,7 +20,19 @@ public class ClawerConstants {
 		}
 	}
 
-	public final static String PROC_LOG = "*process*";
+	public final static String TAG_SPACE = " ";
+	public final static String TAG_SPACE_HTML = "&nbsp;";
+	public final static String TAG_SPACE_TRIM = "";
+	
+	
+	public static int REFRESH_MUILTI_THREADS_NUMBER = Integer.parseInt(ClawerUtils
+			.getServerConfByKey("refresh.muilti.threads.number"));
+
+	public static int REFRESH_INTERVAL_TIMES = THREADS_NUMBER * REFRESH_MUILTI_THREADS_NUMBER;
+
+	public static String REQUEST_ID = String.valueOf(System.currentTimeMillis());
+
+	public final static String PROC_LOG = "*-* ";
 
 	public final static String FROM_WHERE_51JOB = "51job";
 
@@ -30,14 +42,17 @@ public class ClawerConstants {
 
 	public final static String UPDATE_USER = "YTB";
 
-	public final static long WAITING_TIME = 10000;
+	public final static int JOBS_PER_PAGE = 50;
+
+	public final static long WAITING_TIME_LOADING = 2000;
+
+	public final static long WAITING_TIME_SECONDS = 2;
+
+	public final static long WAITING_TIMES = 30;
 
 	public final static String[] EMAIL_SPLITS = { ";", "," };
 
 	public final static String EMAIL_ERROR_SUBJECT = "Error from Project 51job!";
-
-	public static Code FROM_WHERE_51JOB_CODE = new Code();
-	public static Code ADDRESS_CHINA = new Code();
 
 	/**
 	 * <pre>
@@ -188,6 +203,7 @@ public class ClawerConstants {
 	public final static String JOBS_PERPAGE_DEFAULT = ClawerUtils.getValByKey("jobs.default.perpage");
 	public final static String NEXT_PAGE_IMG = ClawerUtils.getValByKey("nextpage.img");
 	public final static String JOB_URL_PREFIX = ClawerUtils.getValByKey("job.url.prefix");
+	public final static String JOB_URL_POSTFIX = ClawerUtils.getValByKey("job.url.postfix");
 	public final static String OTHER_POSITION = ClawerUtils.getValByKey("other.position");
 
 	public final static String[] APPENDIX_ALL = { APPENDIX_INSTERESTING, APPENDIX_SPECIALITY, APPENDIX_CAREER_GOAL,
@@ -195,7 +211,7 @@ public class ClawerConstants {
 
 	public final static String NEXTPAGE = ClawerUtils.getValByKey("nextpage");
 
-	public final static int PAGESIZE_COMPANY = 30;
+	public final static int PAGESIZE_JOBS = 30;
 	public final static String WEBRENDERER_ID = ClawerUtils.getServerConfByKey("webrenderer.id");
 	public final static String WEBRENDERER_SN = ClawerUtils.getServerConfByKey("webrenderer.sn");
 
@@ -234,25 +250,40 @@ public class ClawerConstants {
 	public final static String COMPANY_SCALE = ClawerUtils.getValByKey("company.scale");
 	public final static String COMPANY_EMAIL = ClawerUtils.getValByKey("company.email");
 	public final static String COMPANY_URL_TAG = ClawerUtils.getValByKey("company.url.tag");
+	public final static String COMPANY_URL_NAME = ClawerUtils.getValByKey("company.url.name");
 	public final static String[] PROVINCE_FILTERS = ClawerUtils.getValByKey("province.filter.list").split(",");
 	public final static String[] CITY_FILTERS = ClawerUtils.getValByKey("city.filter.list").split(",");
 	public final static String[] FILTERS_ADDRESS = ClawerUtils.getValByKey("filters.address").split(",");
 
 	public static final String ALERT_ERROR = "0001";
 
-	static {
+	public final static Code FROM_WHERE_51JOB_CODE = getFromWhere();
+	public final static Code ADDRESS_CHINA = getChina();
+
+	public static Code getChina() {
 		if (!TEST_DAO) {
-			FROM_WHERE_51JOB_CODE = BaseCodeDispatch.getBaseCode(BaseCode.FROM_WHERE).getCode(
-					ClawerConstants.FROM_WHERE_51JOB, BaseCode.CODE_LEVEL_FIRST);
-			ADDRESS_CHINA = BaseCodeDispatch.getBaseCode(BaseCode.ADDRESS).getCode(ClawerConstants.ADDRESS_CHINA_CODE,
+			return BaseCodeDispatch.getBaseCode(BaseCode.ADDRESS).getCode(ClawerConstants.ADDRESS_CHINA_CODE,
 					BaseCode.CODE_LEVEL_SECOND);
 		} else {
-			FROM_WHERE_51JOB_CODE.setCode("51job");
-			FROM_WHERE_51JOB_CODE.setCname("51job");
+			return new Code();
+		}
+	}
+
+	public static Code getFromWhere() {
+		if (!TEST_DAO) {
+			return BaseCodeDispatch.getBaseCode(BaseCode.FROM_WHERE).getCode(ClawerConstants.FROM_WHERE_51JOB,
+					BaseCode.CODE_LEVEL_SECOND);
+		} else {
+			Code code = new Code();
+			code.setCode(FROM_WHERE_51JOB);
+			code.setCname(FROM_WHERE_51JOB);
+			return code;
 		}
 	}
 
 	public static void main(String[] args) {
+		BaseCodeDispatch.getBaseCode(BaseCode.FROM_WHERE).getCode(ClawerConstants.FROM_WHERE_51JOB,
+				BaseCode.CODE_LEVEL_SECOND);
 		for (String name : PROVINCE_FILTERS)
 			System.out.print("aaa=" + name);
 	}
