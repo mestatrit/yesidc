@@ -15,6 +15,10 @@ drop table T_CODE_CODE_JOB cascade constraints;
 drop table T_CODE_JOB cascade constraints;
 drop table T_COMPANY cascade constraints;
 drop table T_PERSON cascade constraints;
+drop table T_WEBPAGES cascade constraints;
+drop table T_MAIL_SENDERS cascade constraints;
+drop table T_MAIL_SERVER cascade constraints;
+
 drop sequence SEQ_CODE;
 drop sequence SEQ_CODE_JOB;
 drop sequence SEQ_COMPANY;
@@ -29,6 +33,26 @@ drop sequence SEQ_P_EDU;
 drop sequence SEQ_P_EMAIL;
 drop sequence SEQ_P_LANGUAGE;
 drop sequence SEQ_P_SKILL;
+drop sequence SEQ_WEBPAGES;
+drop sequence SEQ_MAIL_SENDERS;
+drop sequence SEQ_MAIL_SERVER;
+
+create table T_MAIL_SENDERS (ID number(19,0) not null, MAIL_NAME varchar2(60), MAIL_PASSWORD varchar2(30), DEFAULT_SENDER varchar2(30), MEMO varchar2(200), STATUS varchar2(1), CREATE_DATE date, UPDATE_DATE date, CREATE_USER varchar2(20), UPDATE_USER varchar2(20), MAIL_CONF_ID number(19,0), primary key (ID))
+create table T_MAIL_SERVER (ID number(19,0) not null, SMTP_HOST varchar2(30), SMTP_SOCKETFACTORY_CLASS varchar2(30), SMTP_SOCKETFACTORY_FALLBACK varchar2(6), SMTP_PORT number(10,0), SMTP_SOCKETFACTORY_PORT number(10,0), SMTP_AUTH varchar2(6), SMTP_STARTTLS_ENABLE varchar2(6), POP3_SOCKETFACTORY_CLASS varchar2(30), POP3_SOCKETFACTORY_FALLBACK varchar2(6), POP3_PORT number(10,0), POP3_SOCKETFACTORY_PORT number(10,0), CREATE_DATE date, UPDATE_DATE date, CREATE_USER varchar2(20), UPDATE_USER varchar2(20), POP3_HOST varchar2(30), primary key (ID))
+comment on column T_MAIL_SERVER.SMTP_HOST is 'smtp.gmail.com'
+comment on column T_MAIL_SERVER.SMTP_SOCKETFACTORY_CLASS is 'javax.net.ssl.SSLSocketFactory'
+comment on column T_MAIL_SERVER.SMTP_SOCKETFACTORY_FALLBACK is 'false/true'
+comment on column T_MAIL_SERVER.SMTP_PORT is '465'
+comment on column T_MAIL_SERVER.SMTP_SOCKETFACTORY_PORT is '465'
+comment on column T_MAIL_SERVER.SMTP_AUTH is 'false/true'
+comment on column T_MAIL_SERVER.SMTP_STARTTLS_ENABLE is 'false/true'
+comment on column T_MAIL_SERVER.POP3_SOCKETFACTORY_CLASS is 'javax.net.ssl.SSLSocketFactory'
+comment on column T_MAIL_SERVER.POP3_SOCKETFACTORY_FALLBACK is 'false/true'
+comment on column T_MAIL_SERVER.POP3_PORT is '995'
+comment on column T_MAIL_SERVER.POP3_SOCKETFACTORY_PORT is '995'
+comment on column T_MAIL_SERVER.POP3_HOST is 'pop.gmail.com'
+alter table T_MAIL_SENDERS add constraint FK_MAIL_SERVER foreign key (MAIL_CONF_ID) references T_MAIL_SERVER;
+
 create table TC_APPEND (id number(19,0) not null, COMPANY_ID number(19,0), COMPANY_NAME varchar2(200 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), LOB_TYPE varchar2(1 char), CONTENTS clob, DATAS blob, CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
 comment on column TC_APPEND.COMPANY_NAME is '公司名称';
 comment on column TC_APPEND.FROM_WHERE is '数据来源代码';
@@ -64,15 +88,20 @@ comment on column TC_CONTACT_HEADER.UPDATE_USER is '更新者';
 create table TC_CONTACT_INFO (id number(19,0) not null, type varchar2(255 char) not null, FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), CONTRACT_NO varchar2(50 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
 comment on column TC_CONTACT_INFO.FROM_WHERE is '数据来源代码';
 comment on column TC_CONTACT_INFO.FROM_WHERE_NAME is '数据来源';
-create table TC_EMAIL (id number(19,0) not null, FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), MAILTYPE varchar2(100 char), EMAIL varchar2(100 char) not null, CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
+create table TC_EMAIL (id number(19,0) not null, FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), MAILTYPE varchar2(100 char), EMAIL varchar2(100 char) not null,RECIEVER varchar2(50 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
 comment on column TC_EMAIL.FROM_WHERE is '数据来源代码';
 comment on column TC_EMAIL.FROM_WHERE_NAME is '数据来源';
 comment on column TC_EMAIL.MAILTYPE is '邮件地址类型';
 comment on column TC_EMAIL.EMAIL is '邮件地址';
+comment on column TC_EMAIL.RECIEVER is '收件人称呼';
 comment on column TC_EMAIL.CREATE_DATE is '创建时间';
 comment on column TC_EMAIL.UPDATE_DATE is '更新时间';
 comment on column TC_EMAIL.CREATE_USER is '创建者';
 comment on column TC_EMAIL.UPDATE_USER is '更新者';
+create table T_WEBPAGES(ID NUMBER(19) not null,PAGE_TYPE VARCHAR2(2) not null,REQUEST_ID  VARCHAR2(25), URL VARCHAR2(1000),STATUS VARCHAR2(1),UPDATE_DATE TIMESTAMP, primary key (id));
+comment on column T_WEBPAGES.PAGE_TYPE  is '0-default=OK;1-search type list;2-search pages list;3-job list;';
+comment on column T_WEBPAGES.REQUEST_ID  is '操作ID';
+comment on column T_WEBPAGES.STATUS  is '1-KO;2-OK';
 create table TP_ADDR (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), COUNTRY_ID number(19,0), PROVINCE_ID number(19,0), CITY_ID number(19,0), COUNTRY_NAME varchar2(100 char), PROVINCE_NAME varchar2(100 char), CITY_NAME varchar2(100 char), ADDRESS varchar2(200 char), POSTCODE varchar2(10 char), MEMO varchar2(1000 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
 comment on column TP_ADDR.PERSON_ID is '所有者';
 comment on column TP_ADDR.FROM_WHERE is '数据来源代码';
@@ -224,6 +253,7 @@ comment on column T_COMPANY.CREATE_DATE is '创建时间';
 comment on column T_COMPANY.UPDATE_DATE is '更新时间';
 comment on column T_COMPANY.CREATE_USER is '创建者';
 comment on column T_COMPANY.UPDATE_USER is '更新者';
+comment on column T_COMPANY.LOAD_OK is '是否已经从网站更新信息成功.1-KO;2-OK';
 create table T_PERSON (id number(19,0) not null, ID_TYPE number(19,0), ID_TYPE_NAME varchar2(50 char), PERSON_ID varchar2(30 char), NAME_DEFAULT varchar2(200 char), NAME_FIRST varchar2(50 char), NAME_MIDDLE varchar2(50 char), 姓 varchar2(50 char), NAME_NICK1 varchar2(50 char), NAME_NICK2 varchar2(50 char), NAME_NICK3 varchar2(50 char), SEX varchar2(1 char), BIRTHDAY timestamp, ADDR_LIVE number(19,0), ADDR_LIVE_NAME varchar2(50 char), WORK_YEARS number(19,0), WORK_YEARS_NAME varchar2(50 char), ADDR_DOMICILE number(19,0), ADDR_DOMICILE_NAME varchar2(50 char), ADDR_LIVE_DETAIL varchar2(300 char), ADDR_LIVE_ZIP varchar2(10 char), SARALY_YEAR number(19,0), SARALY_YEAR_NAME varchar2(50 char), TEL_MOBILE varchar2(50 char), TEL_COMPANY varchar2(50 char), TEL_BP varchar2(50 char), TEL_FAMILY varchar2(50 char), HOMEPAGE_SELF1 varchar2(200 char), HOMEPAGE_SELF2 varchar2(200 char), LINK_WANGWANG varchar2(50 char), LINK_QQ varchar2(50 char), LINK_MSN varchar2(50 char), LINK_SKYPE varchar2(50 char), LINK_GTALK varchar2(50 char), LINK_FETION varchar2(50 char), WORK_SARALY_BASIC number(19,2), WORK_BONUS number(19,2), WORK_SUBSIDY number(19,2), WORK_STOCK number(19,2), SELF_ADJUST varchar2(1000 char), JOB_NATURE varchar2(2 char), JOB_INTENT_INDUSTRY1 number(19,0), JOB_INTENT_INDUSTRY_NAME1 varchar2(50 char), JOB_INTENT_INDUSTRY2 number(19,0), JOB_INTENT_INDUSTRY_NAME2 varchar2(50 char), JOB_INTENT_INDUSTRY3 number(19,0), JOB_INTENT_INDUSTRY_NAME3 varchar2(50 char), JOB_INTENT_INDUSTRY4 number(19,0), JOB_INTENT_INDUSTRY_NAME4 varchar2(50 char), JOB_INTENT_INDUSTRY5 number(19,0), JOB_INTENT_INDUSTRY_NAME5 varchar2(50 char), JOB_INTENT_ADDR1 number(19,0), JOB_INTENT_ADDR_NAME1 varchar2(50 char), JOB_INTENT_ADDR2 number(19,0), JOB_INTENT_ADDR_NAME2 varchar2(50 char), JOB_INTENT_ADDR3 number(19,0), JOB_INTENT_ADDR_NAME3 varchar2(50 char), JOB_INTENT_ADDR4 number(19,0), JOB_INTENT_ADDR_NAME4 varchar2(50 char), JOB_INTENT_ADDR5 number(19,0), JOB_INTENT_ADDR_NAME5 varchar2(50 char), JOB_INTENT_FUN1 number(19,0), JOB_INTENT_FUN_NAME1 varchar2(50 char), JOB_INTENT_FUN2 number(19,0), JOB_INTENT_FUN_NAME2 varchar2(50 char), JOB_INTENT_FUN3 number(19,0), JOB_INTENT_FUN_NAME3 varchar2(50 char), JOB_INTENT_FUN4 number(19,0), JOB_INTENT_FUN_NAME4 varchar2(50 char), JOB_INTENT_FUN5 number(19,0), JOB_INTENT_FUN_NAME5 varchar2(50 char), JOB_INTENT_SALARY number(19,0), JOB_INTENT_SALARY_NAME varchar2(50 char), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(50 char), UPDATE_USER varchar2(50 char), primary key (id));
 comment on column T_PERSON.ID_TYPE is '证件类别代码';
 comment on column T_PERSON.ID_TYPE_NAME is '证件类别';
@@ -372,6 +402,7 @@ create sequence SEQ_C_APPEND;
 create sequence SEQ_C_CONTACT_HEADER;
 create sequence SEQ_C_CONTACT_INFO;
 create sequence SEQ_C_EMAIL;
+create sequence SEQ_WEBPAGES;
 create sequence SEQ_PERSON;
 create sequence SEQ_P_ADDRESS;
 create sequence SEQ_P_APPEND;
@@ -379,3 +410,5 @@ create sequence SEQ_P_EDU;
 create sequence SEQ_P_EMAIL;
 create sequence SEQ_P_LANGUAGE;
 create sequence SEQ_P_SKILL;
+create sequence SEQ_MAIL_SENDERS START WITH 1000;
+create sequence SEQ_MAIL_SERVER START WITH 1000;

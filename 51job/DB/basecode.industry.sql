@@ -2464,7 +2464,7 @@ values (42, 6, '05', null, null, null, '快速消费品(食品,饮料,化妆品)
 insert into T_CODE_JOB (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (43, 6, '06', null, null, null, '服装/纺织/皮革', null, null, 1, 17, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE_JOB (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (44, 6, '44', null, null, null, '家具/家电/工艺品/玩具', null, null, 1, 18, sysdate, sysdate, 'YTB', 'YTB');
+values (44, 6, '44', null, null, null, '家具/家电/工艺品/玩具/珠宝', null, null, 1, 18, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE_JOB (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (45, 6, '45', null, null, null, '办公用品及设备', null, null, 1, 19, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE_JOB (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -2541,6 +2541,8 @@ insert into T_CODE_JOB (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1
 values (81, 6, '58', null, null, null, '多元化业务集团公司', null, null, 1, 55, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE_JOB (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (82, 6, '30', null, null, null, '其他行业', null, null, 1, 56, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE_JOB (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (83, 6, '59', null, null, null, '外包服务', null, null, 1, 57, sysdate, sysdate, 'YTB', 'YTB');
 commit;
 prompt 57 records loaded
 prompt Loading T_CODE_CODE_JOB...
@@ -2676,6 +2678,9 @@ insert into T_CODE_CODE_JOB (CODE_ID, CODE_JOB_ID)
 values (14933, 74);
 insert into T_CODE_CODE_JOB (CODE_ID, CODE_JOB_ID)
 values (14573, 76);
+insert into T_CODE_CODE_JOB (CODE_ID, CODE_JOB_ID)
+values (15508, 83);
+
 commit;
 prompt 1199 records loaded
 prompt Enabling foreign key constraints for T_CODE...

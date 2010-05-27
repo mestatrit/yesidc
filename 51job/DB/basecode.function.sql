@@ -15,7 +15,7 @@ values (16714, 16708, '3805', null, null, null, '质量管理/验货员(QA/QC)',
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16715, 16708, '3806', null, null, null, '板房/楦头/底格出格师', null, null, 2, 7, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (16716, 16708, '3807', null, null, null, '服装打样/制版', null, null, 2, 8, sysdate, sysdate, 'YTB', 'YTB');
+values (16716, 16708, '3807', null, null, null, '打样/制版', null, null, 2, 8, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16717, 16708, '3811', null, null, null, '电脑放码员', null, null, 2, 9, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -43,9 +43,9 @@ values (16728, 16721, '3907', null, null, null, '其他', null, null, 2, 7, sysd
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16729, 7, '4000', null, null, null, '贸易', null, null, 1, 23, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (16730, 16729, '4001', null, null, null, '外贸/贸易经理/主管', null, null, 2, 1, sysdate, sysdate, 'YTB', 'YTB');
+values (16730, 16729, '4001', null, null, null, '贸易/进出口经理/主管', null, null, 2, 1, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (16731, 16729, '4002', null, null, null, '外贸/贸易专员/助理', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
+values (16731, 16729, '4002', null, null, null, '贸易/进出口专员/助理', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16732, 16729, '4003', null, null, null, '国内贸易人员', null, null, 2, 3, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -309,7 +309,7 @@ values (16860, 16856, '4404', null, null, null, '经纪人/星探', null, null, 
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16861, 16856, '4405', null, null, null, '演员/模特/主持人', null, null, 2, 5, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (16862, 16856, '4406', null, null, null, '摄影师', null, null, 2, 6, sysdate, sysdate, 'YTB', 'YTB');
+values (16862, 16856, '4406', null, null, null, '摄影师/摄像师', null, null, 2, 6, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16863, 16856, '4407', null, null, null, '音效师', null, null, 2, 7, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -323,7 +323,7 @@ values (16867, 7, '4500', null, null, null, '写作/出版/印刷', null, null, 
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16868, 16867, '4501', null, null, null, '总编/副总编', null, null, 2, 1, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (16869, 16867, '4502', null, null, null, '编辑/作家/撰稿人', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
+values (16869, 16867, '4502', null, null, null, '编辑', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16870, 16867, '4503', null, null, null, '记者', null, null, 2, 3, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -355,7 +355,7 @@ values (16883, 16867, '4508', null, null, null, '其他', null, null, 2, 16, sys
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16884, 7, '0900', null, null, null, '艺术/设计', null, null, 1, 33, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (16885, 16884, '0904', null, null, null, '平面设计', null, null, 2, 1, sysdate, sysdate, 'YTB', 'YTB');
+values (16885, 16884, '0904', null, null, null, '平面设计师', null, null, 2, 1, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16886, 16884, '0924', null, null, null, '动画/3D设计', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -395,7 +395,7 @@ values (16902, 16895, '2104', null, null, null, '给排水/暖通工程', null, 
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16903, 16895, '2122', null, null, null, '幕墙工程师', null, null, 2, 8, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (16904, 16895, '2109', null, null, null, '城市规划与设计', null, null, 2, 9, sysdate, sysdate, 'YTB', 'YTB');
+values (16904, 16895, '2109', null, null, null, '规划与设计', null, null, 2, 9, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16905, 16895, '2108', null, null, null, '室内外装潢设计', null, null, 2, 10, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -547,7 +547,7 @@ values (16978, 16970, '1407', null, null, null, '情报信息分析人员', null
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16979, 16970, '1405', null, null, null, '其他', null, null, 2, 9, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (16980, 7, '1100', null, null, null, '律师/法务', null, null, 1, 41, sysdate, sysdate, 'YTB', 'YTB');
+values (16980, 7, '1100', null, null, null, '律师/法务/合规', null, null, 1, 41, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16981, 16980, '1101', null, null, null, '律师/法律顾问', null, null, 2, 1, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -582,8 +582,6 @@ insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (16996, 16988, '1205', null, null, null, '家教', null, null, 2, 8, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16997, 16988, '1211', null, null, null, '职业技术教师', null, null, 2, 9, sysdate, sysdate, 'YTB', 'YTB');
-insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (16998, 16988, '1212', null, null, null, '培训师', null, null, 2, 10, sysdate, sysdate, 'YTB', 'YTB');
 commit;
 prompt 300 records committed...
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -809,7 +807,7 @@ values (17107, 17106, '5601', null, null, null, '环保工程师', null, null, 2
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (17108, 17106, '5602', null, null, null, '污水处理工程师', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (17109, 17106, '5603', null, null, null, '其他', null, null, 2, 3, sysdate, sysdate, 'YTB', 'YTB');
+values (17109, 17106, '5603', null, null, null, '其它', null, null, 2, 3, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16423, 7, '0100', null, null, null, '计算机软件', null, null, 1, 2, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -821,9 +819,9 @@ values (16426, 16423, '0144', null, null, null, '软件UI设计师/工程师', n
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16427, 16423, '0145', null, null, null, '仿真应用工程师', null, null, 2, 4, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (16428, 16423, '0146', null, null, null, 'ERP实施顾问(ORACLE/SAP)', null, null, 2, 5, sysdate, sysdate, 'YTB', 'YTB');
+values (16428, 16423, '0146', null, null, null, 'ERP实施顾问', null, null, 2, 5, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (16429, 16423, '0117', null, null, null, 'ERP技术开发(ORACLE/SAP)', null, null, 2, 6, sysdate, sysdate, 'YTB', 'YTB');
+values (16429, 16423, '0117', null, null, null, 'ERP技术开发', null, null, 2, 6, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16430, 16423, '0147', null, null, null, '需求工程师', null, null, 2, 7, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -1165,7 +1163,7 @@ values (16595, 16593, '2208', null, null, null, '资产评估/分析', null, nul
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16596, 16593, '2209', null, null, null, '风险控制', null, null, 2, 3, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (16597, 16593, '2215', null, null, null, '信贷管理/信用调查/分析人员', null, null, 2, 4, sysdate, sysdate, 'YTB', 'YTB');
+values (16597, 16593, '2215', null, null, null, '信贷管理', null, null, 2, 4, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16598, 16593, '2210', null, null, null, '进出口/信用证结算', null, null, 2, 5, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -1331,7 +1329,7 @@ values (16677, 16647, '0577', null, null, null, '水利/水电工程师', null, 
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16678, 16647, '0578', null, null, null, '石油天然气技术人员', null, null, 2, 31, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (16679, 16647, '0579', null, null, null, '地质／地质勘测工程师', null, null, 2, 32, sysdate, sysdate, 'YTB', 'YTB');
+values (16679, 16647, '0579', null, null, null, '矿产勘探/地质勘测工程师', null, null, 2, 32, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16680, 16647, '0574', null, null, null, '其他', null, null, 2, 33, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -1393,4 +1391,146 @@ insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (16421, 16419, '2402', null, null, null, '硬件工程师', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (16422, 16419, '2403', null, null, null, '其他', null, null, 2, 3, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100020, 16490, '2924', null, null, null, '射频工程师', null, null, 2, 5, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100021, 16514, '0235', null, null, null, '大客户经理', null, null, 2, 8, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100022, 16559, '0449', null, null, null, '资金经理/主管', null, null, 2, 16, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100023, 16559, '0450', null, null, null, '资金专员', null, null, 2, 16, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100024, 16593, '2223', null, null, null, '个人业务部门经理/主管', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100025, 16593, '2224', null, null, null, '个人业务客户经理', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100026, 16593, '2225', null, null, null, '公司业务部门经理/主管', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100027, 16593, '2226', null, null, null, '公司业务客户经理', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100028, 16593, '2227', null, null, null, '综合业务经理/主管', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100029, 16593, '2228', null, null, null, '综合业务专员', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100030, 16593, '2229', null, null, null, '信审核查', null, null, 2, 6, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100031, 16593, '2230', null, null, null, '营业部大堂经理', null, null, 2, 12, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100032, 16620, '3513', null, null, null, '项目总监', null, null, 2, 3, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100033, 16620, '3514', null, null, null, '生产总监', null, null, 2, 7, sysdate, sysdate, 'YTB', 'YTB');
+
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100035, 16647, '0580', null, null, null, '维修经理/主管', null, null, 2, 15, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100034, 16647, '0581', null, null, null, '装配工程师/技师', null, null, 2, 17, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100036, 16738, '0833', null, null, null, '项目经理/主管', null, null, 2, 13, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100037, 16761, '4121', null, null, null, '政府事务管理', null, null, 2, 12, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100038, 16761, '4122', null, null, null, '招投标管理', null, null, 2, 12, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100039, 16856, '4411', null, null, null, '后期制作', null, null, 2, 7, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100040, 16856, '4412', null, null, null, '放映经理/主管', null, null, 2, 9, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100041, 16856, '4413', null, null, null, '放映员', null, null, 2, 9, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100042, 16867, '4517', null, null, null, '作家/撰稿人', null, null, 2, 3, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100043, 16884, '0930', null, null, null, '平面设计总监', null, null, 2, 0, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100044, 16884, '0931', null, null, null, '平面设计经理/主管', null, null, 2, 0, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100045, 16884, '0932', null, null, null, '绘画', null, null, 2, 0, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100047, 16895, '2125', null, null, null, '楼宇自动化', null, null, 2, 6, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100048, 16895, '2126', null, null, null, '安防工程师', null, null, 2, 7, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100049, 16895, '2127', null, null, null, '开发报建', null, null, 2, 14, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100050, 16895, '2128', null, null, null, '合同管理', null, null, 2, 19, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100051, 16895, '2129', null, null, null, '安全员', null, null, 2, 19, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100052, 16895, '2130', null, null, null, '资料员', null, null, 2, 19, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100053, 16916, '4609', null, null, null, '房地产销售经理/主管', null, null, 2, 7, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100054, 16950, '0710', null, null, null, '策略发展总监', null, null, 2, 7, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100055, 16980, '1109', null, null, null, '合规经理', null, null, 2, 4, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100056, 16980, '1110', null, null, null, '合规主管/专员', null, null, 2, 4, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100057, 16988, '1213', null, null, null, '校长', null, null, 2, 0, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100058, 7, '5700', null, null, null, '培训', null, null, 1, 43, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100059, 100058, '5701', null, null, null, '培训督导', null, null, 2, 1, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100060, 100058, '5702', null, null, null, '培训讲师/顾问', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100061, 100058, '5703', null, null, null, '培训策划', null, null, 2, 3, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100062, 100058, '5704', null, null, null, '培训助理', null, null, 2, 4, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100063, 100058, '5705', null, null, null, '其他', null, null, 2, 5, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100064, 17015, '4915', null, null, null, '宾客服务经理', null, null, 2, 5, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100065, 17015, '4916', null, null, null, '预定部主管', null, null, 2, 7, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100066, 17015, '4917', null, null, null, '预定员', null, null, 2, 7, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100067, 17015, '4918', null, null, null, '健身房服务', null, null, 2, 11, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100068, 17030, '5013', null, null, null, '彩妆培训师', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100069, 17030, '5014', null, null, null, '专柜彩妆顾问(BA)', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100070, 17030, '5015', null, null, null, '救生员', null, null, 2, 10, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100071, 17043, '5112', null, null, null, '品类经理', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100072, 17043, '5113', null, null, null, '安防主管', null, null, 2, 3, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100073, 7, '5800', null, null, null, '农/林/牧/渔', null, null, 1, 57, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100074, 100073, '5801', null, null, null, '养殖部主管', null, null, 2, 1, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100075, 100073, '5802', null, null, null, '场长(农/林/牧/渔业)', null, null, 2, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100076, 100073, '5803', null, null, null, '农艺师', null, null, 2, 3, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100077, 100073, '5804', null, null, null, '畜牧师', null, null, 2, 4, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100078, 100073, '5805', null, null, null, '饲养员', null, null, 2, 5, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100079, 100073, '5806', null, null, null, '饲料研发', null, null, 2, 6, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (100080, 100073, '5807', null, null, null, '其他', null, null, 2, 7, sysdate, sysdate, 'YTB', 'YTB');
+
+
+
 commit;

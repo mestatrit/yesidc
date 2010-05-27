@@ -1,12 +1,15 @@
 ----disable constraint
 BEGIN 
   FOR c IN 
-  (SELECT c.owner, c.table_name, c.constraint_name 
-   FROM user_constraints c, user_tables t 
-   WHERE c.table_name = t.table_name 
-   AND c.status = 'ENABLED' 
-   AND c.constraint_name like 'FK%'
-   ORDER BY c.constraint_type) 
+  (
+  SELECT c.owner, c.table_name, c.constraint_name
+  FROM user_constraints c, user_tables t
+ WHERE c.table_name = t.table_name
+   AND c.status = 'ENABLED'
+   AND (c.constraint_name like 'FK%' or c.CONSTRAINT_NAME like 'SYS_C%')
+   AND c.OWNER = 'ITC'
+ ORDER BY c.constraint_type
+  ) 
   LOOP 
     dbms_utility.exec_ddl_statement('alter table ' || c.owner || '.' || c.table_name || ' disable constraint ' || c.constraint_name); 
   END LOOP; 
@@ -32,15 +35,19 @@ create sequence SEQ_C_APPEND;
 create sequence SEQ_C_CONTACT_HEADER;
 create sequence SEQ_C_CONTACT_INFO;
 create sequence SEQ_C_EMAIL;
+
 ----enable constraint
 BEGIN 
   FOR c IN 
-  (SELECT c.owner, c.table_name, c.constraint_name 
-   FROM user_constraints c, user_tables t 
-   WHERE c.table_name = t.table_name 
-   AND c.status = 'DISABLED' 
-   AND c.constraint_name like 'FK%'
-   ORDER BY c.constraint_type) 
+  (
+ SELECT c.owner, c.table_name, c.constraint_name
+  FROM user_constraints c, user_tables t
+ WHERE c.table_name = t.table_name
+   AND c.status = 'DISABLED'
+   AND (c.constraint_name like 'FK%' or c.CONSTRAINT_NAME like 'SYS_C%')
+   AND c.OWNER = 'ITC'
+ ORDER BY c.constraint_type
+) 
   LOOP 
     dbms_utility.exec_ddl_statement('alter table ' || c.owner || '.' || c.table_name || ' enable constraint ' || c.constraint_name); 
   END LOOP; 
