@@ -3,9 +3,13 @@ package com.yesibc.job51.dao.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import oracle.sql.BLOB;
 import oracle.sql.CLOB;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 
 import com.yesibc.core.dao.HibernateEntityDao;
 import com.yesibc.core.exception.ApplicationException;
@@ -13,11 +17,9 @@ import com.yesibc.job51.dao.CompanyDao;
 import com.yesibc.job51.model.ComAppend;
 import com.yesibc.job51.model.Company;
 
-public class CompanyDaoImpl extends HibernateEntityDao<Company> implements
-		CompanyDao {
+public class CompanyDaoImpl extends HibernateEntityDao<Company> implements CompanyDao {
 
-	public void saveAppendLob(ComAppend comAppend, String type)
-			throws ApplicationException {
+	public void saveAppendLob(ComAppend comAppend, String type) throws ApplicationException {
 		PreparedStatement ps = null;
 		try {
 			String sql = null;
@@ -26,8 +28,7 @@ public class CompanyDaoImpl extends HibernateEntityDao<Company> implements
 			} else if (ComAppend.LOB_TYPE_BLOB.equals(type)) {
 				sql = "select datas from TC_APPEND where id=? for update";
 			} else {
-				throw new ApplicationException(
-						"save append lob error and type is wrong!");
+				throw new ApplicationException("save append lob error and type is wrong!");
 			}
 			ps = getSession().connection().prepareStatement(sql);
 			if (ComAppend.LOB_TYPE_CLOB.equals(type)) {
@@ -43,15 +44,13 @@ public class CompanyDaoImpl extends HibernateEntityDao<Company> implements
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					throw new ApplicationException(
-							"save append lob error when close ps!", e);
+					throw new ApplicationException("save append lob error when close ps!", e);
 				}
 			}
 		}
 	}
 
-	private void updateClob(PreparedStatement ps, ComAppend comAppend)
-			throws SQLException {
+	private void updateClob(PreparedStatement ps, ComAppend comAppend) throws SQLException {
 		ps.setLong(1, comAppend.getId());
 		ResultSet rs = ps.executeQuery();
 
@@ -59,8 +58,7 @@ public class CompanyDaoImpl extends HibernateEntityDao<Company> implements
 			CLOB clob = (CLOB) rs.getClob(1);
 			clob.setString(1, comAppend.getContents());
 
-			ps = getSession().connection().prepareStatement(
-					" update TC_APPEND set contents=? where id=? ");
+			ps = getSession().connection().prepareStatement(" update TC_APPEND set contents=? where id=? ");
 			ps.setClob(1, clob);
 			ps.setLong(2, comAppend.getId());
 
@@ -68,8 +66,7 @@ public class CompanyDaoImpl extends HibernateEntityDao<Company> implements
 		}
 	}
 
-	private void updateBlob(PreparedStatement ps, ComAppend comAppend)
-			throws SQLException {
+	private void updateBlob(PreparedStatement ps, ComAppend comAppend) throws SQLException {
 		ps.setLong(1, comAppend.getId());
 		ResultSet rs = ps.executeQuery();
 
@@ -77,8 +74,7 @@ public class CompanyDaoImpl extends HibernateEntityDao<Company> implements
 			BLOB blob = (BLOB) rs.getBlob(1);
 			blob.setBytes(comAppend.getDatas());
 
-			ps = getSession().connection().prepareStatement(
-					" update TC_APPEND set datas=? where id=? ");
+			ps = getSession().connection().prepareStatement(" update TC_APPEND set datas=? where id=? ");
 
 			ps.setBlob(1, blob);
 			ps.setLong(2, comAppend.getId());
@@ -86,4 +82,13 @@ public class CompanyDaoImpl extends HibernateEntityDao<Company> implements
 			ps.executeUpdate();
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Company> getKOLoadedCom() throws ApplicationException {
+		Criteria criteria = getSession().createCriteria(Company.class);
+		criteria.add(Restrictions.ne("loadOK", Company.LOAD_OK));
+
+		return criteria.list();
+	}
+
 }

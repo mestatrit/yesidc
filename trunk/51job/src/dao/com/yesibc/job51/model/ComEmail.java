@@ -17,6 +17,7 @@ public class ComEmail implements java.io.Serializable {
 	private static final long serialVersionUID = 3197774547449040020L;
 	private Long id;
 	private String email;
+	private String reciever;
 	/**
 	 * 个人-1 公司共享-2 公司个人-3 
 	 */
@@ -132,11 +133,18 @@ public class ComEmail implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "ComEmail [createDate=" + createDate + ", createUser=" + createUser
-				+ ", email=" + email + ", fromWhere=" + fromWhere
-				+ ", fromWhereName=" + fromWhereName + ", id=" + id
-				+ ", mailType=" + mailType + ", updateDate=" + updateDate
+		return "ComEmail [comContactHeaders=" + comContactHeaders + ", createDate=" + createDate + ", createUser="
+				+ createUser + ", email=" + email + ", fromWhere=" + fromWhere + ", fromWhereName=" + fromWhereName
+				+ ", id=" + id + ", mailType=" + mailType + ", reciever=" + reciever + ", updateDate=" + updateDate
 				+ ", updateUser=" + updateUser + "]";
+	}
+
+	public String getReciever() {
+		return reciever;
+	}
+
+	public void setReciever(String reciever) {
+		this.reciever = reciever;
 	}
 
 
