@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
+import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.job51.web.search.ProcessContext;
 
@@ -27,10 +28,10 @@ public class LocateMainElements {
 	public static void main(String[] args) {
 		String url = "http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&funtype=2400%2C0100%2C2500&industrytype=01%2C37%2C38&issuedate=9&providesalary=99&keywordtype=2&lang=c&stype=2&workyear=99&cotype=99&degreefrom=99&jobterm=01&fromType=1";
 		ProcessContext processContext = new ProcessContext();
-		IBrowserCanvas browser = JobSupport.initLoading(processContext, "locatePage", 0);
+		IBrowserCanvas browser = BrowserSupport.initLoading(processContext, "locatePage", 0);
 		browser.loadURL(url);
 		try {
-			locatePage(browser,">3<");
+			locatePage(browser, ">3<");
 		} catch (ApplicationException e) {
 			e.printStackTrace();
 		}
@@ -40,7 +41,7 @@ public class LocateMainElements {
 		String[] kes = { "href", "onClick" };
 		String[] values = { PAGING_TAG2, PAGING_TAG1 };
 		String[] txts = { pageNum };
-		IElement pageIE = JobSupport.getElement(browser.getDocument().getAll().tags("A"), kes, values, txts);
+		IElement pageIE = WebrendererSupport.getElement(browser.getDocument().getAll().tags("A"), kes, values, txts);
 		if (pageIE == null) {
 			log.error(ErrorHandler.ERROR_PREFIX + "Can't locate Page!\n"
 					+ browser.getDocument().getBody().getOuterHTML());
@@ -50,7 +51,8 @@ public class LocateMainElements {
 	}
 
 	public static IElement locateFunBtn(IBrowserCanvas browser) throws ApplicationException {
-		IElement funIE = JobSupport.getElement(browser.getDocument().getAll().tags("INPUT"), curFunKey, curFunVal);
+		IElement funIE = WebrendererSupport.getElement(browser.getDocument().getAll().tags("INPUT"), curFunKey,
+				curFunVal);
 		if (funIE == null) {
 			log.error(ErrorHandler.ERROR_PREFIX + "Can't locate function button!");
 			throw new ApplicationException(ErrorHandler.ERROR_PREFIX + "Can't locate function button!");
@@ -59,7 +61,8 @@ public class LocateMainElements {
 	}
 
 	public static IElement locateIndBtn(IBrowserCanvas browser) throws ApplicationException {
-		IElement indIE = JobSupport.getElement(browser.getDocument().getAll().tags("INPUT"), curIndKey, curIndVal);
+		IElement indIE = WebrendererSupport.getElement(browser.getDocument().getAll().tags("INPUT"), curIndKey,
+				curIndVal);
 		if (indIE == null) {
 			ErrorHandler.error(ErrorHandler.ERROR_PREFIX + "Can't locate industry button!");
 			throw new ApplicationException(ErrorHandler.ERROR_PREFIX + "Can't locate industry button!");
@@ -68,7 +71,7 @@ public class LocateMainElements {
 	}
 
 	public static IElement locateMainSrchBtn(IBrowserCanvas browser) throws ApplicationException {
-		List<IElement> ies = JobSupport.getElements(browser.getDocument().getAll().tags("INPUT"), "src",
+		List<IElement> ies = WebrendererSupport.getElements(browser.getDocument().getAll().tags("INPUT"), "src",
 				"http://img01.51jobcdn.com/im/2009/search/c/jsearch.gif");
 		if (ies == null || ies.size() != 1) {
 			ErrorHandler.error(ErrorHandler.ERROR_PREFIX + "Can't locate main search button!");
@@ -78,7 +81,7 @@ public class LocateMainElements {
 	}
 
 	public static IElement locatePaging(IBrowserCanvas browser) throws ApplicationException {
-		List<IElement> elements = JobSupport.getElements(browser.getDocument().getAll(), "A", "onclick",
+		List<IElement> elements = WebrendererSupport.getElements(browser.getDocument().getAll(), "A", "onclick",
 				"zzSearch.jumpPage(this.href);", "http://images.51job.com/im/2009/pageron.gif");
 		if (elements == null) {
 			return null;

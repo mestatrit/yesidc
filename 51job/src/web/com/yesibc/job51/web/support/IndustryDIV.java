@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
+import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.NestedRuntimeException;
 
 public class IndustryDIV {
@@ -35,7 +36,7 @@ public class IndustryDIV {
 	private static String cur_selected_ind = selected_inds[0];
 
 	public static IElement getIndDIV(IBrowserCanvas browser) {
-		List<IElement> ies = JobSupport.getElementsByTxt(browser.getDocument().getAll().tags("DIV"), ind_tags);
+		List<IElement> ies = WebrendererSupport.getElementsByTxt(browser.getDocument().getAll().tags("DIV"), ind_tags);
 		if (ies.size() != 1) {
 			ErrorHandler.error(ErrorHandler.ERROR_PREFIX + "Can't locate industry DIV!ies.size()=" + ies.size());
 			throw new NestedRuntimeException(ErrorHandler.ERROR_PREFIX + "Can't locate industry DIV!ies.size()="
@@ -50,7 +51,7 @@ public class IndustryDIV {
 	}
 
 	public static List<IElement> getSelectedIndTR(IElement funDIV) {
-		JobSupport js = new JobSupport();
+		WebrendererSupport js = new WebrendererSupport();
 		IElement ie = js.getElementByTxtAndLoop(funDIV.getChildElements(), "TR", cur_selected_ind);
 		if (ie == null) {
 			ErrorHandler.error(ErrorHandler.ERROR_PREFIX + "Can't locate selected industry TR!");
@@ -60,10 +61,10 @@ public class IndustryDIV {
 		return ies;
 	}
 
-	public static IElement getIndCHKElement(String[] txts,IBrowserCanvas browser) {
+	public static IElement getIndCHKElement(String[] txts, IBrowserCanvas browser) {
 		// List<IElement> ieLMTs = js.getElementsByTxtAndLoop(ies, "INPUT",
 		// txt);
-		List<IElement> ieLMTs = JobSupport.getElementsByTxt(browser.getDocument().getAll().tags("TD"), txts);
+		List<IElement> ieLMTs = WebrendererSupport.getElementsByTxt(browser.getDocument().getAll().tags("TD"), txts);
 		String innerHTML = "";
 		IElement parent = null;
 		for (Iterator<IElement> it = ieLMTs.iterator(); it.hasNext();) {
@@ -103,7 +104,8 @@ public class IndustryDIV {
 	}
 
 	public static IElement getFunCFMElement(IBrowserCanvas browser) {
-		List<IElement> ieLMTs = JobSupport.getElementsByTxt(browser.getDocument().getAll().tags("SPAN"), confirm_tag);
+		List<IElement> ieLMTs = WebrendererSupport.getElementsByTxt(browser.getDocument().getAll().tags("SPAN"),
+				confirm_tag);
 
 		IElement parent = null;
 		String innerHTML = "";
@@ -147,7 +149,7 @@ public class IndustryDIV {
 			return getTDParent(parent);
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		System.out.println(IndustryDIV.IND_ARRAY.length);
 	}
