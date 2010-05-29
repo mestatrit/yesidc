@@ -2,7 +2,7 @@ package com.yesibc.job51.company;
 
 public class CompanyMain {
 
-	private final static String ALIBABA_HOMEPAGE = "http://china.alibaba.com/";
+	//private final static String ALIBABA_HOMEPAGE = "http://china.alibaba.com/";
 	
 	
 	/**

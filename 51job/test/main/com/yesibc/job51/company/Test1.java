@@ -64,6 +64,7 @@ public class Test1 {
 	 * 
 	 * @param ies
 	 */
+	@SuppressWarnings("unused")
 	private static void doClick(IElement[] ies) {
 		ies[0].click();
 		IDocument doc = browser.getDocument();
@@ -144,6 +145,7 @@ public class Test1 {
 		return elementByLoop;
 	}
 
+	@SuppressWarnings("unused")
 	private static IElement getElement(IElementCollection ies, String attribute, String attrVal) {
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);
@@ -157,6 +159,7 @@ public class Test1 {
 		return null;
 	}
 
+	@SuppressWarnings("unused")
 	private static IElement[] locateButton() {
 		IDocument doc = browser.getDocument();
 		IElementCollection inputs = doc.getAll().tags("INPUT");
@@ -188,7 +191,7 @@ public class Test1 {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			System.out.println("waiting loading¡­¡­[" + i * 0.5 + "]s");
+			System.out.println("waiting loadingï¿½ï¿½ï¿½ï¿½[" + i * 0.5 + "]s");
 		}
 	}
 

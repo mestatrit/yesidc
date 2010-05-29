@@ -10,6 +10,7 @@ import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
 import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
+import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.utils.FileUtils;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
@@ -17,7 +18,6 @@ import com.yesibc.job51.common.ClawerUtils;
 import com.yesibc.job51.web.search.ProcessContext;
 import com.yesibc.job51.web.search.WebrendererContext;
 import com.yesibc.job51.web.support.ErrorHandler;
-import com.yesibc.job51.web.support.JobSupport;
 import com.yesibc.job51.web.support.LocateCompanyInfo;
 import com.yesibc.job51.web.support.LogHandler;
 
@@ -56,8 +56,8 @@ public class TestPutJobsURL2Context {
 		onDocumnetComplete(finish);
 		waitingLoading(0, "111", finish);
 
-		List<IElement> elements = JobSupport.getElements(processContext.getBrowser().getDocument().getAll(), "A",
-				"href", ClawerConstants.JOB_URL_PREFIX);
+		List<IElement> elements = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll(),
+				"A", "href", ClawerConstants.JOB_URL_PREFIX);
 
 		// http\://search.51job.com/job/
 		System.out.println(elements.size());
@@ -97,8 +97,8 @@ public class TestPutJobsURL2Context {
 		System.out.println("finish=" + finish.get("1"));
 		System.out.println("total=" + LocateCompanyInfo.getTotal(processContext));
 
-		List<IElement> elements = JobSupport.getElements(processContext.getBrowser().getDocument().getAll(), "A",
-				"href", ClawerConstants.JOB_URL_PREFIX);
+		List<IElement> elements = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll(),
+				"A", "href", ClawerConstants.JOB_URL_PREFIX);
 
 		// http\://search.51job.com/job/
 		System.out.println(elements.size());
@@ -132,7 +132,7 @@ public class TestPutJobsURL2Context {
 						+ "] waiting loading to long and exit to waiting now. Time is[" + i
 						* ClawerConstants.WAITING_TIME_SECONDS + "]s");
 				// finish = true;
-				WebrendererContext.reFreshContext(index, processContext);
+				WebrendererContext.reFreshContext4Waiting(index, processContext);
 				return false;
 			} else {
 				LogHandler.debug(processContext.getLogTitle() + " URL[" + url + "] waiting loading……[" + i

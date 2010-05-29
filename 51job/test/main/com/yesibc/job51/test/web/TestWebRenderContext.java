@@ -26,7 +26,7 @@ public class TestWebRenderContext {
 		}
 
 		for (int i = 0; i < size; i++) {
-			WebrendererContext.reFreshContext1(i, "aaa" + i);
+			WebrendererContext.reFreshContext(i, "aaa" + i);
 			WebRenderEntity wre = WebrendererContext.WEBRENDER_ENTITIES.get(i);
 			IBrowserCanvas browser = wre.getBrowser();
 			browser.loadURL("http://www.baidu.com/");
