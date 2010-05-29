@@ -6,6 +6,7 @@ import java.util.List;
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
 import com.webrenderer.swing.dom.IElementCollection;
+import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.NestedRuntimeException;
 
 public class FunctionDIV {
@@ -22,7 +23,7 @@ public class FunctionDIV {
 			{ "1200", "教师/培训" }, { "1000", "科研人员" }, { "4800", "餐饮/娱乐" }, { "4900", "酒店/旅游" }, { "5000", "美容/健身/体育" },
 			{ "5100", "百货/连锁/零售服务" }, { "1800", "交通运输服务" }, { "5200", "保安/家政/其他服务" }, { "1500", "公务员" },
 			{ "2000", "翻译" }, { "1600", "在校学生" }, { "1700", "储备干部/培训生/实习生" }, { "5300", "兼职" }, { "1900", "其他" },
-			{ "5600", "环保" },{ "5700", "培训" } ,{ "5800", "农/林/牧/渔" }  };
+			{ "5600", "环保" }, { "5700", "培训" }, { "5800", "农/林/牧/渔" } };
 
 	// public static String[] FUN_ARRAY = { "计算机硬件", "计算机软件", "互联网开发及应用" };
 	public static int SELECT_PER_TIMES = 3;
@@ -37,7 +38,7 @@ public class FunctionDIV {
 	private static String cur_selected_fun = selected_funs[0];
 
 	public static IElement getFunDIV(IBrowserCanvas browser) {
-		List<IElement> ies = JobSupport.getElementsByTxt(browser.getDocument().getAll().tags("DIV"), fun_tags);
+		List<IElement> ies = WebrendererSupport.getElementsByTxt(browser.getDocument().getAll().tags("DIV"), fun_tags);
 		if (ies.size() != 1) {
 			ErrorHandler.error(ErrorHandler.ERROR_PREFIX + "Can't locate function DIV!ies.size()=" + ies.size());
 			throw new NestedRuntimeException(ErrorHandler.ERROR_PREFIX + "Can't locate function DIV!ies.size()="
@@ -52,7 +53,7 @@ public class FunctionDIV {
 	}
 
 	public static List<IElement> getSelectedFunTR(IElement funDIV) {
-		JobSupport js = new JobSupport();
+		WebrendererSupport js = new WebrendererSupport();
 		IElement ie = js.getElementByTxtAndLoop(funDIV.getChildElements(), "TR", cur_selected_fun);
 		if (ie == null) {
 			ErrorHandler.error(ErrorHandler.ERROR_PREFIX + "Can't locate selected function TR!");
@@ -63,7 +64,7 @@ public class FunctionDIV {
 	}
 
 	public static IElement getFunTDElement(IElementCollection ies, String txt) {
-		JobSupport js = new JobSupport();
+		WebrendererSupport js = new WebrendererSupport();
 		List<IElement> ieLMTs = js.getElementsByTxtAndLoop(ies, "TD", txt);
 
 		for (Iterator<IElement> it = ieLMTs.iterator(); it.hasNext();) {
@@ -83,10 +84,10 @@ public class FunctionDIV {
 
 	}
 
-	public static IElement getFunCHKElement(String[] txts,IBrowserCanvas browser) {
+	public static IElement getFunCHKElement(String[] txts, IBrowserCanvas browser) {
 		// List<IElement> ieLMTs = js.getElementsByTxtAndLoop(ies, "INPUT",
 		// txt);
-		List<IElement> ieLMTs = JobSupport.getElementsByTxt(browser.getDocument().getAll().tags("TD"), txts);
+		List<IElement> ieLMTs = WebrendererSupport.getElementsByTxt(browser.getDocument().getAll().tags("TD"), txts);
 		if (ieLMTs.isEmpty() || ieLMTs.size() != 1) {
 			ErrorHandler
 					.error(ErrorHandler.ERROR_PREFIX + "Can't locate function checkbox[TD part]:" + txts.toString());
@@ -99,7 +100,8 @@ public class FunctionDIV {
 	}
 
 	public static IElement getFunCFMElement(IBrowserCanvas browser) {
-		List<IElement> ieLMTs = JobSupport.getElementsByTxt(browser.getDocument().getAll().tags("SPAN"), confirm_tag);
+		List<IElement> ieLMTs = WebrendererSupport.getElementsByTxt(browser.getDocument().getAll().tags("SPAN"),
+				confirm_tag);
 
 		IElement parent = null;
 		String innerHTML = "";

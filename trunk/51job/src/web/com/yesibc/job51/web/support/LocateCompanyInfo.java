@@ -7,9 +7,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.webrenderer.swing.IBrowserCanvas;
-import com.webrenderer.swing.dom.IDocument;
 import com.webrenderer.swing.dom.IElement;
 import com.webrenderer.swing.dom.IElementCollection;
+import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.exception.NestedRuntimeException;
 import com.yesibc.core.utils.StringUtils;
@@ -73,7 +73,7 @@ public class LocateCompanyInfo {
 	}
 
 	public static int validationTableOfJobList(IBrowserCanvas browser) throws ApplicationException {
-		List<IElement> elements = JobSupport.getElements(browser.getDocument().getAll().tags("TABLE"), "id",
+		List<IElement> elements = WebrendererSupport.getElements(browser.getDocument().getAll().tags("TABLE"), "id",
 				COMPANY_LIST_ID);
 
 		errorHandle(elements, "Parse company list error!checkValidation!Can't get Table!URL=" + browser.getURL());
@@ -110,7 +110,7 @@ public class LocateCompanyInfo {
 	public static String[] getComIndustryTypeScale(ProcessContext processContext) {
 		try {
 			String[] ieStr = { ClawerConstants.COMPANY_INDUSTRY };
-			List<IElement> ies = JobSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags(
+			List<IElement> ies = WebrendererSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags(
 					"TD"), ieStr);
 
 			String[] str = new String[] { "", "", "", "" };
@@ -208,11 +208,11 @@ public class LocateCompanyInfo {
 		
 		//log.info(processContext.getBrowser().getDocument().getBody().getOuterHTML());
 		
-		List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("TABLE"),
+		List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("TABLE"),
 				"class", "navBold");
 		errorHandle(ies, "Get Total Records|Table error!");
 
-		JobSupport js = new JobSupport();
+		WebrendererSupport js = new WebrendererSupport();
 		IElement ie = js.getElementByTxtAndLoop(ies.get(0).getChildElements(), "TD", PAGE_SPLIT);
 		String digitals = ie.getInnerHTML();
 		digitals = digitals.substring(digitals.indexOf(PAGE_SPLIT) + PAGE_SPLIT.length());
@@ -225,7 +225,7 @@ public class LocateCompanyInfo {
 
 	public static String getDescription(ProcessContext processContext) throws ApplicationException {
 		String[] strs = { "txt_font" };
-		List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("DIV"),
+		List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("DIV"),
 				"class", "jobs_txt", strs);
 
 		try {
@@ -243,7 +243,7 @@ public class LocateCompanyInfo {
 
 	public static String getWebsite(ProcessContext processContext) {
 		try {
-			List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
 					"P", "class", "txt_font1", ClawerConstants.COMPANY_HOMEPAGE);
 
 			if (ies == null || ies.isEmpty()) {
@@ -266,7 +266,7 @@ public class LocateCompanyInfo {
 
 	public static String getAddress(ProcessContext processContext) {
 		try {
-			List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
 					"P", "class", "txt_font1", ClawerConstants.COMPANY_ADDRESS);
 
 			if (ies == null || ies.isEmpty()) {
@@ -310,7 +310,7 @@ public class LocateCompanyInfo {
 
 	public static String getZip(ProcessContext processContext) {
 		try {
-			List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
 					"P", "class", "txt_font1", ClawerConstants.COMPANY_ZIP);
 			if (ies == null || ies.isEmpty()) {
 				return "";
@@ -330,7 +330,7 @@ public class LocateCompanyInfo {
 
 	public static String getFax(ProcessContext processContext) {
 		try {
-			List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
 					"P", "class", "txt_font1", ClawerConstants.COMPANY_FAX);
 			if (ies == null || ies.isEmpty()) {
 				return "";
@@ -353,7 +353,7 @@ public class LocateCompanyInfo {
 
 	public static String getLinkman(ProcessContext processContext) {
 		try {
-			List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
 					"P", "class", "txt_font1", ClawerConstants.COMPANY_CONTACT_PERSON);
 			if (ies == null || ies.isEmpty()) {
 				return "";
@@ -374,7 +374,7 @@ public class LocateCompanyInfo {
 
 	public static String getTel(ProcessContext processContext) {
 		try {
-			List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
 					"P", "class", "txt_font1", ClawerConstants.COMPANY_TEL);
 			if (ies == null || ies.isEmpty()) {
 				return "";
@@ -396,7 +396,7 @@ public class LocateCompanyInfo {
 	private static Log log = LogFactory.getLog(LocateCompanyInfo.class);
 
 	public static List<String> getEmails(ProcessContext processContext) throws ApplicationException {
-		List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"),
+		List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"),
 				"href", "mailto:");
 		if (ies == null || ies.isEmpty()) {
 			log.warn(processContext.getLogTitle() + "No mail found!");
@@ -456,7 +456,7 @@ public class LocateCompanyInfo {
 
 	public static String getJobEmail(ProcessContext processContext) {
 		try {
-			List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
 					"P", "class", "txt_font1", ClawerConstants.COMPANY_EMAIL);
 			if (ies == null || ies.isEmpty()) {
 				return "";
@@ -480,7 +480,7 @@ public class LocateCompanyInfo {
 
 	public static String getMobile(ProcessContext processContext) {
 		try {
-			List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
 					"P", "class", "txt_font1", ClawerConstants.COMPANY_MOBILE);
 			if (ies == null || ies.isEmpty()) {
 				return "";

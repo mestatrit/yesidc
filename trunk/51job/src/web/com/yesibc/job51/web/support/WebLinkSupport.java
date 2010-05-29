@@ -6,6 +6,7 @@ import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
 import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
+import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
@@ -15,10 +16,11 @@ public class WebLinkSupport {
 
 	private static boolean finish = false;
 	private static long COUNTLOADED = 0;
-	private static long WAITING_CONNECTION = 20000;
+	private static long WAITING_CONNECTION = 10000;
 
 	public synchronized static void reconnectInternet(String rid) throws ApplicationException {
 		finish = false;
+		rid = rid + "[" + (++COUNTLOADED) + "]";
 		try {
 			WebRenderEntity wre = WebrendererContext.WEBRENDER_ENTITIES.get(ClawerConstants.THREADS_NUMBER);
 			IBrowserCanvas browser = wre.getBrowser();
@@ -72,7 +74,7 @@ public class WebLinkSupport {
 			return "";
 		}
 
-		JobSupport js = new JobSupport();
+		WebrendererSupport js = new WebrendererSupport();
 		LogHandler.debug(rid + "!TR message:" + ieTable.getChildElements().item(1).getOuterHTML());
 		LogHandler.debug(rid + "!TR message1:"
 				+ ieTable.getChildElements().item(1).getChildElements().item(1).getOuterHTML());
@@ -97,7 +99,7 @@ public class WebLinkSupport {
 	}
 
 
-	private static void handleReconnect(String rid, IBrowserCanvas browser) {
+	private static void handleReconnect(String rid, IBrowserCanvas browser) throws ApplicationException {
 		IElement ie = getConnectButton(browser);
 		if (ie == null) {
 			ErrorHandler.errorLogAndMail(rid + "reconnectInternet error:can not get connect button!Second Step!\n"
@@ -110,6 +112,12 @@ public class WebLinkSupport {
 		waitingLoading(rid + "|getCutButton!");
 		finish = false;
 
+		try {
+			Thread.sleep(WAITING_CONNECTION);
+		} catch (InterruptedException e) {
+			throw new ApplicationException("ReconnectInternet error Thread.sleep!", e);
+		}
+
 		ie = getCutButton(browser);
 		if (ie == null) {
 			ErrorHandler.errorLogAndMail(rid + "reconnectInternet error:can not get cut button!Three Step!\n" + rid
@@ -120,12 +128,12 @@ public class WebLinkSupport {
 	}
 
 	private static IElement getConnectButton(IBrowserCanvas browser) {
-		return JobSupport.getElement(browser.getDocument().getAll().tags("INPUT"), "ONCLICK",
+		return WebrendererSupport.getElement(browser.getDocument().getAll().tags("INPUT"), "ONCLICK",
 				ClawerConstants.RECONNECT_RECONN_TAG);
 	}
 
 	private static IElement getCutButton(IBrowserCanvas browser) {
-		return JobSupport.getElement(browser.getDocument().getAll().tags("INPUT"), "ONCLICK",
+		return WebrendererSupport.getElement(browser.getDocument().getAll().tags("INPUT"), "ONCLICK",
 				ClawerConstants.RECONNECT_CUT_TAG);
 	}
 
@@ -211,52 +219,11 @@ public class WebLinkSupport {
 
 	}
 
-	private static long current = System.currentTimeMillis();
-
-	public synchronized static void doCount(String tag, int index, boolean retry) throws ApplicationException {
-
-		if (ClawerConstants.TEST_WEB) {
-			return;
-		}
-
-		// checkWebReconnecting(tag);
-		COUNTLOADED++;
-		boolean rec = false;
-		long refreshTime = System.currentTimeMillis() - current;
-
-		if (retry) {
-			if (refreshTime >= ClawerConstants.RECONNECT_INTERVAL) {
-				rec = true;
-			}
-		} else {
-			if ((COUNTLOADED + 1) % ClawerConstants.COUNT_LOADED == 0
-					&& refreshTime >= (ClawerConstants.RECONNECT_INTERVAL / 2)) {
-				rec = true;
-			}
-		}
-
-		if (rec) {
-			current = System.currentTimeMillis();
-			tag = tag + "[" + retry + "]";
-			checkRunningWeb(tag, index);
-
-			int size = WebrendererContext.WEBRENDER_ENTITIES.size();
-			for (int i = 0; i < size; i++) {
-				WebrendererContext.reFreshContext1(i, "Rec " + COUNTLOADED + "-" + i);
-			}
-
-			LogHandler.info(tag + "reconnect internet start!" + COUNTLOADED);
-			long start = System.currentTimeMillis();
-			reconnectInternet(tag);
-			LogHandler.info(tag + "reconnect internet end! time is " + (System.currentTimeMillis() - start));
-		}
-	}
-
 	public static void refreshContext(String title) throws ApplicationException {
 		LogHandler.info(title + " start!");
 		int sizeOfWRE = WebrendererContext.WEBRENDER_ENTITIES.size();
 		for (int i = 0; i < sizeOfWRE; i++) {
-			WebrendererContext.reFreshContext1(i, title + "-" + i);
+			WebrendererContext.reFreshContext(i, title + "-" + i);
 		}
 		WebLinkSupport.reconnectInternet(title);
 		LogHandler.info(title + " End!");
