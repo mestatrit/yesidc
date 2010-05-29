@@ -56,6 +56,7 @@ public class AreaImporter {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static void updateCities() {
 		List<Code> codes = baseCodeDao.findAll(Code.class);
 		Map<String, Code> map = new HashMap<String, Code>();
@@ -84,6 +85,7 @@ public class AreaImporter {
 
 	}
 
+	@SuppressWarnings("unused")
 	private static void updateProvinces() {
 		Date d = new Date();
 

@@ -1,9 +1,6 @@
 package com.yesibc.job51.company;
 
-import java.awt.AWTException;
 import java.awt.BorderLayout;
-import java.awt.Robot;
-import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -269,7 +266,7 @@ public class Test {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			System.out.println("waiting loading¡­¡­[" + i * 0.5 + "]s");
+			System.out.println("waiting loadingï¿½ï¿½ï¿½ï¿½[" + i * 0.5 + "]s");
 		}
 	}
 

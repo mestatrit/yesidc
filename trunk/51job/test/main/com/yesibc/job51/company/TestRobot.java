@@ -154,6 +154,7 @@ public class TestRobot {
 		return elementByLoop;
 	}
 
+	@SuppressWarnings("unused")
 	private static IElement getElement(IElementCollection ies, String attribute, String attrVal) {
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);
@@ -198,7 +199,7 @@ public class TestRobot {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			System.out.println("waiting loading¡­¡­[" + i * 0.5 + "]s");
+			System.out.println("waiting loadingï¿½ï¿½ï¿½ï¿½[" + i * 0.5 + "]s");
 		}
 	}
 
