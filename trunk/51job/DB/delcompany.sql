@@ -23,18 +23,21 @@ truncate table tc_contact_email;
 truncate table tc_contact_info;
 truncate table tc_email;
 truncate table tc_append;
+truncate table T_WEBPAGES;
 
 drop sequence SEQ_COMPANY;
 drop sequence SEQ_C_APPEND;
 drop sequence SEQ_C_CONTACT_HEADER;
 drop sequence SEQ_C_CONTACT_INFO;
 drop sequence SEQ_C_EMAIL;
+drop sequence SEQ_WEBPAGES;
 
 create sequence SEQ_COMPANY;
 create sequence SEQ_C_APPEND;
 create sequence SEQ_C_CONTACT_HEADER;
 create sequence SEQ_C_CONTACT_INFO;
 create sequence SEQ_C_EMAIL;
+create sequence SEQ_WEBPAGES;
 
 ----enable constraint
 BEGIN 
