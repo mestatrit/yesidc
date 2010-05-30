@@ -38,8 +38,8 @@ public class ParseResumeAppendix {
 				continue;
 
 			PersonAppend append = new PersonAppend();
-			for (int j = 0; j < td.length; j++) {
-				temp = ClawerUtils.getOrignText(td[j].toPlainTextString());
+			for (TableColumn element : td) {
+				temp = ClawerUtils.getOrignText(element.toPlainTextString());
 
 				if ("".equals(temp)) {
 					append = null;

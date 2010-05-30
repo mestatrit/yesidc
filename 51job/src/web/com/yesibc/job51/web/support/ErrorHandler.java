@@ -5,11 +5,18 @@ import org.apache.commons.logging.LogFactory;
 
 import cn.cetelem.track.AlertUtils;
 
+import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
 import com.yesibc.job51.common.Clawer51JobMailContext;
 import com.yesibc.job51.common.ClawerConstants;
+import com.yesibc.job51.web.search.ProcessContext;
 
 public class ErrorHandler {
+
+	public static final String WAIT_ERROR_BODY = "Body is null.";
+	public static final String WAIT_ERROR_CONNECT = "Firefox can't find the server";
+	public static final String WAIT_ERROR_PROHIBIT = "is taking too long to respond.";
+	public static final String WAIT_ERROR_SYSTEM = "Important error!Special action will be executed.";
 	public final static String ERROR_PREFIX = "Fatal error!";
 	public final static String WARN_PREFIX = "Warning error!";
 	private static Log logManual = LogFactory.getLog(ClawerConstants.MANUAL_LOG);
@@ -23,6 +30,30 @@ public class ErrorHandler {
 		}
 	}
 
+	public static void handleError(IBrowserCanvas browser, ProcessContext processContext, Exception e) {
+		String str = null;
+		String msg = null;
+		if (e != null) {
+			str = AlertUtils.getErrString(e);
+			msg = e.getMessage();
+		}
+		String html = null;
+		if (browser.getDocument() != null && browser.getDocument().getBody() != null) {
+			html = browser.getDocument().getBody().getOuterHTML();
+		} else {
+			html = "Can't get HTML contents.";
+		}
+
+		if (msg != null && msg.indexOf(WAIT_ERROR_SYSTEM) > -1) {
+			processContext.setError(true);
+			processContext.setErrorMs(msg + "\n" + str);
+		}
+
+		ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " Parsing [" + browser.getURL() + "] is error!"
+				+ msg + "\n HTML contents Start===========\n:" + html
+				+ "\n HTML contents End===========\n ExceptionTrace:" + str);
+	}
+
 	public static void error(String errMsg) {
 		logManual.error(errMsg);
 	}
@@ -34,16 +65,25 @@ public class ErrorHandler {
 		}
 	}
 
-	public static void errorLogAndMail(String errMsg) {
-		getErrorTimes();
-		Clawer51JobMailContext.EMAILS.get(num).setSimpleBody(errMsg);
-		Clawer51JobMailContext.EMAILS.get(num).sendBySimple();
+	public static void errorLogAndMail(final String errMsg) {
+		new Thread() {
+			public void run() {
+				getErrorTimes();
+				Clawer51JobMailContext.EMAILS.get(num).setSimpleBody(errMsg);
+				Clawer51JobMailContext.EMAILS.get(num).sendBySimple();
+			}
+		}.start();
 	}
 
-	public static void errorLogAndMail(String errMsg, Exception e) {
-		getErrorTimes();
-		Clawer51JobMailContext.EMAILS.get(num).setSimpleBody(errMsg + "!\n Exception:" + AlertUtils.getErrString(e));
-		Clawer51JobMailContext.EMAILS.get(num).sendBySimple();
+	public static void errorLogAndMail(final String errMsg, Exception e) {
+		final String eStr = AlertUtils.getErrString(e);
+		new Thread() {
+			public void run() {
+				getErrorTimes();
+				Clawer51JobMailContext.EMAILS.get(num).setSimpleBody(errMsg + "!\n Exception:" + eStr);
+				Clawer51JobMailContext.EMAILS.get(num).sendBySimple();
+			}
+		}.start();
 	}
 
 	public static void errorIElement(IElement ie, String errmsg) {
@@ -62,6 +102,7 @@ public class ErrorHandler {
 	public static void main(String[] args) {
 		String s = "086-" + "		021-" + "		52306918;";
 		errorLogAndMail(s, null);
+		System.out.println("gogogoogogo");
 	}
 
 }

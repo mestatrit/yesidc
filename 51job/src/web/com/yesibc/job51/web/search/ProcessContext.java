@@ -3,9 +3,12 @@ package com.yesibc.job51.web.search;
 import com.webrenderer.swing.IBrowserCanvas;
 
 public class ProcessContext {
-	
+
 	private String logTitle;
 	private IBrowserCanvas browser;
+	private String url;
+	private boolean error = false;
+	private String errorMs;
 
 	public String getLogTitle() {
 		return logTitle;
@@ -21,6 +24,30 @@ public class ProcessContext {
 
 	public void setBrowser(IBrowserCanvas browser) {
 		this.browser = browser;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public boolean isError() {
+		return error;
+	}
+
+	public void setError(boolean error) {
+		this.error = error;
+	}
+
+	public String getErrorMs() {
+		return errorMs;
+	}
+
+	public void setErrorMs(String errorMs) {
+		this.errorMs = errorMs;
 	}
 
 }

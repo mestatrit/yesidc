@@ -11,13 +11,14 @@ import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
 import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
+import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.model.Company;
 import com.yesibc.job51.web.search.WebrendererContext;
 import com.yesibc.job51.web.support.CompanyInfoSupport;
 import com.yesibc.job51.web.support.ErrorHandler;
-import com.yesibc.job51.web.support.JobSupport;
+import com.yesibc.job51.web.support.BrowserSupport;
 import com.yesibc.job51.web.support.LocateCompanyInfo;
 import com.yesibc.job51.web.support.LogHandler;
 
@@ -48,7 +49,7 @@ public class ValidateJobDetail {
 			throw new ApplicationException("ValidateJobDetail error!");
 		}
 
-		browser = JobSupport.initLoading(processContext, title, index);
+		browser = BrowserSupport.initLoading(processContext, title, index);
 		onDocumnetComplete();
 
 		try {
@@ -58,7 +59,7 @@ public class ValidateJobDetail {
 			browser.loadURL(url);
 			boolean loadedOK = true;
 			if (!waitingLoading(index, url)) {
-				browser = JobSupport.reLoading(processContext, title, index);
+				browser = BrowserSupport.reLoading(processContext, title, index);
 				onDocumnetComplete();
 				log.info(processContext.getLogTitle() + "ReStart Loading error1 " + url);
 				browser.loadURL(url);
@@ -90,8 +91,8 @@ public class ValidateJobDetail {
 
 	private void parseCompany() throws ApplicationException {
 		String[] txts = { ClawerConstants.COMPANY_URL_NAME };
-		List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"),
-				"href", ClawerConstants.COMPANY_URL_TAG, txts);
+		List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
+				.tags("A"), "href", ClawerConstants.COMPANY_URL_TAG, txts);
 		if (ies == null || ies.size() != 1) {
 			throw new ApplicationException(processContext.getLogTitle() + " Company url is error found0!");
 		}
@@ -113,8 +114,8 @@ public class ValidateJobDetail {
 	public final static String[] mailStrs = { "mailto:" };
 
 	public void parseEmailFromJobs() throws ApplicationException {
-		List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"),
-				"href", "mailto:");
+		List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
+				.tags("A"), "href", "mailto:");
 		if (ies == null || ies.isEmpty()) {
 			log.warn(processContext.getLogTitle() + "No mail found!");
 			return;
@@ -187,7 +188,7 @@ public class ValidateJobDetail {
 				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " URL[" + url
 						+ "] waiting loading to long and exit to waiting now. Time is[" + i * 10 + "]s");
 				finish = true;
-				WebrendererContext.reFreshContext(index, processContext);
+				WebrendererContext.reFreshContext4Waiting(index, processContext);
 				return false;
 			} else {
 				LogHandler.debug(processContext.getLogTitle() + " URL[" + url + "] waiting loading……[" + i * 10 + "]s");

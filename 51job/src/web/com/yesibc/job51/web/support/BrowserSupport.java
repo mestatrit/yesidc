@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
+import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.web.search.ProcessContext;
 import com.yesibc.job51.web.search.WebrendererContext;
@@ -21,9 +22,69 @@ public class BrowserSupport {
 	public static final String WAIT_TAG_KEY = "key";
 	public static final String WAIT_TAG_VAL = "vale";
 
-	public static boolean waitingLoading(ProcessContext processContext, int index, Map<String, String> finish) {
+	public static void waitingLoading(ProcessContext processContext, int index, Map<String, String> finish)
+			throws ApplicationException {
+
+		if (!waiting(processContext, index, finish)) {
+			log.error(processContext.getLogTitle() + " Load wait error and redo!"
+					+ processContext.getBrowser().getURL());
+			finish.clear();
+			BrowserSupport.onDocumnetComplete(processContext.getBrowser(), finish);
+			processContext.getBrowser().loadURL(processContext.getUrl());
+			if (!waiting(processContext, index, finish)) {
+				throw new ApplicationException(ErrorHandler.WAIT_ERROR_SYSTEM + " Waiting overtime.");
+			} else {
+				log.warn(processContext.getLogTitle() + " Load wait error and redo OK!");
+			}
+		}
+
+		checkBody(processContext);
+
+		String html = processContext.getBrowser().getDocument().getBody().getOuterHTML();
+		errorRedo(processContext, html, index, finish, ErrorHandler.WAIT_ERROR_CONNECT);
+		errorRedo(processContext, html, index, finish, ErrorHandler.WAIT_ERROR_PROHIBIT);
+	}
+
+	private static void errorRedo(ProcessContext processContext, String html, int index, Map<String, String> finish,
+			String htmlTag) throws ApplicationException {
+		String logMsg = " Error Tag:" + htmlTag + ". So load content error and redo!\n URL is:"
+				+ processContext.getBrowser().getURL() + ".\n HTML is:" + html;
+		if (html.indexOf(htmlTag) > -1) {
+			log.error(processContext.getLogTitle() + logMsg);
+			finish.clear();
+			processContext.getBrowser().reload(0);
+			if (!waiting(processContext, index, finish)) {
+				log.error(processContext.getLogTitle() + " Redo waiting error!" + logMsg);
+				throw new ApplicationException(ErrorHandler.WAIT_ERROR_SYSTEM + " Redo waiting error!" + logMsg);
+			}
+			if (html.indexOf(htmlTag) > -1) {
+				log.error(processContext.getLogTitle() + " Redo error again!" + logMsg);
+				throw new ApplicationException(ErrorHandler.WAIT_ERROR_SYSTEM + " Redo error again!" + logMsg);
+			} else {
+				log.warn(processContext.getLogTitle() + " Redo OK!" + logMsg);
+			}
+		}
+	}
+
+	private static void checkBody(ProcessContext processContext) throws ApplicationException {
+		int k = 0;
+		while (processContext.getBrowser().getDocument().getBody() == null) {
+			try {
+				k++;
+				log.warn(processContext.getLogTitle() + ErrorHandler.WAIT_ERROR_BODY + "Times:" + k);
+				Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
+				if (k > ClawerConstants.WAITING_TIMES / 2) {
+					throw new ApplicationException(ErrorHandler.WAIT_ERROR_SYSTEM + ErrorHandler.WAIT_ERROR_BODY);
+				}
+			} catch (Exception e) {
+				throw new ApplicationException(e);
+			}
+		}
+	}
+
+	private static boolean waiting(ProcessContext processContext, int index, Map<String, String> finish) {
 		int i = 0;
-		log.info(processContext.getLogTitle() + " waiting loading start!");
+		log.info(processContext.getLogTitle() + " waiting loading start!" + processContext.getUrl());
 		while (!finish.containsKey(WAIT_TAG_KEY)) {
 			i++;
 			try {
@@ -31,11 +92,15 @@ public class BrowserSupport {
 			} catch (InterruptedException e) {
 				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + ":", e);
 			}
-			if (i > 15) {
-				ErrorHandler.errorLogAndMail(processContext.getLogTitle()
-						+ " waiting loading to long and exit to waiting now. Time is[" + i
-						* ClawerConstants.WAITING_TIME_SECONDS + "]s");
+			if (i > ClawerConstants.WAITING_TIMES) {
+				// ErrorHandler.errorLogAndMail(processContext.getLogTitle()
+				// +
+				// " waiting loading to long and exit to waiting now. Time is["
+				// + i
+				// * ClawerConstants.WAITING_TIME_SECONDS + "]s");
 				// finish = true;
+				log.error(processContext.getLogTitle() + " waiting loading to long and exit to waiting now. Time is["
+						+ i * ClawerConstants.WAITING_TIME_SECONDS + "]s");
 				WebrendererContext.reFreshContext4Waiting(index, processContext);
 				return false;
 			} else {
@@ -43,10 +108,9 @@ public class BrowserSupport {
 						* ClawerConstants.WAITING_TIME_LOADING + "]s");
 			}
 		}
-
-		log.info(processContext.getLogTitle() + " waiting loading end![" + i * 10 + "]s");
+		log.info(processContext.getLogTitle() + " waiting loading end![" + i * ClawerConstants.WAITING_TIME_SECONDS
+				+ "]s." + processContext.getUrl());
 		return true;
-
 	}
 
 	public static void onDocumnetComplete(IBrowserCanvas browser, final Map<String, String> finish) {
@@ -61,7 +125,7 @@ public class BrowserSupport {
 	public static IBrowserCanvas initLoading(ProcessContext processContext, String title, int index) {
 		IBrowserCanvas browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
 		processContext.setBrowser(browser);
-		processContext.setLogTitle(title);
+		processContext.setLogTitle(title + " ");
 		if (ClawerConstants.SHOW_FRAME) {
 			WebrendererContext.WEBRENDER_ENTITIES.get(index).getFrame().setTitle(processContext.getLogTitle());
 		}

@@ -26,7 +26,12 @@ package example;
  */
 public class HelloWorld extends ExampleSupport {
 
-    public String execute() throws Exception {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 290016339072091593L;
+
+	public String execute() throws Exception {
         setMessage(getText(MESSAGE));
         return SUCCESS;
     }

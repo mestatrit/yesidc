@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
 import com.webrenderer.swing.dom.IElementCollection;
 import com.yesibc.core.components.webrenderer.WebrendererSupport;
@@ -72,18 +71,21 @@ public class LocateCompanyInfo {
 		return true;
 	}
 
-	public static int validationTableOfJobList(IBrowserCanvas browser) throws ApplicationException {
-		List<IElement> elements = WebrendererSupport.getElements(browser.getDocument().getAll().tags("TABLE"), "id",
-				COMPANY_LIST_ID);
+	public static int validationTableOfJobList(ProcessContext processContext) throws ApplicationException {
+		List<IElement> elements = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
+				.tags("TABLE"), "id", COMPANY_LIST_ID);
 
-		errorHandle(elements, "Parse company list error!checkValidation!Can't get Table!URL=" + browser.getURL());
+		if (elements == null || elements.size() < 1) {
+			ErrorHandler.error(processContext.getLogTitle() + " ValidationTableOfJobList null.");
+			return -1;
+		}
 
 		String innerHtml = elements.get(0).getInnerHTML();
 		for (String temp : ClawerConstants.COMPANY_LIST_HEADERS) {
 			if (innerHtml.indexOf(temp) < 0) {
 				ErrorHandler.error("Parse company list error 1! HTML content:"
-						+ browser.getDocument().getDocumentSource());
-				throw new NestedRuntimeException("Parse company list error 1!");
+						+ processContext.getBrowser().getDocument().getDocumentSource());
+				throw new ApplicationException("Parse company list error 1!");
 			}
 		}
 
@@ -110,8 +112,8 @@ public class LocateCompanyInfo {
 	public static String[] getComIndustryTypeScale(ProcessContext processContext) {
 		try {
 			String[] ieStr = { ClawerConstants.COMPANY_INDUSTRY };
-			List<IElement> ies = WebrendererSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags(
-					"TD"), ieStr);
+			List<IElement> ies = WebrendererSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll()
+					.tags("TD"), ieStr);
 
 			String[] str = new String[] { "", "", "", "" };
 			if (ies == null || ies.isEmpty()) {
@@ -203,13 +205,12 @@ public class LocateCompanyInfo {
 	}
 
 	public static int getTotal(ProcessContext processContext) throws ApplicationException {
-		log.info(processContext.getLogTitle() + "doc.getAll().tags(\"TABLE\").length()="
-				+ processContext.getBrowser().getDocument().getAll().tags("TABLE").length());
-		
-		//log.info(processContext.getBrowser().getDocument().getBody().getOuterHTML());
-		
-		List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("TABLE"),
-				"class", "navBold");
+		List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags(
+				"TABLE"), "class", "navBold");
+		while (ies == null || ies.size() < 1) {
+			log.error(processContext.getLogTitle() + "===getTotal==="
+					+ processContext.getBrowser().getDocument().getBody().getOuterHTML());
+		}
 		errorHandle(ies, "Get Total Records|Table error!");
 
 		WebrendererSupport js = new WebrendererSupport();
@@ -225,8 +226,8 @@ public class LocateCompanyInfo {
 
 	public static String getDescription(ProcessContext processContext) throws ApplicationException {
 		String[] strs = { "txt_font" };
-		List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("DIV"),
-				"class", "jobs_txt", strs);
+		List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags(
+				"DIV"), "class", "jobs_txt", strs);
 
 		try {
 			errorHandle(ies, "Company detail error!getDescription!URL=" + processContext.getBrowser().getURL());
@@ -243,8 +244,8 @@ public class LocateCompanyInfo {
 
 	public static String getWebsite(ProcessContext processContext) {
 		try {
-			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
-					"P", "class", "txt_font1", ClawerConstants.COMPANY_HOMEPAGE);
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
+					.tags("P"), "P", "class", "txt_font1", ClawerConstants.COMPANY_HOMEPAGE);
 
 			if (ies == null || ies.isEmpty()) {
 				return "";
@@ -266,8 +267,8 @@ public class LocateCompanyInfo {
 
 	public static String getAddress(ProcessContext processContext) {
 		try {
-			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
-					"P", "class", "txt_font1", ClawerConstants.COMPANY_ADDRESS);
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
+					.tags("P"), "P", "class", "txt_font1", ClawerConstants.COMPANY_ADDRESS);
 
 			if (ies == null || ies.isEmpty()) {
 				return "";
@@ -295,7 +296,7 @@ public class LocateCompanyInfo {
 
 	private static void errorHandle(List<IElement> ies, String str) throws ApplicationException {
 		if (ies == null || ies.size() < 1) {
-			ErrorHandler.errorLogAndMail("Error failed!Size=0" + str);
+			ErrorHandler.error("Error failed!Size=0" + str);
 			throw new ApplicationException("Error failed!Size=0" + str);
 		}
 
@@ -310,8 +311,8 @@ public class LocateCompanyInfo {
 
 	public static String getZip(ProcessContext processContext) {
 		try {
-			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
-					"P", "class", "txt_font1", ClawerConstants.COMPANY_ZIP);
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
+					.tags("P"), "P", "class", "txt_font1", ClawerConstants.COMPANY_ZIP);
 			if (ies == null || ies.isEmpty()) {
 				return "";
 			}
@@ -330,8 +331,8 @@ public class LocateCompanyInfo {
 
 	public static String getFax(ProcessContext processContext) {
 		try {
-			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
-					"P", "class", "txt_font1", ClawerConstants.COMPANY_FAX);
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
+					.tags("P"), "P", "class", "txt_font1", ClawerConstants.COMPANY_FAX);
 			if (ies == null || ies.isEmpty()) {
 				return "";
 			}
@@ -353,8 +354,8 @@ public class LocateCompanyInfo {
 
 	public static String getLinkman(ProcessContext processContext) {
 		try {
-			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
-					"P", "class", "txt_font1", ClawerConstants.COMPANY_CONTACT_PERSON);
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
+					.tags("P"), "P", "class", "txt_font1", ClawerConstants.COMPANY_CONTACT_PERSON);
 			if (ies == null || ies.isEmpty()) {
 				return "";
 			}
@@ -374,8 +375,8 @@ public class LocateCompanyInfo {
 
 	public static String getTel(ProcessContext processContext) {
 		try {
-			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
-					"P", "class", "txt_font1", ClawerConstants.COMPANY_TEL);
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
+					.tags("P"), "P", "class", "txt_font1", ClawerConstants.COMPANY_TEL);
 			if (ies == null || ies.isEmpty()) {
 				return "";
 			}
@@ -396,8 +397,8 @@ public class LocateCompanyInfo {
 	private static Log log = LogFactory.getLog(LocateCompanyInfo.class);
 
 	public static List<String> getEmails(ProcessContext processContext) throws ApplicationException {
-		List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"),
-				"href", "mailto:");
+		List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
+				.tags("A"), "href", "mailto:");
 		if (ies == null || ies.isEmpty()) {
 			log.warn(processContext.getLogTitle() + "No mail found!");
 			return null;
@@ -456,8 +457,8 @@ public class LocateCompanyInfo {
 
 	public static String getJobEmail(ProcessContext processContext) {
 		try {
-			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
-					"P", "class", "txt_font1", ClawerConstants.COMPANY_EMAIL);
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
+					.tags("P"), "P", "class", "txt_font1", ClawerConstants.COMPANY_EMAIL);
 			if (ies == null || ies.isEmpty()) {
 				return "";
 			}
@@ -480,8 +481,8 @@ public class LocateCompanyInfo {
 
 	public static String getMobile(ProcessContext processContext) {
 		try {
-			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("P"),
-					"P", "class", "txt_font1", ClawerConstants.COMPANY_MOBILE);
+			List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
+					.tags("P"), "P", "class", "txt_font1", ClawerConstants.COMPANY_MOBILE);
 			if (ies == null || ies.isEmpty()) {
 				return "";
 			}

@@ -8,13 +8,13 @@ import org.apache.commons.logging.LogFactory;
 
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
+import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.common.ClawerUtils;
 import com.yesibc.job51.model.Company;
 import com.yesibc.job51.web.support.CompanyInfoSupport;
-import com.yesibc.job51.web.support.JobSupport;
 
 public class ValidateFirstPages {
 
@@ -49,7 +49,7 @@ public class ValidateFirstPages {
 	}
 
 	private void putJObsURL2Context(TestProcessContext processContext) throws ApplicationException {
-		List<IElement> elements = JobSupport.getElements(processContext.getBrowser().getDocument().getAll(), "A",
+		List<IElement> elements = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll(), "A",
 				"href", ClawerConstants.JOB_URL_PREFIX);
 		if (elements == null || elements.isEmpty()) {
 			throw new ApplicationException("FirstPagesValidation elements error!");
@@ -88,7 +88,7 @@ public class ValidateFirstPages {
 
 
 	public static void putCompanyLinks2Context(TestProcessContext processContext) throws ApplicationException {
-		List<IElement> elements = JobSupport.getElements(processContext.getBrowser().getDocument().getAll(), "A",
+		List<IElement> elements = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll(), "A",
 				"href", ClawerConstants.COMPANY_URL_TAG);
 		String name = "";
 		String companyId = "";

@@ -315,15 +315,15 @@
             </column>
         </property>
         
- 		<bag lazy="false" name="children" table="T_COMPANY">
+ 		<!-- bag lazy="false" name="children" table="T_COMPANY">
 			<key column="PARENT_ID" />
 			<one-to-many class="Company" />
-		</bag>
+		</bag -->
 		
- 		<many-to-one name="parent" class="Company" cascade="none"   
+ 		<!--many-to-one name="parent" class="Company" cascade="none"   
                           outer-join="auto" foreign-key="FK_COMPANY_PARENT">   
                <column name="PARENT_ID" />   
-          </many-to-one>   
+          </many-to-one-->   
     
 		
  		<bag lazy="false" name="comContactHeaders" table="TC_CONTACT_HEADER" cascade="all">

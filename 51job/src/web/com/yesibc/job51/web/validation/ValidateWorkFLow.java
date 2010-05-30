@@ -2,12 +2,14 @@ package com.yesibc.job51.web.validation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.webrenderer.swing.IBrowserCanvas;
 import com.yesibc.core.exception.ApplicationException;
+import com.yesibc.core.utils.DateUtils;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.model.Company;
@@ -36,6 +38,7 @@ public class ValidateWorkFLow {
 	 */
 	public static void main(String[] args) {
 		try {
+			checkLicenseDate();
 			validateIndustryTypeWithRemoteFile();
 			validateFunTypeWithRemoteFile();
 			IBrowserCanvas browser = validateSearchURLs();
@@ -43,6 +46,17 @@ public class ValidateWorkFLow {
 			validateJobDetail();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private static void checkLicenseDate() throws ApplicationException {
+		Date date1 = ClawerConstants.LICENSE_DATE;
+		Date date2 = new Date();
+
+		long days = DateUtils.substractDate(date1, date2);
+
+		if (days > 28) {
+			throw new ApplicationException("Licese date is near to expired.");
 		}
 	}
 

@@ -10,9 +10,9 @@ import org.apache.commons.logging.LogFactory;
 
 import com.webrenderer.swing.BrowserFactory;
 import com.webrenderer.swing.IBrowserCanvas;
+import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.web.support.ErrorHandler;
-import com.yesibc.job51.web.support.JobSupport;
 import com.yesibc.job51.web.support.LogHandler;
 import com.yesibc.job51.web.support.WebRenderEntity;
 
@@ -26,41 +26,16 @@ public class WebrendererContext {
 	static {
 		l = System.currentTimeMillis();
 		BrowserFactory.setLicenseData(ClawerConstants.WEBRENDERER_ID, ClawerConstants.WEBRENDERER_SN);
-		// BrowserFactory.setLicenseData("30dtrial",
-		// "CSK00OUP9KH5JJJK02C02S78");
 		LogHandler.per("WebrendererContext Load license OK! Time is " + (System.currentTimeMillis() - l));
 
 	}
 
-	public synchronized static void reFreshContext(int index, ProcessContext processContext) {
-
-		WebRenderEntity wre = WEBRENDER_ENTITIES.get(index);
-		try {
-			BrowserFactory.destroyBrowser(wre.getBrowser());
-			if (ClawerConstants.SHOW_FRAME) {
-				wre.getFrame().dispose();
-			}
-		} catch (Exception e) {
-			ErrorHandler.errorLogAndMail("Destory Browser Error!", e);
-		}
-		wre.setBrowser(null);
-
-		IBrowserCanvas browser = BrowserFactory.spawnMozilla();
-		browser.enableImageLoading(false);
-		JobSupport.addListener(browser);
-		wre.setLoaded(true);
-		wre.setBrowser(browser);
-		if (ClawerConstants.SHOW_FRAME) {
-			JFrame frame = JobSupport.showFrame(browser, "Loading");
-			wre.setFrame(frame);
-		}
-		WEBRENDER_ENTITIES.put(index, wre);
-
-		reconnectByRefreshConext(processContext, index);
-		log.info("reFreshContext: " + index + " BROWSERS OK!");
+	public synchronized static void reFreshContext4Waiting(int index, ProcessContext processContext) {
+		reFreshContext(index, processContext.getLogTitle());
+		processContext.setBrowser(WEBRENDER_ENTITIES.get(index).getBrowser());
 	}
 
-	public synchronized static void reFreshContext1(int index, String title) {
+	public synchronized static void reFreshContext(int index, String title) {
 
 		WebRenderEntity wre = WEBRENDER_ENTITIES.get(index);
 		try {
@@ -75,11 +50,11 @@ public class WebrendererContext {
 
 		IBrowserCanvas browser = BrowserFactory.spawnMozilla();
 		browser.enableImageLoading(false);
-		JobSupport.addListener(browser);
+		WebrendererSupport.addListener(browser, ClawerConstants.DIALOG_USERNAME, ClawerConstants.DIALOG_PASSWORD);
 		wre.setLoaded(true);
 		wre.setBrowser(browser);
 		if (ClawerConstants.SHOW_FRAME) {
-			JFrame frame = JobSupport.showFrame(browser, title);
+			JFrame frame = WebrendererSupport.showFrame(browser, "Loading");
 			wre.setFrame(frame);
 		}
 		WEBRENDER_ENTITIES.put(index, wre);
@@ -87,27 +62,17 @@ public class WebrendererContext {
 		log.info("reFreshContext: " + index + " BROWSERS OK!");
 	}
 
-	private static void reconnectByRefreshConext(ProcessContext processContext, int index) {
-		long temp = (System.currentTimeMillis() - l);
-		if (temp < ClawerConstants.RECONNECT_INTERVAL) {
-			ErrorHandler.errorLogAndMail("reFreshContext reconnecting:[" + index + "]" + processContext.getLogTitle()
-					+ "@interval:" + temp / (1000 * 60));
-			return;
-		}
-
-	}
-
 	public static Map<Integer, WebRenderEntity> initContext() {
 		Map<Integer, WebRenderEntity> webRenderEntity = new HashMap<Integer, WebRenderEntity>();
 		for (int i = 0; i < ClawerConstants.THREADS_NUMBER + 1; i++) {
 			IBrowserCanvas browser = BrowserFactory.spawnMozilla();
 			browser.enableImageLoading(false);
-			JobSupport.addListener(browser);
+			WebrendererSupport.addListener(browser, ClawerConstants.DIALOG_USERNAME, ClawerConstants.DIALOG_PASSWORD);
 			WebRenderEntity wre = new WebRenderEntity();
 			wre.setLoaded(true);
 			wre.setBrowser(browser);
 			if (ClawerConstants.SHOW_FRAME) {
-				JFrame frame = JobSupport.showFrame(browser, "Loading");
+				JFrame frame = WebrendererSupport.showFrame(browser, "Loading");
 				wre.setFrame(frame);
 			}
 			webRenderEntity.put(i, wre);

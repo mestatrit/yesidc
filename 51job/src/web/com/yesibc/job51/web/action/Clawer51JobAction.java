@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.core.web.BaseAction2Support;
 import com.yesibc.job51.common.ClawerConstants;
+import com.yesibc.job51.model.WebPages;
 import com.yesibc.job51.web.search.CompanyJobContext;
 import com.yesibc.job51.web.search.SearchJobDetailEngine;
 import com.yesibc.job51.web.search.SearchListEngine;
@@ -31,10 +32,14 @@ public class Clawer51JobAction extends BaseAction2Support {
 	long i = 0;
 
 	// 总线程
-	private String totalThreadTag = "ToT-[";
+	private final static String totalThreadTag = "ToT-[";
 
 	// 总任务/当前任务
-	private String currentOfToI = "]#All-Cur[";
+	private final static String currentOfToI = "]#All-Cur[";
+
+	private final static String endTag = "].";
+	private final static int ERROR_TIMES = 9;
+	private final static String FATAL_TAG = "=====================***************================";
 
 	// 某一线程总任务/当前任务
 	// private String currentOfToC = "]#CrToC-";
@@ -56,8 +61,20 @@ public class Clawer51JobAction extends BaseAction2Support {
 	public String companySearch() {
 
 		long start = System.currentTimeMillis();
+
+		String fromDBorFile = null;
+		if (!ClawerConstants.TEST_WEB_REQUEST) {
+			fromDBorFile = getParameter("fromDBorFile");
+		}
+		if (!StringUtils.isEmpty(fromDBorFile)) {
+			CompanyJobContext.initSearchList(fromDBorFile);
+			log.info("FromDBorFile:" + fromDBorFile);
+		} else {
+			log.info("FromDBorFile is [null] file!");
+		}
+
 		String failedOrNot = null;
-		if (ClawerConstants.TEST_WEB) {
+		if (ClawerConstants.TEST_WEB_REQUEST) {
 			failedOrNot = "0";
 		} else {
 			failedOrNot = getParameter("failedOrNot");
@@ -75,7 +92,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 		}
 
 		String requestId = null;
-		if (ClawerConstants.TEST_WEB) {
+		if (ClawerConstants.TEST_WEB_REQUEST) {
 			requestId = String.valueOf(start);
 		} else {
 			requestId = getParameter("requestId");
@@ -92,7 +109,11 @@ public class Clawer51JobAction extends BaseAction2Support {
 		if (ClawerConstants.TEST_WEB) {
 			threadNumber = ClawerConstants.THREADS_NUMBER;
 		} else {
-			String mainThreadsStr = getParameter("mainThreads");
+
+			String mainThreadsStr = "20";
+			if (!ClawerConstants.TEST_WEB_REQUEST) {
+				mainThreadsStr = getParameter("mainThreads");
+			}
 			if (mainThreadsStr != null) {
 				try {
 					threadNumber = Integer.parseInt(mainThreadsStr);
@@ -114,18 +135,39 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 	private void checking(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
 		log.info(reqLog + " Start checking!==========");
+		for (Iterator<WebPages> it = CompanyJobContext.getSearchListWP().iterator(); it.hasNext();) {
+			WebPages wp = it.next();
+			if (WebPages.STATUS_OK.equals(wp.getStatus())) {
+				it.remove();
+			}
+		}
 		int size = CompanyJobContext.getSearchListSize();
 		reqLog = reqLog + "(retry)";
+		log.info(reqLog + " SearchList left:==========" + size);
 		if (size > 0 && failedOrNotInt < 1) {
 			parseSearchList(threadNumber, requestId, reqLog);
 		}
 
+		for (Iterator<WebPages> it = CompanyJobContext.getSearchPagesWP().iterator(); it.hasNext();) {
+			WebPages wp = it.next();
+			if (WebPages.STATUS_OK.equals(wp.getStatus())) {
+				it.remove();
+			}
+		}
 		size = CompanyJobContext.getSearchPagesSize();
+		log.info(reqLog + " SearchPages left:==========" + size);
 		if (size > 0 && failedOrNotInt < 2) {
 			parseSearchPages(requestId, reqLog, threadNumber);
 		}
 
+		for (Iterator<WebPages> it = CompanyJobContext.getJobsWP().iterator(); it.hasNext();) {
+			WebPages wp = it.next();
+			if (WebPages.STATUS_OK.equals(wp.getStatus())) {
+				it.remove();
+			}
+		}
 		size = CompanyJobContext.getJobsWPLength();
+		log.info(reqLog + " Jobs left:==========" + size);
 		if (size > 0 && failedOrNotInt < 3) {
 			parseJobsDetail(requestId, reqLog, threadNumber);
 		}
@@ -140,10 +182,6 @@ public class Clawer51JobAction extends BaseAction2Support {
 		 */
 		if (failedOrNotInt < 1) {
 			parseSearchList(threadNumber, requestId, reqLog);
-		} else {
-			log.warn("Start to parse failed search list!");
-			parseSearchList(threadNumber, requestId, reqLog);
-			log.warn("End to parse failed search list!");
 		}
 
 		/**
@@ -151,10 +189,6 @@ public class Clawer51JobAction extends BaseAction2Support {
 		 */
 		if (failedOrNotInt < 2) {
 			parseSearchPages(requestId, reqLog, threadNumber);
-		} else {
-			log.warn("Start to parse failed search pages!");
-			parseSearchPages(requestId, reqLog, threadNumber);
-			log.warn("End to parse failed search pages!");
 		}
 
 		/**
@@ -162,18 +196,15 @@ public class Clawer51JobAction extends BaseAction2Support {
 		 */
 		if (failedOrNotInt < 3) {
 			parseJobsDetail(requestId, reqLog, threadNumber);
-		} else {
-			log.warn("Start to parse failed job detail!");
-			parseJobsDetail(requestId, reqLog, threadNumber);
-			log.warn("End to parse failed job detail!");
 		}
 	}
 
 	private void parseJobsDetail(String requestId, String reqLog, int threadNumber) {
 		try {
-			WebLinkSupport.refreshContext(ClawerConstants.PROC_LOG + "REC By parseJobsPages!0!");
+			WebLinkSupport
+					.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By parseJobsPages!0!", false);
 		} catch (Exception e) {
-			log.error(ClawerConstants.PROC_LOG + "REC By parseJobsPages!0!ERROR!");
+			log.error(ClawerConstants.PROC_LOG + "REC By parseJobsPages!0!ERROR!", e);
 		}
 		long l = System.currentTimeMillis();
 		int error = 0;
@@ -197,6 +228,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			int current = 0;
 			int circleTime = 0;
 			int recTimes = 0;
+			int errorTimes = 0;
 			List<SearchJobDetailEngine> sjdes = new ArrayList<SearchJobDetailEngine>();
 			while (current < size) {
 				circleTime++;
@@ -207,21 +239,22 @@ public class Clawer51JobAction extends BaseAction2Support {
 					// doing
 					SearchJobDetailEngine sce = new SearchJobDetailEngine("JobDetails#" + totalThreadTag + totalThreads
 							+ "-" + thread + "].CircleTimes[" + circleTimes + "-" + circleTime + currentOfToI + size
-							+ "-" + current, CompanyJobContext.getJobsWP().get(current), thread);
+							+ "-" + current + endTag, CompanyJobContext.getJobsWP().get(current), thread);
 					sce.start();
 					sjdes.add(sce);
 					current++;
 				}
 
-				waitingParseJobDetailLinks(sjdes);
+				errorTimes = waitingParseJobDetailLinks(sjdes, errorTimes);
 
 				if (current % (ClawerConstants.REFRESH_INTERVAL_TIMES) == 0) {
 					recTimes++;
 					try {
-						WebLinkSupport.refreshContext(ClawerConstants.PROC_LOG + "REC By parseJobDetails!" + recTimes
-								+ "!");
+						WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
+								+ "REC By parseJobDetails!" + recTimes + "!", false);
 					} catch (Exception e) {
-						log.error(ClawerConstants.PROC_LOG + "REC By parseJobDetails!ERROR!recTimes=" + recTimes + ".");
+						log.error(ClawerConstants.PROC_LOG + "REC By parseJobDetails!ERROR!recTimes=" + recTimes + ".",
+								e);
 					}
 				}
 			}
@@ -239,9 +272,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 	private void parseSearchPages(String requestId, String reqLog, int threadNumber) {
 		try {
-			WebLinkSupport.refreshContext(ClawerConstants.PROC_LOG + "REC By SearchPages!0!");
+			WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchPages!0!", false);
 		} catch (Exception e) {
-			log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!");
+			log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!", e);
 		}
 		long l = System.currentTimeMillis();
 		int error = 0;
@@ -268,6 +301,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			int current = 0;
 			int circleTime = 0;
 			int recTimes = 0;
+			int errorTimes = 0;
 			List<SearchPagesEngine> sces = new ArrayList<SearchPagesEngine>();
 			while (current < size) {
 				circleTime++;
@@ -278,21 +312,21 @@ public class Clawer51JobAction extends BaseAction2Support {
 					// doing
 					SearchPagesEngine sce = new SearchPagesEngine("SearchPages#" + totalThreadTag + totalThreads + "-"
 							+ thread + "].CircleTimes[" + circleTimes + "-" + circleTime + currentOfToI + size + "-"
-							+ current, CompanyJobContext.getSearchPagesWP().get(current), thread);
+							+ current + endTag, CompanyJobContext.getSearchPagesWP().get(current), thread);
 					sce.start();
 					sces.add(sce);
 					current++;
 				}
 
-				waitingSearchPages(sces);
+				errorTimes = waitingSearchPages(sces, errorTimes);
 
 				if (current % (ClawerConstants.REFRESH_INTERVAL_TIMES) == 0) {
 					recTimes++;
 					try {
-						WebLinkSupport
-								.refreshContext(ClawerConstants.PROC_LOG + "REC By SearchPages!" + recTimes + "!");
+						WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchPages!"
+								+ recTimes + "!", false);
 					} catch (Exception e) {
-						log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!recTimes=" + recTimes + ".");
+						log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!recTimes=" + recTimes + ".", e);
 					}
 				}
 			}
@@ -323,7 +357,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 				totalThreads = size;
 			}
 
-			Collections.shuffle(CompanyJobContext.getSearchList());
+			Collections.shuffle(CompanyJobContext.getSearchListWP());
 
 			log.info(reqLog + "Parse search list start!threadNumber[" + threadNumber + "]page size[" + size
 					+ "]circleTimes[" + circleTimes + "]");
@@ -331,6 +365,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			int current = 0;
 			int circleTime = 0;
 			int recTimes = 0;
+			int errorTimes = 0;
 			List<SearchListEngine> spes = new ArrayList<SearchListEngine>();
 			while (current < size) {
 				circleTime++;
@@ -341,20 +376,21 @@ public class Clawer51JobAction extends BaseAction2Support {
 					// doing
 					SearchListEngine sce = new SearchListEngine("SearchList#" + totalThreadTag + totalThreads + "-"
 							+ thread + "].CircleTimes[" + circleTimes + "-" + circleTime + currentOfToI + size + "-"
-							+ current, CompanyJobContext.getSearchList().get(current), thread);
+							+ current + endTag, CompanyJobContext.getSearchListWP().get(current), thread);
 					sce.start();
 					spes.add(sce);
 					current++;
 				}
 
-				waitingSearchList(spes);
+				errorTimes = waitingSearchList(spes, errorTimes);
 
 				if (current % (ClawerConstants.REFRESH_INTERVAL_TIMES) == 0) {
 					recTimes++;
 					try {
-						WebLinkSupport.refreshContext(ClawerConstants.PROC_LOG + "REC By SearchList!" + recTimes + "!");
+						WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchList!"
+								+ recTimes + "!", false);
 					} catch (Exception e) {
-						log.error(ClawerConstants.PROC_LOG + "REC By SearchList!ERROR!recTimes=" + recTimes + ".");
+						log.error(ClawerConstants.PROC_LOG + "REC By SearchList!ERROR!recTimes=" + recTimes + ".", e);
 					}
 				}
 			}
@@ -373,11 +409,19 @@ public class Clawer51JobAction extends BaseAction2Support {
 				+ CompanyJobContext.getCompaniesLength());
 	}
 
-	private void waitingSearchList(List<SearchListEngine> spes) {
+	private int waitingSearchList(List<SearchListEngine> spes, int errorTimes) {
 		SearchListEngine spe = null;
+		boolean error = false;
+		String errorMsg = "";
+		int errTimes = 0;
 		for (Iterator<SearchListEngine> it = spes.iterator(); it.hasNext();) {
 			int i = 0;
 			spe = it.next();
+			if (spe.getProcessContext().isError()) {
+				++errTimes;
+				error = true;
+				errorMsg = errorMsg + "[" + errTimes + "]" + spe.getProcessContext().getErrorMs();
+			}
 			while (true) {
 				if (!spe.isAlive()) {
 					log.info(spe.getTitle() + " thread was removed OK.");
@@ -396,7 +440,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 							+ "]s. URL|" + spe.getUrl());
 				}
 
-				if (i > ClawerConstants.WAITING_TIMES + 1) {
+				if (i > (ClawerConstants.WAITING_TIMES + ClawerConstants.WAITING_TIMES_EXT)) {
 					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing [" + i
 							* ClawerConstants.WAITING_TIME_SECONDS + "]s. OverTime!. URL|" + spe.getUrl());
 					it.remove();
@@ -405,14 +449,39 @@ public class Clawer51JobAction extends BaseAction2Support {
 				}
 			}
 		}
-		log.info("WaitingPageLinkThreads waiting end OK.");
+
+		if (error) {
+			++errorTimes;
+			log.error(errorMsg);
+			if (errorTimes > ERROR_TIMES) {
+				log.fatal(FATAL_TAG + " Error too many times!");
+				System.exit(0);
+			}
+			try {
+				WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
+						+ "REC By SearchList when error!recTimes=" + errorTimes + ".", true);
+			} catch (Exception e) {
+				log.error(ClawerConstants.PROC_LOG + "REC By SearchList!ERROR!recTimes=" + errorTimes + ".", e);
+			}
+		}
+
+		log.info("Waiting Page List Threads waiting end OK.");
+		return errorTimes;
 	}
 
-	private void waitingParseJobDetailLinks(List<SearchJobDetailEngine> jobs) {
+	private int waitingParseJobDetailLinks(List<SearchJobDetailEngine> jobs, int errorTimes) {
 		SearchJobDetailEngine spe = null;
+		boolean error = false;
+		String errorMsg = "";
+		int errTimes = 0;
 		for (Iterator<SearchJobDetailEngine> it = jobs.iterator(); it.hasNext();) {
 			int i = 0;
 			spe = it.next();
+			if (spe.getProcessContext().isError()) {
+				++errTimes;
+				error = true;
+				errorMsg = errorMsg + "[" + errTimes + "]" + spe.getProcessContext().getErrorMs();
+			}
 			while (true) {
 				if (!spe.isAlive()) {
 					log.info(spe.getTitle() + " thread was removed OK.");
@@ -431,7 +500,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 							+ "]s. URL|" + spe.getUrl());
 				}
 
-				if (i > ClawerConstants.WAITING_TIMES + 1) {
+				if (i > (ClawerConstants.WAITING_TIMES + ClawerConstants.WAITING_TIMES_EXT)) {
 					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing [" + i
 							* ClawerConstants.WAITING_TIME_SECONDS + "]s. OverTime!. URL|" + spe.getUrl());
 					it.remove();
@@ -440,14 +509,39 @@ public class Clawer51JobAction extends BaseAction2Support {
 				}
 			}
 		}
+
+		if (error) {
+			++errorTimes;
+			log.error(errorMsg);
+			if (errorTimes > ERROR_TIMES) {
+				log.fatal(FATAL_TAG + " Error too many times!");
+				System.exit(0);
+			}
+			try {
+				WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
+						+ "REC By SearchJobDetails when error!recTimes=" + errorTimes + ".", true);
+			} catch (Exception e) {
+				log.error(ClawerConstants.PROC_LOG + "REC By SearchJobDetails!ERROR!recTimes=" + errorTimes + ".", e);
+			}
+		}
+
 		log.info("waitingParseJobDetailLinks waiting end OK.");
+		return errorTimes;
 	}
 
-	private void waitingSearchPages(List<SearchPagesEngine> sles) {
+	private int waitingSearchPages(List<SearchPagesEngine> sles, int errorTimes) {
 		SearchPagesEngine spe = null;
+		boolean error = false;
+		String errorMsg = "";
+		int errTimes = 0;
 		for (Iterator<SearchPagesEngine> it = sles.iterator(); it.hasNext();) {
 			int i = 0;
 			spe = it.next();
+			if (spe.getProcessContext().isError()) {
+				++errTimes;
+				error = true;
+				errorMsg = errorMsg + "[" + errTimes + "]" + spe.getProcessContext().getErrorMs();
+			}
 			while (true) {
 				if (!spe.isAlive()) {
 					log.info(spe.getTitle() + " thread was removed OK.");
@@ -466,7 +560,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 							+ "]s. URL|" + spe.getUrl());
 				}
 
-				if (i > ClawerConstants.WAITING_TIMES + 1) {
+				if (i > (ClawerConstants.WAITING_TIMES + ClawerConstants.WAITING_TIMES_EXT)) {
 					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing [" + i
 							* ClawerConstants.WAITING_TIME_SECONDS + "]s. OverTime!. URL|" + spe.getUrl());
 					it.remove();
@@ -475,6 +569,23 @@ public class Clawer51JobAction extends BaseAction2Support {
 				}
 			}
 		}
+
+		if (error) {
+			++errorTimes;
+			log.error(errorMsg);
+			if (errorTimes > ERROR_TIMES) {
+				log.fatal(FATAL_TAG + " Error too many times!");
+				System.exit(0);
+			}
+			try {
+				WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
+						+ "REC By SearchPages when error!recTimes=" + errorTimes + ".", true);
+			} catch (Exception e) {
+				log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!recTimes=" + errorTimes + ".", e);
+			}
+		}
+
 		log.info("SearchPages waiting end OK.");
+		return errorTimes;
 	}
 }

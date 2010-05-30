@@ -1,5 +1,8 @@
 package com.yesibc.job51.web.validation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -7,11 +10,9 @@ import com.webrenderer.swing.BrowserFactory;
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IDocument;
 import com.webrenderer.swing.dom.IElement;
-import com.webrenderer.swing.event.NetworkAdapter;
-import com.webrenderer.swing.event.NetworkEvent;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.job51.common.ClawerConstants;
-import com.yesibc.job51.web.support.JobSupport;
+import com.yesibc.job51.web.support.BrowserSupport;
 import com.yesibc.job51.web.support.LocateCompanyInfo;
 import com.yesibc.job51.web.support.LocateMainElements;
 
@@ -38,7 +39,7 @@ public class ValidateSearchUrl {
 	public static long WAITING = 0;
 
 	public static IBrowserCanvas browser;
-	public static boolean FINISH = false;
+	private static Map<String, String> finish = new HashMap<String, String>();
 	public final static boolean TEST = true;
 	private static int index = 0;
 
@@ -55,10 +56,11 @@ public class ValidateSearchUrl {
 	public static IBrowserCanvas validateSearchUrl() throws ApplicationException {
 		TestProcessContext processContext = new TestProcessContext();
 
-		browser = JobSupport.initLoading(processContext, "Advanced Searching!", index);
-		onDocumnetComplete();
+		browser = BrowserSupport.initLoading(processContext, "Advanced Searching!", index);
+		BrowserSupport.onDocumnetComplete(browser, finish);
 		browser.loadURL(URL_SEARCH);
-		waitingLoading();
+		BrowserSupport.waitingLoading(processContext, index, finish);
+
 		log.info(ClawerConstants.PROC_LOG + "Load " + URL_SEARCH + " complete OK!Time is "
 				+ (System.currentTimeMillis() - l));
 		l = System.currentTimeMillis();
@@ -79,21 +81,35 @@ public class ValidateSearchUrl {
 		log.info(ClawerConstants.PROC_LOG + "Do funClick OK!Time is " + (System.currentTimeMillis() - l));
 		l = System.currentTimeMillis();
 
-		JobSupport.waiting();
+		try {
+			Thread.sleep(3000);
+			log.info("=================0=" + finish.get(BrowserSupport.WAIT_TAG_KEY).toString());
+			browser.reload(0);
+			log.info("=================1=" + finish.get(BrowserSupport.WAIT_TAG_KEY).toString());
+			finish.clear();
+			log.info("=================2=" + finish.containsKey(BrowserSupport.WAIT_TAG_KEY));
+			BrowserSupport.waitingLoading(processContext, index, finish);
+			log.info("=================3=" + finish.get(BrowserSupport.WAIT_TAG_KEY).toString());
+			finish.clear();
+			Thread.sleep(3000);
+			log.info("=================2=" + finish.containsKey(BrowserSupport.WAIT_TAG_KEY));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		ValidateSearchUrlSuppot.doIndClick(indIE, browser, 0);
 		log.info(ClawerConstants.PROC_LOG + "Do indClick OK!Time is " + (System.currentTimeMillis() - l));
 		l = System.currentTimeMillis();
 
-		JobSupport.waiting();
-
-		// click search button
-		FINISH = false;
+		finish.clear();
 		IElement searchBtn = LocateMainElements.locateMainSrchBtn(browser);
 		log.info(ClawerConstants.PROC_LOG + "Locate MainSrchBtn OK!Time is " + (System.currentTimeMillis() - l));
 		l = System.currentTimeMillis();
 
+		// click search button
 		searchBtn.click();
-		waitingLoading();
+		BrowserSupport.waitingLoading(processContext, index, finish);
+
 		log.info(ClawerConstants.PROC_LOG + "Searching OK!Time is " + (System.currentTimeMillis() - l));
 		l = System.currentTimeMillis();
 
@@ -105,7 +121,7 @@ public class ValidateSearchUrl {
 		}
 
 		// validate contents
-		if (LocateCompanyInfo.validationTableOfJobList(browser) < 1) {
+		if (LocateCompanyInfo.validationTableOfJobList(processContext) < 1) {
 			throw new ApplicationException("Validate job list page error:" + url);
 		}
 
@@ -124,9 +140,9 @@ public class ValidateSearchUrl {
 		// get paging url
 		IElement pageIE = LocateMainElements.locatePage(browser, ">2<");
 		// paging.
-		FINISH = false;
+		finish.clear();
 		pageIE.click();
-		waitingLoading();
+		BrowserSupport.waitingLoading(processContext, index, finish);
 		log.info(ClawerConstants.PROC_LOG + "Paging URL===" + url);
 		// check paging urls
 		url = browser.getURL();
@@ -140,29 +156,8 @@ public class ValidateSearchUrl {
 		return browser;
 	}
 
-	private static void onDocumnetComplete() {
-		browser.addNetworkListener(new NetworkAdapter() {
-			public void onDocumentComplete(NetworkEvent e) {
-				FINISH = true;
-			}
-		});
-	}
-
 	public static IDocument getDoc() {
 		return browser.getDocument();
-	}
-
-	public static void waitingLoading() {
-		int i = 0;
-		while (!FINISH) {
-			i++;
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			log.info("Job Main waiting loading![" + i * 0.5 + "]s");
-		}
 	}
 
 }

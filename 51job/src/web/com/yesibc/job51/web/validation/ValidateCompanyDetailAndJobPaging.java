@@ -12,7 +12,7 @@ import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.model.Company;
 import com.yesibc.job51.web.search.WebrendererContext;
 import com.yesibc.job51.web.support.ErrorHandler;
-import com.yesibc.job51.web.support.JobSupport;
+import com.yesibc.job51.web.support.BrowserSupport;
 import com.yesibc.job51.web.support.LogHandler;
 
 public class ValidateCompanyDetailAndJobPaging {
@@ -45,7 +45,7 @@ public class ValidateCompanyDetailAndJobPaging {
 
 	public void run() throws ApplicationException {
 		try {
-			browser = JobSupport.initLoading(processContext, title, 0);
+			browser = BrowserSupport.initLoading(processContext, title, 0);
 			onDocumnetComplete();
 			finish = false;
 			l = System.currentTimeMillis();
@@ -102,7 +102,7 @@ public class ValidateCompanyDetailAndJobPaging {
 						+ "] waiting loading to long and exit to waiting now. Time is[" + i
 						* ClawerConstants.WAITING_TIME_LOADING + "]s");
 				// finish = true;
-				WebrendererContext.reFreshContext(index, processContext);
+				WebrendererContext.reFreshContext4Waiting(index, processContext);
 				return false;
 			} else {
 				LogHandler.debug(processContext.getLogTitle() + " URL[" + url + "] waiting loading……[" + i
