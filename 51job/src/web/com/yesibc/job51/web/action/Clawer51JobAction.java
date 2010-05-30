@@ -66,12 +66,10 @@ public class Clawer51JobAction extends BaseAction2Support {
 		if (!ClawerConstants.TEST_WEB_REQUEST) {
 			fromDBorFile = getParameter("fromDBorFile");
 		}
-		if (!StringUtils.isEmpty(fromDBorFile)) {
-			CompanyJobContext.initSearchList(fromDBorFile);
-			log.info("FromDBorFile:" + fromDBorFile);
-		} else {
-			log.info("FromDBorFile is [null] file!");
-		}
+		
+		CompanyJobContext.initSearchList(fromDBorFile);
+		log.info("FromDBorFile:" + fromDBorFile);
+
 
 		String failedOrNot = null;
 		if (ClawerConstants.TEST_WEB_REQUEST) {
