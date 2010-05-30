@@ -11,8 +11,6 @@ import cn.cetelem.track.audit.dao.MainAuditDao;
 import cn.cetelem.track.audit.domain.DesMainAudit;
 import cn.cetelem.track.audit.web.query.PageList;
 
-
-
 /**
  * @author <a href="mailto:jimmy.xu@cetelem.com.cn">JimmyXu</a>
  * @version 1.0
@@ -62,18 +60,19 @@ public class MainAuditDaoImpl extends BaseDaoImpl implements MainAuditDao {
 	}
 
 	public DesMainAudit getMainAuditById(Long id) {
-		return (DesMainAudit) getHibernateTemplate().get(DesMainAudit.class, id);
+		return (DesMainAudit) getHibernateTemplate()
+				.get(DesMainAudit.class, id);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<DesMainAudit> getMainAuditsByAppId(String appId) {
-		List<DesMainAudit> mainAudit = getHibernateTemplate().find("from DesMainAudit where appId=?", appId);
-        return mainAudit;
+		List<DesMainAudit> mainAudit = getHibernateTemplate().find(
+				"from DesMainAudit where appId=?", appId);
+		return mainAudit;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<DesMainAudit> getAllMainAudits() {
-		List<DesMainAudit> mainAudits = getHibernateTemplate().find("from DesMainAudit");
+		List<DesMainAudit> mainAudits = getHibernateTemplate().find(
+				"from DesMainAudit");
 		return mainAudits;
 	}
 
