@@ -164,8 +164,7 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 
 		Class clazz = object.getClass();
 		Method method = null;
-		for (Class superClass = clazz; superClass != Object.class; superClass = superClass
-				.getSuperclass()) {
+		for (Class superClass = clazz; superClass != Object.class;) {
 			try {
 				method = superClass.getDeclaredMethod(methodName, types);
 				break;
@@ -208,8 +207,7 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 
 		Class clazz = object.getClass();
 		Method method = null;
-		for (Class superClass = clazz; superClass != Object.class; superClass = superClass
-				.getSuperclass()) {
+		for (Class superClass = clazz; superClass != Object.class;) {
 			try {
 				method = superClass.getDeclaredMethod(methodName, types);
 				break;
@@ -248,8 +246,7 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 
 		Class clazz = object.getClass();
 		Method method = null;
-		for (Class superClass = clazz; superClass != Object.class; superClass = superClass
-				.getSuperclass()) {
+		for (Class superClass = clazz; superClass != Object.class;) {
 			try {
 				method = superClass.getDeclaredMethod(methodName);
 				break;
@@ -288,8 +285,7 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 
 		Class clazz = object.getClass();
 		Method method = null;
-		for (Class superClass = clazz; superClass != Object.class; superClass = superClass
-				.getSuperclass()) {
+		for (Class superClass = clazz; superClass != Object.class;) {
 			try {
 				method = superClass.getDeclaredMethod(methodName);
 				break;
