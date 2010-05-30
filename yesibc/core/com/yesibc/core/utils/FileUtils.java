@@ -389,7 +389,7 @@ public class FileUtils {
 	 *            文本文件打开的编码方式
 	 * @return 返回文本文件的内容
 	 */
-	public static String readTxt(String filePathAndName, String encoding) throws IOException {
+	public static String readTxt(String filePathAndName, String encoding) {
 		StringBuffer str = new StringBuffer("");
 		String st = "";
 		try {

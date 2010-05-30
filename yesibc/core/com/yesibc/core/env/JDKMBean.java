@@ -13,6 +13,7 @@ import java.util.List;
 
 public class JDKMBean {
 
+	@SuppressWarnings("unchecked")
 	public static <T> void printMXBean(Class<T> t, Object object) {
 		Method[] methods = t.getMethods();
 		T instance = (T) object;
