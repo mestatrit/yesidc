@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.webrenderer.swing.dom.IElement;
+import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.spring.SpringContext;
 import com.yesibc.core.utils.CollectionUtils;
@@ -13,7 +14,6 @@ import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.model.Company;
 import com.yesibc.job51.service.CompanyInfoHandlerService;
 import com.yesibc.job51.web.support.CompanyInfoSupport;
-import com.yesibc.job51.web.support.JobSupport;
 import com.yesibc.job51.web.support.LocateCompanyInfo;
 
 public class ParseJobdetail {
@@ -25,23 +25,29 @@ public class ParseJobdetail {
 		Company company = getCompany(processContext);
 		List<String> emails = LocateCompanyInfo.getEmails(processContext);
 		if (Company.LOAD_OK.equals(company.getLoadOK()) && CollectionUtils.isEmpty(emails)) {
-			log.info(processContext.getLogTitle() + "Company and email existed:" + company.getCompanyName());
+			log.info(processContext.getLogTitle() + "Email existed or no found.Company:" + company.getCompanyName());
 			return;
 		}
+		long l = System.currentTimeMillis();
 		CompanyInfoSupport.parseToCompany(company, emails, processContext);
+		log.info(processContext.getLogTitle() + " Parse company is OK!Time is " + (System.currentTimeMillis() - l));
+		l = System.currentTimeMillis();
 		company.setLoadOK(Company.LOAD_OK);
+
 		if (!ClawerConstants.TEST_DAO) {
 			CompanyInfoHandlerService companyInfoHandlerService = (CompanyInfoHandlerService) SpringContext
 					.getBean("companyInfoHandlerService");
 			companyInfoHandlerService.update(company);
+			log.info(processContext.getLogTitle() + " Update company to DB is OK!Time is "
+					+ (System.currentTimeMillis() - l));
 		}
 
 	}
 
 	private static Company getCompany(ProcessContext processContext) throws ApplicationException {
 		String[] txts = { ClawerConstants.COMPANY_URL_NAME };
-		List<IElement> ies = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"),
-				"href", ClawerConstants.COMPANY_URL_TAG, txts);
+		List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
+				.tags("A"), "href", ClawerConstants.COMPANY_URL_TAG, txts);
 		if (ies == null || ies.size() != 1) {
 			throw new ApplicationException(processContext.getLogTitle() + " Company url is error found0!");
 		}

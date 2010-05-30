@@ -1,5 +1,6 @@
 package com.yesibc.job51.web.support;
 
+import java.util.Date;
 import java.util.Map.Entry;
 
 import com.webrenderer.swing.IBrowserCanvas;
@@ -17,10 +18,10 @@ public class WebLinkSupport {
 	private static boolean finish = false;
 	private static long COUNTLOADED = 0;
 	private static long WAITING_CONNECTION = 10000;
+	private static Date reconnDate = null;
 
-	public synchronized static void reconnectInternet(String rid) throws ApplicationException {
+	private static void reconnectInternet(String rid) throws ApplicationException {
 		finish = false;
-		rid = rid + "[" + (++COUNTLOADED) + "]";
 		try {
 			WebRenderEntity wre = WebrendererContext.WEBRENDER_ENTITIES.get(ClawerConstants.THREADS_NUMBER);
 			IBrowserCanvas browser = wre.getBrowser();
@@ -97,7 +98,6 @@ public class WebLinkSupport {
 
 		return IP;
 	}
-
 
 	private static void handleReconnect(String rid, IBrowserCanvas browser) throws ApplicationException {
 		IElement ie = getConnectButton(browser);
@@ -219,13 +219,23 @@ public class WebLinkSupport {
 
 	}
 
-	public static void refreshContext(String title) throws ApplicationException {
+	public static void refreshContextAndReconnInternet(String title, boolean errReconn) throws ApplicationException {
+		reconnDate = new Date();
+
+		if (errReconn) {
+			if ((System.currentTimeMillis() - reconnDate.getTime()) < ClawerConstants.RECONNECT_INTERVAL) {
+				throw new ApplicationException(ErrorHandler.WAIT_ERROR_SYSTEM
+						+ " refreshContextAndReconnInternet! reconn times is to close!");
+			}
+		}
+
+		title = title + "[" + (++COUNTLOADED) + "]";
 		LogHandler.info(title + " start!");
 		int sizeOfWRE = WebrendererContext.WEBRENDER_ENTITIES.size();
 		for (int i = 0; i < sizeOfWRE; i++) {
 			WebrendererContext.reFreshContext(i, title + "-" + i);
 		}
-		WebLinkSupport.reconnectInternet(title);
+		reconnectInternet(title);
 		LogHandler.info(title + " End!");
 	}
 

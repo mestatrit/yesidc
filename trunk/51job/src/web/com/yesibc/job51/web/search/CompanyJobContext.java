@@ -14,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.webrenderer.swing.dom.IElement;
+import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.exception.NestedRuntimeException;
 import com.yesibc.core.spring.SpringContext;
@@ -28,9 +29,12 @@ import com.yesibc.job51.model.WebPages;
 import com.yesibc.job51.service.CompanyInfoHandlerService;
 import com.yesibc.job51.web.support.CompanyInfoSupport;
 import com.yesibc.job51.web.support.ErrorHandler;
-import com.yesibc.job51.web.support.JobSupport;
 
 public class CompanyJobContext {
+
+	public final static String DB_OR_REQUEST_VAL = "db";
+
+	public static String DB_OR_REQUEST = null;
 
 	public static Log LOG_MANUAL = LogFactory.getLog(ClawerConstants.MANUAL_LOG);
 	private static Log log = LogFactory.getLog(CompanyJobContext.class);
@@ -38,14 +42,13 @@ public class CompanyJobContext {
 
 	private static Map<String, Company> companies = new HashMap<String, Company>();
 	private static List<WebPages> searchPagesWP = new ArrayList<WebPages>();
+	private static List<WebPages> searchListWP = new ArrayList<WebPages>();
 	private static List<WebPages> jobsWP = new ArrayList<WebPages>();
 	private static List<String> pagesURL = new ArrayList<String>();
 	private static List<String> jobsURL = new ArrayList<String>();
 	private static List<String> emails = new ArrayList<String>();
-	private static List<String> searchList = new ArrayList<String>();
 
 	static {
-		initSearchList();
 		intWebpages();
 		intCompanies();
 	}
@@ -96,7 +99,28 @@ public class CompanyJobContext {
 		}
 	}
 
-	private static void initSearchList() {
+	public static void initSearchList(String fromDBorFile) {
+		DB_OR_REQUEST = fromDBorFile;
+		if (fromDBorFile != null && DB_OR_REQUEST_VAL.equals(fromDBorFile)) {
+			getSearchListFromDB();
+		} else {
+			getSearchListFromFile();
+		}
+	}
+
+	private static void getSearchListFromDB() {
+		try {
+			if (!ClawerConstants.TEST_DAO) {
+				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
+				searchListWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_SEARCH_LIST, WebPages.STATUS_KO);
+			}
+		} catch (Exception e) {
+			throw new NestedRuntimeException("GetSearchListFromDB Error:", e);
+		}
+		log.info("init search list from DB and size:" + searchListWP.size());
+	}
+
+	private static void getSearchListFromFile() {
 		try {
 			String path = StringUtils.getRealPath(CompanyJobContext.class, null, null) + "resulturls.51job";
 			File file = new File(path);
@@ -104,16 +128,31 @@ public class CompanyJobContext {
 				throw new FileNotFoundException();
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String temp = br.readLine();
-			searchList.add(temp);
+
+			WebPages wp = new WebPages();
+			wp.setUrl(temp);
+			wp.setPageType(WebPages.PAGE_TYPE_SEARCH_LIST);
+			wp.setRequestId(ClawerConstants.REQUEST_ID);
+			wp.setStatus(WebPages.STATUS_KO);
+			wp.setUpdateDate(new Date());
+			searchListWP.add(wp);
+
 			while (temp != null) {
 				temp = br.readLine();
-				if (temp != null)
-					searchList.add(temp);
+				if (temp != null) {
+					WebPages wp1 = new WebPages();
+					wp1.setUrl(temp);
+					wp1.setPageType(WebPages.PAGE_TYPE_SEARCH_LIST);
+					wp1.setRequestId(ClawerConstants.REQUEST_ID);
+					wp1.setStatus(WebPages.STATUS_KO);
+					wp1.setUpdateDate(new Date());
+					searchListWP.add(wp1);
+				}
 			}
 		} catch (Exception e) {
-			ErrorHandler.error("intSearchInitialURLs!", e);
+			ErrorHandler.error("GetSearchListFromFile from file:", e);
 		}
-		log.info("intResultURLs size:" + searchList.size());
+		log.info("init search list from file and size:" + searchListWP.size());
 	}
 
 	public static String getNewUrlPage(String url, int page) {
@@ -125,8 +164,8 @@ public class CompanyJobContext {
 	}
 
 	public static int putJobsURL2Context(ProcessContext processContext) throws ApplicationException {
-		List<IElement> elements = JobSupport.getElements(processContext.getBrowser().getDocument().getAll(), "A",
-				"href", ClawerConstants.JOB_URL_PREFIX);
+		List<IElement> elements = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll(),
+				"A", "href", ClawerConstants.JOB_URL_PREFIX);
 		if (elements == null || elements.isEmpty()) {
 			return -1;
 		}
@@ -177,8 +216,8 @@ public class CompanyJobContext {
 	}
 
 	public static int putCompanyLinks2Context(ProcessContext processContext) throws ApplicationException {
-		List<IElement> elements = JobSupport.getElements(processContext.getBrowser().getDocument().getAll(), "A",
-				"href", ClawerConstants.COMPANY_URL_TAG);
+		List<IElement> elements = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll(),
+				"A", "href", ClawerConstants.COMPANY_URL_TAG);
 
 		if (elements == null || elements.size() < 1) {
 			return -1;
@@ -330,12 +369,12 @@ public class CompanyJobContext {
 		return jobsWP;
 	}
 
-	public static List<String> getSearchList() {
-		return searchList;
+	public static List<WebPages> getSearchListWP() {
+		return searchListWP;
 	}
 
 	public static int getSearchListSize() {
-		return searchList.size();
+		return searchListWP.size();
 	}
 
 }

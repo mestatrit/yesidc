@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
+import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.utils.CollectionUtils;
 import com.yesibc.job51.common.ClawerConstants;
@@ -14,7 +15,7 @@ import com.yesibc.job51.model.Company;
 import com.yesibc.job51.web.search.WebrendererContext;
 import com.yesibc.job51.web.support.CompanyInfoSupport;
 import com.yesibc.job51.web.support.ErrorHandler;
-import com.yesibc.job51.web.support.JobSupport;
+import com.yesibc.job51.web.support.BrowserSupport;
 import com.yesibc.job51.web.support.LocateCompanyInfo;
 
 public class ParseCompanyDetailSupport {
@@ -42,7 +43,7 @@ public class ParseCompanyDetailSupport {
 	}
 
 	private static void onePage(TestProcessContext processContext, Company company) throws ApplicationException {
-		List<IElement> urls = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"),
+		List<IElement> urls = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"),
 				"href", ClawerConstants.JOB_URL_PREFIX);
 		String url = null;
 		for (IElement ie : urls) {
@@ -65,7 +66,7 @@ public class ParseCompanyDetailSupport {
 			log.info(processContext.getLogTitle() + " for [" + company.getCompanyCode() + ","
 					+ company.getCompanyName() + "] 50 perpage [1] loading!");
 
-			IBrowserCanvas browser = JobSupport.initLoading(processContext, title + "|| Sub-1 [" + positionOfURL + "]",
+			IBrowserCanvas browser = BrowserSupport.initLoading(processContext, title + "|| Sub-1 [" + positionOfURL + "]",
 					index);
 			processContext.getCompanyDetailAndJobPaging().setFinish(false);
 			processContext.getCompanyDetailAndJobPaging().setBrowser(browser);
@@ -86,7 +87,7 @@ public class ParseCompanyDetailSupport {
 
 			boolean loaded = processContext.getCompanyDetailAndJobPaging().waitingLoading(index, subUrl);
 			if (!loaded) {
-				browser = JobSupport.reLoading(processContext, title + "|| Sub-1 [" + positionOfURL + "]", index);
+				browser = BrowserSupport.reLoading(processContext, title + "|| Sub-1 [" + positionOfURL + "]", index);
 				processContext.getCompanyDetailAndJobPaging().onDocumnetComplete();
 				log.info(processContext.getLogTitle() + "ReStart Loading  " + subUrl);
 				browser.loadURL(okUrl);
@@ -104,7 +105,7 @@ public class ParseCompanyDetailSupport {
 			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(true);
 		}
 
-		List<IElement> urls = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"),
+		List<IElement> urls = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"),
 				"href", ClawerConstants.JOB_URL_PREFIX);
 		for (IElement ie : urls) {
 			url = ie.getAttribute("href", 0);
@@ -138,7 +139,7 @@ public class ParseCompanyDetailSupport {
 	private static void putJobLinks2Context(int index, TestProcessContext processContext, Company company) throws ApplicationException {
 		String[] innerTxts = { ClawerConstants.NEXT_PAGE_IMG };
 		String title = processContext.getLogTitle();
-		List<IElement> ies = JobSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags("A"),
+		List<IElement> ies = WebrendererSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags("A"),
 				innerTxts);
 		if (ies == null || ies.size() == 0) {
 			onePage(processContext, company);
@@ -156,7 +157,7 @@ public class ParseCompanyDetailSupport {
 	private static void paging(int index, String title, TestProcessContext processContext, Company company) throws ApplicationException {
 		int positionOfURL = 1;
 		String[] innerTxts = { ClawerConstants.NEXT_PAGE_IMG };
-		List<IElement> ies = JobSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags("A"),
+		List<IElement> ies = WebrendererSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags("A"),
 				innerTxts);
 		int size = 0;
 		List<IElement> urls = null;
@@ -164,7 +165,7 @@ public class ParseCompanyDetailSupport {
 		while (ies != null && ies.size() > 0) {
 			positionOfURL++;
 			try {
-				IBrowserCanvas browser = JobSupport.initLoading(processContext, title + "|| Sub-2 [" + positionOfURL
+				IBrowserCanvas browser = BrowserSupport.initLoading(processContext, title + "|| Sub-2 [" + positionOfURL
 						+ "] ", index);
 				processContext.getCompanyDetailAndJobPaging().setFinish(false);
 				processContext.getCompanyDetailAndJobPaging().setBrowser(browser);
@@ -188,7 +189,7 @@ public class ParseCompanyDetailSupport {
 
 				boolean loaded = processContext.getCompanyDetailAndJobPaging().waitingLoading(index, subUrl);
 				if (!loaded) {
-					browser = JobSupport.reLoading(processContext, title + "|| Sub-2 [" + positionOfURL + "] ", index);
+					browser = BrowserSupport.reLoading(processContext, title + "|| Sub-2 [" + positionOfURL + "] ", index);
 					processContext.getCompanyDetailAndJobPaging().onDocumnetComplete();
 					log.info(processContext.getLogTitle() + "ReStart Loading error2 " + subUrl);
 					browser.loadURL(okUrl);
@@ -207,7 +208,7 @@ public class ParseCompanyDetailSupport {
 				WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(true);
 			}
 
-			urls = JobSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"), "href",
+			urls = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll().tags("A"), "href",
 					ClawerConstants.JOB_URL_PREFIX);
 			for (IElement ie : urls) {
 				url = ie.getAttribute("href", 0);
@@ -218,7 +219,7 @@ public class ParseCompanyDetailSupport {
 			}
 
 			size = size + urls.size();
-			ies = JobSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags("A"), innerTxts);
+			ies = WebrendererSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags("A"), innerTxts);
 		}
 
 		log.info(processContext.getLogTitle() + " for [" + company.getCompanyCode() + "," + company.getCompanyName()
@@ -227,7 +228,7 @@ public class ParseCompanyDetailSupport {
 
 	private static IElement get50Button(TestProcessContext processContext) {
 		String[] innerTxts = { ">50<" };
-		List<IElement> ies = JobSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags("A"),
+		List<IElement> ies = WebrendererSupport.getElementsByTxt(processContext.getBrowser().getDocument().getAll().tags("A"),
 				innerTxts);
 		return ies.get(0);
 	}

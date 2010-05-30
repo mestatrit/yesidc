@@ -1,30 +1,45 @@
 package com.yesibc.job51.common;
 
+import java.text.ParseException;
+import java.util.Date;
+
+import com.yesibc.core.utils.DateUtils;
 import com.yesibc.job51.model.Code;
 
 public class ClawerConstants {
 
 	// public final static boolean TEST = false;
-	public static boolean TEST_DAO = true;
+	public static boolean TEST_DAO = false;
 
-	public static boolean TEST_WEB = true;
+	public static boolean TEST_WEB = false;
+
+	public static boolean TEST_WEB_REQUEST = false;
 
 	public static boolean SHOW_FRAME = true;
 
 	public static int TEST_WEB_NUM = 2;
 
 	public static int THREADS_NUMBER = TEST_WEB_NUM;
+
+	public static Date LICENSE_DATE = null;
+
 	static {
 		if (!TEST_WEB) {
 			THREADS_NUMBER = Integer.parseInt(ClawerUtils.getServerConfByKey("threads.number"));
+		}
+
+		try {
+			LICENSE_DATE = DateUtils.stringToDate(ClawerUtils.getServerConfByKey("license.date"),
+					DateUtils.DAY_YMD_LINE);
+		} catch (ParseException e) {
+			LICENSE_DATE = new Date();
 		}
 	}
 
 	public final static String TAG_SPACE = " ";
 	public final static String TAG_SPACE_HTML = "&nbsp;";
 	public final static String TAG_SPACE_TRIM = "";
-	
-	
+
 	public static int REFRESH_MUILTI_THREADS_NUMBER = Integer.parseInt(ClawerUtils
 			.getServerConfByKey("refresh.muilti.threads.number"));
 
@@ -49,6 +64,8 @@ public class ClawerConstants {
 	public final static long WAITING_TIME_SECONDS = 2;
 
 	public final static long WAITING_TIMES = 30;
+
+	public final static long WAITING_TIMES_EXT = 5;
 
 	public final static String[] EMAIL_SPLITS = { ";", "," };
 
@@ -95,7 +112,7 @@ public class ClawerConstants {
 	public final static String RECONNECT_CUT_TAG = "Connect(this.form,'Disconnect_pppoe')";
 	public final static String RECONNECT_RECONN_TAG = "Connect(this.form,'Connect_pppoe')";
 	public final static String RECONNECT_RECONN_NAME = ClawerUtils.getValByKey("reconnect.reconn");
-	public final static long RECONNECT_INTERVAL = Long.valueOf(ClawerUtils.getValByKey("reReconnect.interval")) * 1000 * 60;
+	public final static long RECONNECT_INTERVAL = Long.valueOf(ClawerUtils.getServerConfByKey("reReconnect.interval")) * 1000 * 60;
 	public final static String VAL = "_val";
 	public final static String RECONNECT_IP_TAG = ClawerUtils.getValByKey("reconnect.ip.tag");
 
@@ -282,6 +299,7 @@ public class ClawerConstants {
 	}
 
 	public static void main(String[] args) {
+		System.out.println("bbb=[" + DateUtils.dateToString(LICENSE_DATE, DateUtils.DAY_YMD_LINE) + "]");
 		BaseCodeDispatch.getBaseCode(BaseCode.FROM_WHERE).getCode(ClawerConstants.FROM_WHERE_51JOB,
 				BaseCode.CODE_LEVEL_SECOND);
 		for (String name : PROVINCE_FILTERS)

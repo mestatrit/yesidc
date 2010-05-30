@@ -12,11 +12,11 @@ import org.apache.commons.logging.LogFactory;
 
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
+import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.utils.FileUtils;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
-import com.yesibc.job51.web.support.JobSupport;
 
 public class ValidateTypes {
 
@@ -127,12 +127,14 @@ public class ValidateTypes {
 	public static String oldStr = getOldComNature();
 
 	public static void validateCompanyNature(IBrowserCanvas browser) throws ApplicationException {
-		List<IElement> elements = JobSupport.getElements(browser.getDocument().getAll(), "SELECT", "name", "cotype");
+		List<IElement> elements = WebrendererSupport.getElements(browser.getDocument().getAll(), "SELECT", "name",
+				"cotype");
 		if (elements == null || elements.size() != 1) {
 			throw new ApplicationException("ValidateCompanyNature elements error1!");
 		}
 		String html = elements.get(0).getOuterHTML().replace(ClawerConstants.TAG_SPACE, ClawerConstants.TAG_SPACE_TRIM)
-				.replace(ClawerConstants.TAG_SPACE_HTML, ClawerConstants.TAG_SPACE_TRIM).replace("=\"selected\"", ClawerConstants.TAG_SPACE_TRIM);
+				.replace(ClawerConstants.TAG_SPACE_HTML, ClawerConstants.TAG_SPACE_TRIM).replace("=\"selected\"",
+						ClawerConstants.TAG_SPACE_TRIM);
 		if (!oldStr.equalsIgnoreCase(html)) {
 			throw new ApplicationException("ValidateCompanyNature error2!");
 		}

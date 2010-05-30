@@ -17,6 +17,7 @@ import com.yesibc.job51.dao.CompanyDao;
 import com.yesibc.job51.model.ComAppend;
 import com.yesibc.job51.model.Company;
 
+@SuppressWarnings("deprecation")
 public class CompanyDaoImpl extends HibernateEntityDao<Company> implements CompanyDao {
 
 	public void saveAppendLob(ComAppend comAppend, String type) throws ApplicationException {

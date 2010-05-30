@@ -28,10 +28,18 @@ public class ParseSearchList {
 	}
 
 	public static void parseSearchList(ProcessContext processContext) throws ApplicationException {
+
 		long l = System.currentTimeMillis();
+		int x = validateContent(processContext);
+		log.info(processContext.getLogTitle() + " validateContent ok!Time is " + (System.currentTimeMillis() - l));
+		l = System.currentTimeMillis();
+
+		if (x == 0) {
+			log.info(processContext.getLogTitle() + " No recored found!");
+			return;
+		}
 
 		int total = LocateCompanyInfo.getTotal(processContext);
-
 		int size = CompanyJobContext.putCompanyLinks2Context(processContext);
 		int jobSize = 0;
 		if (size > -1) {
@@ -53,6 +61,39 @@ public class ParseSearchList {
 				ErrorHandler.errorLogAndMail("putSearchPages2Context error!size=" + wps1.size(), e);
 			}
 		}
+	}
+
+	private static int validateContent(ProcessContext processContext) throws ApplicationException {
+		int k = 0;
+		int x = -1;
+		while (true) {
+			k++;
+			try {
+				x = LocateCompanyInfo.validationTableOfJobList(processContext);
+			} catch (Exception e) {
+				x = -1;
+				log.error(processContext.getLogTitle() + " validationTableOfJobList error.times:" + k, e);
+			}
+
+			if (x > -1) {
+				break;
+			}
+
+			log.warn(processContext.getLogTitle() + " LocateCompanyInfo.validationTableOfJobList Error.times:" + k);
+
+			try {
+				Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
+			} catch (InterruptedException e) {
+				ErrorHandler.errorLogAndMail(
+						"LocateCompanyInfo.validationTableOfJobList error!InterruptedException@times:" + k, e);
+			}
+
+			if (k > ClawerConstants.WAITING_TIMES / 2) {
+				throw new ApplicationException("LocateCompanyInfo.validationTableOfJobList Error.times:" + k);
+			}
+
+		}
+		return x;
 	}
 
 	private static List<WebPages> putSearchPages2Context(int total, ProcessContext processContext) {

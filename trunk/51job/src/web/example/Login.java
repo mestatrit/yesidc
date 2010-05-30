@@ -23,7 +23,12 @@ package example;
 
 public class Login extends ExampleSupport {
 
-    public String execute() throws Exception {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6743981647068010896L;
+
+	public String execute() throws Exception {
 
         if (isInvalid(getUsername())) return INPUT;
 

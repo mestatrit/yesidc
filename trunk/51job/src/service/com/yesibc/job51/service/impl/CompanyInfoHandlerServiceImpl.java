@@ -87,7 +87,7 @@ public class CompanyInfoHandlerServiceImpl implements CompanyInfoHandlerService 
 	}
 
 	public void initalCompanyInfo(Map<String, Company> companies, List<String> emails) throws ApplicationException {
-		List<Company> companyAll = companyDao.findAll(Company.class);
+		List<Company> companyAll = companyDao.findByHql(" from Company ");
 		for (Company company : companyAll) {
 			companies.put(company.getCompanyCode(), company);
 			List<ComContactHeader> chs = company.getComContactHeaders();
