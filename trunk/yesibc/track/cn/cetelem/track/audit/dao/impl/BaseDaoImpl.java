@@ -104,7 +104,6 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 		deleteObject(getObject(clazz, id));
 	}
 
-	@SuppressWarnings("deprecation")
 	protected PageList getPageList(final String hql, final PageList pageList) {
 		return (PageList) getHibernateTemplate().execute(
 				new HibernateCallback() {

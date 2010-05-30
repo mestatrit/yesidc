@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
  * @Creationdate:Dec 2, 2008 5:42:59 PM
  */
 
+@SuppressWarnings( { "unchecked", "unused" })
 public class MainAuditQueryFilter implements Filter {
 
 	private static final long serialVersionUID = 1L;
@@ -88,28 +89,28 @@ public class MainAuditQueryFilter implements Filter {
 			}
 			sb.append(" " + REQUEST_ID + " = " + "'" + requestId + "'");
 		}
-		
+
 		if (StringUtils.isNotBlank(appId)) {
 			if (sb.length() > 0) {
 				sb.append(" and ");
 			}
 			sb.append(" " + APP_ID + " = " + "'" + appId + "'");
 		}
-		
+
 		if (StringUtils.isNotBlank(workflowId)) {
 			if (sb.length() > 0) {
 				sb.append(" and ");
 			}
 			sb.append(" " + WORKFLOW_ID + " = " + "'" + workflowId + "'");
 		}
-		
+
 		if (StringUtils.isNotBlank(stepId)) {
 			if (sb.length() > 0) {
 				sb.append(" and ");
 			}
 			sb.append(" " + STEP_ID + " = " + "'" + stepId + "'");
 		}
-		
+
 		if (StringUtils.isNotBlank(desStatus)) {
 			if (sb.length() > 0) {
 				sb.append(" and ");
@@ -314,7 +315,5 @@ public class MainAuditQueryFilter implements Filter {
 	public void setLogDateTime(Date logDateTime) {
 		this.logDateTime = logDateTime;
 	}
-
-	
 
 }
