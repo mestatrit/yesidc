@@ -50,6 +50,7 @@ import org.hibernate.engine.SessionFactoryImplementor;
  * 
  * @author Steve Ebersole
  */
+@SuppressWarnings("unchecked")
 public abstract class FunctionalTestCase extends UnitTestCase implements
 		ExecutionEnvironment.Settings {
 

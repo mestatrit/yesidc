@@ -10,12 +10,11 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
-import com.yesibc.core.utils.XMLFileUtil;
-
 public class TestXML {
 
 	static String s = "D:/new/txt.xml";
 	static String s1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ROWS><ROW no=\"1\"><INPUT><gmsfhm>420281198106054212</gmsfhm><xm>xuxinyu</xm></INPUT><OUTPUT><ITEM><gmsfhm></gmsfhm><result_gmsfhm>ok</result_gmsfhm></ITEM><ITEM><xm></xm><result_xm>good</result_xm></ITEM><ITEM><xp></xp></ITEM></OUTPUT></ROW></ROWS>";
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) { 
 //		Document doc = XMLFileUtil.LoadXmlFile(s);
 //		System.out.println("===");
