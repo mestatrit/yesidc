@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="core"/>
-	<classpathentry kind="src" path="examples"/>
-	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="src" path="tools/download"/>
-	<classpathentry kind="src" path="track"/>
-	<classpathentry kind="src" path="src/email"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="Components/jboss/lib/jboss-cache.jar"/>
-	<classpathentry kind="lib" path="Components/jboss/lib/jboss-common.jar"/>
-	<classpathentry kind="lib" path="Components/jboss/lib/jboss-jmx.jar"/>
-	<classpathentry kind="lib" path="Components/jboss/lib/jboss-system.jar"/>
-	<classpathentry kind="lib" path="Components/database/oracle/lib/ojdbc14.jar"/>
+	<classpathentry excluding="**/.svn/*" kind="src" path="src/email"/>
+	<classpathentry excluding="**/.svn/*" kind="src" path="test"/>
+	<classpathentry excluding="**/.svn/*" kind="src" path="examples"/>
+	<classpathentry excluding="**/.svn/*" kind="src" path="track"/>
+	<classpathentry excluding="**/.svn/*" kind="src" path="core"/>
 	<classpathentry kind="lib" path="Components/main/lib/activation-1.1.jar"/>
 	<classpathentry kind="lib" path="Components/main/lib/ant-1.7.0.jar"/>
 	<classpathentry kind="lib" path="Components/main/lib/antlr-2.7.6.jar"/>
@@ -19,105 +12,88 @@
 	<classpathentry kind="lib" path="Components/main/lib/asm-attrs-2.2.1.jar"/>
 	<classpathentry kind="lib" path="Components/main/lib/aspectjrt-1.5.2a.jar"/>
 	<classpathentry kind="lib" path="Components/main/lib/aspectjweaver-1.5.2a.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/bsh-2.0b4.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/cglib-nodep-2.1_3.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/dozer-4.2.1.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/dozer.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/el-api.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/el-ri.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/freemarker-2.3.8.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/jackrabbit-api-1.4.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/jackrabbit-core-1.4.5.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/jackrabbit-jcr-commons-1.4.2.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/jcr-1.0.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/json-20090211.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/json-lib-2.2.3-jdk13.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/jsp-api-2.0.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/jstl-1.1.2.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/jta-1.0.1B.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/jul-to-slf4j-1.5.5.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/jul-to-slf4j-1.5.6.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/jxl.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/log4j-1.2.13.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/mail-1.4.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/ojdbc14.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/oro-2.0.8.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/quartz-1.6.0.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/servlet-api-2.4.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/slf4j-api-1.5.6.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/slf4j-ext-1.5.6.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/spring-2.0.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/springside-joddform-2.0.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/standard-1.1.2.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/struts-1.2.9.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/xalan-2.7.0.jar"/>
+	<classpathentry kind="lib" path="Components/main/lib/xwork-2.0.7.jar"/>
+	<classpathentry kind="lib" path="Components/web/webrender/corecomponents-swing-win.jar"/>
+	<classpathentry kind="lib" path="Components/web/webrender/webrenderer-swing-win.jar"/>
+	<classpathentry kind="lib" path="Components/web/webrender/webrenderer-swing.jar"/>
+	<classpathentry kind="lib" path="Components/mvc/struts2/lib/struts2-convention-plugin-2.1.6.jar"/>
+	<classpathentry kind="lib" path="Components/mvc/struts2/lib/struts2-core-2.1.6.jar"/>
+	<classpathentry kind="lib" path="Components/mvc/struts2/lib/struts2-spring-plugin-2.1.6.jar"/>
+	<classpathentry kind="lib" path="Components/mvc/struts2/lib/xwork-2.1.2.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/apache-mailet-2.4.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/apache-mime4j-0.6.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/cglib-nodep-2.1_3.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/commons-attributes-api-2.1.jar"/>
+	<classpathentry kind="lib" path="Components/apache/lib/commons-beanutils-1.8.0.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/commons-cli-1.1.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/commons-codec-1.3.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/commons-collections-3.2.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/commons-configuration-1.2.jar"/>
+	<classpathentry kind="lib" path="Components/apache/lib/commons-dbcp-1.2.2.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/commons-digester-1.7.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/commons-discovery-0.2.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/commons-fileupload-1.2.1.jar"/>
+	<classpathentry kind="lib" path="Components/apache/lib/commons-httpclient-3.1.jar"/>
+	<classpathentry kind="lib" path="Components/apache/lib/commons-io-1.3.2.jar"/>
+	<classpathentry kind="lib" path="Components/apache/lib/commons-lang-2.4.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/commons-pool-1.3.jar"/>
 	<classpathentry kind="lib" path="Components/apache/lib/commons-validator-1.3.0.jar"/>
-	<classpathentry kind="lib" path="Components/main/lib/jstl-1.1.2.jar"/>
-	<classpathentry kind="lib" path="Components/main/lib/jxl.jar"/>
-	<classpathentry kind="lib" path="Components/main/lib/log4j-1.2.13.jar"/>
-	<classpathentry kind="lib" path="Components/main/lib/mail-1.4.jar"/>
-	<classpathentry kind="lib" path="Components/main/lib/servlet-api-2.4.jar"/>
-	<classpathentry kind="lib" path="Components/main/lib/standard-1.1.2.jar"/>
-	<classpathentry kind="lib" path="Components/main/lib/xalan-2.7.0.jar"/>
-	<classpathentry kind="lib" path="Components/mvc/struts/lib/oro-2.0.8.jar"/>
-	<classpathentry kind="lib" path="Components/mvc/struts/lib/struts-1.2.9.jar"/>
+	<classpathentry kind="lib" path="Components/apache/lib/httpclient-4.0.jar"/>
+	<classpathentry kind="lib" path="Components/apache/lib/httpcore-4.0.1.jar"/>
+	<classpathentry kind="lib" path="Components/apache/lib/httpcore-nio-4.0.1.jar"/>
+	<classpathentry kind="lib" path="Components/apache/lib/httpmime-4.0.jar"/>
 	<classpathentry kind="lib" path="Components/orm/hibernate/lib/ehcache-1.2.3.jar"/>
 	<classpathentry kind="lib" path="Components/orm/hibernate/lib/hibernate-3.2.0.ga.jar"/>
 	<classpathentry kind="lib" path="Components/orm/hibernate/lib/hibernate-annotations-3.2.0.ga.jar"/>
 	<classpathentry kind="lib" path="Components/orm/hibernate/lib/jta-1.0.1B.jar"/>
 	<classpathentry kind="lib" path="Components/orm/hibernate/lib/persistence-api-1.0.jar"/>
-	<classpathentry kind="lib" path="Components/test/lib/dbunit-2.1.jar"/>
+	<classpathentry kind="lib" path="Components/xml/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="Components/xml/jdom-1.0.jar"/>
+	<classpathentry kind="lib" path="Components/web/extremetable/lib/extremecomponents-1.0.1.jar"/>
+	<classpathentry kind="lib" path="Components/web/extremetable/lib/poi-2.5.1.jar"/>
+	<classpathentry kind="lib" path="Components/workflow/jbpm/lib/jbpm-identity.jar"/>
+	<classpathentry kind="lib" path="Components/workflow/jbpm/lib/jbpm-jpdl.jar"/>
+	<classpathentry kind="lib" path="Components/workflow/jbpm/lib/spring-modules-jbpm31.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="Components/test/lib/easymock-2.2.jar"/>
 	<classpathentry kind="lib" path="Components/test/lib/easymockclassextension-2.2.jar"/>
-	<classpathentry kind="lib" path="Components/test/lib/junit-3.8.1.jar"/>
 	<classpathentry kind="lib" path="Components/test/lib/selenium-java-client-driver-0.9.0.jar"/>
 	<classpathentry kind="lib" path="Components/test/lib/selenium-server-0.9.0.jar"/>
 	<classpathentry kind="lib" path="Components/test/lib/spring-mock-2.0.jar"/>
-	<classpathentry kind="lib" path="Components/web/extremetable/lib/extremecomponents-1.0.1.jar"/>
-	<classpathentry kind="lib" path="Components/web/extremetable/lib/poi-2.5.1.jar"/>
-	<classpathentry kind="lib" path="Components/web/webrender/corecomponents-swing-win.jar"/>
-	<classpathentry kind="lib" path="Components/web/webrender/webrenderer-swing-win.jar"/>
-	<classpathentry kind="lib" path="Components/web/webrender/webrenderer-swing.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/bcprov-jdk15-133.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/jaxb-api-1.0.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/jaxb-api-2.0.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/jaxb-impl-1.0.5.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/jaxb-impl-2.0.1.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/jaxb-xjc-2.0.1.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/jaxen-1.1-beta-9.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/jaxws-api-2.0.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/jdom-1.0.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/jsr173_api-1.0.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/opensaml-1.0.1.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/relaxngDatatype-20050913.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/saaj-api-1.3.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/saaj-impl-1.3.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/stax-api-1.0.1.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/stax-utils-20040917.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/wsdl4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/wss4j-1.5.1.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/wstx-asl-3.2.0.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xbean-2.2.0.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xbean-spring-2.8.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xercesImpl-2.6.2.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xfire-aegis-1.2.6.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xfire-annotations-1.2.6.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xfire-core-1.2.6.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xfire-generator-1.2.6.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xfire-java5-1.2.6.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xfire-jaxb-1.1.2.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xfire-jaxb2-1.2.6.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xfire-jaxws-1.2.6.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xfire-jsr181-api-1.0-M1.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xfire-spring-1.2.6.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xfire-ws-security-1.2.6.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xfire-xmlbeans-1.2.6.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xml-apis-1.0.b2.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/XmlSchema-1.1.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xmlsec-1.3.0.jar"/>
-	<classpathentry kind="lib" path="Components/webservice/xfire/lib/xsdlib-20050913.jar"/>
-	<classpathentry kind="lib" path="Components/workflow/jbpm/lib/jbpm-3.1.2.jar"/>
-	<classpathentry kind="lib" path="Components/workflow/jbpm/lib/jbpm-identity-3.1.2.jar"/>
-	<classpathentry kind="lib" path="Components/workflow/jbpm/lib/spring-modules-jbpm31.jar"/>
-	<classpathentry kind="lib" path="Components/mvc/struts2/lib/struts2-convention-plugin-2.1.6.jar"/>
-	<classpathentry kind="lib" path="Components/mvc/struts2/lib/struts2-core-2.1.6.jar"/>
-	<classpathentry kind="lib" path="Components/mvc/struts2/lib/struts2-spring-plugin-2.1.6.jar"/>
-	<classpathentry kind="lib" path="Components/mvc/struts2/lib/xwork-2.1.2.jar"/>
-	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/spring.jar"/>
-	<classpathentry kind="lib" path="Components/main/lib/dom4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="Components/main/lib/jsp-api-2.0.jar"/>
-	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-web.jar"/>
-	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-webmvc-struts.jar"/>
-	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-webmvc.jar"/>
-	<classpathentry kind="lib" path="Components/apache/lib/commons-beanutils-1.8.0.jar"/>
-	<classpathentry kind="lib" path="Components/apache/lib/commons-dbcp-1.2.2.jar"/>
-	<classpathentry kind="lib" path="Components/apache/lib/commons-io-1.3.2.jar"/>
-	<classpathentry kind="lib" path="Components/apache/lib/commons-lang-2.4.jar"/>
-	<classpathentry kind="lib" path="Components/apache/lib/commons-httpclient-3.1.jar"/>
-	<classpathentry kind="lib" path="Components/apache/lib/httpclient-4.0.jar"/>
-	<classpathentry kind="lib" path="Components/apache/lib/httpcore-4.0.1.jar"/>
-	<classpathentry kind="lib" path="Components/apache/lib/httpcore-nio-4.0.1.jar"/>
-	<classpathentry kind="lib" path="Components/apache/lib/httpmime-4.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.5.0"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
