@@ -19,7 +19,7 @@ import cn.cetelem.track.AlertUtils;
 public class MailSender implements java.io.Serializable {
 
 	private static Log log = LogFactory.getLog(MailSender.class);
-
+	
 	/**
 	 * 
 	 */
@@ -181,22 +181,20 @@ public class MailSender implements java.io.Serializable {
 
 	public void sendBySimple() {
 		if (senderServer == null || mailMessage == null) {
-			AlertUtils.sendAlert("[" + mailName + "] senderServer or mailMessage can not be null!");
-			AlertUtils.sendAlert(simpleBody);
+			AlertUtils.sendAlert("[" + mailName + "] senderServer or mailMessage can not be null!\n" + simpleBody);
 			return;
 		}
+		log.error(simpleBody);
 		mailMessage.setText(simpleBody);
-		log.error("[" + mailName + "] " + simpleBody);
 		senderServer.send(mailMessage);
 	}
 
 	public void sendByMuilti() {
 		if (senderServer == null || multiMessage == null) {
-			AlertUtils.sendAlert("[" + mailName + "] senderServer or multiMessage can not be null!");
-			AlertUtils.sendAlert(multiBody);
+			AlertUtils.sendAlert("[" + mailName + "] senderServer or multiMessage can not be null!\n" + multiBody);
 			return;
 		}
-		log.error("[" + mailName + "] " + multiBody);
+		log.error(multiBody);
 		senderServer.send(multiMessage);
 	}
 
