@@ -36,7 +36,7 @@ public class FunctionalTest extends SearchTest {
 
 			waitingLoading(url);
 
-			int i = LocateCompanyInfo.validationTableOfJobList(browser);
+			int i = LocateCompanyInfo.validationTableOfJobList(processContext);
 			System.out.println("i===" + i);
 		} catch (Exception e) {
 			e.printStackTrace();
