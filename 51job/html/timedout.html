@@ -1,0 +1,48 @@
+﻿<body dir="ltr">
+
+    <!-- ERROR ITEM CONTAINER (removed during loading to avoid bug 39098) -->
+    
+
+    <!-- PAGE CONTAINER (for styling purposes only) -->
+    <div xmlns="http://www.w3.org/1999/xhtml" id="errorPageContainer">
+    
+      <!-- Error Title -->
+      <div id="errorTitle">
+        <h1 id="errorTitleText">The connection has timed out</h1>
+      </div>
+      
+      <!-- LONG CONTENT (the section most likely to require scrolling) -->
+      <div id="errorLongContent">
+      
+        <!-- Short Description -->
+        <div id="errorShortDesc">
+          <p id="errorShortDescText">The server at search.51job.com is taking too long to respond.</p>
+        </div>
+
+        <!-- Long Description (Note: See netError.dtd for used XHTML tags) -->
+        <div id="errorLongDesc">
+<ul>
+  <li>The site could be temporarily unavailable or too busy. Try again in a few
+    moments.</li>
+  <li>If you are unable to load any pages, check your computer's network
+    connection.</li>
+  <li>If your computer or network is protected by a firewall or proxy, make sure
+    that Bon Echo is permitted to access the Web.</li>
+</ul>
+</div>
+
+      </div>
+
+      <!-- Retry Button -->
+      <xul:button xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="errorTryAgain" label="Try Again" oncommand="retryThis();"/>
+
+    </div>
+
+    <!--
+    - Note: It is important to run the script this way, instead of using
+    - an onload handler. This is because error pages are loaded as
+    - LOAD_BACKGROUND, which means that onload handlers will not be executed.
+    -->
+    <script xmlns="http://www.w3.org/1999/xhtml" type="application/x-javascript">initPage();</script>
+
+  </body>
