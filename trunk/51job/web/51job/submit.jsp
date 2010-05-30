@@ -9,6 +9,7 @@
 <s:form action="clawer51JobSearch">
     <s:textfield key="requestId"/>
     <s:textfield key="failedOrNot"/>
+    <s:textfield key="fromDBorFile"/>
     <s:submit/>
 </s:form>
 </body>
