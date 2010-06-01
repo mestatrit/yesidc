@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -26,7 +27,7 @@ import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
-public class Junit4CommonTest extends Assert {
+public class Junit4CommonTest extends TestCase {
 	private static String zipRegEx = "^\\d{5}([\\-]\\d{4})?$";
 	private static Pattern pattern;
 

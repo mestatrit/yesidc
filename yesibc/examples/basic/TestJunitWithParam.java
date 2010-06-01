@@ -1,9 +1,9 @@
 package basic;
 
-import static org.junit.Assert.*;
-
 import java.util.Arrays;
 import java.util.Collection;
+
+import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +11,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class TestJunitWithParam {
+public class TestJunitWithParam extends TestCase {
 	private String expected;
 
 	private String target;
