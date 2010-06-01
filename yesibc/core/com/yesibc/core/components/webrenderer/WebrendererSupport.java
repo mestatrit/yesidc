@@ -23,6 +23,7 @@ public class WebrendererSupport {
 	private final static String SPACER = "";
 
 	public static void main(String[] args) {
+		System.out.println(removeSpace("a b"));
 	}
 
 	public static String removeSpace(String str) {
