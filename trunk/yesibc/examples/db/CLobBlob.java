@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+@SuppressWarnings("deprecation")
 public class CLobBlob {
 
 	public void updateLob(String data) throws Exception {
@@ -135,7 +136,6 @@ public class CLobBlob {
 	}
 
 	public void getClob() throws Exception {
-		String data;
 		// 获得数据库连接
 		Connection con = getConnection();
 		con.setAutoCommit(false);
