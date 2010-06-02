@@ -32,7 +32,9 @@ public class CompanyInfoSupport {
 
 	public static void parseToCompany(Company company, List<String> emails, ProcessContext processContext)
 			throws ApplicationException {
+
 		setCompanyCommon(company, false);
+
 		String[] industryTypeScale = LocateCompanyInfo.getComIndustryTypeScale(processContext);
 		company.setCompanyIndustry1Name(industryTypeScale[0]);
 		company.setCompanyIndustry2Name(industryTypeScale[1]);

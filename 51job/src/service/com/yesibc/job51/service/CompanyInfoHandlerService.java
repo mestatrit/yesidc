@@ -10,6 +10,8 @@ import com.yesibc.job51.model.Company;
 
 public interface CompanyInfoHandlerService {
 
+	Company findCompanyByCode(String companyCode) throws ApplicationException;
+
 	void handleCompanyInfo(String companyHTML) throws ApplicationException;
 
 	void save(ComEmail comEmail, List<ComContactHeader> comContactHeaders) throws ApplicationException;

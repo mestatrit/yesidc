@@ -26,8 +26,7 @@ public class BrowserSupport {
 			throws ApplicationException {
 
 		if (!waiting(processContext, index, finish)) {
-			log.error(processContext.getLogTitle() + " Load wait error and redo!"
-					+ processContext.getBrowser().getURL());
+			log.error(processContext.getLogTitle() + " Load wait error and redo!");
 			finish.clear();
 			BrowserSupport.onDocumnetComplete(processContext.getBrowser(), finish);
 			processContext.getBrowser().loadURL(processContext.getUrl());
@@ -47,8 +46,7 @@ public class BrowserSupport {
 
 	private static void errorRedo(ProcessContext processContext, String html, int index, Map<String, String> finish,
 			String htmlTag) throws ApplicationException {
-		String logMsg = " Error Tag:" + htmlTag + ". So load content error and redo!\n URL is:"
-				+ processContext.getBrowser().getURL() + ".\n HTML is:" + html;
+		String logMsg = " Error Tag:" + htmlTag + ". So load content error and redo!\n HTML is:" + html;
 		if (html.indexOf(htmlTag) > -1) {
 			log.error(processContext.getLogTitle() + logMsg);
 			finish.clear();
@@ -84,32 +82,30 @@ public class BrowserSupport {
 
 	private static boolean waiting(ProcessContext processContext, int index, Map<String, String> finish) {
 		int i = 0;
+		long l = System.currentTimeMillis();
 		log.info(processContext.getLogTitle() + " waiting loading start!" + processContext.getUrl());
 		while (!finish.containsKey(WAIT_TAG_KEY)) {
 			i++;
 			try {
 				Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
 			} catch (InterruptedException e) {
-				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + ":", e);
+				log.error(processContext.getLogTitle() + ":", e);
 			}
+
 			if (i > ClawerConstants.WAITING_TIMES) {
-				// ErrorHandler.errorLogAndMail(processContext.getLogTitle()
-				// +
-				// " waiting loading to long and exit to waiting now. Time is["
-				// + i
-				// * ClawerConstants.WAITING_TIME_SECONDS + "]s");
-				// finish = true;
 				log.error(processContext.getLogTitle() + " waiting loading to long and exit to waiting now. Time is["
 						+ i * ClawerConstants.WAITING_TIME_SECONDS + "]s");
 				WebrendererContext.reFreshContext4Waiting(index, processContext);
 				return false;
 			} else {
-				log.debug(processContext.getLogTitle() + " waiting loading……[" + i
-						* ClawerConstants.WAITING_TIME_LOADING + "]s");
+				if (log.isDebugEnabled()) {
+					log.debug(processContext.getLogTitle() + " waiting loading……[" + i
+							* ClawerConstants.WAITING_TIME_LOADING + "]s");
+				}
 			}
 		}
-		log.info(processContext.getLogTitle() + " waiting loading end![" + i * ClawerConstants.WAITING_TIME_SECONDS
-				+ "]s." + processContext.getUrl());
+		log.info(processContext.getLogTitle() + " waiting loading end![" + ((System.currentTimeMillis() - l) / 1000)
+				+ "]s.");
 		return true;
 	}
 
