@@ -66,10 +66,10 @@ import com.yesibc.core.utils.StringUtils;
 @SuppressWarnings("all")
 public class Httpclient4Util {
 
-	public static final String PROXY_USER_KEY = "proxyUser";
-	public static final String PROXY_PWD_KEY = "proxyPwd";
-	public static final String PROXY_ADDR_KEY = "proxyAddr";
-	public static final String PROXY_PORT_KEY = "proxyPort";
+	public static final String PROXY_USER_KEY = "proxyUserYTB";
+	public static final String PROXY_PWD_KEY = "proxyPwdYTB";
+	public static final String PROXY_ADDR_KEY = "proxyAddrYTB";
+	public static final String PROXY_PORT_KEY = "proxyPortYTB";
 	private static final String CHARSET_UTF8 = "UTF-8";
 	private static final String CHARSET_GBK = "GBK";
 	private static final String SSL_DEFAULT_SCHEME = "https";
