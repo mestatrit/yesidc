@@ -47,7 +47,7 @@
 	function freshIframe()
 	{
 	   if(tag == "true"){
-	  	 	iframe2.location = "/clawer51job/51job/clawer51JobRefresh";
+	  	 	iframe1.location = "/clawer51job/51job/clawer51JobRefresh";
 		}
 		setTimeout("freshIframe();",3000); 
 	}
