@@ -12,6 +12,7 @@ import org.hibernate.stat.Statistics;
 import org.htmlparser.tags.TableTag;
 
 import com.yesibc.core.exception.ApplicationException;
+import com.yesibc.core.utils.CollectionUtils;
 import com.yesibc.job51.dao.BaseCodeDao;
 import com.yesibc.job51.dao.CompanyDao;
 import com.yesibc.job51.dao.PersonDao;
@@ -219,6 +220,14 @@ public class CompanyInfoHandlerServiceImpl implements CompanyInfoHandlerService 
 		cch.setComEmails(ces);
 
 		companyDao.update(com);
+	}
+
+	public Company findCompanyByCode(String companyCode) throws ApplicationException {
+		List<Company> company = companyDao.findByNameValue(Company.class, "companyCode", companyCode);
+		if (!CollectionUtils.isEmpty(company)) {
+			return company.get(0);
+		}
+		return null;
 	}
 
 }

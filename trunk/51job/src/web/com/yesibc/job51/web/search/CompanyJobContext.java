@@ -40,13 +40,14 @@ public class CompanyJobContext {
 	private static Log log = LogFactory.getLog(CompanyJobContext.class);
 	private static Log logurls = LogFactory.getLog(ClawerConstants.LOG_URLS);
 
-	private static Map<String, Company> companies = new HashMap<String, Company>();
+	public static Map<String, Company> companies = new HashMap<String, Company>();
 	private static List<WebPages> searchPagesWP = new ArrayList<WebPages>();
 	private static List<WebPages> searchListWP = new ArrayList<WebPages>();
 	private static List<WebPages> jobsWP = new ArrayList<WebPages>();
 	private static List<String> pagesURL = new ArrayList<String>();
 	private static List<String> jobsURL = new ArrayList<String>();
 	private static List<String> emails = new ArrayList<String>();
+	private static Object synObject = new Object();
 
 	static {
 		intWebpages();
@@ -59,7 +60,8 @@ public class CompanyJobContext {
 			if (!ClawerConstants.TEST_DAO) {
 				CompanyInfoHandlerService cih = (CompanyInfoHandlerService) SpringContext
 						.getBean("companyInfoHandlerService");
-				cih.initalCompanyInfo(companies, emails);
+				// cih.initalCompanyInfo(companies, emails);
+				log.info("Not to initial company!" + cih.toString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -243,21 +245,27 @@ public class CompanyJobContext {
 			com.setUrl(url);
 			com.setCompanyCode(companyId);
 
-			if (filterCompany(companyId, com)) {
-				sizeFilter++;
-				log.debug(processContext.getLogTitle() + " Filtered:" + companyId + ",name=" + name);
-				com = null;
-				continue;
+			synchronized (synObject) {
+				if (filterCompany(processContext, com)) {
+					sizeFilter++;
+					log.debug(processContext.getLogTitle() + " Filtered:" + companyId + ",name=" + name);
+					com = null;
+					continue;
+				}
 			}
 
-			CompanyInfoSupport.setCompanyCommon(com, true);
+			if (com.getId() == null) {
+				CompanyInfoSupport.setCompanyCommon(com, true);
+			}
+
+			com.setUpdateDate(new Date());
 			com.setLoadOK(Company.LOAD_KO);
 			size++;
 			logurls.info(processContext.getLogTitle() + "Put [" + companyId + "," + name + "] url=[" + url
 					+ "] to company map!");
 
 			try {
-				if (!ClawerConstants.TEST_DAO) {
+				if (!ClawerConstants.TEST_DAO && com.getId() != null) {
 					CompanyInfoHandlerService companyInfoHandlerService = (CompanyInfoHandlerService) SpringContext
 							.getBean("companyInfoHandlerService");
 					companyInfoHandlerService.save(com);
@@ -268,26 +276,76 @@ public class CompanyJobContext {
 
 		}
 
-		return size;
+		return elements.size();
 
 	}
 
-	private static boolean filterCompany(String companyId, Company com) {
+	private static boolean filterCompany(ProcessContext processContext, Company com) {
+		String companyId = com.getCompanyCode();
+		/**
+		 * <pre>
+		 * A.在CACHE里,1)如果OK,则判时间不过长过滤; 2)如果KO,直接过滤.
+		 * 所以，只有时间过长或者为空且状态为OK的，需要更新。
+		 * B.不在CACHE，则放到CACHE，1）不在DB，新建；2）在DB，时间过长或者为空且状态为OK的，需要更新。
+		 * </pre>
+		 */
 		if (companies.containsKey(companyId)) {
-			if (Company.LOAD_OK.equals(companies.get(companyId).getLoadOK())) {
-				Date updateDate = companies.get(companyId).getUpdateDate();
-				if (updateDate != null) {
-					if (DateUtils.substractDate(updateDate, new Date()) < Company.UPDATE_DAYS) {
-						return true;
-					}
-				}
-			} else {
-				return true;
-			}
+			return filterInCache(companyId, com);
+		} else {
+			return filterInDB(processContext, companyId, com);
 		}
+	}
+
+	private static boolean filterInDB(ProcessContext processContext, String companyId, Company com) {
+
 		companies.put(companyId, com);
 
+		if (ClawerConstants.TEST_DAO) {
+			return false;
+		}
+
+		CompanyInfoHandlerService cih = (CompanyInfoHandlerService) SpringContext.getBean("companyInfoHandlerService");
+		Company company = null;
+		try {
+			company = cih.findCompanyByCode(companyId);
+		} catch (ApplicationException e) {
+			log.error(processContext.getLogTitle() + " com code:" + com.getCompanyCode() + " com name:"
+					+ com.getCompanyName() + ".Get error from DB!", e);
+		}
+
+		if (company != null) {
+			com = company;
+			if (Company.LOAD_OK.equals(com.getLoadOK())) {
+				Date updateDate = com.getUpdateDate();
+				if (updateDate != null) {
+					if (DateUtils.substractDate(updateDate, new Date()) > Company.UPDATE_DAYS) {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
+
+			// 存在且少于30天，或者KO的，都返回TRUE
+			return true;
+		}
+
 		return false;
+	}
+
+	private static boolean filterInCache(String companyId, Company com) {
+		com = companies.get(companyId);
+		if (Company.LOAD_OK.equals(companies.get(companyId).getLoadOK())) {
+			Date updateDate = companies.get(companyId).getUpdateDate();
+			if (updateDate != null) {
+				if (DateUtils.substractDate(updateDate, new Date()) > Company.UPDATE_DAYS) {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public static void main(String[] args) {

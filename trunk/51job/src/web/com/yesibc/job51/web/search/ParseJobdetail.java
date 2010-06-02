@@ -56,7 +56,18 @@ public class ParseJobdetail {
 		companyId = ClawerConstants.FROM_WHERE_51JOB + "_" + companyId;
 		Company company = CompanyJobContext.getCompanies(companyId);
 		if (company == null) {
-			throw new ApplicationException(processContext.getLogTitle() + " Get company is null!");
+			CompanyInfoHandlerService cih = (CompanyInfoHandlerService) SpringContext
+					.getBean("companyInfoHandlerService");
+			try {
+				company = cih.findCompanyByCode(companyId);
+			} catch (ApplicationException e) {
+				log.error(processContext.getLogTitle() + ".Get error from DB!", e);
+			}
+
+			if (company == null) {
+				throw new ApplicationException(processContext.getLogTitle() + " Get company is null!");
+			}
+			CompanyJobContext.companies.put(companyId, company);
 		}
 		return company;
 	}

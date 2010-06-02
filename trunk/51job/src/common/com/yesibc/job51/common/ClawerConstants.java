@@ -8,16 +8,16 @@ import com.yesibc.job51.model.Code;
 
 public class ClawerConstants {
 
-	// public final static boolean TEST = false;
-	public static boolean TEST_DAO = false;
+	// public final static boolean TEST = true;
+	public static boolean TEST_DAO = true;
 
-	public static boolean TEST_WEB = false;
+	public static boolean TEST_WEB = true;
 
-	public static boolean TEST_WEB_REQUEST = false;
+	public static boolean TEST_WEB_REQUEST = true;
 
-	public static boolean SHOW_FRAME = true;
+	public static boolean SHOW_FRAME = false;
 
-	public static int TEST_WEB_NUM = 2;
+	public static int TEST_WEB_NUM = 40;
 
 	public static int THREADS_NUMBER = TEST_WEB_NUM;
 
@@ -64,6 +64,8 @@ public class ClawerConstants {
 	public final static long WAITING_TIME_SECONDS = 2;
 
 	public final static long WAITING_TIMES = 30;
+
+	public final static long WAITING_TIMES_MILLIS = 100000;
 
 	public final static long WAITING_TIMES_EXT = 5;
 

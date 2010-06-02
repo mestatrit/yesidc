@@ -66,10 +66,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 		if (!ClawerConstants.TEST_WEB_REQUEST) {
 			fromDBorFile = getParameter("fromDBorFile");
 		}
-		
+
 		CompanyJobContext.initSearchList(fromDBorFile);
 		log.info("FromDBorFile:" + fromDBorFile);
-
 
 		String failedOrNot = null;
 		if (ClawerConstants.TEST_WEB_REQUEST) {
@@ -269,11 +268,12 @@ public class Clawer51JobAction extends BaseAction2Support {
 	}
 
 	private void parseSearchPages(String requestId, String reqLog, int threadNumber) {
-		try {
-			WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchPages!0!", false);
-		} catch (Exception e) {
-			log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!", e);
-		}
+		// try {
+		// WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
+		// + "REC By SearchPages!0!", false);
+		// } catch (Exception e) {
+		// log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!", e);
+		// }
 		long l = System.currentTimeMillis();
 		int error = 0;
 		try {
@@ -412,6 +412,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 		boolean error = false;
 		String errorMsg = "";
 		int errTimes = 0;
+		long l = System.currentTimeMillis();
 		for (Iterator<SearchListEngine> it = spes.iterator(); it.hasNext();) {
 			int i = 0;
 			spe = it.next();
@@ -438,9 +439,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 							+ "]s. URL|" + spe.getUrl());
 				}
 
-				if (i > (ClawerConstants.WAITING_TIMES + ClawerConstants.WAITING_TIMES_EXT)) {
-					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing [" + i
-							* ClawerConstants.WAITING_TIME_SECONDS + "]s. OverTime!. URL|" + spe.getUrl());
+				if (i > (ClawerConstants.WAITING_TIMES * 2)) {
+					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing ["
+							+ ((System.currentTimeMillis() - l) / 1000) + "]s. OverTime!. URL|" + spe.getUrl());
 					it.remove();
 					spe = null;
 					break;
@@ -472,6 +473,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 		boolean error = false;
 		String errorMsg = "";
 		int errTimes = 0;
+		long l = System.currentTimeMillis();
 		for (Iterator<SearchJobDetailEngine> it = jobs.iterator(); it.hasNext();) {
 			int i = 0;
 			spe = it.next();
@@ -498,9 +500,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 							+ "]s. URL|" + spe.getUrl());
 				}
 
-				if (i > (ClawerConstants.WAITING_TIMES + ClawerConstants.WAITING_TIMES_EXT)) {
-					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing [" + i
-							* ClawerConstants.WAITING_TIME_SECONDS + "]s. OverTime!. URL|" + spe.getUrl());
+				if (i > (ClawerConstants.WAITING_TIMES * 2)) {
+					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing ["
+							+ ((System.currentTimeMillis() - l) / 1000) + "]s. OverTime!. URL|" + spe.getUrl());
 					it.remove();
 					spe = null;
 					break;
@@ -532,6 +534,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 		boolean error = false;
 		String errorMsg = "";
 		int errTimes = 0;
+		long l = System.currentTimeMillis();
 		for (Iterator<SearchPagesEngine> it = sles.iterator(); it.hasNext();) {
 			int i = 0;
 			spe = it.next();
@@ -558,9 +561,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 							+ "]s. URL|" + spe.getUrl());
 				}
 
-				if (i > (ClawerConstants.WAITING_TIMES + ClawerConstants.WAITING_TIMES_EXT)) {
-					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing [" + i
-							* ClawerConstants.WAITING_TIME_SECONDS + "]s. OverTime!. URL|" + spe.getUrl());
+				if (i > (ClawerConstants.WAITING_TIMES * 2)) {
+					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing ["
+							+ ((System.currentTimeMillis() - l) / 1000) + "]s. OverTime!. URL|" + spe.getUrl());
 					it.remove();
 					spe = null;
 					break;
