@@ -24,6 +24,16 @@ public class WebPages implements java.io.Serializable {
 	private String requestId;
 	private String url;
 	private String status;
+	private Date createDate;
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
 	private Date updateDate;
 
 	public Long getId() {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -53,7 +54,7 @@ public class ParseSearchList {
 		if (total > ClawerConstants.PAGESIZE_JOBS) {
 			List<WebPages> wps1 = putSearchPages2Context(total, processContext);
 			try {
-				if (!ClawerConstants.TEST_DAO) {
+				if (!ClawerConstants.TEST_DAO && !CollectionUtils.isEmpty(wps1)) {
 					WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
 					webPagesDao.saveByBatch(wps1);
 				}
@@ -96,31 +97,61 @@ public class ParseSearchList {
 		return x;
 	}
 
+	/**
+	 * 和DB里的pages进行比较，如果pages小于等于pages_DB，则update，如果大于pages_DB，则只保存大于pages_DB的部分
+	 * 。
+	 * 
+	 * @param total
+	 * @param processContext
+	 * @return
+	 */
 	private static List<WebPages> putSearchPages2Context(int total, ProcessContext processContext) {
 
 		int pages = total % ClawerConstants.PAGESIZE_JOBS == 0 ? total / ClawerConstants.PAGESIZE_JOBS
 				: (total / ClawerConstants.PAGESIZE_JOBS) + 1;
-		String url = processContext.getBrowser().getURL();
+		String url = processContext.getUrl();
+		
+		
 		List<WebPages> wps = new ArrayList<WebPages>();
 		for (int i = 2; i <= pages; i++) {
 			url = CompanyJobContext.getNewUrlPage(url, i);
 			if (CompanyJobContext.getPagesURL().contains(url)) {
 				continue;
 			}
+
 			WebPages wp = new WebPages();
 			wp.setUrl(url);
+			Date date = new Date();
+			if (!existInDB(wp)) {
+				wp.setCreateDate(date);
+			}
+
+			wp.setUpdateDate(date);
 			wp.setPageType(WebPages.PAGE_TYPE_SEARCH_PAGES);
 			wp.setRequestId(ClawerConstants.REQUEST_ID);
 			wp.setStatus(WebPages.STATUS_KO);
-			wp.setUpdateDate(new Date());
+
 			wps.add(wp);
 			CompanyJobContext.putSearchPages2Conext(wp);
+			CompanyJobContext.getPagesURL().add(url);
 		}
 
 		LogHandler.info(processContext.getLogTitle() + " [" + processContext.getBrowser().getURL()
 				+ "] Put search pages to  context!Total pages [" + pages + "].");
 
 		return wps;
+	}
+
+	private static boolean existInDB(WebPages wp) {
+		if (!ClawerConstants.TEST_DAO) {
+			WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
+			List<WebPages> searchPagesWP = webPagesDao.findByNameValue(WebPages.class, "url", wp.getUpdateDate());
+			if (!CollectionUtils.isEmpty(searchPagesWP)) {
+				wp = searchPagesWP.get(0);
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
