@@ -1,7 +1,6 @@
 package com.yesibc.job51.web.action;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -220,23 +219,39 @@ public class Clawer51JobAction extends BaseAction2Support {
 			log.info(reqLog + "Parse job detail links start!threadNumber[" + threadNumber + "]job links size[" + size
 					+ "]circleTimes[" + circleTimes + "]");
 
-			Collections.shuffle(CompanyJobContext.getJobsWP());
-
 			int current = 0;
 			int circleTime = 0;
 			int recTimes = 0;
 			int errorTimes = 0;
+			int loop = 0;
 			List<SearchJobDetailEngine> sjdes = new ArrayList<SearchJobDetailEngine>();
 			while (current < size) {
+				if (current == size) {
+					if (ClawerConstants.TEST_WEB) {
+						break;
+					}
+					log.info(reqLog + "#JobDetails#This time-" + circleTime + " of Jobs is used out.Re-get from DB!");
+					CompanyJobContext.intPages();
+					size = CompanyJobContext.getSearchPagesSize();
+					if (size < 1) {
+						break;
+					}
+					current = 0;
+					circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
+					circleTime = 0;
+					loop++;
+				}
+
 				circleTime++;
 				for (int thread = 0; thread < threadNumber; thread++) {
 					if (current >= size) {
 						break;
 					}
 					// doing
-					SearchJobDetailEngine sce = new SearchJobDetailEngine("JobDetails#" + totalThreadTag + totalThreads
-							+ "-" + thread + "].CircleTimes[" + circleTimes + "-" + circleTime + currentOfToI + size
-							+ "-" + current + endTag, CompanyJobContext.getJobsWP().get(current), thread);
+					SearchJobDetailEngine sce = new SearchJobDetailEngine("JobDetails-loop-" + loop + "#"
+							+ totalThreadTag + totalThreads + "-" + thread + "].CircleTimes[" + circleTimes + "-"
+							+ circleTime + currentOfToI + size + "-" + current + endTag, CompanyJobContext.getJobsWP()
+							.get(current), thread);
 					sce.start();
 					sjdes.add(sce);
 					current++;
@@ -268,12 +283,11 @@ public class Clawer51JobAction extends BaseAction2Support {
 	}
 
 	private void parseSearchPages(String requestId, String reqLog, int threadNumber) {
-		// try {
-		// WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
-		// + "REC By SearchPages!0!", false);
-		// } catch (Exception e) {
-		// log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!", e);
-		// }
+		try {
+			WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchPages!0!", false);
+		} catch (Exception e) {
+			log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!", e);
+		}
 		long l = System.currentTimeMillis();
 		int error = 0;
 		try {
@@ -292,7 +306,6 @@ public class Clawer51JobAction extends BaseAction2Support {
 			log.info(reqLog + "Parse SearchPages start!threadNumber[" + threadNumber + "]company links size[" + size
 					+ "]circleTimes[" + circleTimes + "]");
 
-			Collections.shuffle(CompanyJobContext.getSearchPagesWP());
 			l = System.currentTimeMillis() - l;
 			log.info(reqLog + "SearchPages shffle!Times[" + l / (1000 * 60) + "s]");
 
@@ -300,17 +313,35 @@ public class Clawer51JobAction extends BaseAction2Support {
 			int circleTime = 0;
 			int recTimes = 0;
 			int errorTimes = 0;
+			int loop = 0;
 			List<SearchPagesEngine> sces = new ArrayList<SearchPagesEngine>();
-			while (current < size) {
+			while (current <= size) {
+				if (current == size) {
+					if (ClawerConstants.TEST_WEB) {
+						break;
+					}
+					log.info(reqLog + "#SearchPages#This time-" + circleTime + " of Pages is used out.Re-get from DB!");
+					CompanyJobContext.intPages();
+					size = CompanyJobContext.getSearchPagesSize();
+					if (size < 1) {
+						break;
+					}
+					current = 0;
+					circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
+					circleTime = 0;
+					loop++;
+				}
+
 				circleTime++;
 				for (int thread = 0; thread < threadNumber; thread++) {
 					if (current >= size) {
 						break;
 					}
 					// doing
-					SearchPagesEngine sce = new SearchPagesEngine("SearchPages#" + totalThreadTag + totalThreads + "-"
-							+ thread + "].CircleTimes[" + circleTimes + "-" + circleTime + currentOfToI + size + "-"
-							+ current + endTag, CompanyJobContext.getSearchPagesWP().get(current), thread);
+					SearchPagesEngine sce = new SearchPagesEngine("SearchPages-loop-" + loop + "#" + totalThreadTag
+							+ totalThreads + "-" + thread + "].CircleTimes[" + circleTimes + "-" + circleTime
+							+ currentOfToI + size + "-" + current + endTag, CompanyJobContext.getSearchPagesWP().get(
+							current), thread);
 					sce.start();
 					sces.add(sce);
 					current++;
@@ -354,8 +385,6 @@ public class Clawer51JobAction extends BaseAction2Support {
 			if (size < threadNumber) {
 				totalThreads = size;
 			}
-
-			Collections.shuffle(CompanyJobContext.getSearchListWP());
 
 			log.info(reqLog + "Parse search list start!threadNumber[" + threadNumber + "]page size[" + size
 					+ "]circleTimes[" + circleTimes + "]");

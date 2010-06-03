@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,9 +50,13 @@ public class CompanyJobContext {
 	private static List<String> jobsURL = new ArrayList<String>();
 	private static List<String> emails = new ArrayList<String>();
 	private static Object synObject = new Object();
+	private static final int FETCH_RECORDS = 1000;
+	private static int INIT_PAGES_TIMES = 0;
+	private static int INIT_JOBS_TIMES = 0;
 
 	static {
-		intWebpages();
+		intPages();
+		intJobs();
 		intCompanies();
 	}
 
@@ -76,37 +82,73 @@ public class CompanyJobContext {
 		}
 	}
 
-	private static void intWebpages() {
+	public static void intJobs() {
+		INIT_JOBS_TIMES++;
 		try {
+			jobsWP.clear();
+			jobsURL.clear();
 			if (!ClawerConstants.TEST_DAO) {
 				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
-				searchPagesWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_SEARCH_PAGES, WebPages.STATUS_KO);
-				jobsWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_JOB_LIST, WebPages.STATUS_KO);
+				jobsWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_JOB_LIST, WebPages.STATUS_KO, FETCH_RECORDS);
+			}
+		} catch (Exception e) {
+			throw new NestedRuntimeException("IntCompanies:", e);
+		}
+
+		if (jobsWP != null && !jobsWP.isEmpty()) {
+			Collections.shuffle(jobsWP);
+			for (WebPages wp : jobsWP) {
+				jobsURL.add(wp.getUrl());
+			}
+			LogHandler.info("Get Jobs! times-[" + INIT_JOBS_TIMES + "] Jobs size is " + jobsWP.size());
+		} else {
+			jobsWP = new ArrayList<WebPages>(); 
+			LogHandler.info("Get Jobs! times-[" + INIT_JOBS_TIMES + "] Jobs size is 0.");
+		}
+	}
+
+	public static void intPages() {
+		INIT_PAGES_TIMES++;
+		try {
+			searchPagesWP.clear();
+			pagesURL.clear();
+			if (!ClawerConstants.TEST_DAO) {
+				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
+				searchPagesWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_SEARCH_PAGES, WebPages.STATUS_KO,
+						FETCH_RECORDS);
 			}
 		} catch (Exception e) {
 			throw new NestedRuntimeException("IntCompanies:", e);
 		}
 
 		if (searchPagesWP != null && !searchPagesWP.isEmpty()) {
+			Collections.shuffle(searchPagesWP);
 			for (WebPages wp : searchPagesWP) {
 				pagesURL.add(wp.getUrl());
 			}
-			LogHandler.info("Init pages List pages! webpages size is " + searchPagesWP.size());
-		}
-		if (jobsWP != null && !jobsWP.isEmpty()) {
-			for (WebPages wp : jobsWP) {
-				jobsURL.add(wp.getUrl());
-			}
-			LogHandler.info("Init Job List pages! webpages size is " + jobsWP.size());
+			LogHandler.info("Get pages!times-[" + INIT_PAGES_TIMES + "] Pages size is " + searchPagesWP.size());
+		} else {
+			searchPagesWP = new ArrayList<WebPages>(); 
+			LogHandler.info("Get pages!times-[" + INIT_PAGES_TIMES + "] Pages size is 0.");
 		}
 	}
 
 	public static void initSearchList(String fromDBorFile) {
+		if (fromDBorFile == null || fromDBorFile.equals("")) {
+			fromDBorFile = "file";
+		}
 		DB_OR_REQUEST = fromDBorFile;
 		if (fromDBorFile != null && DB_OR_REQUEST_VAL.equals(fromDBorFile)) {
 			getSearchListFromDB();
 		} else {
 			getSearchListFromFile();
+		}
+		if (searchListWP != null && !searchListWP.isEmpty()) {
+			Collections.shuffle(searchListWP);
+			log.info("init search list from " + DB_OR_REQUEST + " and size:" + searchListWP.size());
+		} else {
+			searchListWP = new ArrayList<WebPages>(); 
+			log.info("init search list from " + DB_OR_REQUEST + " and size is 0.");
 		}
 	}
 
@@ -114,30 +156,36 @@ public class CompanyJobContext {
 		try {
 			if (!ClawerConstants.TEST_DAO) {
 				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
-				searchListWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_SEARCH_LIST, WebPages.STATUS_KO);
+				searchListWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_SEARCH_LIST, WebPages.STATUS_KO,
+						FETCH_RECORDS);
 			}
 		} catch (Exception e) {
 			throw new NestedRuntimeException("GetSearchListFromDB Error:", e);
 		}
-		log.info("init search list from DB and size:" + searchListWP.size());
 	}
 
 	private static void getSearchListFromFile() {
+		BufferedReader br = null;
 		try {
 			String path = StringUtils.getRealPath(CompanyJobContext.class, null, null) + "resulturls.51job";
 			File file = new File(path);
 			if (!file.exists() || file.isDirectory())
 				throw new FileNotFoundException();
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String temp = br.readLine();
+			br = new BufferedReader(new FileReader(file));
 
-			WebPages wp = new WebPages();
-			wp.setUrl(temp);
-			wp.setPageType(WebPages.PAGE_TYPE_SEARCH_LIST);
-			wp.setRequestId(ClawerConstants.REQUEST_ID);
-			wp.setStatus(WebPages.STATUS_KO);
-			wp.setUpdateDate(new Date());
-			searchListWP.add(wp);
+			String temp = null;
+			if (br != null) {
+				temp = br.readLine();
+				if (temp != null) {
+					WebPages wp = new WebPages();
+					wp.setUrl(temp);
+					wp.setPageType(WebPages.PAGE_TYPE_SEARCH_LIST);
+					wp.setRequestId(ClawerConstants.REQUEST_ID);
+					wp.setStatus(WebPages.STATUS_KO);
+					wp.setUpdateDate(new Date());
+					searchListWP.add(wp);
+				}
+			}
 
 			while (temp != null) {
 				temp = br.readLine();
@@ -153,8 +201,15 @@ public class CompanyJobContext {
 			}
 		} catch (Exception e) {
 			ErrorHandler.error("GetSearchListFromFile from file:", e);
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
-		log.info("init search list from file and size:" + searchListWP.size());
 	}
 
 	public static String getNewUrlPage(String url, int page) {
