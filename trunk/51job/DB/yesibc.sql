@@ -18,6 +18,7 @@ drop table T_PERSON cascade constraints;
 drop table T_WEBPAGES cascade constraints;
 drop table T_MAIL_SENDERS cascade constraints;
 drop table T_MAIL_SERVER cascade constraints;
+drop table TC_SEARCH_RESULT cascade constraints;
 
 drop sequence SEQ_CODE;
 drop sequence SEQ_CODE_JOB;
@@ -36,6 +37,23 @@ drop sequence SEQ_P_SKILL;
 drop sequence SEQ_WEBPAGES;
 drop sequence SEQ_MAIL_SENDERS;
 drop sequence SEQ_MAIL_SERVER;
+drop sequence SEQ_SEARCH_RESULT;
+
+-- Create table
+create table TC_SEARCH_RESULT
+(
+  ID          NUMBER(19) not null,
+  REQUEST_ID  VARCHAR2(25),
+  URL_CODE    VARCHAR2(30),
+  URL_ADDR    VARCHAR2(400),
+  TOT_RECORDS NUMBER(19),
+  TOT_PAGES   NUMBER(19),
+  STARTUS     VARCHAR2(1),
+  CREATE_DATE timestamp,
+  UPDATE_DATE timestamp
+);
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table TC_SEARCH_RESULT  add constraint PK_SEARCH_RESULT primary key (ID);
 
 create table T_MAIL_SENDERS (ID number(19,0) not null, MAIL_NAME varchar2(60), MAIL_PASSWORD varchar2(30), DEFAULT_SENDER varchar2(30), MEMO varchar2(200), STATUS varchar2(1), CREATE_DATE date, UPDATE_DATE date, CREATE_USER varchar2(20), UPDATE_USER varchar2(20), MAIL_CONF_ID number(19,0), primary key (ID))
 create table T_MAIL_SERVER (ID number(19,0) not null, SMTP_HOST varchar2(30), SMTP_SOCKETFACTORY_CLASS varchar2(30), SMTP_SOCKETFACTORY_FALLBACK varchar2(6), SMTP_PORT number(10,0), SMTP_SOCKETFACTORY_PORT number(10,0), SMTP_AUTH varchar2(6), SMTP_STARTTLS_ENABLE varchar2(6), POP3_SOCKETFACTORY_CLASS varchar2(30), POP3_SOCKETFACTORY_FALLBACK varchar2(6), POP3_PORT number(10,0), POP3_SOCKETFACTORY_PORT number(10,0), CREATE_DATE date, UPDATE_DATE date, CREATE_USER varchar2(20), UPDATE_USER varchar2(20), POP3_HOST varchar2(30), primary key (ID))
@@ -412,3 +430,4 @@ create sequence SEQ_P_LANGUAGE;
 create sequence SEQ_P_SKILL;
 create sequence SEQ_MAIL_SENDERS START WITH 1000;
 create sequence SEQ_MAIL_SERVER START WITH 1000;
+create sequence SEQ_SEARCH_RESULT;
