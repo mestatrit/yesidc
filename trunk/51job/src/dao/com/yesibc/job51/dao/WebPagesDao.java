@@ -8,7 +8,7 @@ import com.yesibc.job51.model.WebPages;
 
 public interface WebPagesDao extends EntityDao<WebPages> {
 
-	public List<WebPages> getWebPagesByType(String type,String status) throws ApplicationException;
+	public List<WebPages> getWebPagesByType(String type, String status, int fetchSize) throws ApplicationException;
 
 	public void saveByBatch(List<WebPages> wps);
 

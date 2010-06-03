@@ -16,13 +16,16 @@ import com.yesibc.job51.model.WebPages;
 public class WebPagesDaoImpl extends HibernateEntityDao<WebPages> implements WebPagesDao {
 
 	@SuppressWarnings("unchecked")
-	public List<WebPages> getWebPagesByType(String type, String status) throws ApplicationException {
+	public List<WebPages> getWebPagesByType(String type, String status, int fetchSize) throws ApplicationException {
 		Criteria criteria = getSession().createCriteria(WebPages.class).addOrder(Order.asc("id"));
 		if (!StringUtils.trimToEmpty(type).equals("")) {
 			criteria.add(Restrictions.eq("pageType", type));
 		}
 		if (!StringUtils.trimToEmpty(status).equals("")) {
 			criteria.add(Restrictions.eq("status", status));
+		}
+		if (fetchSize > 0) {
+			criteria.setFetchSize(fetchSize);
 		}
 
 		return criteria.list();
