@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<bean name="quartzScheduler"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="logVmCronTrigger" />
+			</list>
+		</property>
+		<property name="configLocation" value="classpath:spring/quartz.properties" />
+	</bean>
+
+
+	<bean id="logVmCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="jobDetailLogVm" />
+		<property name="cronExpression" value="0 0/10 * * * ?" />
+	</bean>
+
+	<bean id="jobDetailLogVm"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="logJdkvm" />
+		<property name="targetMethod" value="logJdkvm" />
+	</bean>
+
+
+	<bean id="logJdkvm" class="com.yesibc.job51.common.LogJdkvm"
+		autowire="byName" lazy-init="true">
+	</bean>
+
+</beans>
