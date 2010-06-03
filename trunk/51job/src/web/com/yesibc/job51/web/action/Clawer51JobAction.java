@@ -1,6 +1,7 @@
 package com.yesibc.job51.web.action;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.yesibc.core.utils.DateUtils;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.core.web.BaseAction2Support;
 import com.yesibc.job51.common.ClawerConstants;
@@ -617,5 +619,10 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 		log.info("SearchPages waiting end OK.");
 		return errorTimes;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(DateUtils.dateToString(new Date(), DateUtils.DAY_YMD) + "_"
+				+ (System.currentTimeMillis() + "").substring(7,13));
 	}
 }

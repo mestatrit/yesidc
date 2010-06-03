@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -102,7 +103,7 @@ public class CompanyJobContext {
 			}
 			LogHandler.info("Get Jobs! times-[" + INIT_JOBS_TIMES + "] Jobs size is " + jobsWP.size());
 		} else {
-			jobsWP = new ArrayList<WebPages>(); 
+			jobsWP = new ArrayList<WebPages>();
 			LogHandler.info("Get Jobs! times-[" + INIT_JOBS_TIMES + "] Jobs size is 0.");
 		}
 	}
@@ -128,7 +129,7 @@ public class CompanyJobContext {
 			}
 			LogHandler.info("Get pages!times-[" + INIT_PAGES_TIMES + "] Pages size is " + searchPagesWP.size());
 		} else {
-			searchPagesWP = new ArrayList<WebPages>(); 
+			searchPagesWP = new ArrayList<WebPages>();
 			LogHandler.info("Get pages!times-[" + INIT_PAGES_TIMES + "] Pages size is 0.");
 		}
 	}
@@ -147,7 +148,7 @@ public class CompanyJobContext {
 			Collections.shuffle(searchListWP);
 			log.info("init search list from " + DB_OR_REQUEST + " and size:" + searchListWP.size());
 		} else {
-			searchListWP = new ArrayList<WebPages>(); 
+			searchListWP = new ArrayList<WebPages>();
 			log.info("init search list from " + DB_OR_REQUEST + " and size is 0.");
 		}
 	}
@@ -156,8 +157,11 @@ public class CompanyJobContext {
 		try {
 			if (!ClawerConstants.TEST_DAO) {
 				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
-				searchListWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_SEARCH_LIST, WebPages.STATUS_KO,
-						FETCH_RECORDS);
+				searchListWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_SEARCH_LIST, null, 0);
+				if (!CollectionUtils.isEmpty(searchPagesWP))
+					for (WebPages wp : searchListWP) {
+						wp.setStatus(WebPages.STATUS_KO);
+					}
 			}
 		} catch (Exception e) {
 			throw new NestedRuntimeException("GetSearchListFromDB Error:", e);
