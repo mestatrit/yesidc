@@ -26,8 +26,10 @@ import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.common.ClawerUtils;
 import com.yesibc.job51.company.LogHandler;
+import com.yesibc.job51.dao.SearchResultDao;
 import com.yesibc.job51.dao.WebPagesDao;
 import com.yesibc.job51.model.Company;
+import com.yesibc.job51.model.SearchResult;
 import com.yesibc.job51.model.WebPages;
 import com.yesibc.job51.service.CompanyInfoHandlerService;
 import com.yesibc.job51.web.support.CompanyInfoSupport;
@@ -44,20 +46,24 @@ public class CompanyJobContext {
 	private static Log logurls = LogFactory.getLog(ClawerConstants.LOG_URLS);
 
 	public static Map<String, Company> companies = new HashMap<String, Company>();
-	private static List<WebPages> searchPagesWP = new ArrayList<WebPages>();
-	private static List<WebPages> searchListWP = new ArrayList<WebPages>();
-	private static List<WebPages> jobsWP = new ArrayList<WebPages>();
-	private static List<String> pagesURL = new ArrayList<String>();
-	private static List<String> jobsURL = new ArrayList<String>();
-	private static List<String> emails = new ArrayList<String>();
-	private static Object synObject = new Object();
+	public static Map<String, SearchResult> searchResultMap = new HashMap<String, SearchResult>();
+	public static List<WebPages> searchPagesWP = new ArrayList<WebPages>();
+	public static List<WebPages> searchListWP = new ArrayList<WebPages>();
+	public static List<SearchResult> searchResults = new ArrayList<SearchResult>();
+	public static List<WebPages> jobsWP = new ArrayList<WebPages>();
+	public static Map<String, WebPages> pagesMap = new HashMap<String, WebPages>();
+	public static Map<String, WebPages> jobsMap = new HashMap<String, WebPages>();
+	public static List<String> emails = new ArrayList<String>();
+	public static Object synObject = new Object();
 	private static final int FETCH_RECORDS = 1000;
+	private static int INIT_RESULT_TIMES = 0;
 	private static int INIT_PAGES_TIMES = 0;
 	private static int INIT_JOBS_TIMES = 0;
 
 	static {
 		intPages();
 		intJobs();
+		intSearchResults();
 		intCompanies();
 	}
 
@@ -83,11 +89,36 @@ public class CompanyJobContext {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	private static void intSearchResults() {
+		INIT_RESULT_TIMES++;
+		try {
+			searchResults.clear();
+			if (!ClawerConstants.TEST_DAO) {
+				SearchResultDao searchResultDao = (SearchResultDao) SpringContext.getBean("searchResultDao");
+				searchResults = searchResultDao.loadAll(SearchResult.class);
+			}
+		} catch (Exception e) {
+			throw new NestedRuntimeException("intSearchResults:", e);
+		}
+
+		if (searchResults != null && !searchResults.isEmpty()) {
+			Collections.shuffle(searchResults);
+			for (SearchResult sr : searchResults) {
+				searchResultMap.put(sr.getUrlAddr(), sr);
+			}
+			LogHandler.info("Get searchResults!times-[" + INIT_RESULT_TIMES + "] and Size is " + searchResults.size());
+		} else {
+			searchResults = new ArrayList<SearchResult>();
+			LogHandler.info("Get searchResults!times-[" + INIT_RESULT_TIMES + "] and Size is 0.");
+		}
+	}
+
 	public static void intJobs() {
 		INIT_JOBS_TIMES++;
 		try {
 			jobsWP.clear();
-			jobsURL.clear();
+			jobsMap.clear();
 			if (!ClawerConstants.TEST_DAO) {
 				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
 				jobsWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_JOB_LIST, WebPages.STATUS_KO, FETCH_RECORDS);
@@ -99,9 +130,12 @@ public class CompanyJobContext {
 		if (jobsWP != null && !jobsWP.isEmpty()) {
 			Collections.shuffle(jobsWP);
 			for (WebPages wp : jobsWP) {
-				jobsURL.add(wp.getUrl());
+				//下面判断是为了防止覆盖已经在CACHE里的WP
+				if (!jobsMap.containsKey(wp.getMemo())) {
+					jobsMap.put(wp.getMemo(), wp);
+				}
 			}
-			LogHandler.info("Get Jobs! times-[" + INIT_JOBS_TIMES + "] Jobs size is " + jobsWP.size());
+			LogHandler.info("Get Jobs! times-[" + INIT_JOBS_TIMES + "] Jobs size is " + jobsMap.size());
 		} else {
 			jobsWP = new ArrayList<WebPages>();
 			LogHandler.info("Get Jobs! times-[" + INIT_JOBS_TIMES + "] Jobs size is 0.");
@@ -112,7 +146,7 @@ public class CompanyJobContext {
 		INIT_PAGES_TIMES++;
 		try {
 			searchPagesWP.clear();
-			pagesURL.clear();
+			pagesMap.clear();
 			if (!ClawerConstants.TEST_DAO) {
 				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
 				searchPagesWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_SEARCH_PAGES, WebPages.STATUS_KO,
@@ -125,7 +159,10 @@ public class CompanyJobContext {
 		if (searchPagesWP != null && !searchPagesWP.isEmpty()) {
 			Collections.shuffle(searchPagesWP);
 			for (WebPages wp : searchPagesWP) {
-				pagesURL.add(wp.getUrl());
+				//下面判断是为了防止覆盖已经在CACHE里的WP
+				if (!pagesMap.containsKey(wp.getUrl())) {
+					pagesMap.put(wp.getUrl(), wp);
+				}
 			}
 			LogHandler.info("Get pages!times-[" + INIT_PAGES_TIMES + "] Pages size is " + searchPagesWP.size());
 		} else {
@@ -224,6 +261,7 @@ public class CompanyJobContext {
 		return newPage;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static int putJobsURL2Context(ProcessContext processContext) throws ApplicationException {
 		List<IElement> elements = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll(),
 				"A", "href", ClawerConstants.JOB_URL_PREFIX);
@@ -236,32 +274,71 @@ public class CompanyJobContext {
 		String url = "";
 		int position = 0;
 
+		/**
+		 * <pre>
+		 * 如果cache中存在该job,根据时间，更改status状态。 
+		 * 如果cache中不存在该job,则从DB取.
+		 * 如果DB也不存在，则保存到cache和DB。
+		 * 如果DB中存在，则保存到cache，根据时间决定是否要更改status状态并更新到DB。
+		 * </pre>
+		 */
 		List<WebPages> wps = new ArrayList<WebPages>();
+		Date date = new Date();
 		for (IElement ie : elements) {
-			url = ClawerUtils.removeSpace(ie.getAttribute("href", 0));
-
-			if (jobsURL.contains(url)) {
-				continue;
-			} else {
-				jobsURL.add(url);
-			}
-
 			name = StringUtils.parseOutHTML(ClawerUtils.removeSpace(ie.getInnerHTML()));
 			if (name.equals("")) {
 				continue;
 			}
 
+			url = ClawerUtils.removeSpace(ie.getAttribute("href", 0));
 			position = url.indexOf(ClawerConstants.JOB_URL_POSTFIX);
 			jobCode = url.substring(ClawerConstants.JOB_URL_PREFIX.length(), position);
 
-			WebPages wp = new WebPages();
-			wp.setUrl(url);
-			wp.setPageType(WebPages.PAGE_TYPE_JOB_LIST);
-			wp.setRequestId(ClawerConstants.REQUEST_ID);
-			wp.setStatus(WebPages.STATUS_KO);
-			wp.setUpdateDate(new Date());
-			wps.add(wp);
+			WebPages wp = null;
+			if (jobsMap.get(jobCode) != null) {
+				wp = jobsMap.get(jobCode);
+				if (WebPages.STATUS_OK.equals(wp.getStatus())
+						&& DateUtils.substractDate(wp.getUpdateDate(), date) > Company.UPDATE_DAYS) {
+					wp.setRequestId(ClawerConstants.REQUEST_ID);
+					wp.setUpdateDate(date);
+					wp.setStatus(WebPages.STATUS_KO);
+				}
+				continue;
+			}
+
+			boolean have = false;
+			if (!ClawerConstants.TEST_DAO) {
+				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
+				String hql = " from WebPages wp where wp.pageType=? and wp.memo=?";
+				String[] strs = { WebPages.PAGE_TYPE_JOB_LIST, jobCode };
+				List<WebPages> wpsOld = webPagesDao.findObjectList(hql, strs, false);
+				if (!CollectionUtils.isEmpty(wpsOld)) {
+					have = true;
+					wp = wpsOld.get(0);
+				}
+			}
+
+			if (have) {
+				if (WebPages.STATUS_OK.equals(wp.getStatus())
+						&& DateUtils.substractDate(wp.getUpdateDate(), date) > Company.UPDATE_DAYS) {
+					wp.setRequestId(ClawerConstants.REQUEST_ID);
+					wp.setStatus(WebPages.STATUS_KO);
+					wp.setUpdateDate(date);
+				}
+			} else {
+				wp = new WebPages();
+				wp.setUrl(url);
+				wp.setPageType(WebPages.PAGE_TYPE_JOB_LIST);
+				wp.setCreateDate(date);
+				wp.setMemo(jobCode);
+				wp.setRequestId(ClawerConstants.REQUEST_ID);
+				wp.setUpdateDate(date);
+				wp.setStatus(WebPages.STATUS_KO);
+				wps.add(wp);
+			}
+
 			jobsWP.add(wp);
+			jobsMap.put(jobCode, wp);
 			log.info(processContext.getLogTitle() + "Put [" + jobCode + "," + name + "] url=[" + url + "] to job map!");
 		}
 
@@ -410,6 +487,7 @@ public class CompanyJobContext {
 	public static void main(String[] args) {
 		String url = "http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=4200,4300,0300&industrytype=22&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0%2C0&radius=-1&ord_field=0&list_type=1&fromType=14";
 		System.out.println(getNewUrlPage(url, 99));
+
 		// while (true) {
 		// doCount("test");
 		// }
@@ -470,28 +548,29 @@ public class CompanyJobContext {
 		return searchPagesWP.size();
 	}
 
-	public static List<String> getJobsURL() {
-		return jobsURL;
-	}
-
-	public static List<String> getPagesURL() {
-		return pagesURL;
-	}
-
-	public static int getJobsURLSize() {
-		return jobsURL.size();
-	}
-
-	public static List<WebPages> getJobsWP() {
-		return jobsWP;
-	}
-
-	public static List<WebPages> getSearchListWP() {
-		return searchListWP;
+	public static int getJobsSize() {
+		return jobsWP.size();
 	}
 
 	public static int getSearchListSize() {
 		return searchListWP.size();
+	}
+
+	public static void setSearchResults(List<SearchResult> searchResults) {
+		CompanyJobContext.searchResults = searchResults;
+	}
+
+	public static int getSearchResultSize() {
+		return searchResults.size();
+	}
+
+	public static SearchResult getSearchResult(String url) {
+		return searchResultMap.get(url);
+	}
+
+	public static void addPagesURL(String url, WebPages wp) {
+		pagesMap.put(url, wp);
+		searchPagesWP.add(wp);
 	}
 
 }

@@ -10,8 +10,12 @@ import org.apache.commons.logging.LogFactory;
 
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.spring.SpringContext;
+import com.yesibc.core.utils.DateUtils;
 import com.yesibc.job51.common.ClawerConstants;
+import com.yesibc.job51.dao.SearchResultDao;
 import com.yesibc.job51.dao.WebPagesDao;
+import com.yesibc.job51.model.Company;
+import com.yesibc.job51.model.SearchResult;
 import com.yesibc.job51.model.WebPages;
 import com.yesibc.job51.web.support.ErrorHandler;
 import com.yesibc.job51.web.support.LocateCompanyInfo;
@@ -110,30 +114,55 @@ public class ParseSearchList {
 		int pages = total % ClawerConstants.PAGESIZE_JOBS == 0 ? total / ClawerConstants.PAGESIZE_JOBS
 				: (total / ClawerConstants.PAGESIZE_JOBS) + 1;
 		String url = processContext.getUrl();
-		
-		
+
+		saveReults2DB(total, pages, url);
+
+		/**
+		 * <pre>
+		 * 如果cache中存在该job,根据时间，更改status状态。 
+		 * 如果cache中不存在该job,则从DB取.
+		 * 如果DB也不存在，则保存到cache和DB。
+		 * 如果DB中存在，则保存到cache，根据时间决定是否要更改status状态并更新到DB。
+		 * </pre>
+		 */
+		Date date = new Date();
 		List<WebPages> wps = new ArrayList<WebPages>();
 		for (int i = 2; i <= pages; i++) {
 			url = CompanyJobContext.getNewUrlPage(url, i);
-			if (CompanyJobContext.getPagesURL().contains(url)) {
+
+			WebPages wp = null;
+			if (CompanyJobContext.pagesMap.get(url) != null) {
+				wp = CompanyJobContext.pagesMap.get(url);
+				if (WebPages.STATUS_OK.equals(wp.getStatus())
+						&& DateUtils.substractDate(wp.getUpdateDate(), date) > Company.UPDATE_DAYS) {
+					wp.setRequestId(ClawerConstants.REQUEST_ID);
+					wp.setUpdateDate(date);
+					wp.setStatus(WebPages.STATUS_KO);
+				}
 				continue;
 			}
 
-			WebPages wp = new WebPages();
-			wp.setUrl(url);
-			Date date = new Date();
-			if (!existInDB(wp)) {
+			wp = existInDB(url);
+
+			if (wp != null) {
+				if (WebPages.STATUS_OK.equals(wp.getStatus())
+						&& DateUtils.substractDate(wp.getUpdateDate(), date) > Company.UPDATE_DAYS) {
+					wp.setRequestId(ClawerConstants.REQUEST_ID);
+					wp.setStatus(WebPages.STATUS_KO);
+					wp.setUpdateDate(date);
+				}
+			} else {
+				wp = new WebPages();
+				wp.setUrl(url);
+				wp.setPageType(WebPages.PAGE_TYPE_SEARCH_PAGES);
 				wp.setCreateDate(date);
+				wp.setRequestId(ClawerConstants.REQUEST_ID);
+				wp.setUpdateDate(date);
+				wp.setStatus(WebPages.STATUS_KO);
+				wps.add(wp);
 			}
 
-			wp.setUpdateDate(date);
-			wp.setPageType(WebPages.PAGE_TYPE_SEARCH_PAGES);
-			wp.setRequestId(ClawerConstants.REQUEST_ID);
-			wp.setStatus(WebPages.STATUS_KO);
-
-			wps.add(wp);
-			CompanyJobContext.putSearchPages2Conext(wp);
-			CompanyJobContext.getPagesURL().add(url);
+			CompanyJobContext.addPagesURL(url, wp);
 		}
 
 		LogHandler.info(processContext.getLogTitle() + " [" + processContext.getBrowser().getURL()
@@ -142,16 +171,32 @@ public class ParseSearchList {
 		return wps;
 	}
 
-	private static boolean existInDB(WebPages wp) {
+	private static void saveReults2DB(int total, int pages, String url) {
+		if (!ClawerConstants.TEST_DAO) {
+			SearchResultDao searchResultDao = (SearchResultDao) SpringContext.getBean("searchResultDao");
+			SearchResult sr = new SearchResult();
+			Date date = new Date();
+			sr.setCreateDate(date);
+			sr.setRequestId(ClawerConstants.REQUEST_ID);
+			sr.setStatus(SearchResult.STATUS_KO);
+			sr.setTotPages(pages);
+			sr.setTotRecords(total);
+			sr.setUpdateDate(date);
+			sr.setUrlAddr(url);
+			searchResultDao.save(sr);
+		}
+
+	}
+
+	private static WebPages existInDB(String url) {
 		if (!ClawerConstants.TEST_DAO) {
 			WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
-			List<WebPages> searchPagesWP = webPagesDao.findByNameValue(WebPages.class, "url", wp.getUpdateDate());
+			List<WebPages> searchPagesWP = webPagesDao.findByNameValue(WebPages.class, "url", url);
 			if (!CollectionUtils.isEmpty(searchPagesWP)) {
-				wp = searchPagesWP.get(0);
-				return true;
+				return searchPagesWP.get(0);
 			}
 		}
-		return false;
+		return null;
 	}
 
 }

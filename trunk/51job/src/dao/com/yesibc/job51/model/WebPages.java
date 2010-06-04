@@ -25,6 +25,8 @@ public class WebPages implements java.io.Serializable {
 	private String url;
 	private String status;
 	private Date createDate;
+	private Date updateDate;
+	private String memo;
 
 	public Date getCreateDate() {
 		return createDate;
@@ -33,8 +35,6 @@ public class WebPages implements java.io.Serializable {
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
-
-	private Date updateDate;
 
 	public Long getId() {
 		return id;
@@ -88,6 +88,14 @@ public class WebPages implements java.io.Serializable {
 	public String toString() {
 		return "Pages [id=" + id + ", pageType=" + pageType + ", requestId=" + requestId + ", status=" + status
 				+ ", updateDate=" + updateDate + ", url=" + url + "]";
+	}
+
+	public String getMemo() {
+		return memo;
+	}
+
+	public void setMemo(String memo) {
+		this.memo = memo;
 	}
 
 }

@@ -38,8 +38,21 @@
 
 		<property name="updateDate" type="timestamp">
 			<column name="UPDATE_DATE">
+				<comment>建立时间</comment>
+			</column>
+		</property>
+
+		<property name="updateDate" type="timestamp">
+			<column name="UPDATE_DATE">
 				<comment>更新时间</comment>
 			</column>
 		</property>
+		
+		<property name="memo" type="java.lang.String">
+			<column name="MEMO" length="50">
+				<comment>备注</comment>
+			</column>
+		</property>
+		
 	</class>
 </hibernate-mapping>
