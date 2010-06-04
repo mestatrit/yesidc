@@ -14,9 +14,11 @@ import com.yesibc.job51.web.support.WebRenderEntity;
 public class TestWebRenderContext {
 
 	public static void main(String[] args) {
+		System.out.println(CompanyJobContext.getJobsSize());
+		
 		CompanyJobContext.initSearchList(null);
 		for (int thread = 0; thread < 20; thread++) {
-			SearchListEngine sce = new SearchListEngine("SearchList#" + thread, CompanyJobContext.getSearchListWP()
+			SearchListEngine sce = new SearchListEngine("SearchList#" + thread, CompanyJobContext.searchListWP
 					.get(thread), thread);
 			sce.start();
 		}
