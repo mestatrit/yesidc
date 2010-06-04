@@ -16,8 +16,8 @@ public class SearchResult implements java.io.Serializable {
 	private String requestId;
 	private String urlCode;
 	private String urlAddr;
-	private String totRecords;
-	private String totPages;
+	private int totRecords;
+	private int totPages;
 	private String status;
 	private Date createDate;
 	private Date updateDate;
@@ -46,19 +46,19 @@ public class SearchResult implements java.io.Serializable {
 		this.urlAddr = urlAddr;
 	}
 
-	public String getTotRecords() {
+	public int getTotRecords() {
 		return totRecords;
 	}
 
-	public void setTotRecords(String totRecords) {
+	public void setTotRecords(int totRecords) {
 		this.totRecords = totRecords;
 	}
 
-	public String getTotPages() {
+	public int getTotPages() {
 		return totPages;
 	}
 
-	public void setTotPages(String totPages) {
+	public void setTotPages(int totPages) {
 		this.totPages = totPages;
 	}
 

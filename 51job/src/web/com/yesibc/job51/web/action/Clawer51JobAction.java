@@ -89,16 +89,8 @@ public class Clawer51JobAction extends BaseAction2Support {
 			return SUCCESS;
 		}
 
-		String requestId = null;
-		if (ClawerConstants.TEST_WEB_REQUEST) {
-			requestId = String.valueOf(start);
-		} else {
-			requestId = getParameter("requestId");
-		}
-		if (requestId == null) {
-			requestId = String.valueOf(start);
-			log.info("Request id from client is null.Generate:" + requestId);
-		}
+		String requestId = DateUtils.dateToString(new Date(), DateUtils.DAY_YMD) + "_"
+				+ (System.currentTimeMillis() + "").substring(7, 13);
 
 		ClawerConstants.REQUEST_ID = requestId;
 		String reqLog = "requestId[" + requestId + "]";
@@ -133,7 +125,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 	private void checking(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
 		log.info(reqLog + " Start checking!==========");
-		for (Iterator<WebPages> it = CompanyJobContext.getSearchListWP().iterator(); it.hasNext();) {
+		for (Iterator<WebPages> it = CompanyJobContext.searchListWP.iterator(); it.hasNext();) {
 			WebPages wp = it.next();
 			if (WebPages.STATUS_OK.equals(wp.getStatus())) {
 				it.remove();
@@ -146,7 +138,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			parseSearchList(threadNumber, requestId, reqLog);
 		}
 
-		for (Iterator<WebPages> it = CompanyJobContext.getSearchPagesWP().iterator(); it.hasNext();) {
+		for (Iterator<WebPages> it = CompanyJobContext.searchPagesWP.iterator(); it.hasNext();) {
 			WebPages wp = it.next();
 			if (WebPages.STATUS_OK.equals(wp.getStatus())) {
 				it.remove();
@@ -158,7 +150,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			parseSearchPages(requestId, reqLog, threadNumber);
 		}
 
-		for (Iterator<WebPages> it = CompanyJobContext.getJobsWP().iterator(); it.hasNext();) {
+		for (Iterator<WebPages> it = CompanyJobContext.jobsWP.iterator(); it.hasNext();) {
 			WebPages wp = it.next();
 			if (WebPages.STATUS_OK.equals(wp.getStatus())) {
 				it.remove();
@@ -252,7 +244,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 					// doing
 					SearchJobDetailEngine sce = new SearchJobDetailEngine("JobDetails-loop-" + loop + "#"
 							+ totalThreadTag + totalThreads + "-" + thread + "].CircleTimes[" + circleTimes + "-"
-							+ circleTime + currentOfToI + size + "-" + current + endTag, CompanyJobContext.getJobsWP()
+							+ circleTime + currentOfToI + size + "-" + current + endTag, CompanyJobContext.jobsWP
 							.get(current), thread);
 					sce.start();
 					sjdes.add(sce);
@@ -405,7 +397,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 					// doing
 					SearchListEngine sce = new SearchListEngine("SearchList#" + totalThreadTag + totalThreads + "-"
 							+ thread + "].CircleTimes[" + circleTimes + "-" + circleTime + currentOfToI + size + "-"
-							+ current + endTag, CompanyJobContext.getSearchListWP().get(current), thread);
+							+ current + endTag, CompanyJobContext.searchListWP.get(current), thread);
 					sce.start();
 					spes.add(sce);
 					current++;
@@ -622,7 +614,8 @@ public class Clawer51JobAction extends BaseAction2Support {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(DateUtils.dateToString(new Date(), DateUtils.DAY_YMD) + "_"
-				+ (System.currentTimeMillis() + "").substring(7,13));
+		long lo = System.currentTimeMillis();
+		System.out.println(lo);
+		System.out.println(DateUtils.dateToString(new Date(), DateUtils.DAY_YMD) + "_" + (lo + "").substring(7, 13));
 	}
 }

@@ -37,7 +37,7 @@ public class WebPagesDaoImpl extends HibernateEntityDao<WebPages> implements Web
 		for (WebPages wp : wps) {
 			i++;
 			session.save(wp);
-			if (i % 5 == 0) {
+			if (i % 200 == 0) {
 				session.flush();
 				session.clear();
 			}
