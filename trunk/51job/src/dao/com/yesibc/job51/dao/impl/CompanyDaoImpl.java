@@ -13,8 +13,10 @@ import org.hibernate.criterion.Restrictions;
 
 import com.yesibc.core.dao.HibernateEntityDao;
 import com.yesibc.core.exception.ApplicationException;
+import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.dao.CompanyDao;
 import com.yesibc.job51.model.ComAppend;
+import com.yesibc.job51.model.ComEmail;
 import com.yesibc.job51.model.Company;
 
 @SuppressWarnings("deprecation")
@@ -89,6 +91,15 @@ public class CompanyDaoImpl extends HibernateEntityDao<Company> implements Compa
 		Criteria criteria = getSession().createCriteria(Company.class);
 		criteria.add(Restrictions.ne("loadOK", Company.LOAD_OK));
 
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ComEmail> getComEmails(String email) throws ApplicationException {
+		Criteria criteria = getSession().createCriteria(ComEmail.class);
+		if (!StringUtils.isEmpty(email)) {
+			criteria.add(Restrictions.eq("email", email));
+		}
 		return criteria.list();
 	}
 

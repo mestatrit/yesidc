@@ -14,7 +14,6 @@ import com.yesibc.core.utils.DateUtils;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.dao.SearchResultDao;
 import com.yesibc.job51.dao.WebPagesDao;
-import com.yesibc.job51.model.Company;
 import com.yesibc.job51.model.SearchResult;
 import com.yesibc.job51.model.WebPages;
 import com.yesibc.job51.web.support.ErrorHandler;
@@ -119,8 +118,8 @@ public class ParseSearchList {
 
 		/**
 		 * <pre>
-		 * 如果cache中存在该job,根据时间，更改status状态。 
-		 * 如果cache中不存在该job,则从DB取.
+		 * 如果cache中存在该page,根据时间，更改status状态。 
+		 * 如果cache中不存在该page,则从DB取.
 		 * 如果DB也不存在，则保存到cache和DB。
 		 * 如果DB中存在，则保存到cache，根据时间决定是否要更改status状态并更新到DB。
 		 * </pre>
@@ -134,7 +133,7 @@ public class ParseSearchList {
 			if (CompanyJobContext.pagesMap.get(url) != null) {
 				wp = CompanyJobContext.pagesMap.get(url);
 				if (WebPages.STATUS_OK.equals(wp.getStatus())
-						&& DateUtils.substractDate(wp.getUpdateDate(), date) > Company.UPDATE_DAYS) {
+						&& DateUtils.substractDate(wp.getUpdateDate(), date) > ClawerConstants.EXPIRED_DAYS) {
 					wp.setRequestId(ClawerConstants.REQUEST_ID);
 					wp.setUpdateDate(date);
 					wp.setStatus(WebPages.STATUS_KO);
@@ -146,7 +145,7 @@ public class ParseSearchList {
 
 			if (wp != null) {
 				if (WebPages.STATUS_OK.equals(wp.getStatus())
-						&& DateUtils.substractDate(wp.getUpdateDate(), date) > Company.UPDATE_DAYS) {
+						&& DateUtils.substractDate(wp.getUpdateDate(), date) > ClawerConstants.EXPIRED_DAYS) {
 					wp.setRequestId(ClawerConstants.REQUEST_ID);
 					wp.setStatus(WebPages.STATUS_KO);
 					wp.setUpdateDate(date);

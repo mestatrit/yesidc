@@ -65,7 +65,8 @@ public class ParseJobdetail {
 			}
 
 			if (company == null) {
-				throw new ApplicationException(processContext.getLogTitle() + " Get company is null!");
+				throw new ApplicationException(processContext.getLogTitle() + " Get company is null! Company is "
+						+ companyId);
 			}
 			CompanyJobContext.companies.put(companyId, company);
 		}

@@ -38,13 +38,13 @@
 
 		<property name="updateDate" type="timestamp">
 			<column name="UPDATE_DATE">
-				<comment>建立时间</comment>
+				<comment>更新时间</comment>
 			</column>
 		</property>
 
-		<property name="updateDate" type="timestamp">
-			<column name="UPDATE_DATE">
-				<comment>更新时间</comment>
+		<property name="createDate" type="timestamp">
+			<column name="CREATE_DATE">
+				<comment>建立时间</comment>
 			</column>
 		</property>
 		
