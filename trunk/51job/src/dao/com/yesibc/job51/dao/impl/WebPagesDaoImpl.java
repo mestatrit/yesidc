@@ -25,7 +25,7 @@ public class WebPagesDaoImpl extends HibernateEntityDao<WebPages> implements Web
 			criteria.add(Restrictions.eq("status", status));
 		}
 		if (fetchSize > 0) {
-			criteria.setFetchSize(fetchSize);
+			criteria.setMaxResults(fetchSize);
 		}
 
 		return criteria.list();
@@ -35,6 +35,9 @@ public class WebPagesDaoImpl extends HibernateEntityDao<WebPages> implements Web
 		Session session = getSession();
 		int i = 0;
 		for (WebPages wp : wps) {
+			if (wp.getId() != null) {
+				continue;
+			}
 			i++;
 			session.save(wp);
 			if (i % 200 == 0) {

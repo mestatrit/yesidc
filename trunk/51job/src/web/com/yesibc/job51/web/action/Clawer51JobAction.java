@@ -253,7 +253,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 				errorTimes = waitingParseJobDetailLinks(sjdes, errorTimes);
 
-				if (current % (ClawerConstants.REFRESH_INTERVAL_TIMES) == 0) {
+				if (circleTime % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER) == 0) {
 					recTimes++;
 					try {
 						WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
@@ -343,7 +343,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 				errorTimes = waitingSearchPages(sces, errorTimes);
 
-				if (current % (ClawerConstants.REFRESH_INTERVAL_TIMES) == 0) {
+				if (circleTime % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER) == 0) {
 					recTimes++;
 					try {
 						WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchPages!"
