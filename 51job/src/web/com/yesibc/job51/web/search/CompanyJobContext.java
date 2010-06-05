@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.cglib.beans.BeanCopier;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,6 +38,8 @@ import com.yesibc.job51.web.support.CompanyInfoSupport;
 import com.yesibc.job51.web.support.ErrorHandler;
 
 public class CompanyJobContext {
+
+	public final static BeanCopier ompanyCopier = BeanCopier.create(Company.class, Company.class, false);
 
 	public final static String DB_OR_REQUEST_VAL = "db";
 
@@ -294,19 +298,21 @@ public class CompanyJobContext {
 			position = url.indexOf(ClawerConstants.JOB_URL_POSTFIX);
 			jobCode = url.substring(ClawerConstants.JOB_URL_PREFIX.length(), position);
 
-			WebPages wp = null;
 			if (jobsMap.get(jobCode) != null) {
-				wp = jobsMap.get(jobCode);
-				if (WebPages.STATUS_OK.equals(wp.getStatus())
-						&& DateUtils.substractDate(wp.getUpdateDate(), date) > ClawerConstants.EXPIRED_DAYS) {
-					wp.setRequestId(ClawerConstants.REQUEST_ID);
-					wp.setUpdateDate(date);
-					wp.setStatus(WebPages.STATUS_KO);
+				if (WebPages.STATUS_OK.equals(jobsMap.get(jobCode).getStatus())
+						&& DateUtils.substractDate(jobsMap.get(jobCode).getUpdateDate(), date) > ClawerConstants.EXPIRED_DAYS) {
+					jobsMap.get(jobCode).setRequestId(ClawerConstants.REQUEST_ID);
+					jobsMap.get(jobCode).setUpdateDate(date);
+					jobsMap.get(jobCode).setStatus(WebPages.STATUS_KO);
+					log.info("Job code:" + jobCode + " from cache! EXPIRED and re-get!");
+				} else {
+					log.info("Job code:" + jobCode + " from cache! Filtered!");
 				}
 				continue;
 			}
 
 			boolean have = false;
+			WebPages wp = null;
 			if (!ClawerConstants.TEST_DAO) {
 				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
 				String hql = " from WebPages wp where wp.pageType=? and wp.memo=?";
@@ -324,6 +330,10 @@ public class CompanyJobContext {
 					wp.setRequestId(ClawerConstants.REQUEST_ID);
 					wp.setStatus(WebPages.STATUS_KO);
 					wp.setUpdateDate(date);
+					wp.setMemo(jobCode);
+					log.info("Job code:" + jobCode + " from DB! EXPIRED and re-get!");
+				} else {
+					log.info("Job code:" + jobCode + " from DB! Filtered!");
 				}
 			} else {
 				wp = new WebPages();
@@ -335,17 +345,19 @@ public class CompanyJobContext {
 				wp.setUpdateDate(date);
 				wp.setStatus(WebPages.STATUS_KO);
 				wps.add(wp);
+				log.info(processContext.getLogTitle() + " Put new[" + jobCode + "," + name + "] url=[" + url
+						+ "] to job map!");
 			}
 
 			jobsWP.add(wp);
 			jobsMap.put(jobCode, wp);
-			log.info(processContext.getLogTitle() + "Put [" + jobCode + "," + name + "] url=[" + url + "] to job map!");
 		}
 
 		try {
 			if (!ClawerConstants.TEST_DAO) {
 				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
 				webPagesDao.saveByBatch(wps);
+				log.info(processContext.getLogTitle() + "Save Jobs to DB!Size:" + wps.size());
 			}
 		} catch (Exception e) {
 			ErrorHandler.errorLogAndMail("Save Pages of WebPages error!size=" + wps.size(), e);
@@ -376,19 +388,21 @@ public class CompanyJobContext {
 				continue;
 			}
 			companyId = ClawerConstants.FROM_WHERE_51JOB + "_" + CompanyInfoSupport.getCompanyCode(url);
-			Company com = new Company();
-			com.setCompanyName(name);
-			com.setUrl(url);
-			com.setCompanyCode(companyId);
 
 			synchronized (synObject) {
-				if (filterCompany(processContext, com)) {
+				if (filterCompany(processContext, companyId)) {
 					sizeFilter++;
-					log.debug(processContext.getLogTitle() + " Filtered:" + companyId + ",name=" + name);
-					com = null;
 					continue;
 				}
 			}
+
+			Company com = companies.get(companyId);
+			if (com == null) {
+				throw new ApplicationException("Get company error from Cache!companyId:" + companyId);
+			}
+			com.setCompanyName(name);
+			com.setUrl(url);
+			com.setCompanyCode(companyId);
 
 			if (com.getId() == null) {
 				CompanyInfoSupport.setCompanyCommon(com, true);
@@ -416,8 +430,7 @@ public class CompanyJobContext {
 
 	}
 
-	private static boolean filterCompany(ProcessContext processContext, Company com) {
-		String companyId = com.getCompanyCode();
+	private static boolean filterCompany(ProcessContext processContext, String companyId) {
 		/**
 		 * <pre>
 		 * A.在CACHE里,1)如果OK,则判时间不过长过滤; 2)如果KO,直接过滤.
@@ -426,18 +439,16 @@ public class CompanyJobContext {
 		 * </pre>
 		 */
 		if (companies.containsKey(companyId)) {
-			return filterInCache(companyId, com);
+			return filterInCache(processContext, companyId);
 		} else {
-			return filterInDB(processContext, companyId, com);
+			return filterInDB(processContext, companyId);
 		}
 	}
 
-	private static boolean filterInDB(ProcessContext processContext, String companyId, Company com) {
-
-		companies.put(companyId, com);
+	private static boolean filterInDB(ProcessContext processContext, String companyId) {
 
 		if (ClawerConstants.TEST_DAO) {
-			return false;
+			return true;
 		}
 
 		CompanyInfoHandlerService cih = (CompanyInfoHandlerService) SpringContext.getBean("companyInfoHandlerService");
@@ -445,42 +456,60 @@ public class CompanyJobContext {
 		try {
 			company = cih.findCompanyByCode(companyId);
 		} catch (ApplicationException e) {
-			log.error(processContext.getLogTitle() + " com code:" + com.getCompanyCode() + " com name:"
-					+ com.getCompanyName() + ".Get error from DB!", e);
+			log.error(processContext.getLogTitle() + " com code:" + companyId + ".Get error from DB!", e);
 		}
 
 		if (company != null) {
-			com = company;
-			if (Company.LOAD_OK.equals(com.getLoadOK())) {
-				Date updateDate = com.getUpdateDate();
+			companies.put(companyId, company);
+			if (Company.LOAD_OK.equals(company.getLoadOK())) {
+				Date updateDate = company.getUpdateDate();
 				if (updateDate != null) {
 					if (DateUtils.substractDate(updateDate, new Date()) > ClawerConstants.EXPIRED_DAYS) {
+						log.info(processContext.getLogTitle() + " com code:" + company.getCompanyCode()
+								+ " from DB! EXPIRED and refresh!");
 						return false;
 					}
 				} else {
+					log.info(processContext.getLogTitle() + " com code:" + company.getCompanyCode()
+							+ " from DB! UpdateDate is null and refresh!");
 					return false;
 				}
 			}
 
 			// 存在且少于30天，或者KO的，都返回TRUE
+			log.info(processContext.getLogTitle() + " com code:" + companyId + " existed in DB!Filtered!");
 			return true;
 		}
 
+		company = new Company();
+		companies.put(companyId, company);
+		log.info(processContext.getLogTitle() + " com code:" + companyId + " not in DB!");
 		return false;
 	}
 
-	private static boolean filterInCache(String companyId, Company com) {
-		com = companies.get(companyId);
+	private static boolean filterInCache(ProcessContext processContext, String companyId) {
+		Company comOld = companies.get(companyId);
+		if (comOld == null) {
+			comOld = new Company();
+			companies.put(companyId, comOld);
+			log.info(processContext.getLogTitle() + " com code:" + companyId + " not in Cache!");
+			return false;
+		}
 		if (Company.LOAD_OK.equals(companies.get(companyId).getLoadOK())) {
 			Date updateDate = companies.get(companyId).getUpdateDate();
 			if (updateDate != null) {
 				if (DateUtils.substractDate(updateDate, new Date()) > ClawerConstants.EXPIRED_DAYS) {
+					log.info(processContext.getLogTitle() + " com code:" + comOld.getCompanyCode()
+							+ " from Cache! EXPIRED and refresh!");
 					return false;
 				}
 			} else {
+				log.info(processContext.getLogTitle() + " com code:" + comOld.getCompanyCode()
+						+ " from Cache! UpdateDate is null and refresh!");
 				return false;
 			}
 		}
+		log.info(processContext.getLogTitle() + " com code:" + comOld.getCompanyCode() + " from Cache! Filtered!");
 		return true;
 	}
 

@@ -48,7 +48,7 @@ create table TC_SEARCH_RESULT
   URL_ADDR    VARCHAR2(400),
   TOT_RECORDS NUMBER(19),
   TOT_PAGES   NUMBER(19),
-  STARTUS     VARCHAR2(1),
+  STATUS     VARCHAR2(1),
   CREATE_DATE timestamp,
   UPDATE_DATE timestamp
 );
@@ -116,7 +116,7 @@ comment on column TC_EMAIL.CREATE_DATE is '创建时间';
 comment on column TC_EMAIL.UPDATE_DATE is '更新时间';
 comment on column TC_EMAIL.CREATE_USER is '创建者';
 comment on column TC_EMAIL.UPDATE_USER is '更新者';
-create table T_WEBPAGES(ID NUMBER(19) not null,PAGE_TYPE VARCHAR2(2) not null,REQUEST_ID  VARCHAR2(25), URL VARCHAR2(1000),STATUS VARCHAR2(1),UPDATE_DATE TIMESTAMP,CREATE_DATE TIMESTAMP(6), primary key (id));
+create table T_WEBPAGES(ID NUMBER(19) not null,PAGE_TYPE VARCHAR2(2) not null,REQUEST_ID  VARCHAR2(25), URL VARCHAR2(1000),STATUS VARCHAR2(1),UPDATE_DATE TIMESTAMP,CREATE_DATE TIMESTAMP(6),MEMO VARCHAR2(50), primary key (id));
 comment on column T_WEBPAGES.PAGE_TYPE  is '0-default=OK;1-search type list;2-search pages list;3-job list;';
 comment on column T_WEBPAGES.REQUEST_ID  is '操作ID';
 comment on column T_WEBPAGES.STATUS  is '1-KO;2-OK';

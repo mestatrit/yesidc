@@ -9,5 +9,5 @@
 	<bean id="webPagesDao" class="com.yesibc.job51.dao.impl.WebPagesDaoImpl" />
 	<bean id="companyDao" class="com.yesibc.job51.dao.impl.CompanyDaoImpl" />
 	<bean id="emailInfoDao" class="com.yesibc.email.dao.EmailInfoDaoImpl" />
-	<bean id="searchResultDao" class="com.yesibc.email.dao.SearchResultDaoImpl" />
+	<bean id="searchResultDao" class="com.yesibc.job51.dao.impl.SearchResultDaoImpl" />
 </beans>
