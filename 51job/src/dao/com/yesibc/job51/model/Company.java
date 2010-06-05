@@ -88,7 +88,6 @@ public class Company implements java.io.Serializable {
 	public final static String LOAD_OK = "2";
 	public final static String LOAD_KO = "1";
 
-	public final static long UPDATE_DAYS = 180;
 
 	private Company parent;
 	private List<Company> children;

@@ -11,8 +11,13 @@ import com.webrenderer.swing.dom.IElementCollection;
 import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.exception.NestedRuntimeException;
+import com.yesibc.core.spring.SpringContext;
+import com.yesibc.core.utils.CollectionUtils;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.ClawerConstants;
+import com.yesibc.job51.common.ClawerUtils;
+import com.yesibc.job51.dao.CompanyDao;
+import com.yesibc.job51.model.ComEmail;
 import com.yesibc.job51.web.search.CompanyJobContext;
 import com.yesibc.job51.web.search.ProcessContext;
 
@@ -412,6 +417,8 @@ public class LocateCompanyInfo {
 				continue;
 			}
 
+			html = ClawerUtils.removeSpace(html);
+
 			if (!emailsList.contains(html)) {
 				emailsList.add(html);
 			}
@@ -431,11 +438,8 @@ public class LocateCompanyInfo {
 				if (emails.indexOf(temp) > 0) {
 					String[] emailsArray = emails.split(temp);
 					for (String email : emailsArray) {
-						if (!CompanyJobContext.getEmails().contains(email) && StringUtils.isEmail(email)) {
+						if (checkEmail(processContext, email)) {
 							emailsOk.add(email);
-							CompanyJobContext.getEmails().add(email);
-						} else {
-							log.info(processContext.getLogTitle() + " Mail filtered:" + email);
 						}
 					}
 					split = true;
@@ -444,15 +448,38 @@ public class LocateCompanyInfo {
 			}
 
 			if (!split) {
-				if (!CompanyJobContext.getEmails().contains(emails) && StringUtils.isEmail(emails)) {
+				if (checkEmail(processContext, emails)) {
 					emailsOk.add(emails);
-					CompanyJobContext.getEmails().add(emails);
-				} else {
-					log.info(processContext.getLogTitle() + " Mail filtered:" + emails);
 				}
 			}
 		}
 		return emailsOk;
+	}
+
+	private static boolean checkEmail(ProcessContext processContext, String email) throws ApplicationException {
+		if (!StringUtils.isEmail(email)) {
+			return false;
+		} else if (CompanyJobContext.emails.contains(email)) {
+			return false;
+		} else if (!existInDB(email)) {
+			CompanyJobContext.addEmail(email);
+			return true;
+		} else {
+			log.info(processContext.getLogTitle() + " Mail filtered:" + email);
+			return false;
+		}
+	}
+
+	private static boolean existInDB(String email) throws ApplicationException {
+		if (ClawerConstants.TEST_DAO) {
+			return false;
+		}
+		CompanyDao companyDao = (CompanyDao) SpringContext.getBean("companyDao");
+		List<ComEmail> ces = companyDao.getComEmails(email);
+		if(!CollectionUtils.isEmpty(ces)){
+			return true;
+		}
+		return false;
 	}
 
 	public static String getJobEmail(ProcessContext processContext) {

@@ -63,15 +63,15 @@ public class ClawerConstants {
 
 	public final static long WAITING_TIME_SECONDS = 2;
 
-	public final static long WAITING_TIMES = 40;
-
-	public final static long WAITING_TIMES_MILLIS = 100000;
+	public final static long WAITING_TIMES = 50;
 
 	public final static long WAITING_TIMES_EXT = 5;
 
 	public final static String[] EMAIL_SPLITS = { ";", "," };
 
 	public final static String EMAIL_ERROR_SUBJECT = "Error from Project 51job!";
+
+	public final static long EXPIRED_DAYS = 180;
 
 	/**
 	 * <pre>

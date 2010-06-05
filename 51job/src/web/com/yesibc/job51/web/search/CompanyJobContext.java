@@ -130,7 +130,7 @@ public class CompanyJobContext {
 		if (jobsWP != null && !jobsWP.isEmpty()) {
 			Collections.shuffle(jobsWP);
 			for (WebPages wp : jobsWP) {
-				//下面判断是为了防止覆盖已经在CACHE里的WP
+				// 下面判断是为了防止覆盖已经在CACHE里的WP
 				if (!jobsMap.containsKey(wp.getMemo())) {
 					jobsMap.put(wp.getMemo(), wp);
 				}
@@ -159,7 +159,7 @@ public class CompanyJobContext {
 		if (searchPagesWP != null && !searchPagesWP.isEmpty()) {
 			Collections.shuffle(searchPagesWP);
 			for (WebPages wp : searchPagesWP) {
-				//下面判断是为了防止覆盖已经在CACHE里的WP
+				// 下面判断是为了防止覆盖已经在CACHE里的WP
 				if (!pagesMap.containsKey(wp.getUrl())) {
 					pagesMap.put(wp.getUrl(), wp);
 				}
@@ -298,7 +298,7 @@ public class CompanyJobContext {
 			if (jobsMap.get(jobCode) != null) {
 				wp = jobsMap.get(jobCode);
 				if (WebPages.STATUS_OK.equals(wp.getStatus())
-						&& DateUtils.substractDate(wp.getUpdateDate(), date) > Company.UPDATE_DAYS) {
+						&& DateUtils.substractDate(wp.getUpdateDate(), date) > ClawerConstants.EXPIRED_DAYS) {
 					wp.setRequestId(ClawerConstants.REQUEST_ID);
 					wp.setUpdateDate(date);
 					wp.setStatus(WebPages.STATUS_KO);
@@ -320,7 +320,7 @@ public class CompanyJobContext {
 
 			if (have) {
 				if (WebPages.STATUS_OK.equals(wp.getStatus())
-						&& DateUtils.substractDate(wp.getUpdateDate(), date) > Company.UPDATE_DAYS) {
+						&& DateUtils.substractDate(wp.getUpdateDate(), date) > ClawerConstants.EXPIRED_DAYS) {
 					wp.setRequestId(ClawerConstants.REQUEST_ID);
 					wp.setStatus(WebPages.STATUS_KO);
 					wp.setUpdateDate(date);
@@ -454,7 +454,7 @@ public class CompanyJobContext {
 			if (Company.LOAD_OK.equals(com.getLoadOK())) {
 				Date updateDate = com.getUpdateDate();
 				if (updateDate != null) {
-					if (DateUtils.substractDate(updateDate, new Date()) > Company.UPDATE_DAYS) {
+					if (DateUtils.substractDate(updateDate, new Date()) > ClawerConstants.EXPIRED_DAYS) {
 						return false;
 					}
 				} else {
@@ -474,7 +474,7 @@ public class CompanyJobContext {
 		if (Company.LOAD_OK.equals(companies.get(companyId).getLoadOK())) {
 			Date updateDate = companies.get(companyId).getUpdateDate();
 			if (updateDate != null) {
-				if (DateUtils.substractDate(updateDate, new Date()) > Company.UPDATE_DAYS) {
+				if (DateUtils.substractDate(updateDate, new Date()) > ClawerConstants.EXPIRED_DAYS) {
 					return false;
 				}
 			} else {
@@ -519,8 +519,8 @@ public class CompanyJobContext {
 	/**
 	 * @return the emails
 	 */
-	public static List<String> getEmails() {
-		return emails;
+	public static void addEmail(String email) {
+		emails.add(email);
 	}
 
 	public static int getEmailsLength() {
