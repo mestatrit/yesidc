@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import net.sf.cglib.beans.BeanCopier;
 
@@ -57,6 +59,7 @@ public class CompanyJobContext {
 	public static List<WebPages> jobsWP = new ArrayList<WebPages>();
 	public static Map<String, WebPages> pagesMap = new HashMap<String, WebPages>();
 	public static Map<String, WebPages> jobsMap = new HashMap<String, WebPages>();
+	private static Lock lock = new ReentrantLock();
 	public static List<String> emails = new ArrayList<String>();
 	public static Object synObject = new Object();
 	private static final int FETCH_RECORDS = 1000;
@@ -122,7 +125,6 @@ public class CompanyJobContext {
 		INIT_JOBS_TIMES++;
 		try {
 			jobsWP.clear();
-			jobsMap.clear();
 			if (!ClawerConstants.TEST_DAO) {
 				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
 				jobsWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_JOB_LIST, WebPages.STATUS_KO, FETCH_RECORDS);
@@ -136,7 +138,7 @@ public class CompanyJobContext {
 			for (WebPages wp : jobsWP) {
 				// 下面判断是为了防止覆盖已经在CACHE里的WP
 				if (!jobsMap.containsKey(wp.getMemo())) {
-					jobsMap.put(wp.getMemo(), wp);
+					jobsMap.put(wp.getUrl(), wp);
 				}
 			}
 			LogHandler.info("Get Jobs! times-[" + INIT_JOBS_TIMES + "] Jobs size is " + jobsMap.size());
@@ -150,7 +152,6 @@ public class CompanyJobContext {
 		INIT_PAGES_TIMES++;
 		try {
 			searchPagesWP.clear();
-			pagesMap.clear();
 			if (!ClawerConstants.TEST_DAO) {
 				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
 				searchPagesWP = webPagesDao.getWebPagesByType(WebPages.PAGE_TYPE_SEARCH_PAGES, WebPages.STATUS_KO,
@@ -298,12 +299,12 @@ public class CompanyJobContext {
 			position = url.indexOf(ClawerConstants.JOB_URL_POSTFIX);
 			jobCode = url.substring(ClawerConstants.JOB_URL_PREFIX.length(), position);
 
-			if (jobsMap.get(jobCode) != null) {
-				if (WebPages.STATUS_OK.equals(jobsMap.get(jobCode).getStatus())
-						&& DateUtils.substractDate(jobsMap.get(jobCode).getUpdateDate(), date) > ClawerConstants.EXPIRED_DAYS) {
-					jobsMap.get(jobCode).setRequestId(ClawerConstants.REQUEST_ID);
-					jobsMap.get(jobCode).setUpdateDate(date);
-					jobsMap.get(jobCode).setStatus(WebPages.STATUS_KO);
+			if (jobsMap.get(url) != null) {
+				if (WebPages.STATUS_OK.equals(jobsMap.get(url).getStatus())
+						&& DateUtils.substractDate(jobsMap.get(url).getUpdateDate(), date) > ClawerConstants.EXPIRED_DAYS) {
+					jobsMap.get(url).setRequestId(ClawerConstants.REQUEST_ID);
+					jobsMap.get(url).setUpdateDate(date);
+					jobsMap.get(url).setStatus(WebPages.STATUS_KO);
 					log.info("Job code:" + jobCode + " from cache! EXPIRED and re-get!");
 				} else {
 					log.info("Job code:" + jobCode + " from cache! Filtered!");
@@ -311,12 +312,24 @@ public class CompanyJobContext {
 				continue;
 			}
 
-			boolean have = false;
 			WebPages wp = null;
+			try {
+				lock.lock();
+				if (jobsMap.get(url) == null) {
+					wp = new WebPages();
+					jobsMap.put(url, wp);
+				} else {
+					continue;
+				}
+			} finally {
+				lock.unlock();
+			}
+
+			boolean have = false;
 			if (!ClawerConstants.TEST_DAO) {
 				WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
-				String hql = " from WebPages wp where wp.pageType=? and wp.memo=?";
-				String[] strs = { WebPages.PAGE_TYPE_JOB_LIST, jobCode };
+				String hql = " from WebPages wp where wp.pageType=? and url=?";
+				String[] strs = { WebPages.PAGE_TYPE_JOB_LIST, url };
 				List<WebPages> wpsOld = webPagesDao.findObjectList(hql, strs, false);
 				if (!CollectionUtils.isEmpty(wpsOld)) {
 					have = true;
@@ -336,7 +349,6 @@ public class CompanyJobContext {
 					log.info("Job code:" + jobCode + " from DB! Filtered!");
 				}
 			} else {
-				wp = new WebPages();
 				wp.setUrl(url);
 				wp.setPageType(WebPages.PAGE_TYPE_JOB_LIST);
 				wp.setCreateDate(date);
@@ -350,7 +362,7 @@ public class CompanyJobContext {
 			}
 
 			jobsWP.add(wp);
-			jobsMap.put(jobCode, wp);
+			jobsMap.put(url, wp);
 		}
 
 		try {
