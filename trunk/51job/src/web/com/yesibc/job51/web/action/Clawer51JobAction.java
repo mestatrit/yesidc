@@ -218,6 +218,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			int recTimes = 0;
 			int errorTimes = 0;
 			int loop = 0;
+			int currentOfAll = 0;
 			List<SearchJobDetailEngine> sjdes = new ArrayList<SearchJobDetailEngine>();
 			while (current < size) {
 				if (current == size) {
@@ -249,11 +250,12 @@ public class Clawer51JobAction extends BaseAction2Support {
 					sce.start();
 					sjdes.add(sce);
 					current++;
+					currentOfAll++;
 				}
 
 				errorTimes = waitingParseJobDetailLinks(sjdes, errorTimes);
 
-				if (circleTime % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER) == 0) {
+				if (currentOfAll % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER * threadNumber) == 0) {
 					recTimes++;
 					try {
 						WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
@@ -308,6 +310,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			int recTimes = 0;
 			int errorTimes = 0;
 			int loop = 0;
+			int currentOfAll = 0;
 			List<SearchPagesEngine> sces = new ArrayList<SearchPagesEngine>();
 			while (current <= size) {
 				if (current == size) {
@@ -339,11 +342,12 @@ public class Clawer51JobAction extends BaseAction2Support {
 					sce.start();
 					sces.add(sce);
 					current++;
+					currentOfAll++;
 				}
 
 				errorTimes = waitingSearchPages(sces, errorTimes);
 
-				if (circleTime % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER) == 0) {
+				if (currentOfAll % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER * threadNumber) == 0) {
 					recTimes++;
 					try {
 						WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchPages!"
@@ -387,6 +391,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			int circleTime = 0;
 			int recTimes = 0;
 			int errorTimes = 0;
+			int currentOfAll = 0;
 			List<SearchListEngine> spes = new ArrayList<SearchListEngine>();
 			while (current < size) {
 				circleTime++;
@@ -401,11 +406,12 @@ public class Clawer51JobAction extends BaseAction2Support {
 					sce.start();
 					spes.add(sce);
 					current++;
+					currentOfAll++;
 				}
 
 				errorTimes = waitingSearchList(spes, errorTimes);
 
-				if (current % (ClawerConstants.REFRESH_INTERVAL_TIMES) == 0) {
+				if (currentOfAll % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER * threadNumber) == 0) {
 					recTimes++;
 					try {
 						WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchList!"
@@ -463,7 +469,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 				}
 
 				if (i > (ClawerConstants.WAITING_TIMES * 2)) {
-					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing ["
+					ErrorHandler.error(spe.getTitle() + " Waiting thread runing ["
 							+ ((System.currentTimeMillis() - l) / 1000) + "]s. OverTime!. URL|" + spe.getUrl());
 					it.remove();
 					spe = null;
@@ -524,7 +530,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 				}
 
 				if (i > (ClawerConstants.WAITING_TIMES * 2)) {
-					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing ["
+					ErrorHandler.error(spe.getTitle() + " Waiting thread runing ["
 							+ ((System.currentTimeMillis() - l) / 1000) + "]s. OverTime!. URL|" + spe.getUrl());
 					it.remove();
 					spe = null;
@@ -585,7 +591,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 				}
 
 				if (i > (ClawerConstants.WAITING_TIMES * 2)) {
-					ErrorHandler.errorLogAndMail(spe.getTitle() + " Waiting thread runing ["
+					ErrorHandler.error(spe.getTitle() + " Waiting thread runing ["
 							+ ((System.currentTimeMillis() - l) / 1000) + "]s. OverTime!. URL|" + spe.getUrl());
 					it.remove();
 					spe = null;

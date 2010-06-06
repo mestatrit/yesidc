@@ -50,7 +50,7 @@ public class BrowserSupport {
 		if (html.indexOf(htmlTag) > -1) {
 			log.error(processContext.getLogTitle() + logMsg);
 			finish.clear();
-			processContext.getBrowser().reload(0);
+			processContext.getBrowser().loadURL(processContext.getUrl());
 			if (!waiting(processContext, index, finish)) {
 				log.error(processContext.getLogTitle() + " Redo waiting error!" + logMsg);
 				throw new ApplicationException(ErrorHandler.WAIT_ERROR_SYSTEM + " Redo waiting error!" + logMsg);

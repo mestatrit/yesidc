@@ -63,7 +63,7 @@ public class ClawerConstants {
 
 	public final static long WAITING_TIME_SECONDS = 2;
 
-	public final static long WAITING_TIMES = 50;
+	public final static long WAITING_TIMES = 65;
 
 	public final static long WAITING_TIMES_EXT = 5;
 
