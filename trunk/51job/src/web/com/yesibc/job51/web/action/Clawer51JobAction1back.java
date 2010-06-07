@@ -22,13 +22,13 @@ import com.yesibc.job51.web.search.SearchPagesEngine;
 import com.yesibc.job51.web.support.ErrorHandler;
 import com.yesibc.job51.web.support.WebLinkSupport;
 
-public class Clawer51JobAction extends BaseAction2Support {
+public class Clawer51JobAction1back extends BaseAction2Support {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8228026649441186987L;
-	private static Log log = LogFactory.getLog(Clawer51JobAction.class);
+	private static Log log = LogFactory.getLog(Clawer51JobAction1back.class);
 	private static String finishTag = "false";
 	private static long callTimes = System.currentTimeMillis();
 	long i = 0;
