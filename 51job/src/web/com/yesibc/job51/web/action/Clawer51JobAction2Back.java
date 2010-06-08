@@ -2,10 +2,8 @@ package com.yesibc.job51.web.action;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
@@ -23,13 +21,13 @@ import com.yesibc.job51.web.search.SearchPagesEngine;
 import com.yesibc.job51.web.support.ErrorHandler;
 import com.yesibc.job51.web.support.WebLinkSupport;
 
-public class Clawer51JobAction extends BaseAction2Support {
+public class Clawer51JobAction2Back extends BaseAction2Support {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8228026649441186987L;
-	private static Log log = LogFactory.getLog(Clawer51JobAction.class);
+	private static Log log = LogFactory.getLog(Clawer51JobAction2Back.class);
 	private static String finishTag = "false";
 	private static long callTimes = System.currentTimeMillis();
 	long i = 0;
@@ -41,7 +39,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 	private final static String currentOfToI = "]#All-Cur[";
 
 	private final static String endTag = "].";
-	private final static int ERROR_TIMES = 16;
+	private final static int ERROR_TIMES = 9;
 	private final static String FATAL_TAG = "=====================***************================";
 
 	// 某一线程总任务/当前任务
@@ -205,57 +203,68 @@ public class Clawer51JobAction extends BaseAction2Support {
 			if (ClawerConstants.TEST_WEB) {
 				size = ClawerConstants.TEST_WEB_NUM;
 			}
+			int circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
 
 			int totalThreads = threadNumber;
 			if (size < threadNumber) {
 				totalThreads = size;
 			}
 
-			log.info(reqLog + "Parse job start!threadNumber[" + threadNumber + "]job links size[" + size + "].");
+			log.info(reqLog + "Parse job detail links start!threadNumber[" + threadNumber + "]job links size[" + size
+					+ "]circleTimes[" + circleTimes + "]");
 
 			int current = 0;
+			int circleTime = 0;
 			int recTimes = 0;
 			int errorTimes = 0;
 			int loop = 0;
 			int currentOfAll = 0;
-
-			Map<Integer, SearchJobDetailEngine> jobs = new HashMap<Integer, SearchJobDetailEngine>();
-
-			while (true) {
+			List<SearchJobDetailEngine> sjdes = new ArrayList<SearchJobDetailEngine>();
+			while (current < size) {
 				if (current == size) {
 					if (ClawerConstants.TEST_WEB) {
 						break;
 					}
-					log.info(reqLog + "#SearchJob#This time-" + (++loop) + " of Jobs is used out.Re-get from DB!");
-					CompanyJobContext.intJobs();
-					size = CompanyJobContext.getJobsSize();
+					log.info(reqLog + "#JobDetails#This time-" + circleTime + " of Jobs is used out.Re-get from DB!");
+					CompanyJobContext.intPages();
+					size = CompanyJobContext.getSearchPagesSize();
 					if (size < 1) {
 						break;
 					}
 					current = 0;
+					circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
+					circleTime = 0;
+					loop++;
 				}
 
+				circleTime++;
 				for (int thread = 0; thread < threadNumber; thread++) {
 					if (current >= size) {
 						break;
 					}
-					SearchJobDetailEngine sce = jobs.get(thread);
-					if (sce != null && sce.isAlive()) {
-						continue;
-					}
-					sce = new SearchJobDetailEngine("SearchJob-loop-" + loop + "#" + totalThreadTag + totalThreads
-							+ "-" + thread + "]." + currentOfToI + size + "-" + current + endTag,
-							CompanyJobContext.jobsWP.get(current), thread);
+					// doing
+					SearchJobDetailEngine sce = new SearchJobDetailEngine("JobDetails-loop-" + loop + "#"
+							+ totalThreadTag + totalThreads + "-" + thread + "].CircleTimes[" + circleTimes + "-"
+							+ circleTime + currentOfToI + size + "-" + current + endTag, CompanyJobContext.jobsWP
+							.get(current), thread);
 					sce.start();
-					jobs.put(thread, sce);
+					sjdes.add(sce);
 					current++;
 					currentOfAll++;
 				}
 
-				errorTimes = waitingParseJobs(jobs, errorTimes);
+				errorTimes = waitingParseJobDetailLinks(sjdes, errorTimes);
 
-				recTimes = reConn(threadNumber, recTimes, currentOfAll);
-
+				if (currentOfAll % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER * threadNumber) == 0) {
+					recTimes++;
+					try {
+						WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
+								+ "REC By parseJobDetails!" + recTimes + "!", false);
+					} catch (Exception e) {
+						log.error(ClawerConstants.PROC_LOG + "REC By parseJobDetails!ERROR!recTimes=" + recTimes + ".",
+								e);
+					}
+				}
 			}
 
 		} catch (Exception e) {
@@ -283,64 +292,76 @@ public class Clawer51JobAction extends BaseAction2Support {
 				size = ClawerConstants.TEST_WEB_NUM;
 			}
 
+			int circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
+
 			int totalThreads = threadNumber;
 			if (size < threadNumber) {
 				totalThreads = size;
 			}
 
 			log.info(reqLog + "Parse SearchPages start!threadNumber[" + threadNumber + "]company links size[" + size
-					+ "].");
+					+ "]circleTimes[" + circleTimes + "]");
 
-			l = System.currentTimeMillis();
+			l = System.currentTimeMillis() - l;
+			log.info(reqLog + "SearchPages shffle!Times[" + l / (1000 * 60) + "s]");
 
 			int current = 0;
+			int circleTime = 0;
 			int recTimes = 0;
 			int errorTimes = 0;
 			int loop = 0;
 			int currentOfAll = 0;
-			Map<Integer, SearchPagesEngine> sces = new HashMap<Integer, SearchPagesEngine>();
+			List<SearchPagesEngine> sces = new ArrayList<SearchPagesEngine>();
 
-			while (true) {
+			while (current <= size) {
 				if (current == size) {
 					if (ClawerConstants.TEST_WEB) {
 						break;
 					}
-					log.info(reqLog + "#SearchPages#This time-" + (++loop) + " of Pages is used out.Re-get from DB!");
+					log.info(reqLog + "#SearchPages#This time-" + circleTime + " of Pages is used out.Re-get from DB!");
 					CompanyJobContext.intPages();
 					size = CompanyJobContext.getSearchPagesSize();
 					if (size < 1) {
 						break;
 					}
 					current = 0;
+					circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
+					circleTime = 0;
+					loop++;
 				}
 
+				circleTime++;
 				for (int thread = 0; thread < threadNumber; thread++) {
 					if (current >= size) {
 						break;
 					}
-					SearchPagesEngine sce = sces.get(thread);
-					if (sce != null && sce.isAlive()) {
-						continue;
-					}
-					sce = new SearchPagesEngine("SearchPages-loop-" + loop + "#" + totalThreadTag + totalThreads + "-"
-							+ thread + "]." + currentOfToI + size + "-" + current + endTag,
-							CompanyJobContext.searchPagesWP.get(current), thread);
+					// doing
+					SearchPagesEngine sce = new SearchPagesEngine("SearchPages-loop-" + loop + "#" + totalThreadTag
+							+ totalThreads + "-" + thread + "].CircleTimes[" + circleTimes + "-" + circleTime
+							+ currentOfToI + size + "-" + current + endTag, CompanyJobContext.getSearchPagesWP().get(
+							current), thread);
 					sce.start();
-					sces.put(thread, sce);
+					sces.add(sce);
 					current++;
 					currentOfAll++;
 				}
 
 				errorTimes = waitingSearchPages(sces, errorTimes);
 
-				recTimes = reConn(threadNumber, recTimes, currentOfAll);
-
+				if (currentOfAll % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER * threadNumber) == 0) {
+					recTimes++;
+					try {
+						WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchPages!"
+								+ recTimes + "!", false);
+					} catch (Exception e) {
+						log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!recTimes=" + recTimes + ".", e);
+					}
+				}
 			}
 		} catch (Exception e) {
 			error++;
 			ErrorHandler.errorLogAndMail("SearchPages error in Action:", e);
 		}
-
 		l = System.currentTimeMillis() - l;
 		log.info("parseSearchPages OK.Times[" + l / (1000 * 60) + "s]. Error[" + error + "]Search List="
 				+ CompanyJobContext.getSearchListSize() + ",Search Pages=" + CompanyJobContext.getSearchPagesSize()
@@ -357,50 +378,53 @@ public class Clawer51JobAction extends BaseAction2Support {
 			if (ClawerConstants.TEST_WEB) {
 				size = ClawerConstants.TEST_WEB_NUM;
 			}
+			int circleTimes = size % threadNumber == 0 ? size / threadNumber : size / threadNumber + 1;
 
 			int totalThreads = threadNumber;
 			if (size < threadNumber) {
 				totalThreads = size;
 			}
 
-			log.info(reqLog + "Parse search list start!threadNumber[" + threadNumber + "]page size[" + size + "].");
+			log.info(reqLog + "Parse search list start!threadNumber[" + threadNumber + "]page size[" + size
+					+ "]circleTimes[" + circleTimes + "]");
 
 			int current = 0;
+			int circleTime = 0;
 			int recTimes = 0;
 			int errorTimes = 0;
 			int currentOfAll = 0;
-			int loop = 1;
-
-			Map<Integer, SearchListEngine> lists = new HashMap<Integer, SearchListEngine>();
-
-			while (true) {
-				if (current >= size) {
-					break;
-				}
-
+			List<SearchListEngine> spes = new ArrayList<SearchListEngine>();
+			while (current < size) {
+				circleTime++;
 				for (int thread = 0; thread < threadNumber; thread++) {
 					if (current >= size) {
 						break;
 					}
-					SearchListEngine sce = lists.get(thread);
-					if (sce != null && sce.isAlive()) {
-						continue;
-					}
-					sce = new SearchListEngine("SearchList-loop-" + loop + "#" + totalThreadTag + totalThreads + "-"
-							+ thread + "]." + currentOfToI + size + "-" + current + endTag,
-							CompanyJobContext.searchListWP.get(current), thread);
+					// doing
+					SearchListEngine sce = new SearchListEngine("SearchList#" + totalThreadTag + totalThreads + "-"
+							+ thread + "].CircleTimes[" + circleTimes + "-" + circleTime + currentOfToI + size + "-"
+							+ current + endTag, CompanyJobContext.searchListWP.get(current), thread);
 					sce.start();
-					lists.put(thread, sce);
+					spes.add(sce);
 					current++;
 					currentOfAll++;
 				}
 
-				errorTimes = waitingSearchList(lists, errorTimes);
+				errorTimes = waitingSearchList(spes, errorTimes);
 
-				recTimes = reConn(threadNumber, recTimes, currentOfAll);
-
+				if (currentOfAll % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER * threadNumber) == 0) {
+					recTimes++;
+					try {
+						WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchList!"
+								+ recTimes + "!", false);
+					} catch (Exception e) {
+						log.error(ClawerConstants.PROC_LOG + "REC By SearchList!ERROR!recTimes=" + recTimes + ".", e);
+					}
+				}
 			}
 
+			l = System.currentTimeMillis() - l;
+			log.info(reqLog + "Parse search list submit OK!Times[" + l / (1000 * 60) + "s]");
 		} catch (Exception e) {
 			error++;
 			ErrorHandler.errorLogAndMail("Parse search list error in Action:", e);
@@ -413,160 +437,186 @@ public class Clawer51JobAction extends BaseAction2Support {
 				+ CompanyJobContext.getCompaniesLength());
 	}
 
-	private int reConn(int threadNumber, int recTimes, int currentOfAll) {
-		if (currentOfAll % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER * threadNumber) == 0) {
-			recTimes++;
-			try {
-				WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchPages!"
-						+ recTimes + "!", false);
-			} catch (Exception e) {
-				log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!recTimes=" + recTimes + ".", e);
-			}
-		}
-		return recTimes;
-	}
-
-	private int waitingSearchList(Map<Integer, SearchListEngine> lists, int errorTimes) {
+	private int waitingSearchList(List<SearchListEngine> spes, int errorTimes) {
 		SearchListEngine spe = null;
 		boolean error = false;
 		String errorMsg = "";
-		List<Integer> keys = new ArrayList<Integer>();
-		int size = lists.size();
-		for (Map.Entry<Integer, SearchListEngine> entry : lists.entrySet()) {
-			spe = entry.getValue();
+		int errTimes = 0;
+		long l = System.currentTimeMillis();
+		for (Iterator<SearchListEngine> it = spes.iterator(); it.hasNext();) {
+			int i = 0;
+			spe = it.next();
 			if (spe.getProcessContext().isError()) {
-				++errorTimes;
+				++errTimes;
 				error = true;
-				errorMsg = errorMsg + "[" + errorTimes + "]" + spe.getProcessContext().getErrorMs();
+				errorMsg = errorMsg + "[" + errTimes + "]" + spe.getProcessContext().getErrorMs();
 			}
-			if (!spe.isAlive()) {
-				log.info(spe.getTitle() + " thread was removed OK. Left size:" + (--size));
-				spe = null;
-				keys.add(entry.getKey());
-			}
-		}
+			while (true) {
+				if (!spe.isAlive()) {
+					log.info(spe.getTitle() + " thread was removed OK.");
+					it.remove();
+					spe = null;
+					break;
+				} else {
+					i++;
+					log.debug(spe.getTitle() + " Waiting thread runing!  URL|" + spe.getUrl());
+					try {
+						Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
+					} catch (InterruptedException e) {
+						log.error(spe.getTitle() + "Waiting thread exception!", e);
+					}
+					log.debug(spe.getTitle() + " Waiting thread runing [" + i * ClawerConstants.WAITING_TIME_SECONDS
+							+ "]s. URL|" + spe.getUrl());
+				}
 
-		for (Integer i : keys) {
-			lists.remove(i);
-		}
-
-		try {
-			Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
-		} catch (InterruptedException e) {
-			log.error(spe.getTitle() + "Waiting thread exception!", e);
-		}
-
-		if (error) {
-			log.error(errorMsg);
-			if (errorTimes > ERROR_TIMES) {
-				log.fatal(FATAL_TAG + " Error too many times!");
-				System.exit(0);
-			} else {
-				try {
-					WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
-							+ "REC By SearcList when error!recTimes=" + errorTimes + ".", true);
-				} catch (Exception e) {
-					log.error(ClawerConstants.PROC_LOG + "REC By SearcList!ERROR!recTimes=" + errorTimes + ".", e);
+				if (i > (ClawerConstants.WAITING_TIMES * 2)) {
+					ErrorHandler.error(spe.getTitle() + " Waiting thread runing ["
+							+ ((System.currentTimeMillis() - l) / 1000) + "]s. OverTime!. URL|" + spe.getUrl());
+					it.remove();
+					spe = null;
+					break;
 				}
 			}
 		}
 
+		if (error) {
+			++errorTimes;
+			log.error(errorMsg);
+			if (errorTimes > ERROR_TIMES) {
+				log.fatal(FATAL_TAG + " Error too many times!");
+				System.exit(0);
+			}
+			try {
+				WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
+						+ "REC By SearchList when error!recTimes=" + errorTimes + ".", true);
+			} catch (Exception e) {
+				log.error(ClawerConstants.PROC_LOG + "REC By SearchList!ERROR!recTimes=" + errorTimes + ".", e);
+			}
+		}
+
+		log.info("Waiting Page List Threads waiting end OK.");
 		return errorTimes;
 	}
 
-	private int waitingParseJobs(Map<Integer, SearchJobDetailEngine> jobs, int errorTimes) {
+	private int waitingParseJobDetailLinks(List<SearchJobDetailEngine> jobs, int errorTimes) {
 		SearchJobDetailEngine spe = null;
 		boolean error = false;
 		String errorMsg = "";
-		List<Integer> keys = new ArrayList<Integer>();
-		int size = jobs.size();
-		for (Map.Entry<Integer, SearchJobDetailEngine> entry : jobs.entrySet()) {
-			spe = entry.getValue();
+		int errTimes = 0;
+		long l = System.currentTimeMillis();
+		for (Iterator<SearchJobDetailEngine> it = jobs.iterator(); it.hasNext();) {
+			int i = 0;
+			spe = it.next();
 			if (spe.getProcessContext().isError()) {
-				++errorTimes;
+				++errTimes;
 				error = true;
-				errorMsg = errorMsg + "[" + errorTimes + "]" + spe.getProcessContext().getErrorMs();
+				errorMsg = errorMsg + "[" + errTimes + "]" + spe.getProcessContext().getErrorMs();
 			}
-			if (!spe.isAlive()) {
-				log.info(spe.getTitle() + " thread was removed OK. Left size:" + (--size));
-				spe = null;
-				keys.add(entry.getKey());
-			}
-		}
+			while (true) {
+				if (!spe.isAlive()) {
+					log.info(spe.getTitle() + " thread was removed OK.");
+					it.remove();
+					spe = null;
+					break;
+				} else {
+					i++;
+					log.info(spe.getTitle() + " Waiting thread runing end!  URL|" + spe.getUrl());
+					try {
+						Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
+					} catch (InterruptedException e) {
+						log.error(spe.getTitle() + "Waiting thread exception!", e);
+					}
+					log.debug(spe.getTitle() + " Waiting thread runing [" + i * ClawerConstants.WAITING_TIME_SECONDS
+							+ "]s. URL|" + spe.getUrl());
+				}
 
-		for (Integer i : keys) {
-			jobs.remove(i);
-		}
-
-		try {
-			Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
-		} catch (InterruptedException e) {
-			log.error(spe.getTitle() + "Waiting thread exception!", e);
-		}
-
-		if (error) {
-			log.error(errorMsg);
-			if (errorTimes > ERROR_TIMES) {
-				log.fatal(FATAL_TAG + " Error too many times!");
-				System.exit(0);
-			} else {
-				try {
-					WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
-							+ "REC By SearchPages when error!recTimes=" + errorTimes + ".", true);
-				} catch (Exception e) {
-					log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!recTimes=" + errorTimes + ".", e);
+				if (i > (ClawerConstants.WAITING_TIMES * 2)) {
+					ErrorHandler.error(spe.getTitle() + " Waiting thread runing ["
+							+ ((System.currentTimeMillis() - l) / 1000) + "]s. OverTime!. URL|" + spe.getUrl());
+					it.remove();
+					spe = null;
+					break;
 				}
 			}
 		}
 
+		if (error) {
+			++errorTimes;
+			log.error(errorMsg);
+			if (errorTimes > ERROR_TIMES) {
+				log.fatal(FATAL_TAG + " Error too many times!");
+				System.exit(0);
+			}
+			try {
+				WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
+						+ "REC By SearchJobDetails when error!recTimes=" + errorTimes + ".", true);
+			} catch (Exception e) {
+				log.error(ClawerConstants.PROC_LOG + "REC By SearchJobDetails!ERROR!recTimes=" + errorTimes + ".", e);
+			}
+		}
+
+		log.info("waitingParseJobDetailLinks waiting end OK.");
 		return errorTimes;
 	}
 
-	private int waitingSearchPages(Map<Integer, SearchPagesEngine> sces, int errorTimes) {
+	private int waitingSearchPages(List<SearchPagesEngine> sles, int errorTimes) {
 		SearchPagesEngine spe = null;
 		boolean error = false;
 		String errorMsg = "";
-		List<Integer> keys = new ArrayList<Integer>();
-		int size = sces.size();
-		for (Map.Entry<Integer, SearchPagesEngine> entry : sces.entrySet()) {
-			spe = entry.getValue();
+		int errTimes = 0;
+		long l = System.currentTimeMillis();
+		for (Iterator<SearchPagesEngine> it = sles.iterator(); it.hasNext();) {
+			int i = 0;
+			spe = it.next();
 			if (spe.getProcessContext().isError()) {
-				++errorTimes;
+				++errTimes;
 				error = true;
-				errorMsg = errorMsg + "[" + errorTimes + "]" + spe.getProcessContext().getErrorMs();
+				errorMsg = errorMsg + "[" + errTimes + "]" + spe.getProcessContext().getErrorMs();
 			}
-			if (!spe.isAlive()) {
-				log.info(spe.getTitle() + " thread was removed OK. Left size:" + (--size));
-				spe = null;
-				keys.add(entry.getKey());
-			}
-		}
+			while (true) {
+				if (!spe.isAlive()) {
+					log.info(spe.getTitle() + " thread was removed OK.");
+					it.remove();
+					spe = null;
+					break;
+				} else {
+					i++;
+					log.debug(spe.getTitle() + " Waiting thread runing!  URL|" + spe.getUrl());
+					try {
+						Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
+					} catch (InterruptedException e) {
+						log.error(spe.getTitle() + "Waiting thread exception!", e);
+					}
+					log.debug(spe.getTitle() + " Waiting thread runing [" + i * ClawerConstants.WAITING_TIME_SECONDS
+							+ "]s. URL|" + spe.getUrl());
+				}
 
-		for (Integer i : keys) {
-			sces.remove(i);
-		}
-
-		try {
-			Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
-		} catch (InterruptedException e) {
-			log.error(spe.getTitle() + "Waiting thread exception!", e);
-		}
-
-		if (error) {
-			log.error(errorMsg);
-			if (errorTimes > ERROR_TIMES) {
-				log.fatal(FATAL_TAG + " Error too many times!");
-				System.exit(0);
-			} else {
-				try {
-					WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
-							+ "REC By SearchPages when error!recTimes=" + errorTimes + ".", true);
-				} catch (Exception e) {
-					log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!recTimes=" + errorTimes + ".", e);
+				if (i > (ClawerConstants.WAITING_TIMES * 2)) {
+					ErrorHandler.error(spe.getTitle() + " Waiting thread runing ["
+							+ ((System.currentTimeMillis() - l) / 1000) + "]s. OverTime!. URL|" + spe.getUrl());
+					it.remove();
+					spe = null;
+					break;
 				}
 			}
 		}
 
+		if (error) {
+			++errorTimes;
+			log.error(errorMsg);
+			if (errorTimes > ERROR_TIMES) {
+				log.fatal(FATAL_TAG + " Error too many times!");
+				System.exit(0);
+			}
+			try {
+				WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
+						+ "REC By SearchPages when error!recTimes=" + errorTimes + ".", true);
+			} catch (Exception e) {
+				log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!recTimes=" + errorTimes + ".", e);
+			}
+		}
+
+		log.info("SearchPages waiting end OK.");
 		return errorTimes;
 	}
 

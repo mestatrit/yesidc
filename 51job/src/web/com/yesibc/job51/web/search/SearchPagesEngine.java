@@ -30,6 +30,7 @@ public class SearchPagesEngine extends Thread {
 	private String title;
 	private int index;
 	private ProcessContext processContext;
+	private long startTime = 0;
 
 	public SearchPagesEngine(String title, WebPages wp, int index) {
 		this.url = wp.getUrl();
@@ -39,6 +40,7 @@ public class SearchPagesEngine extends Thread {
 		processContext = new ProcessContext();
 		processContext.setUrl(url);
 		finish = new HashMap<String, String>();
+		startTime = System.currentTimeMillis();
 	}
 
 	public void run() {
@@ -90,5 +92,14 @@ public class SearchPagesEngine extends Thread {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
+	public long getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+
 
 }
