@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+	default-lazy-init="true">
+
+	<!--
+		会在classpath路径下找ehcache.xml配置文件 CacheManager manager = new
+		CacheManager(); 也可以根据相对文件路径来加载配置文件 CacheManager manager = new
+		CacheManager(“src/ehcache.xml”); 通过相对与类路径的位置加载 URL url =
+		getClass().getResource(“/ehcache.xml”); CacheManager manager = new
+		CacheManager(url); 通过流加载 InputSream fis = new FileInputStream(new
+		File(“src/config/ehcache.xml”).getAbsolutePath());
+	-->
+	<description>EhCache配置文件</description>
+
+	<!-- 引用ehCache的配置 -->
+	<bean id="defaultCacheManager"
+		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation">
+			<value>/cache/ehcache.xml</value>
+		</property>
+	</bean>
+
+	<!-- 定义ehCache的工厂，并设置所使用的Cache name -->
+	<bean id="ehCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheManager">
+			<ref local="defaultCacheManager" />
+		</property>
+		<property name="cacheName">
+			<value>contentInfoCache</value>
+		</property>
+	</bean>
+</beans>

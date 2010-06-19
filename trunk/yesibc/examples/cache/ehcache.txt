@@ -1,0 +1,108 @@
+Ehcache使用用例（一）
+Singleton创建方式
+Ehcache1.2版本之后，都可以使用singleton（工厂创建方法）去创建一个singleton的CacheManager实例。
+CacheManager.create();
+String[] cacheNames = CacheManager.getInstance().getCacheNames();
+使用默认配置创建CacheManager
+CacheManager manager = new CacheManager();
+String[] cacheNames = manager.getCacheNames();
+使用配置文件创建指定的CacheManager
+CacheManager manager1 = new CacheManager(“src/config/ehcache1.xml”);
+CacheManager manager2 = new CacheManager(“src/config/ehcache2.xml”);
+String[] cacheNamesForManager1 = manager1.getCacheNames();
+String[] cacheNamesForManager2 = manager2.getCacheNames();
+配置文件加载方式
+·   CacheManager manager = new CacheManager();会在classpath路径下找ehcache.xml配置文件。
+·   CacheManager manager = new CacheManager(“src/config.ehcache.xml”); 也可以根据相对文件路径来加载配置文件.
+·   通过URL加载
+URL url = getClass().getResource(“/anotherconfigurationname.xml”);
+CacheManager manager = new CacheManager(url);
+·   通过流加载
+InputSream fis = new FileInputStream(new File(“src/config/ehcache.xml”).getAbsolutePath());
+Try {
+    CacheManager manager = new CacheManager(fis);
+} finally {
+    Fis.close();
+}
+编码实现添加和缓存
+Ehcache中不仅可以用配置文件来配置缓存，而在代码中也可以实现同样的功能。
+CacheManager singletonManager = CacheManager.create();
+Cache memoryOnlyCache = new Cache(“testCache”, 50000, false, false, 8, 2);
+Cache test = singletonManager.getCache(“testCache”);
+删除只需要调用singletonManager.removeCache(“testCache”);
+Shotdown CacheManager
+在使用完Ehcache后，必须要shutdown缓存。Ehcache中有自己的关闭机制，不过最好在你的代码中显示调用CacheManager.getInstance().shutdown();
+
+Ehcache使用实例（二）
+Cache使用
+l 得到一个Cache引用
+获得一个sampleCache1的引用，从官方下载ehcache.xml，在ehcache.xml中已经有配置好的缓存，大家直接使用就可以，或是做测试，如果说真正使用的时候，最后自己手动配置一个比较好。
+Cache cache = manager.getCache(“sampleCache1”);
+l 使用Cache
+Put一个Element到cache中
+Cache cache = manager.getCache(“sampleCache1”);
+Element element = new Element(“key1”,”value1”);
+cache.put(element);
+update一个element时，只要在构造element时将相同的key传入，在调用cache.put(element)，这是Ehcache会根据key到缓存中找到对应的element并做更新。
+Cache cache = manager.getCache(“sampleCache1”)；
+Cache.put(new Element(“key1”, “value1”));
+//更新element
+Cache.put(new Element(“key1”, “value2”));
+根据key取得对应element的序列化value值
+Cache cache = manager.getCache(“sampleCache1”);
+Element element = cache.get(“key1”);
+Serializable value = element.getValue();
+根据key取得对应element的非序列化value值
+Cache cache = manager.getcache(“samplecache1”);
+Element element = cache.get(“key1”);
+Ojbect value = element.getObjectValue();
+从cache中移除key对应的element
+Cache cache = manager.getCache(“sampleCache”);
+Element element = new Element(“key1”, “value1”);
+Cache.reomve(“key1”);
+l 磁盘持久化
+SampleCache1的配置是支持磁盘持久化的。如果想要保证element即时的被输出到磁盘，可以调用cache.flush();
+Cache cache = manager.getcache(“samplecache1”);
+Cache.flush();
+l Cache Sizes
+获得当前cache中的element数量。
+Cache cache = manager.getCache(“sampleCache1”);
+Int elementsInMemory = cache.getSize();
+获得当前MemoryStore中的element数量。
+Cache cache = manager.getCache(“sampleCache1”);
+long elementsInMemory = cache.getMemoryStoreSize();
+获得当前DiskStore中element数量。
+Cache cache = manager.getCache(“sampleCache1”);
+long elementsInMemory = cache.getDiskStoreSize();
+l  Cache Hits and Misses
+所谓的hits就是缓存访问次数，而misses就是缓存中每个element的丢失次数。这些参数对优化缓存配置有很大的帮助。
+获得缓存中请求的element被找到的次数。
+Cache cache = manager.getCache(“sampleCache1”);
+Int hits = cache.getHitCount();
+获得请求的element在MemoryStore中被找到的次数。
+Cache cache = manager.getCache(“sampleCache1”);
+Int hits = cache.getMemoryStoreHitCount();
+获得请求的element在DiskStore中被找到的次数。
+Cache cache = manager.getCache(“sampleCache1”);
+Int hits = cache.getDiskStoreHitCount();
+获得请求的element在MemoryStore中没有被找到的次数。
+Cache cache = manager.getCache(“sampleCache1”);
+Int hits = cache.getMissCountNotFound();
+获得请求的element在MemoryStore中没有被找到的次数。
+Cache cache = manager.getCache(“sampleCache1”);
+Int hits = cache.getMissCountNotFound();
+获得缓存中失效element没有被找到的次数。
+Cache cache = manager.getcache(“samplecache1”);
+Int hits = cache.getMissCountExpired();
+创建一个默认配置cache
+manager.addCache(String cachename);这个方法可以说是Ehcache很灵活的体现，通常我们想要添加一个新的cache到CacheManager中时，应该调用manager.addCache(Cache cache);可以看到入参是一个Cache类型对象，而前面那段代码，Ehcache会自动使用默认配置创建一个名字为输出参数的cache供使用，是不是很方面呢。
+使用自定义参数创建一个cache
+Ehcache允许通过编码的方式创建一个自定义Cache，也就是调用构造方法。
+Public Cache(String name, int maxElementsInMemory, MemoryStoreEvictionPolicy memoryStoreEvictionPolicy, Boolean overflowToDisk, Boolean eternal, long timeToLiveSeconds, long timeToIdleSeconds, Boolean isdkPersistent, long diskExpiryThreadIntervalSeconds) {}
+以上就是Cache的构造函数。
+CacheManager manager = CacheManager.create();
+Cache cache = new Cache(“test”, maxElements, MemoryStoreEvictionPolicy.LFU, true, false, 60, 30, false, 0);
+Manager.addCache(testCache);
+以上代码是创建一个缓存添加到cachemanager中，缓存名字为test，内存驱逐策略是LFU，允许输出到磁盘，element不是永久有效的，element最大存活时间是60秒，element最大闲置时间30秒，不会持久化到磁盘，失效element清理线程运行时间间隔是0秒。
+
+
