@@ -1,0 +1,75 @@
+联机重演日志没有丢失应使用完成恢复，如联机重演日志损坏，而又没有备份，就只能进行不完全恢复。
+
+一、完全恢复：
+1．使用命令“svrmgrl”调用行方式服务器管理；
+2．输入命令“connect internal”，然后输入命令“startup mount’；
+3．输入命令“recover database;”
+4．按下ENTER，接受默认值。
+5．然后输入命令“alter database open;”完成数据库恢复。
+
+二、不完全恢复
+警告：
+应用不完成恢复前，必须将数据库做一次完全冷备份，因为应用不完全恢复后，联机重演日志将重置，以前的所有日志不可用。
+如果恢复不成功，数据库就不能使用了。再次强调，做完全冷备份后再应用不完全恢复。
+
+1）.基于变化的恢复(change-based recovery)
+    要执行基于变化的恢复，需要知道丢失日志之前的系统写入归档重演日志的最大的变化号(SCN)，然后可以启动恢复语句恢复数据库直到改变scn_number，其中比scn_number是写到已归档重演日志文件顺序号386的SCN(即，小于丢失日志顺序号387的SCN)。可以从V$log_history视图中得到SCN信息。
+
+select first_change# from v$log_history where sequence#=387;
+
+其中387为最后一个有效的日志文件号加1,该例是查找386.
+知道了SCN后，使用下述步骤完成恢复
+1．使用命令“svrmgrl”调用行方式服务器管理；
+2．输入命令“connect internal”，然后输入命令“startup mount’；
+3．输入命令“recover database until change 9999;”
+4．在回答Oracle第一个归档重演日志建议信息时，输入“auto”,Oracle在找到第387号重演日志之前停止恢复。
+5．用命令“alter database open resetlogs;”打开数据库。(应用该命令前请确认数据库已备份，如打开失败，日志将不可用)
+
+2).基于停止��恢复(cancel-based recovery)
+1．使用命令“svrmgrl”调用行方式服务器管理；
+2．输入命令“connect internal”，然后输入命令“startup mount’；
+3．输入命令“recover database until cancel;”,Oracle提示需要的第一个归档重演日志文件名．按下ENTER键接受缺省文件名，并且—路ENTER直到询问顺序号387的日志。输入“cancel”，停止恢复操作。
+4．用命令“alter database open resetlogs;”打开数据库。(应用该命令前请确认数据库已备份，如打开失败，日志将不可用)
+
+3).基于时间的恢复(time-based recovery)
+为使用基于时间的恢复，必须知道记录在V$log_history归档重演日志序号387（丢失重演日志）的时间，通过执行查询语句“select time from v$log_history where sequence#=387;”得到。本例得到的时间是：2002-06-23 14：42：04
+
+现在开始实施恢复。
+1．使用命令“svrmgrl”调用行方式服务器管理；
+2．输入命令“connect internal”，然后输入命令“startup mount’；
+3．输入命令“recover database until time '2002/06/23 14:42:04';”,Oracle提示需要的第一个归档重演日志文件名，输入“auto”，Oracle恢复归档重演日志直到序号为387的日志，停止恢复操作。
+4．用命令“alter database open resetlogs;”打开数据库。(应用该命令前请确认已数据库已备份，如打开失败，日志将不可用)
+
+提示： 使用基于时间的恢复，时间的格式是YYYY/MM/DD HH24:MI:SS,并且用单引号括起。
+
+附：如何启用Oracle的归档方式
+1.参照以下内容编辑init.ora文件：
+log_archive_start = true
+log_archive_dest_1 = " LOCATION=D:\Oracle\oradata\ORCL\archive "
+og_archive_format = %%ORACLE_SID%%T%TS%S.ARC
+2.关闭数据库
+svrmgrl> connect internal
+svrmgrl> shutdown normal
+3.然后启动实例并安装该数据库，但不打开数据库。
+svrmgrl> startup mount
+4.接着，发布下列更改数据库的命令。
+Svrmgrl> alter database archivelog;
+5.现在，数据库已经更改为归档方式，您可以打开数据库。
+svrmgrl> alter database open;
+
+提示：也可以使用DBA studio工具启用数据库的归档方式，操作很简单 
+
+======================================================
+SQL> recover database using backup controlfile until cancel;
+ORA-00279: 更改 1069041 (在 02/25/2005 15:36:00 生成) 对于线程 1 是必需的
+ORA-00289: 建议: C:\ORACLE\ORA92\RDBMS\ARC00012.001
+ORA-00280: 更改 1069041 对于线程 1 是按序列 # 12 进行的
+指定日志: {<RET>=suggested | filename | AUTO | CANCEL}
+cancel
+ORA-01547: 警告: RECOVER 成功但 OPEN RESETLOGS 将出现如下错误
+ORA-01152: 文件 2 没有从完备的旧备份中恢复
+ORA-01110: 数据文件 2: 'C:\ORACLE\ORADATA\PDF\UNDOTBS01.DBF'
+ORA-01112: 未启动介质恢复
+
+SQL> alter database open resetlogs;
+alter database open resetlogs

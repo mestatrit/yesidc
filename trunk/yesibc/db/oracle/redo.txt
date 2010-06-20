@@ -1,0 +1,241 @@
+1 使用oracle的logmnr分析工具2010年01月21日 星期四 16:551.安装logminer： 
+      要安装LogMiner工具，必须首先要运行下面这样两个脚本，
+      @F:\oracle\product\10.2.0\db_1\RDBMS\ADMIN\dbmslm.sql
+      @F:\oracle\product\10.2.0\db_1\RDBMS\ADMIN\dbmslmd.sql.
+      这两个脚本必须均以SYS用户身份运行。
+2 创建数据字典文件
+首先在init.ora初始化参数文件中，添加参数UTL_FILE_DIR，该参数值为服务器中放置数据
+字典文件的目录。如：utl_file_dir=F:\hisrun
+[SYS@orcl] SQL>execute dbms_logmnr_d.build('showdict.ora','F:\hisrun');
+BEGIN dbms_logmnr_d.build('showdict.ora','F:\hisrun'); END;
+*
+第 1 行出现错误:
+ORA-01308: 未设置初始化参数 utl_file_dir
+ORA-06512: 在 "SYS.DBMS_LOGMNR_INTERNAL", line 3474
+ORA-06512: 在 "SYS.DBMS_LOGMNR_INTERNAL", line 3552
+ORA-06512: 在 "SYS.DBMS_LOGMNR_D", line 12
+ORA-06512: 在 line 1
+
+[SYS@orcl] SQL>show parameter utl_file;
+NAME                                 TYPE
+------------------------------------ ----------------------
+VALUE
+------------------------------
+utl_file_dir                         string
+
+[SYS@orcl] SQL>show parameter utl;
+NAME                                 TYPE
+------------------------------------ ----------------------
+VALUE
+------------------------------
+create_stored_outlines               string
+utl_file_dir                         string
+
+[SYS@orcl] SQL>show user;
+USER 为 "SYS"
+[SYS@orcl] SQL>alter system set utl_file_dir='F:\hisrun' scope=spfile;
+系统已更改。
+[SYS@orcl] SQL>show parameter utl
+NAME                                 TYPE
+------------------------------------ ----------------------
+VALUE
+------------------------------
+create_stored_outlines               string
+utl_file_dir                         string
+
+[SYS@orcl] SQL>shutdown abort
+ORACLE 例程已经关闭。
+[SYS@orcl] SQL>startup
+ORACLE 例程已经启动。
+Total System Global Area 612368384 bytes
+Fixed Size                  1250428 bytes
+Variable Size             218106756 bytes
+Database Buffers          385875968 bytes
+Redo Buffers                7135232 bytes
+数据库装载完毕。
+数据库已经打开。
+
+[SYS@orcl] SQL>show parameter utl;
+NAME                                 TYPE
+------------------------------------ ----------------------
+VALUE
+------------------------------
+create_stored_outlines               string
+utl_file_dir                         string
+F:\hisrun
+[SYS@orcl] SQL>execute dbms_logmnr_d.build('showdict.ora','F:\hisrun');
+20100122补充：SQL> execute dbms_logmnr_d.build(dictionary_filename=>'showdict.ora',dictionary_l
+ocation=>'F:\hisrun');
+PL/SQL 过程已成功完成。
+3 将要分析的日志文件加入要分析的log list中，察看有哪些日志文件可以用select * from v$logfile;查询已经加入那些可以用select * from v$logmnr_logs(注：查询必须在同一个会话中查询，单独开查询将查不到）语句如下：
+execute dbms_logmnr.add_logfile('F:\ORACLE\PRODUCT\10.2.0\ORADATA\ORCL\REDO03.LOG
+',dbms_logmnr.new);
+[SYS@orcl] SQL>select member from v$logfile;
+
+MEMBER
+--------------------------------------------------------------------------------
+F:\ORACLE\PRODUCT\10.2.0\ORADATA\ORCL\REDO03.LOG
+F:\ORACLE\PRODUCT\10.2.0\ORADATA\ORCL\REDO02.LOG
+F:\ORACLE\PRODUCT\10.2.0\ORADATA\ORCL\REDO01.LOG
+
+[SYS@orcl] SQL>execute dbms_logmnr.add_logfile('F:\ORACLE\PRODUCT\10.2.0\ORADATA\ORCL\REDO01.LOG',dbms_logmnr.new);
+PL/SQL 过程已成功完成。
+
+再增加一个：
+[SYS@orcl] SQL>execute dbms_logmnr.add_logfile('F:\ORACLE\PRODUCT\10.2.0\ORADATA\ORCL\REDO02.LOG',dbms_logmnr.addfile);
+
+如果需要从分析列表里去掉一个文件用
+('F:\ORACLE\PRODUCT\10.2.0\ORADATA\ORCL\REDO01.LOG',dbms_logmnr.removefile);
+20100122补充：
+   （1）分析在线重作日志文件
+        如上所示
+     （2）分析离线日志文件
+SQL> EXECUTE dbms_logmnr.add_logfile( 
+LogFileName=>' E:\Oracle\oradata\sxf\archive\ARCARC09108.001', 
+Options=>dbms_logmnr.new);
+
+4 更改会话时间表达方式（注一定要在本会话下修改，我开始发生错误就是因为在别的会话里修改的，如果允许，可以将数据库默认的时间表达方式修改掉）会话内修改为alter session set nls_date_format='yyyy-mm-dd hh24:mi:ss'; 系统设置在注册表。
+5 查询分析的日志文件包含的scn范围和日期范围。
+　　select low_time,high_time,low_scn,next_scn from v$logmnr_logs;会列出你加入的日志文件的以上信息。
+6 使用LogMiner进行日志分析
+      SQL>execute dbms_logmnr.start_logmnr(DictFileName=>'F:\hisrun\showdict.ora',options=>dbms_logmnr.committed_data_only,startscn=>116295629,endscn=>116685026);
+20100122补充：
+（1）无限制条件
+SQL> EXECUTE dbms_logmnr.start_logmnr( 
+DictFileName=>' e:\oracle\logs\ v816dict.ora ');
+（2）有限制条件
+通过对过程DBMS_ LOGMNR.START_LOGMNR中几个不同参数的设置（参数含义见表1），可以缩小要分析日志文件的范围。通过设置起始时间和终止时间参数我们可以限制只分析某一时间范围的日志。如下面的例子，我们仅仅分析2001年9月18日的日志，：
+SQL> EXECUTE dbms_logmnr.start_logmnr( 
+DictFileName => ' e:\oracle\logs\ v816dict.ora ', 
+StartTime => to_date('2001-9-18 00:00:00','YYYY-MM-DD HH24:MI:SS') 
+EndTime => to_date(''2001-9-18 23:59:59','YYYY-MM-DD HH24:MI:SS '));
+　　也可以通过设置起始SCN和截至SCN来限制要分析日志的范围：
+SQL> EXECUTE dbms_logmnr.start_logmnr( 
+DictFileName => ' e:\oracle\logs\ v816dict.ora ', 
+StartScn => 20, 
+EndScn => 50);
+7 观察分析结果(LogMiner的分析结果是放在v$logmnr_contents中)
+       A.SQL> select sql_redo from v$logmnr_contents where upper(sql_redo) like '%DELETE%;
+              在视图v$logmnr_contents中查找真实被删除的记录。
+       B.SQL> SELECT timeseg_name,sql_redo FROM v$logmnr_contents WHERE seg_name='MS_CF01' and sql_redo like '%DELETE%';
+              功能同A。
+       C.SQL> select sql_undo from v$logmnr_contents where seg_name='MS_CF01' and sql_redo like '%delete%' and rownum<10;
+       D.SQL> select sql_undo from v$logmnr_contents where seg_name='MS_CF01' and upper(OPERATION)='DELETE';
+             针对SQL_REDO重做记录重做指定行变化的SQL语句，所对应的反操作就是重做记录回退或恢复指定行变化的SQL语句。
+        select timestamp,sql_undo,sql_redo from v$logmnr_contents where seg_name='MS_CF01'
+20100122补充：
+需要强调一点的是，视图v$logmnr_contents中的分析结果仅在我们运行过程'dbms_logmrn.start_logmnr'这个会话的生命期中存在。这是因为所有的LogMiner存储都在PGA内存中，所有其他的进程是看不到它的，同时随着进程的结束，分析结果也随之消失。
+8 结束分析,清空v$logmnr_contents
+      SQL>execute dbms_logmnr.end_logmnr (结束会话，会自清除分析记录）
+9 下面将就视图v$logmnr_contents的常用字段含义进行说明：
+其中operation指的是操作，sql_redo指的是实际的操作，sql_undo指的是用于取消的相反的操作)
+         名称                    含义
+        ----------------------- -------- --------------------------------------------
+         SCN                    特定数据变化的系统更改号
+         TIMESTAMP              数据改变发生的时间
+         COMMIT_TIMESTAMP       数据改变提交的时间
+         SEG_OWNER              数据发生改变的段名称
+         SEG_NAME               段的所有者名称
+         SEG_TYPE               数据发生改变的段类型
+         SEG_TYPE_NAME          数据发生改变的段类型名称
+         TABLE_SPACE            变化段的表空间
+         ROW_ID                 特定数据变化行的ID
+         SESSION_INFO           数据发生变化时用户进程信息
+         OPERATION              重做记录中记录的操作(如INSERT)
+         SQL_REDO               可以为重做记录重做指定行变化的SQL语句(正向操作)
+         SQL_UNDO               可以为重做记录回退或恢复指定行变化的SQL语句(反向操作)
+      注：SQL_REDO 列显示的是所做的操作(SQL 语句)，SQL_UNDO 列显示的是要恢复该操作所需要的SQL语句
+        只要顺序执行SQL_UNDO的内容，就可以恢复到修改前的数据。
+ 
+=========================================================
+
+
+---通过SQL的界面来查询redo日志的工具。
+
+用途：
+o,Z<!--[if !supportFootnotes]-->[1]<!--[endif]-->m{o#p*v3{-`01)用户在误删除数据后，可以通过LogMiner来恢复；虽然也可以通过RMAN来恢复，但需要有之前的备份，要先转出再query，会比较麻烦；LogMiner比较简单；ITPUB个人空间M)_#l?t
+2） 可以进行后审计功能，LOG日志中包含跟踪任何DML和DDL的的全部信息，可以知道执行的顺序和有谁来执行；
+
+LOGMINER通过固定视图V$LOGMNR_CONTENTS来提供REDO LOG的信息；V$LOGMNR_CONTENTS每个字段的信息可以参考ITPUB个人空间'Xf1No1X-F5?m
+《Database Administrator Guide》。ITPUB个人空间}#G2Q BdS%C<!--[if !supportFootnotes]-->[1]<!--[endif]-->_N|
+几个组件：
+QE\*N R7{A h0Redo Logs
+9Vi-iWcJ8v0在使用LogMiner时，需要指定想要分析日志的名称； 可以通过dbms_logmnr.add_logfile来添加；
+F(A6Mc[M4I"g*f<!--[if !supportFootnotes]-->[1]<!--[endif]-->T0需要注意的几点：
+*p&?6@}!^9Y<!--[if !supportFootnotes]-->
+
+--------------------------------------------------------------------------------
+<!--[endif]-->K1R
+?1N01） 重做日志必须是8.0或者以上版本Oracle数据库，在版本9.0.1引入的几个特性只能运用在9i或者之上版本的数据库产生的redo log。ITPUB个人空间-Jk<!--[if !supportFootnotes]-->
+--------------------------------------------------------------------------------
+<!--[endif]-->\7w
+cs(C-Uu
+2） 在版本9.2引入了对LOB和LONG数据类型的支持，但只支持9.2或以后的版本的数据库产生的REDO LOG。
+<!--[if !supportFootnotes]-->[1]<!--[endif]-->~7W'D
+@$q8c E03）redo log的字符集必须和LOGMINER运行所在的数据库的字符集兼容；
+-L7rvojohd04） 一般，分析REDO LOG需要的数据字典来自于产生REDO LOG的同一个数据库。
+PM(x4H7y c,A4z05）LogMiner必须运行在和产生REDO LOG的硬件平台要相同，但不要求运行在同一个系统；
+z#Z8^x.?U06） 运行LogMiner时要指定正确的REDO LOG；如果省略包含一些你需要的数据的REDO LOG，那在查询v$logmnr_contents会无法得到正确的结果；
+
+Dictionary Options
+2X/F(@ J8~/U2`e'T4~(tyv j0LogMiner需要数据字典才能完整的翻译REDO LOG的内容；LOGMINER使用字典来转换内部对象标识符和数据类型为对象名称和数据格式；没有数据字典，LogMiner返回内部的对象ID和用16进制表示数据。
+Kfi v:?\$F0G0举个例子，返回的不是如下SQL语句：
+
+INSERT INTO emp(name, salary) VALUES ('John Doe', 50000);
+而是：
+insert into Object#2581(col#1, col#2) values (hextoraw('4a6f686e20446f65'),hextoraw('c306'));"
+字典的信息可以来自普通文件和REDO LOG和在线目录（就是当前数据字典）。
+可以通过EXTRACT把字典信息转出到一个普通文件和REDO LOG文件。
+转出（Extract）字典文件的必须有相同的字符集和通过产生REDO LOG的数据库创建；但字典Extract后，可以在其他数据库上个挖掘redolog的，而不需要连接到原数据库；
+而且转出（Extract）字典文件可以避免当前的数据字典只包含最新的表格定义时出现的问题；比如，你在搜索过去某个时间被删除的表格，然而当前的字典文件没有任何的关于该删除 TABLE的信息。
+Extract到普通文件：
+1） 在init.ora中设定参数：
+UTL_FILE_DIR = /oracle/database
+2） 重启服务器：
+startup pfile=/oracle/data/init.ora
+3) Extract 字典信息：
+EXECUTE DBMS_LOGMNR_D.BUILD(’dictionary.ora’, -
+’/oracle/database/’, -
+OPTIONS => DBMS_LOGMNR_D.STORE_IN_FLAT_FILE);
+Extract到Redo log，直接执行如下SQL:
+EXECUTE DBMS_LOGMNR_D.BUILD ( -
+OPTIONS=>DBMS_LOGMNR_D.STORE_IN_REDO_LOGS);
+
+使用当前目录作为字典的选项，会有限制。就是不能配合 DDL_DICT_TRACKING使用。
+EXECUTE DBMS_LOGMNR.START_LOGMNR(OPTIONS => -
+DBMS_LOGMNR.DICT_FROM_ONLINE_CATALOG);
+一般的操作步骤：
+1） 添加 redo log文件
+EXECUTE DBMS_LOGMNR.ADD_LOGFILE( -
+LOGFILENAME => 'log1orc1.ora', -
+OPTIONS => DBMS_LOGMNR.NEW);
+如果文件不止一个，那添加其他的文件：
+EXECUTE DBMS_LOGMNR.ADD_LOGFILE( -
+LOGFILENAME => 'log2orc1.ora', -
+OPTIONS => DBMS_LOGMNR.ADDFILE);
+如果有很多的REDO LOG需要添加到LOGMINER，那可以通过以下SQL的输出来得到想要的结果：
+select 'exec dbms_logmnr.add_logfile(logfilename=>''' || name ||'''); '
+from v$archived_log
+where recid > 106;
+2） 开始LogMiner：
+EXECUTE DBMS_LOGMNR.START_LOGMNR(OPTIONS => -
+DBMS_LOGMNR.DICT_FROM_ONLINE_CATALOG);
+如果要加上时间界限：
+EXECUTE DBMS_LOGMNR.START_LOGMNR( -
+OPTIONS =>DBMS_LOGMNR.DICT_FROM_ONLINE_CATALOG, -
+STARTTIME => TO_DATE('01-Jan-2008 08:30:00', 'DD-MON-YYYY HH:MI:SS'), -
+ENDTIME => TO_DATE('01-Jan-2008 08:45:00', 'DD-MON-YYYY HH:MI:SS'));
+SQL> execute dbms_logmnr.start_logmnr(dictfilename =>'c:log_minertesttrace.ora',starttime =>to_date-('20071031 09:00:00','yyyymmdd hh24:mi:ss'),endtime =>to_date('20071031 12:00:00','yyyymmdd-hh24:mi:ss'));
+3) 查询v$logmnr_contenst以获得想要的内容：
+SELECT SQL_REDO, SQL_UNDO FROM V$LOGMNR_CONTENTS
+WHERE USERNAME = 'joedevo' AND SEG_NAME = 'salary';
+select sql_undo, sql_redo , operation
+from v$logmnr_contents
+where username='KONG' and peration ='DDL'
+
+建议：
+使用非SYSTEM TABLESPACE来存放LogMiner的信息：
+EXECUTE DBMS_LOGMNR_D.SET_TABLESPACE(’logmnrts$’);
+
+
+
