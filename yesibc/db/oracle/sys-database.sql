@@ -244,3 +244,199 @@ select t.*
          WHERE D.TABLESPACE_NAME = F.TABLESPACE(+)) t
  order by "USED_RATE(%)" desc;
 
+===============================================
+创建Oracle数据库（以Oracle10g为例）
+有两种创建数据库的方式，一种是以命令行脚本方式，即手动方式创建；另一种是利用Oracle提供的数据库配置向导来创建。本篇主要介绍在Unix和Windows下以命令行脚本方式创建Oracle数据库。
+     一个完整的数据库系统，应包括一个物理结构、一个逻辑结构、一个内存结构和一个进程结构，如果要创建一个新的数据库，则这些结构都必须完整的建立起来。
+一、在Unix下创建数据库
+1.确定数据库名、数据库实例名和服务名
+关于数据库名、数据库实例名和服务名，我之前有专门用一篇来详细介绍。这里就不再说明了。
+2.创建参数文件
+参数文件很确定了数据库的总体结构。Oracle10g有两种参数文件，一个是文本参数文件，一种是服务器参数文件。在创建数据库时先创建文本参数文件，在数据库创建后，可以由文件参数文件创建服务器参数文件。文本参数文件的取名方式为initORACLE_SID.ora,其中，ORACLE_SID是数据库实例名。其名称及路径为：
+/home/app/oracle/product/10.1.0/admin/DB_NAME/pfile/initORACLE_SID.ora
+其中，DB_NAME为数据库名。所以，应创建一个以之命名的目录，并将文本参数文件存放在上述目录中。假设新创建的数据库名为MYORACLE，SID与数据库名一致。则上述目录实际为：
+/home/app/oracle/product/10.1.0/admin/MYORACLE/pfile/initMYORACLE.ora
+1)参数文件的介绍
+参数文件决定着数据库的总体结构，用于设置数据库的近260个系统参数。下面分类别说明一下各参数的作用，关于参数的详细使用说明请参考Oracle官方参考文档。
+a.数据库标识类参数
+DB_NAME: 数据库名，此参数在创建数据前决定，数据库创建后修改时，必须建控制文件
+DB_DOMAIN: 数据库域名，用于区别同名数据库。数据库名与域名一起构成了全局数据库名
+INSTANCE_NAME: 数据库实例名，可以与数据库相同
+SERVICE_NAMES: 数据库服务名，与全局数据库名相同如果没有域名，则服务名就是数据库名
+b.日志管理类参数
+LOG_ARCHIVE_START: 是否启动自动归档进程ARCH
+LOG_ARCHIVE_DEST: 归档日志文件存储目录
+LOG_ARCHIVE_FORMAT: 归档日志文件的默认文件存储格式
+LOG_ARCHIVE_DUPLEX_DEST: 归档日志文件镜像存储目录（Oracle8以上）
+LOG_ARCHIVE_DEST_n: 归档日志文件存储目录（Oracle8i以上）
+LOG_ARCHIVE_DEST_STATE_n: 设置参数LOG_ARCHIVE_DEST_n失效或生效
+LOG_ARCHIVE_MAX_PROCESSES: 设置自动归档进程的个数
+LOG_ARCHIVE_MIN_SUCCEED_DEST: 设置最少的成功归档日志存储目录的个数
+LOG_CHECKPOINT_INTERVAL: 根据日志数量设置检验点频率
+LOG_CHECKPOINT_TIMEOUT: 根据时间间隔设置检验点频率
+c.内存管理参数
+DB_BLOCK_SIZE: 标准数据块大小
+DB_nK_CACHE_SIZE: 非标准数据块数据缓冲区大小
+SHARED_POOL_SIZE: 共享池大小控制参数，单位为字节
+DB_CACHE_SIZE: 标准数据块数据缓冲区大小
+DB_BLOCK_BUFFERS: 数据缓冲区大小，9i之后已放弃使用
+LOG_BUFFER: 日志缓冲区大小
+SORT_AREA_SIZE: 排序区大小
+LARGE_POOL_SIZE: 大池大小
+JAVA_POOL_SIZE: Java池大小
+d.最大许可用户数量限制参数
+LICENSE_MAX_SESSIONS:数据库可以连接的最大会话数
+LICENSE_MAX_USERS:数据库支持的最大用户数
+LICENSE_MAX_WARNING:数据库最大警告会数（会话数据达到这个值时，产生新会话时就会产生警告信息）
+e.系统跟踪信息管理参数
+USER_DUMP_DEST:用户跟踪文件生成的设置
+BACKGROUND_DUMP_DEST:后台进程跟踪文件生成的位置
+MAX_DUMPFILE_SIZE:跟踪文件的最大尺寸
+f.系统性能优化与动态统计参数
+SQL_TRACE:设置SQL跟踪
+TIMED_STATICS:设置动态统计
+AUDIT_TRAIL:启动数据库审计功能
+g.其他系统参数
+CONTROL_FILES:控制文件名及路径
+Undo_MANAGMENT:Undo空间管理方式
+ROLLBACK_SEGMENTS:为这个例程分配的回退段名
+OPEN_CURSORS:一个用户一次可以打开的游标的最大值
+PROCESSES:最大进程数，包括后台进程与服务器进程
+IFILE:另一个参数文件的名字
+DB_RECOVERY_FILE_DEST:自动数据库备份目录
+DB_RECOVERY_FILE_SIZE:数据库备份文件大小
+2）参数文件样式
+db_name=myoracle
+instance_name=myoracle
+db_domain=fangys.xiya.com
+service_names=myoracle.fangys.xiya.com
+control_files=(/home/app/oracle/product/10.1.0/oradata/myoracle/control01.ctl,
+               /home/app/oracle/product/10.1.0/oradata/myoracle/control02.ctl,
+               /home/app/oracle/product/10.1.0/oradata/myoracle/control03.ctl)
+db_block_size=8192
+user_dump_dest=/home/app/oracle/product/10.1.0/admin/myoracle/udump
+background_dump_dest=/home/app/oracle/product/10.1.0/admin/myoracle/bdump
+core_dump_dest=/home/app/oracle/product/10.1.0/admin/myoracle/cdump
+db_recovery_file_dest=/home/app/oracle/product/10.1.0/flash_recover_area
+db_recovery_file_size=100G
+...
+
+3.设置操作系统参数
+$ORACLE_SID=myoracle
+$export ORACLE_SID
+4.启动实例并创建数据库
+在创建数据库之前，首先要以新的数据库参数启动数据库实例，因为这时数据库的控制文件还没有产生，不能MOUNT或OPEN数据库。启动实例时，Oracle只按照内存参数分配SGA区，启动系统后台进程。
+$sqlplus "sys/pass as sysdba"
+sql>startup nomount
+如果参数文件不在规定的目录中，可以在启动实例时指定参数文件：
+sql>startup pfile=/export/home/user/initmyoracle.init nomount
+在实例启动后就可以使用CREATE DATABASE命令创建数据。其详细语法请参考Oracle官方SQL参考文档。这里以实例来介绍：
+sql>CREATE DATABASE myoracle
+    MAXINSTANCE 1
+    MAXLOGHISTORY 216
+    MAXLOGFILES 50
+    MAXLOGMEMBERS 5
+DATAFILE '/home1/app/oracle/product/10.1.0/oradata/myoracle/system01.dbf' SIZE 500m
+AUTOEXTEND ON NEXT 100m MAXSIZE UNLIMITED
+LOGFILE
+    GROUP 1('/home1/app/oracle/product/10.1.0/oradata/myoracle/log1a.log',
+            '/home1/app/oracle/product/10.1.0/oradata/myoracle/log1b.log') SIZE 10m,
+    GROUP 2('/home1/app/oracle/product/10.1.0/oradata/myoracle/log2a.log',
+            '/home1/app/oracle/product/10.1.0/oradata/myoracle/log2b.log') SIZE 10m,
+    GROUP 3('/home1/app/oracle/product/10.1.0/oradata/myoracle/log3a.log',
+            '/home1/app/oracle/product/10.1.0/oradata/myoracle/log3b.log') SIZE 10m,
+Undo TABLESPACE undotbs DATAFILE
+'/home1/app/oracle/product/10.1.0/oradata/myoracle/undotbs01.dbf' size 200m
+AUTOEXTEND ON NEXT 100m MAXSIZE UNLIMITED
+DEFAULT TEMPORARY TALESPACE temp TEMPFILE
+'/home1/app/oracle/product/10.1.0/oradata/myoracle/temp01.dbf' size 325m
+AUTOEXTEND ON NEXT 100m MAXSIZE UNLIMITED
+DEFAULT TABLESPACE users DATAFILE
+'/home1/app/oracle/product/10.1.0/oradata/myoracle/usertbs01.dbf' size 1000m
+CHARACTER SET ZHS16GBK;
+这里说明一下CREATE DATABASE语句的各个关键字的含义：
+DATAFILE:SYSTEM表空间的数据文件定义
+LOGFILE:日志文件组的定义
+Undo_TABLESPACE:重做表空间的定义
+DEFAULT TEMPORTY TABLESPACE:默认临时表空间的定义
+DEFAULT TABLESPACE：默认数据表空间的定义。
+
+5.创建数据字典
+在数据库创建结束后，数据库自动处于OPEN状态下，这时所有V$××××类数据字典都可以查询。而其它数据字典，如DBA_DATA_FILES、DBA_TABLESPACES等都不存在，必须通过下列骤为系统创建数据字典。
+1)加载常用的数据字典包
+sql>@/home/app/oracle/product/10.1.0/db_1/rdbms/catalog
+2)加载PL/SQL程序包
+sql>@/home/app/oracle/product/10.1.0/db_1/rdbms/admin/catproc
+3)加载数据复制支持软件包
+sql>@/home/app/oracle/product/10.1.0/db_1/rdbms/admin/catrep
+4)加载Java程序包
+sql>@/home/app/oracle/product/10.1.0/db_1/javavm/install/initjvm
+5)加载系统环境文件
+sql>connect system/pass
+sql>@/home/app/oracle/product/10.1.0/db_1/sqlplus/admin/pupbld
+二、在Windows下创建数据库
+Oracle实例在Windows下表现为操作系统服务。在windows下，使用命令行方式创建数据的方法有所不同，差别在于在Windows下，需要先创建数据库服务和实例。
+1.确定数据库名、数据库实例名和服务名
+（略）
+2.创建参数文件
+在Windows下的参数文件名称及路径如下：
+d:\oracle\product\10.1.0\admin\DB_NAME\pfile\init.ora(oracle10g)
+d:\orant\database\iniORACLE_SID.ora(oracle7,oracle8)
+参数据文件内容与前述一致。这里不再说明。
+3.选择数据库实例
+设置环境变量ORACLE_SID
+c:\>set ORACLE_SID=数据库实例名
+4.创建数据库实例
+在Windows中创建数据库实例的命令为Oradim.exe，是一个可执行文件，可以在操作系统符号下直接运行。直接输入oradim显示此命令的帮助。
+c:\>Oradim
+下面对Oradim命令的参数进行一个说明
+-------------------------------
+-NEW 表示新建一个实例
+-EDIT 表示修改一个实例
+-DELETE 表示删除一个实例
+-SID sid 指定要启动的实例名称
+-SRVC service 指定要启动的服务名称
+-INTPWD password 以Internal方式连接数据库时的口令字
+-MAXUSERS count 该实例可以连接的最大用户数
+-USRPWD password 指定内部用户的口令，如是作为Windows管理登录，不用此参数
+-PFILE pfile 该实例所使用的参数文件名及路径
+-STARTTYPE srvc|inst|srvc,inst 启动选项（srvc:只启动服务，inst:启动实例，服务必须先启动，srvc,inst:服务和实例同时启动）
+-SHUTTYPE srvc|linst|srvc,inst 关闭选项（srvc:只关闭服务，实例必须已关闭，inst:只关闭实例，srvc,inst:服务和实例同时关闭）
+-STARTMODE a|m 创建实例所使用的模式（a:自动，即windows启动时自动启动 m:手动）
+-SHUTMODE a|i|m 关闭实例时所使用的模式（a:abort异常方式,i:immediate立即方式,n:normal正常方式）
+----------------------------
+例：创建一个数据库实例
+c:\>oradim -NEW -SID myoracle -STARTMODE m -PFILE "d:\fangys\initmyoracle.ora"
+或
+c:\>oradim -NEW -SRVC OracleServicemyoracle -STARTMODE m -PFILE "d:\fangys\initmyoracle.ora"
+例：修改一个数据实例
+c:\>oradim -EDIT -SID myoracle -STARTMODE a
+或
+c:\>oradim -EDIT -SRVC OracleServicemyoracle -STARTMODE a
+例：删除一个实例
+c:\>oradim -DELETE -SID myoracle
+或
+c:\>oradim -DELETE -SRVC Oracleservicemyoracle
+例：启动服务与实例
+c:\>oradim -STARTUP -SID myoracle -STARTTYPE srvc,inst
+只启动服务
+c:\>oradim -STARTUP -SID myoracle -STARTTYPE srvc
+启动实例：
+c:\>oradim -STARTUP -SID myoracle -STARTTYPE inst
+例：关闭服务与实例
+c:\>oradim -SHUTDOWN -SID myoracle 
+c:\>oradim -SHUTDOWN -SID myoracle -SHUTTYPE srvc,inst
+5.启动实例并创建数据库
+c:\>oradim -NEW -SID myoracle -INTPWD syspass -STARTMODE a -PFILE d:\fangys\initmyoracle.ora
+c:\>set ORACLE_SID=myoracle
+c:\>sqlplus sys/syspass as sysdba
+sql>startup -pfile=d:\fangys\initmyoracle.ora nomount
+sql>CREATE DATABASE myoracle
+logfile group...
+...
+6.创建数据字典
+sql>@d:\oracle\product\10.1.0\db_1\rdbms\admin\catalog.sql;
+sql>@d:\oracle\product\10.1.0\db_1\rdbms\admin\catproc.sql;
+sql>@d:\oracle\product\10.1.0\db_1\rdbms\admin\catrep.sql;
+sql>@d:\oracle\product\10.1.0\db_1\javavm\install\initjvm.sql;
+sql>@d:\oracle\product\10.1.0\db_1\sqlplus\admin\ppbld.sql;

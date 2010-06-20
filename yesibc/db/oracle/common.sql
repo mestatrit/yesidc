@@ -106,12 +106,10 @@ having count(distinct t.cust1_nb_creditcards) > 1
 
 --11.Oracle中用于类似MSSQL中top的关键字为rownumber,具体用法如下:
 SELECT   *   FROM  chn_inst_uat4.application_basic_audit    WHERE   ROWNUM<11;
-select firmcode, balance
-  from (select rownum rn, t.firmcode, t.balance
-          from FIRMBALANCE_TAB t
-         order by balance desc) tab
- where tab.rn > 0
-   and tab.rn < 11;
+select * from (select a.*, rownum row_num
+                          from (select * from t_webpages t order by t.id desc) a
+                         where rownum <= 1000000) b
+                 where b.row_num >= 1
 
 --12.循环写Sequence
 declare 
@@ -201,3 +199,9 @@ alter table TIP_INSTANCE disable primary key cascade;
 truncate table TIP_INSTANCE;
 alter table TIP_INSTANCE enable primary key;
 
+--21.删除重复记录.
+delete from t_company
+ where id in (select min(id) as id
+                from t_company
+               group by company_code
+              having count(*) > 1)

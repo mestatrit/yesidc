@@ -1,0 +1,196 @@
+ORA-00600: 错误 参数: [kcratr_nab_less_than_odr], [1], [3313]
+前天数据库突然断电，出现如下错误：
+ORA-00600: 内部错误代码, 参数: [kcratr_nab_less_than_odr], [1], [3313],[2328320], [2334233], [], [], [], [], [], [], []
+进行了如下操作进行恢复：
+
+SQL> alter database open ;
+alter database open
+*
+第 1 行出现错误:
+ORA-00600: 内部错误代码, 参数: [kcratr_nab_less_than_odr], [1], [3313],[2328320], [2334233], [], [], [], [], [], [], []
+
+SQL> recover database
+ORA-00283: 恢复会话因错误而取消
+ORA-00264: 不要求恢复
+
+SQL> recover database until cancel
+ORA-10879: error signaled in parallel recovery slave
+ORA-01547: 警告: RECOVER 成功但 OPEN RESETLOGS 将出现如下错误
+ORA-01152: 文件 1 没有从过旧的备份中还原
+ORA-01110: 数据文件 1: '/u01/oracle/oradata/orcl/system01.dbf'
+
+SQL> alter database open;
+alter database open
+*
+第 1 行出现错误:
+ORA-01589: 要打开数据库则必须使用 RESETLOGS 或 NORESETLOGS 选项
+
+SQL> alter database open resetlogs;
+alter database open resetlogs
+*
+第 1 行出现错误:
+ORA-01152: 文件 1 没有从过旧的备份中还原
+ORA-01110: 数据文件 1: '/u01/oracle/oradata/orcl/system01.dbf'
+
+
+SQL> alter database open noresetlogs;
+alter database open noresetlogs
+*
+第 1 行出现错误:
+ORA-00600: 内部错误代码, 参数: [kcratr_nab_less_than_odr], [1], [3313],
+[2328320], [2334233], [], [], [], [], [], [], []
+
+
+SQL> recover database until cancel;
+ORA-10879: error signaled in parallel recovery slave
+ORA-01547: 警告: RECOVER 成功但 OPEN RESETLOGS 将出现如下错误
+ORA-01152: 文件 1 没有从过旧的备份中还原
+ORA-01110: 数据文件 1: '/u01/oracle/oradata/orcl/system01.dbf'
+
+
+SQL> show parameters log_parallelism;
+SQL> show parameter log
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+audit_syslog_level                   string
+commit_logging                       string
+db_create_online_log_dest_1          string
+db_create_online_log_dest_2          string
+
+SQL> show parameters recovery_parallelism
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+recovery_parallelism                 integer     0
+SQL> show parameters log_p
+SQL> show parameters parall
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+fast_start_parallel_rollback         string      LOW
+parallel_adaptive_multi_user         boolean     TRUE
+parallel_automatic_tuning            boolean     FALSE
+
+SQL> shutdown immediate;
+ORA-01109: 数据库未打开
+
+
+已经卸载数据库。
+ORACLE 例程已经关闭。
+SQL> @sp.sql                                   --重建控制文件
+ORACLE 例程已经启动。
+
+Total System Global Area 1.9314E+10 bytes
+Fixed Size                  2156256 bytes
+Variable Size            8187287840 bytes
+Database Buffers         1.0939E+10 bytes
+Redo Buffers              185450496 bytes
+控制文件已创建。
+PL/SQL 过程已成功完成。
+PL/SQL 过程已成功完成。
+PL/SQL 过程已成功完成。
+PL/SQL 过程已成功完成。
+ORA-00279: ?? 5965899154943 (? 05/23/2010 06:57:59 ??) ???? 1 ????
+ORA-00289: ??: /u01/db_recovery/ORCL/archivelog/2010_05_23/o1_mf_1_3313_%u_.arc
+ORA-00280: ?? 5965899154943 (???? 1) ??? #3313 ?
+
+指定日志: {<RET>=suggested | filename | AUTO | CANCEL}
+redo01.log  
+ORA-00308: ???????????????? 'redo01.log'
+ORA-27037: ????????????????
+SVR4 Error: 2: No such file or directory
+Additional information: 3
+
+
+指定日志: {<RET>=suggested | filename | AUTO | CANCEL}
+filename
+ORA-00308: ???????????????? 'filename'
+ORA-27037: ????????????????
+SVR4 Error: 2: No such file or directory
+Additional information: 3
+
+指定日志: {<RET>=suggested | filename | AUTO | CANCEL}
+/u01/redolog/redo01.log
+已应用的日志。
+完成介质恢复。
+SQL> select status from v$instance;
+STATUS
+------------
+MOUNTED
+
+SQL>  alter database open;
+ alter database open
+*
+第 1 行出现错误:
+ORA-01589: ??????????? RESETLOGS ? NORESETLOGS ??
+
+
+SQL> alter database open;
+alter database open
+*
+第 1 行出现错误:
+ORA-01589: ??????????? RESETLOGS ? NORESETLOGS ??
+
+
+SQL> alter database open noresetlogs;
+alter database open noresetlogs
+*
+第 1 行出现错误:
+ORA-01588: ??????????? RESETLOGS ??
+--为了防止出错，进行了半天的冷备份
+ SQL> alter database open RESETLOGS;
+
+数据库已更改。
+SQL> select status from v$instance;
+
+STATUS
+------------
+OPEN
+
+SQL> exit
+注意：
+如果一点log都不丢,就可以直接open了
+这个CASE的情况是控制文件比数据文件新.(需要重建控制文件)
+控制文件比数据文件旧时, 用using backup controlfile.
+
+如果recover database的时候，提示完成 ”完成介质恢复“；
+
+就可以直接使用open  resetlogs开库；
+
+
+
+=======================
+近日，有朋友遇到了ORA-00600: 内部错误代码, 参数: [kcratr_nab_less_than_odr]错误，具体的错误信息类似：
+Incident 63078 created, dump file: /u01/diag/rdbms/orcl/orcl/incident/incdir_63078/orcl_ora_1916_i63078.trc
+ORA-00600: 内部错误代码, 参数: [kcratr_nab_less_than_odr], [1], [3313], [2328320], [2334233], [], [], [], [], [], [], []
+
+ORA-00600: 内部错误代码, 参数: [kcratr_nab_less_than_odr], [1], [3313], [2328320], [2334233], [], [], [], [], [], [], []
+ORA-00600: 内部错误代码, 参数: [kcratr_nab_less_than_odr], [1], [3313], [2328320], [2334233], [], [], [], [], [], [], []
+朋友说这个错误在metalink上找不到解释。
+
+其实，很多时候在处理问题时，我们可能都无法找到针对性的参考，这时候，猜测就很重要了。
+当学习到一定阶段：猜测将成为一种重要的学习能力。
+
+这时Oracle 11g中的问题，猜测错误号，[kcratr_nab_less_than_odr]，根据less than字样，可以判断是在进行某个比较时，出现问题，剩下的kcratr,nab,odr都可以进行猜测，比如odr可能是Oracle Data Redo/Oracle Data Recovery等等的缩写。
+
+
+再通过进一步的日志信息可以看到：
+Thread 1checkpoint:logseq 3313, block 2, scn 5965899084787
+  cache-low rba: logseq 3313, block 1484161
+    on-disk rba: logseq 3313, block2334233, scn 5965899135009
+  start recovery at logseq 3313, block 1484161, scn 0
+这里就知道了600错误中的1，3313的含义，是Thread 1 logseq 3313，那么剩下的就应该是恢复时的rba地址，错误提示中的2334233是On-Disk Rba，是恢复应该到达的终点，而2328320小于On-Disk Rba，就应该是Less Than里面提到的恢复的终点，因为没有到达Redo的最后位置，被认为是非法的，可能丢失数据。
+
+再向下检查错误跟踪文件，可以验证我们的推测：
+WARNING! Crash recovery of thread 1 seq 3313 is
+ending at redo block 2328320 but should not have ended before
+redo block 2334233
+现在600错误中的另外重要信息出现了，2328320是恢复的中止位置，小于了on-disk rba.
+
+那么现在不需要Metalink，我们就可以判断和解决这个600问题了，数据库无法启动的原因就是恢复的进度不够，进度不够可能是因为Redo写丢失或者硬件故障。
+
+我们可以尝试进行恢复，如果仍然无法到达这个位置，则可以考虑忽略这些未应用的Redo，启动数据库。
+
+这个案例和之前遇到的ORA-00600 kcratr1_lostwrt之解决与原理分析极其相似。
+
+我在这里还想强调的就是，猜测是一种很重要的能力。

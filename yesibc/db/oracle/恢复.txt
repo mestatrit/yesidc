@@ -1,0 +1,323 @@
+一、 数据库服务器基本情况
+    OS：RHEL 3
+    CPU：4个Intel(R) Xeon(TM) MP CPU 2.70GHz
+    Mem：8G
+    Swap：16G
+    Disk：120G
+    Oracle Database 10g Enterprise Edition Release 10.1.0.3.0
+
+二、 备份方式
+    数据库以archive模式运行，RMAN多级增量备份。策略如下：
+    设置控制文件自动备份。
+    每三个月做一个数据库的全备份（包括所有得数据库和只读表空间）,并备份归档日志。
+    每一个月做一次零级备份（不包含只读表空间），并备份归档日志。
+    每周做一次一级备份，并备份归档日志。
+    每天做一次二级备份，并备份归档日志。
+
+三、 恢复案例
+    所有恢复的前提：已经做过数据库全备份（包括归档日志），控制文件和spfile自动备份。
+    1． 损坏一个数据文件
+    （1）故障模拟
+        删除数据文件：rm /u02/oradata/dbnms/users01.dbf
+        关闭数据库：shutdown immediate; 
+        ORA-01116: error in opening database file 4
+        ORA-01110: data file 4: '/u02/oradata/dbnms/users01.dbf'
+        ORA-27041: unable to open file
+        Linux Error: 2: No such file or directory
+        Additional information: 3
+        强行关闭：sutdown abort;
+        启动数据库：startup;
+        ORA-01157: cannot identify/lock data file 4 - see DBWR trace file
+        ORA-01110: data file 4: '/u02/oradata/dbnms/users01.dbf' 
+    （2）恢复步骤
+        rman target sys@dbnms catalog rmanuser@cata
+        run{
+            allocate channel c1 type disk;
+            restore datafile 4;
+            recover datafile 4;
+            sql 'alter database datafile 4 online';
+            sql 'alter database open';
+            release channel c1;
+            }
+
+        sqlplus sys as sysdba
+        select instance_name,status from v$instance;
+        INSTANCE_NAME STATUS
+        ---------------- ------------
+        dbnms OPEN
+
+    恢复成功
+
+    2． 损坏全部数据文件
+    （1）故障模拟
+        删除数据文件：rm /u02/oradata/dbnms/*.dbf
+        强行关闭：sutdown abort;
+        启动数据库：startup;
+        ORA-01157: cannot identify/lock data file 1 - see DBWR trace file
+        ORA-01110: data file 1: '/u02/oradata/dbnms/system01.dbf'
+
+    （2）恢复步骤
+        rman target sys@dbnms catalog rmanuser@cata
+        run{
+            allocate channel c1 type disk;
+            restore database;
+            recover database;
+            sql 'alter database open';
+            release channel c1;
+            }
+
+        sqlplus sys as sysdba 
+        select instance_name,status from v$instance;
+        INSTANCE_NAME STATUS
+        ---------------- ------------
+        dbnms OPEN
+
+        恢复临时文件：
+        alter database tempfile '/u02/oradata/dbnms/temp01.dbf' drop;
+        alter tablespace temp add tempfile '/u02/oradata/dbnms/temp01.dbf' size 50M autoextend on next 5M maxsize unlimited;
+
+    恢复成功
+
+    3． 损坏非当前联机日志成员
+    （1）故障模拟
+         删除日志文件：rm /u02/oradata/dbnms/redo01.log
+        关闭数据库：shutdown immediate; 
+        启动数据库：startup;
+        select * from v$logfile;
+
+        GROUP# STATUS TYPE MEMBER IS_
+        ---------- ------- ------- ------------------------------ ---
+        3 ONLINE /u02/oradata/dbnms/redo03.log NO
+        2 STALE ONLINE /u02/oradata/dbnms/redo02.log NO
+        1 INVALID ONLINE /u02/oradata/dbnms/redo01.log NO
+        1 STALE ONLINE /u02/oradata/dbnms/redo11.log NO
+        1 STALE ONLINE /u02/oradata/dbnms/redo21.log NO
+        2 STALE ONLINE /u02/oradata/dbnms/redo12.log NO
+        3 ONLINE /u02/oradata/dbnms/redo13.log NO
+        2 STALE ONLINE /u02/oradata/dbnms/redo22.log NO
+        3 ONLINE /u02/oradata/dbnms/redo23.log NO
+        4 ONLINE /u02/oradata/dbnms/redo31.log NO
+        4 ONLINE /u02/oradata/dbnms/redo32.log NO
+
+        GROUP# STATUS TYPE MEMBER IS_
+        ---------- ------- ------- ------------------------------ ---
+        4 ONLINE /u02/oradata/dbnms/redo33.log NO 
+
+    （2）恢复步骤
+        alter database drop logfile member '/u02/oradata/dbnms/redo01.log';
+        alter database add logfile member '/u02/oradata/dbnms/redo01.log' to group 1;
+
+    恢复成功
+
+    4． 损坏非当前联机日志组
+    （1）故障模拟
+        删除日志文件组1的所有文件：
+        rm /u02/oradata/dbnms/redo01.log
+        rm /u02/oradata/dbnms/redo11.log
+        rm /u02/oradata/dbnms/redo21.log
+        关闭数据库：shutdown immediate; 
+        启动数据库：startup;
+        Database mounted.
+        ORA-00313: open failed for members of log group 1 of thread 1
+        ORA-00312: online log 1 thread 1: '/u02/oradata/dbnms/redo11.log'
+        ORA-00312: online log 1 thread 1: '/u02/oradata/dbnms/redo21.log'
+        ORA-00312: online log 1 thread 1: '/u02/oradata/dbnms/redo01.log'
+
+    （2）恢复步骤
+        alter database clear logfile group 1;
+        如果该日志组还没有归档，则用：
+        alter database clear unarchived logfile group 1;
+        打开数据库：
+        alter database open;
+
+    恢复成功
+
+    5． 损坏全部联机日志
+    （1）故障模拟
+        删除日志文件：rm /u02/oradata/dbnms/*.log
+        关闭数据库：shutdown immediate; 
+        启动数据库：startup;
+        Database mounted.
+        ORA-00313: open failed for members of log group 1 of thread 1
+        ORA-00312: online log 1 thread 1: '/u02/oradata/dbnms/redo11.log'
+        ORA-00312: online log 1 thread 1: '/u02/oradata/dbnms/redo21.log'
+        ORA-00312: online log 1 thread 1: '/u02/oradata/dbnms/redo01.log'
+
+    （2）恢复步骤
+        shutdown immediate;
+        create pfile from spfile;
+        cd $ORACLE_HOME/dbs
+        vi initdbnms.ora
+        加一个参数：_allow_resetlogs_corruption=true
+        create spfile from pfile;
+        startup;
+        Database mounted.
+        ORA-00313: open failed for members of log group 1 of thread 1
+        ORA-00312: online log 1 thread 1: '/u02/oradata/dbnms/redo11.log'
+        ORA-00312: online log 1 thread 1: '/u02/oradata/dbnms/redo21.log'
+        ORA-00312: online log 1 thread 1: '/u02/oradata/dbnms/redo01.log'
+        recover database until cancel;
+        alter database open resetlogs;
+        同步catalog：
+        rman target sys@dbnms catalog rmanuser@cata
+        reset database;
+
+        new incarnation of database registered in recovery catalog
+        starting full resync of recovery catalog
+        full resync complete
+
+        做一个full备份：
+        /home/oracle/dbbat/backup_full.sh
+
+    恢复成功
+
+    6． 损坏一个控制文件
+    （1）故障模拟
+        删除控制文件：rm /u02/oradata/dbnms/control01.ctl
+        关闭数据库：shutdown immediate; 
+        ORA-00210: cannot open the specified controlfile
+        ORA-00202: controlfile: '/u02/oradata/dbnms/control01.ctl'
+        ORA-27041: unable to open file
+        Linux Error: 2: No such file or directory
+        Additional information: 3
+
+    （2）恢复步骤
+        拷贝一个好的控制文件：
+        cp control02.ctl control01.ctl
+        shutdown immediate;
+        startup;
+        Database mounted.
+        ORA-01122: database file 1 failed verification check
+        ORA-01110: data file 1: '/u02/oradata/dbnms/system01.dbf'
+        ORA-01207: file is more recent than controlfile - old controlfile
+
+        rman target sys@dbnms catalog rmanuser@cata
+        run{
+            allocate channel c1 type disk;
+            restore database;
+            recover database;
+            sql 'alter database open';
+            release channel c1;
+            }
+        RMAN-00571: ===========================================================
+        RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+        RMAN-00571: ===========================================================
+        RMAN-03009: failure of sql command on default channel at 09/08/2005 17:29:04
+        RMAN-11003: failure during parse/execution of SQL statement: alter database open
+        ORA-00322: log 3 of thread 1 is not current copy
+        ORA-00312: online log 3 thread 1: '/u02/oradata/dbnms/redo03.log'
+        ORA-00312: online log 3 thread 1: '/u02/oradata/dbnms/redo13.log'
+        ORA-00312: online log 3 thread 1: '/u02/oradata/dbnms/redo23.log'
+
+        alter database clear unarchived logfile group 3;
+        alter database open;
+
+    恢复成功
+
+    7． 损坏全部控制文件
+    （1）故障模拟
+        删除控制文件：rm /u02/oradata/dbnms/control01.ctl
+        关闭数据库：shutdown immediate; 
+        ORA-00210: cannot open the specified controlfile
+        ORA-00202: controlfile: '/u02/oradata/dbnms/control01.ctl'
+        ORA-27041: unable to open file
+        Linux Error: 2: No such file or directory
+        Additional information: 3
+
+    （2）恢复步骤
+        shutdown abort;
+        startup nomount;
+
+        rman target sys catalog rmanuser@cata
+        run{
+            allocate channel c1 type disk;
+            restore controlfile;
+            restore database;
+            sql 'alter database mount';
+            recover database;
+            sql 'alter database open resetlogs';
+            release channel c1;
+            }
+
+        RMAN-00571: ===========================================================
+        RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+        RMAN-00571: ===========================================================
+        RMAN-03002: failure of recover command at 09/08/2005 17:43:31
+        RMAN-06054: media recovery requesting unknown log: thread 1 seq 9 lowscn 670233
+
+        alter database open resetlogs;
+
+        做一个full备份：
+        /home/oracle/dbbat/backup_full.sh
+
+    恢复成功
+
+    8． 损坏临时数据文件
+    （1）故障模拟
+        删除临时数据文件：rm /u02/oradata/dbnms/temp01.dbf
+        关闭数据库：shutdown immediate; 
+        启动数据库：startup;
+
+    （2）恢复步骤
+        alter database tempfile '/u02/oradata/dbnms/temp01.dbf' drop;
+        ERROR at line 1:
+        ORA-01516: nonexistent log file, datafile, or tempfile
+        "/u02/oradata/dbnms/temp01.dbf"
+
+        alter tablespace temp add tempfile '/u02/oradata/dbnms/temp01.dbf' size 50M autoextend on next 5M maxsize unlimited;
+
+    恢复成功
+
+    9． 损坏spfile参数文件
+    （1）故障模拟
+        删除spfile文件：rm $ORACLE_HOME/dbs/spfiledbnms.ora
+        关闭数据库：shutdown immediate; 
+        启动数据库：startup;
+
+    （2）恢复步骤
+        startup nomount;
+
+        rman target sys catalog rmanuser@cata
+        restore spfile;
+
+        shutdown immediate;
+        startup;
+
+    恢复成功
+
+    10． 损坏全部文件（包括全部数据文件、控制文件、临时数据文件、联机日志文件）
+    （1）故障模拟
+        删除全部文件：rm /u02/oradata/dbnms/*
+        关闭数据库：shutdown immediate;
+        ORA-03113: end-of-file on communication channel
+
+    （2）恢复步骤
+        sqlplus sys as sysdba
+        startup nomount;
+
+        rman target sys catalog rmanuser@cata
+        还原控制文件：restore controlfile;
+        还原数据库：restore database;
+        mount 数据库：alter database mount;
+        恢复数据库：recover database;
+        RMAN-00571: ===========================================================
+        RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+        RMAN-00571: ===========================================================
+        RMAN-03002: failure of recover command at 09/09/2005 10:33:13
+        RMAN-06054: media recovery requesting unknown log: thread 1 seq 19 lowscn 718284
+        用resetlogs方式打开数据库：alter database open resetlogs;
+        database opened
+        new incarnation of database registered in recovery catalog
+        starting full resync of recovery catalog
+        full resync complete
+        重建临时文件：
+        sqlplus sys as sysdba
+        alter database tempfile '/u02/oradata/dbnms/temp01.dbf' drop;
+        ERROR at line 1:
+        ORA-01516: nonexistent log file, datafile, or tempfile
+        "/u02/oradata/dbnms/temp01.dbf"
+
+        alter tablespace temp add tempfile '/u02/oradata/dbnms/temp01.dbf' size 50M autoextend on next 5M maxsize unlimited;
+
+        执行一次全库备份：/home/oracle/dbbat/backup_full.sh
+    恢复成功
