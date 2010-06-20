@@ -66,12 +66,14 @@
 
 	<!-- DefaultCache setting. -->
  		<defaultCache
-		maxElementsInMemory="10000" eternal="false" timeToIdleSeconds="120"
-		timeToLiveSeconds="120" memoryStoreEvictionPolicy="LRU"
+		maxElementsInMemory="1" eternal="true" timeToIdleSeconds="120"
+		timeToLiveSeconds="120" memoryStoreEvictionPolicy="LRU" overflowToDisk="true"
+		diskPersistent="true"
 		/>
 
 	<cache name="contentInfoCache" maxElementsInMemory="1000" 
-	 timeToIdleSeconds="120"	timeToLiveSeconds="120" 
+	 timeToIdleSeconds="120"	timeToLiveSeconds="120" overflowToDisk="true"
+		diskPersistent="true"
 		eternal="true"  memoryStoreEvictionPolicy="LRU" />
 
 </ehcache>
