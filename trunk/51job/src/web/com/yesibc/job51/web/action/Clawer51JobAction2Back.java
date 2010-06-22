@@ -138,32 +138,32 @@ public class Clawer51JobAction2Back extends BaseAction2Support {
 			parseSearchList(threadNumber, requestId, reqLog);
 		}
 
-		for (Iterator<WebPages> it = CompanyJobContext.searchPagesWP.iterator(); it.hasNext();) {
+		for (Iterator<WebPages> it = CompanyJobContext.getSearchPagesWP().iterator(); it.hasNext();) {
 			WebPages wp = it.next();
 			if (WebPages.STATUS_OK.equals(wp.getStatus())) {
 				it.remove();
 			}
 		}
-		size = CompanyJobContext.getSearchPagesSize();
+		size = CompanyJobContext.getKOPageSize();
 		log.info(reqLog + " SearchPages left:==========" + size);
 		if (size > 0 && failedOrNotInt < 2) {
 			parseSearchPages(requestId, reqLog, threadNumber);
 		}
 
-		for (Iterator<WebPages> it = CompanyJobContext.jobsWP.iterator(); it.hasNext();) {
+		for (Iterator<WebPages> it = CompanyJobContext.getJobsWP().iterator(); it.hasNext();) {
 			WebPages wp = it.next();
 			if (WebPages.STATUS_OK.equals(wp.getStatus())) {
 				it.remove();
 			}
 		}
-		size = CompanyJobContext.getJobsWPLength();
+		size = CompanyJobContext.getKOJobsLength();
 		log.info(reqLog + " Jobs left:==========" + size);
 		if (size > 0 && failedOrNotInt < 3) {
 			parseJobsDetail(requestId, reqLog, threadNumber);
 		}
 		log.info(reqLog + " End checking!Results:SearchListSize=" + CompanyJobContext.getSearchListSize()
-				+ ",SearchPagesSize=" + CompanyJobContext.getSearchPagesSize() + ",JobsWPLength="
-				+ CompanyJobContext.getJobsWPLength());
+				+ ",SearchPagesSize=" + CompanyJobContext.getPageSizeInCache() + ",JobsWPLength="
+				+ CompanyJobContext.getJobsLengthInCache());
 	}
 
 	private void doing(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
@@ -199,7 +199,7 @@ public class Clawer51JobAction2Back extends BaseAction2Support {
 		long l = System.currentTimeMillis();
 		int error = 0;
 		try {
-			int size = CompanyJobContext.getJobsWPLength();
+			int size = CompanyJobContext.getKOJobsLength();
 			if (ClawerConstants.TEST_WEB) {
 				size = ClawerConstants.TEST_WEB_NUM;
 			}
@@ -227,7 +227,7 @@ public class Clawer51JobAction2Back extends BaseAction2Support {
 					}
 					log.info(reqLog + "#JobDetails#This time-" + circleTime + " of Jobs is used out.Re-get from DB!");
 					CompanyJobContext.intPages();
-					size = CompanyJobContext.getSearchPagesSize();
+					size = CompanyJobContext.getKOPageSize();
 					if (size < 1) {
 						break;
 					}
@@ -245,7 +245,7 @@ public class Clawer51JobAction2Back extends BaseAction2Support {
 					// doing
 					SearchJobDetailEngine sce = new SearchJobDetailEngine("JobDetails-loop-" + loop + "#"
 							+ totalThreadTag + totalThreads + "-" + thread + "].CircleTimes[" + circleTimes + "-"
-							+ circleTime + currentOfToI + size + "-" + current + endTag, CompanyJobContext.jobsWP
+							+ circleTime + currentOfToI + size + "-" + current + endTag, CompanyJobContext.getJobsWP()
 							.get(current), thread);
 					sce.start();
 					sjdes.add(sce);
@@ -273,7 +273,7 @@ public class Clawer51JobAction2Back extends BaseAction2Support {
 		}
 		l = System.currentTimeMillis() - l;
 		log.info("parse parseJobsDetails.Times[" + l / (1000 * 60) + "s]. Error[" + error + "]. URL_COMPANIES="
-				+ CompanyJobContext.getCompaniesLength() + ",URL_JOBS=" + CompanyJobContext.getJobsWPLength()
+				+ CompanyJobContext.getCompaniesLength() + ",URL_JOBS=" + CompanyJobContext.getJobsLengthInCache()
 				+ ",COMPANY=" + CompanyJobContext.getCompaniesLength() + ",Email="
 				+ CompanyJobContext.getEmailsLength() + ".");
 	}
@@ -287,7 +287,7 @@ public class Clawer51JobAction2Back extends BaseAction2Support {
 		long l = System.currentTimeMillis();
 		int error = 0;
 		try {
-			int size = CompanyJobContext.getSearchPagesSize();
+			int size = CompanyJobContext.getKOPageSize();
 			if (ClawerConstants.TEST_WEB) {
 				size = ClawerConstants.TEST_WEB_NUM;
 			}
@@ -320,7 +320,7 @@ public class Clawer51JobAction2Back extends BaseAction2Support {
 					}
 					log.info(reqLog + "#SearchPages#This time-" + circleTime + " of Pages is used out.Re-get from DB!");
 					CompanyJobContext.intPages();
-					size = CompanyJobContext.getSearchPagesSize();
+					size = CompanyJobContext.getKOPageSize();
 					if (size < 1) {
 						break;
 					}
@@ -364,8 +364,8 @@ public class Clawer51JobAction2Back extends BaseAction2Support {
 		}
 		l = System.currentTimeMillis() - l;
 		log.info("parseSearchPages OK.Times[" + l / (1000 * 60) + "s]. Error[" + error + "]Search List="
-				+ CompanyJobContext.getSearchListSize() + ",Search Pages=" + CompanyJobContext.getSearchPagesSize()
-				+ ",Jobs=" + CompanyJobContext.getJobsWPLength() + ",Companies="
+				+ CompanyJobContext.getSearchListSize() + ",Search Pages=" + CompanyJobContext.getPageSizeInCache()
+				+ ",Jobs=" + CompanyJobContext.getJobsLengthInCache() + ",Companies="
 				+ CompanyJobContext.getCompaniesLength());
 	}
 
@@ -432,8 +432,8 @@ public class Clawer51JobAction2Back extends BaseAction2Support {
 
 		l = System.currentTimeMillis() - l;
 		log.info("parse search list OK.Times[" + l / (1000 * 60) + "s]. Error[" + error + "]Search List="
-				+ CompanyJobContext.getSearchListSize() + ",Search Pages=" + CompanyJobContext.getSearchPagesSize()
-				+ ",Jobs=" + CompanyJobContext.getJobsWPLength() + ",Companies="
+				+ CompanyJobContext.getSearchListSize() + ",Search Pages=" + CompanyJobContext.getPageSizeInCache()
+				+ ",Jobs=" + CompanyJobContext.getJobsLengthInCache() + ",Companies="
 				+ CompanyJobContext.getCompaniesLength());
 	}
 

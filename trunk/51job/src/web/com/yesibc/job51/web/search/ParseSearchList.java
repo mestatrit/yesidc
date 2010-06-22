@@ -130,8 +130,8 @@ public class ParseSearchList {
 			url = CompanyJobContext.getNewUrlPage(url, i);
 
 			WebPages wp = null;
-			if (CompanyJobContext.pagesMap.get(url) != null) {
-				wp = CompanyJobContext.pagesMap.get(url);
+			if (CompanyJobContext.getPageInCache(url) != null) {
+				wp = CompanyJobContext.getPageInCache(url);
 				if (WebPages.STATUS_OK.equals(wp.getStatus())
 						&& DateUtils.substractDate(wp.getUpdateDate(), date) > ClawerConstants.EXPIRED_DAYS) {
 					wp.setRequestId(ClawerConstants.REQUEST_ID);

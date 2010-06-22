@@ -19,6 +19,7 @@ public class WebLinkSupport {
 	private static long COUNTLOADED = 0;
 	private static long WAITING_CONNECTION = 10000;
 	private static Date reconnDate = null;
+	public static boolean CONN_TAG = true;
 
 	private static void reconnectInternet(String rid) throws ApplicationException {
 		finish = false;
@@ -202,12 +203,11 @@ public class WebLinkSupport {
 			while (!entry.getValue().isLoaded()) {
 				try {
 					i++;
-					LogHandler.info(tag + "Check running web waiting time:" + ClawerConstants.WAITING_TIME_LOADING * i);
 					Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
 
 					if (i > 12) {
 						entry.getValue().setLoaded(true);
-						ErrorHandler.errorLogAndMail(tag + "Check running web waiting error!Time:"
+						ErrorHandler.errorLogAndMail(tag + "Check running web waiting error when checkRunning!Time:"
 								+ ClawerConstants.WAITING_TIME_LOADING * i);
 					}
 				} catch (InterruptedException e) {
@@ -220,23 +220,31 @@ public class WebLinkSupport {
 	}
 
 	public static void refreshContextAndReconnInternet(String title, boolean errReconn) throws ApplicationException {
-		reconnDate = new Date();
+		try {
+			CONN_TAG = false;
 
-		if (errReconn) {
-			if ((System.currentTimeMillis() - reconnDate.getTime()) < ClawerConstants.RECONNECT_INTERVAL) {
-				throw new ApplicationException(ErrorHandler.WAIT_ERROR_SYSTEM
-						+ " refreshContextAndReconnInternet! reconn times is to close!");
+			checkRunningWeb(title, -1);
+
+			reconnDate = new Date();
+
+			if (errReconn) {
+				if ((System.currentTimeMillis() - reconnDate.getTime()) < ClawerConstants.RECONNECT_INTERVAL) {
+					throw new ApplicationException(ErrorHandler.WAIT_ERROR_SYSTEM
+							+ " refreshContextAndReconnInternet! reconn times is to close!");
+				}
 			}
-		}
 
-		title = title + "[" + (++COUNTLOADED) + "]";
-		LogHandler.info(title + " start!");
-		int sizeOfWRE = WebrendererContext.WEBRENDER_ENTITIES.size();
-		for (int i = 0; i < sizeOfWRE; i++) {
-			WebrendererContext.reFreshContext(i, title + "-" + i);
+			title = title + "[" + (++COUNTLOADED) + "]";
+			LogHandler.info(title + " start!");
+			int sizeOfWRE = WebrendererContext.WEBRENDER_ENTITIES.size();
+			for (int i = 0; i < sizeOfWRE; i++) {
+				WebrendererContext.reFreshContext(i, title + "-" + i);
+			}
+			reconnectInternet(title);
+			LogHandler.info(title + " End!");
+		} finally {
+			CONN_TAG = true;
 		}
-		reconnectInternet(title);
-		LogHandler.info(title + " End!");
 	}
 
 }

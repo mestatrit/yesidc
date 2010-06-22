@@ -54,7 +54,7 @@ public class ParseJobdetail {
 		String url = ies.get(0).getAttribute("href", 0);
 		String companyId = CompanyInfoSupport.getCompanyCode(url);
 		companyId = ClawerConstants.FROM_WHERE_51JOB + "_" + companyId;
-		Company company = CompanyJobContext.getCompanies(companyId);
+		Company company = CompanyJobContext.getComInCache(companyId);
 		if (company == null) {
 			CompanyInfoHandlerService cih = (CompanyInfoHandlerService) SpringContext
 					.getBean("companyInfoHandlerService");
@@ -68,7 +68,7 @@ public class ParseJobdetail {
 				throw new ApplicationException(processContext.getLogTitle() + " Get company is null! Company is "
 						+ companyId);
 			}
-			CompanyJobContext.companies.put(companyId, company);
+			CompanyJobContext.putCompany(companyId, company);
 		}
 		return company;
 	}
