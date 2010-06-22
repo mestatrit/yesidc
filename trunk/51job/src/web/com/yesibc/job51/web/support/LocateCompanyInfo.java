@@ -457,6 +457,8 @@ public class LocateCompanyInfo {
 	}
 
 	private static boolean checkEmail(ProcessContext processContext, String email) throws ApplicationException {
+		email = StringUtils.parseOutHTML(email);
+
 		if (!StringUtils.isEmail(email)) {
 			return false;
 		} else if (CompanyJobContext.emails.contains(email)) {
@@ -476,7 +478,7 @@ public class LocateCompanyInfo {
 		}
 		CompanyDao companyDao = (CompanyDao) SpringContext.getBean("companyDao");
 		List<ComEmail> ces = companyDao.getComEmails(email);
-		if(!CollectionUtils.isEmpty(ces)){
+		if (!CollectionUtils.isEmpty(ces)) {
 			return true;
 		}
 		return false;
