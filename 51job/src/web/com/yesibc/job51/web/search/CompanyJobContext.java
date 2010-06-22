@@ -15,12 +15,14 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import net.sf.cglib.beans.BeanCopier;
+import net.sf.ehcache.Cache;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.webrenderer.swing.dom.IElement;
+import com.yesibc.core.components.cache.EhCacheSupport;
 import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.exception.NestedRuntimeException;
@@ -41,6 +43,10 @@ import com.yesibc.job51.web.support.ErrorHandler;
 
 public class CompanyJobContext {
 
+	private static Cache companyCache = (Cache) SpringContext.getBean("companyCache");
+	private static Cache pageCache = (Cache) SpringContext.getBean("pageCache");
+	private static Cache jobCache = (Cache) SpringContext.getBean("jobCache");
+
 	public final static BeanCopier ompanyCopier = BeanCopier.create(Company.class, Company.class, false);
 
 	public final static String DB_OR_REQUEST_VAL = "db";
@@ -51,14 +57,12 @@ public class CompanyJobContext {
 	private static Log log = LogFactory.getLog(CompanyJobContext.class);
 	private static Log logurls = LogFactory.getLog(ClawerConstants.LOG_URLS);
 
-	public static Map<String, Company> companies = new HashMap<String, Company>();
+	private static List<WebPages> searchPagesWP = new ArrayList<WebPages>();
+	private static List<WebPages> jobsWP = new ArrayList<WebPages>();
+
 	public static Map<String, SearchResult> searchResultMap = new HashMap<String, SearchResult>();
-	public static List<WebPages> searchPagesWP = new ArrayList<WebPages>();
 	public static List<WebPages> searchListWP = new ArrayList<WebPages>();
 	public static List<SearchResult> searchResults = new ArrayList<SearchResult>();
-	public static List<WebPages> jobsWP = new ArrayList<WebPages>();
-	public static Map<String, WebPages> pagesMap = new HashMap<String, WebPages>();
-	public static Map<String, WebPages> jobsMap = new HashMap<String, WebPages>();
 	private static Lock lock = new ReentrantLock();
 	public static List<String> emails = new ArrayList<String>();
 	public static Object synObject = new Object();
@@ -71,29 +75,6 @@ public class CompanyJobContext {
 		intPages();
 		intJobs();
 		intSearchResults();
-		intCompanies();
-	}
-
-	private static void intCompanies() {
-
-		try {
-			if (!ClawerConstants.TEST_DAO) {
-				CompanyInfoHandlerService cih = (CompanyInfoHandlerService) SpringContext
-						.getBean("companyInfoHandlerService");
-				// cih.initalCompanyInfo(companies, emails);
-				log.info("Not to initial company!" + cih.toString());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new NestedRuntimeException("IntCompanies error!");
-		}
-
-		if (companies != null && !companies.isEmpty()) {
-			LogHandler.info("Init company map! map size is " + companies.size());
-		}
-		if (emails != null && !emails.isEmpty()) {
-			LogHandler.info("Init email map! map size is " + emails.size());
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -135,13 +116,22 @@ public class CompanyJobContext {
 
 		if (jobsWP != null && !jobsWP.isEmpty()) {
 			Collections.shuffle(jobsWP);
+			String url = null;
+			int position = 0;
+			String jobCode = null;
 			for (WebPages wp : jobsWP) {
 				// 下面判断是为了防止覆盖已经在CACHE里的WP
-				if (!jobsMap.containsKey(wp.getMemo())) {
-					jobsMap.put(wp.getUrl(), wp);
+				if(wp.getMemo()==null || "".equals(wp.getMemo())){
+					url = wp.getUrl();
+					position = url.indexOf(ClawerConstants.JOB_URL_POSTFIX);
+					jobCode = url.substring(ClawerConstants.JOB_URL_PREFIX.length(), position);
+					wp.setMemo(jobCode);
+				}
+				if (!jobCache.isKeyInCache(wp.getMemo())) {
+					EhCacheSupport.put2Cache(jobCache, wp.getMemo(), wp);
 				}
 			}
-			LogHandler.info("Get Jobs! times-[" + INIT_JOBS_TIMES + "] Jobs size is " + jobsMap.size());
+			LogHandler.info("Get Jobs! times-[" + INIT_JOBS_TIMES + "] Jobs size is " + jobsWP.size());
 		} else {
 			jobsWP = new ArrayList<WebPages>();
 			LogHandler.info("Get Jobs! times-[" + INIT_JOBS_TIMES + "] Jobs size is 0.");
@@ -165,8 +155,8 @@ public class CompanyJobContext {
 			Collections.shuffle(searchPagesWP);
 			for (WebPages wp : searchPagesWP) {
 				// 下面判断是为了防止覆盖已经在CACHE里的WP
-				if (!pagesMap.containsKey(wp.getUrl())) {
-					pagesMap.put(wp.getUrl(), wp);
+				if (!pageCache.isKeyInCache(wp.getUrl())) {
+					EhCacheSupport.put2Cache(pageCache, wp.getUrl(), wp);
 				}
 			}
 			LogHandler.info("Get pages!times-[" + INIT_PAGES_TIMES + "] Pages size is " + searchPagesWP.size());
@@ -299,12 +289,13 @@ public class CompanyJobContext {
 			position = url.indexOf(ClawerConstants.JOB_URL_POSTFIX);
 			jobCode = url.substring(ClawerConstants.JOB_URL_PREFIX.length(), position);
 
-			if (jobsMap.get(url) != null) {
-				if (WebPages.STATUS_OK.equals(jobsMap.get(url).getStatus())
-						&& DateUtils.substractDate(jobsMap.get(url).getUpdateDate(), date) > ClawerConstants.EXPIRED_DAYS) {
-					jobsMap.get(url).setRequestId(ClawerConstants.REQUEST_ID);
-					jobsMap.get(url).setUpdateDate(date);
-					jobsMap.get(url).setStatus(WebPages.STATUS_KO);
+			if (jobCache.isKeyInCache(jobCode)) {
+				WebPages wpInCache = EhCacheSupport.getValue(jobCache, jobCode, WebPages.class);
+				if (WebPages.STATUS_OK.equals(wpInCache.getStatus())
+						&& DateUtils.substractDate(wpInCache.getUpdateDate(), date) > ClawerConstants.EXPIRED_DAYS) {
+					wpInCache.setRequestId(ClawerConstants.REQUEST_ID);
+					wpInCache.setUpdateDate(date);
+					wpInCache.setStatus(WebPages.STATUS_KO);
 					log.info("Job code:" + jobCode + " from cache! EXPIRED and re-get!");
 				} else {
 					log.info("Job code:" + jobCode + " from cache! Filtered!");
@@ -315,9 +306,9 @@ public class CompanyJobContext {
 			WebPages wp = null;
 			try {
 				lock.lock();
-				if (jobsMap.get(url) == null) {
+				if (!jobCache.isKeyInCache(jobCode)) {
 					wp = new WebPages();
-					jobsMap.put(url, wp);
+					EhCacheSupport.put2Cache(jobCache, jobCode, wp);
 				} else {
 					continue;
 				}
@@ -362,7 +353,7 @@ public class CompanyJobContext {
 			}
 
 			jobsWP.add(wp);
-			jobsMap.put(url, wp);
+			EhCacheSupport.put2Cache(jobCache, jobCode, wp);
 		}
 
 		try {
@@ -408,7 +399,7 @@ public class CompanyJobContext {
 				}
 			}
 
-			Company com = companies.get(companyId);
+			Company com = (Company) companyCache.get(companyId).getValue();
 			if (com == null) {
 				throw new ApplicationException("Get company error from Cache!companyId:" + companyId);
 			}
@@ -450,7 +441,7 @@ public class CompanyJobContext {
 		 * B.不在CACHE，则放到CACHE，1）不在DB，新建；2）在DB，时间过长或者为空且状态为OK的，需要更新。
 		 * </pre>
 		 */
-		if (companies.containsKey(companyId)) {
+		if (companyCache.isKeyInCache(companyId)) {
 			return filterInCache(processContext, companyId);
 		} else {
 			return filterInDB(processContext, companyId);
@@ -472,7 +463,7 @@ public class CompanyJobContext {
 		}
 
 		if (company != null) {
-			companies.put(companyId, company);
+			EhCacheSupport.put2Cache(companyCache, companyId, company);
 			if (Company.LOAD_OK.equals(company.getLoadOK())) {
 				Date updateDate = company.getUpdateDate();
 				if (updateDate != null) {
@@ -494,21 +485,21 @@ public class CompanyJobContext {
 		}
 
 		company = new Company();
-		companies.put(companyId, company);
+		EhCacheSupport.put2Cache(companyCache, companyId, company);
 		log.info(processContext.getLogTitle() + " com code:" + companyId + " not in DB!");
 		return false;
 	}
 
 	private static boolean filterInCache(ProcessContext processContext, String companyId) {
-		Company comOld = companies.get(companyId);
+		Company comOld = getComInCache(companyId);
 		if (comOld == null) {
 			comOld = new Company();
-			companies.put(companyId, comOld);
+			EhCacheSupport.put2Cache(companyCache, companyId, comOld);
 			log.info(processContext.getLogTitle() + " com code:" + companyId + " not in Cache!");
 			return false;
 		}
-		if (Company.LOAD_OK.equals(companies.get(companyId).getLoadOK())) {
-			Date updateDate = companies.get(companyId).getUpdateDate();
+		if (Company.LOAD_OK.equals(comOld.getLoadOK())) {
+			Date updateDate = comOld.getUpdateDate();
 			if (updateDate != null) {
 				if (DateUtils.substractDate(updateDate, new Date()) > ClawerConstants.EXPIRED_DAYS) {
 					log.info(processContext.getLogTitle() + " com code:" + comOld.getCompanyCode()
@@ -535,26 +526,31 @@ public class CompanyJobContext {
 	}
 
 	/**
-	 * @return the companies
-	 */
-	public static Company getCompanies(String code) {
-		return companies.get(code);
-	}
-
-	/**
 	 * @param companies
 	 *            the companies to set
 	 */
-	public static void setCompanies(String key, Company company) {
-		companies.put(key, company);
+	public static void putCompany(String companyId, Company company) {
+		EhCacheSupport.put2Cache(companyCache, companyId, company);
+	}
+
+	public static Company getComInCache(String companyId) {
+		return EhCacheSupport.getValue(companyCache, companyId, Company.class);
+	}
+
+	public static WebPages getPageInCache(String url) {
+		return EhCacheSupport.getValue(pageCache, url, WebPages.class);
 	}
 
 	public static int getCompaniesLength() {
-		return companies.size();
+		return companyCache.getSize();
 	}
 
-	public static int getJobsWPLength() {
+	public static int getKOJobsLength() {
 		return jobsWP.size();
+	}
+
+	public static int getJobsLengthInCache() {
+		return jobCache.getSize();
 	}
 
 	/**
@@ -576,16 +572,15 @@ public class CompanyJobContext {
 		emails.add(email);
 	}
 
-	public static void putSearchPages2Conext(WebPages wp) {
-		searchPagesWP.add(wp);
-
-	}
-
 	public static List<WebPages> getSearchPagesWP() {
 		return searchPagesWP;
 	}
 
-	public static int getSearchPagesSize() {
+	public static int getPageSizeInCache() {
+		return pageCache.getSize();
+	}
+
+	public static int getKOPageSize() {
 		return searchPagesWP.size();
 	}
 
@@ -610,8 +605,12 @@ public class CompanyJobContext {
 	}
 
 	public static void addPagesURL(String url, WebPages wp) {
-		pagesMap.put(url, wp);
+		EhCacheSupport.put2Cache(pageCache, url, wp);
 		searchPagesWP.add(wp);
+	}
+
+	public static List<WebPages> getJobsWP() {
+		return jobsWP;
 	}
 
 }

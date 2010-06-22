@@ -17,7 +17,7 @@ public class ClawerConstants {
 
 	public static boolean SHOW_FRAME = false;
 
-	public static int TEST_WEB_NUM = 20;
+	public static int TEST_WEB_NUM = 2;
 
 	public static int THREADS_NUMBER = TEST_WEB_NUM;
 

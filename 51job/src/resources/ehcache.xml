@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache>
 
-	<diskStore path="./temp/ehcache" />
+	<diskStore path="./logs/ehcache" />
 
 	<!-- DefaultCache setting. -->
 	<defaultCache maxElementsInMemory="10000"
@@ -9,14 +9,19 @@
 		timeToLiveSeconds="300" overflowToDisk="false" diskPersistent="false" />
 
 
-	<cache name="contentInfoCache" maxElementsInMemory="1000"
+	<cache name="companyCache" maxElementsInMemory="1000"
 		eternal="true" timeToIdleSeconds="0" timeToLiveSeconds="0"
 		overflowToDisk="true" diskPersistent="true"
-		diskExpiryThreadIntervalSeconds="0" memoryStoreEvictionPolicy="LRU" />
+		diskExpiryThreadIntervalSeconds="0" memoryStoreEvictionPolicy="LFU" />
 		
-	<cache name="contentInfoCache1" maxElementsInMemory="1000"
+	<cache name="pageCache" maxElementsInMemory="1000"
 		eternal="true" timeToIdleSeconds="0" timeToLiveSeconds="0"
 		overflowToDisk="true" diskPersistent="true"
-		diskExpiryThreadIntervalSeconds="0" memoryStoreEvictionPolicy="LRU" />
+		diskExpiryThreadIntervalSeconds="0" memoryStoreEvictionPolicy="LFU" />
+		
+	<cache name="jobCache" maxElementsInMemory="1000"
+		eternal="true" timeToIdleSeconds="0" timeToLiveSeconds="0"
+		overflowToDisk="true" diskPersistent="true"
+		diskExpiryThreadIntervalSeconds="0" memoryStoreEvictionPolicy="LFU" />
 
 </ehcache>

@@ -4,17 +4,35 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
 	default-lazy-init="true">
 
-	<!--
-		会在classpath路径下找ehcache.xml配置文件 CacheManager manager = new
-		CacheManager(); 也可以根据相对文件路径来加载配置文件 CacheManager manager = new
-		CacheManager(“src/ehcache.xml”); 通过相对与类路径的位置加载 URL url =
-		getClass().getResource(“/ehcache.xml”); CacheManager manager = new
-		CacheManager(url); 通过流加载 InputSream fis = new FileInputStream(new
-		File(“src/config/ehcache.xml”).getAbsolutePath());
-	-->
 	<description>EhCache配置文件</description>
 
-	<bean id="ehcacheManager"
-		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" />
+	<!-- 引用ehCache的配置 -->
+	<bean id="defaultCacheManager"
+		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
+
+	<bean id="companyCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheManager">
+			<ref local="defaultCacheManager" />
+		</property>
+		<property name="cacheName">
+			<value>companyCache</value>
+		</property>
+	</bean>
+	<bean id="pageCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheManager">
+			<ref local="defaultCacheManager" />
+		</property>
+		<property name="cacheName">
+			<value>pageCache</value>
+		</property>
+	</bean>
+	<bean id="jobCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheManager">
+			<ref local="defaultCacheManager" />
+		</property>
+		<property name="cacheName">
+			<value>jobCache</value>
+		</property>
+	</bean>
 
 </beans>
