@@ -273,6 +273,8 @@ public class ClawerConstants {
 	public final static String[] PROVINCE_FILTERS = ClawerUtils.getValByKey("province.filter.list").split(",");
 	public final static String[] CITY_FILTERS = ClawerUtils.getValByKey("city.filter.list").split(",");
 	public final static String[] FILTERS_ADDRESS = ClawerUtils.getValByKey("filters.address").split(",");
+	
+	public final static String JOB_NO_FOUND = ClawerUtils.getValByKey("job.no.found");
 
 	public static final String ALERT_ERROR = "0001";
 

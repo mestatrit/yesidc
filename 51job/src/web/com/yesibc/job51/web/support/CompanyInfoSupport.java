@@ -30,6 +30,15 @@ public class CompanyInfoSupport {
 	private static Log log = LogFactory.getLog(CompanyInfoSupport.class);
 	private final static String ADDR_TAG = " #Address# ";
 
+	public static boolean jobPageValidate(ProcessContext processContext) throws ApplicationException {
+		String html = processContext.getBrowser().getDocument().getBody().getOuterHTML();
+		if (html != null && html.indexOf(ClawerConstants.JOB_NO_FOUND) > -1) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public static void parseToCompany(Company company, List<String> emails, ProcessContext processContext)
 			throws ApplicationException {
 

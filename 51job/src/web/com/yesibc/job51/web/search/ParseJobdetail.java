@@ -22,6 +22,12 @@ public class ParseJobdetail {
 	private static Log log = LogFactory.getLog(ParseJobdetail.class);
 
 	public static void parseJobdetail(ProcessContext processContext) throws ApplicationException {
+
+		if (!CompanyInfoSupport.jobPageValidate(processContext)) {
+			log.info(processContext.getLogTitle() + " Job page not KO!");
+			return;
+		}
+
 		Company company = getCompany(processContext);
 		List<String> emails = LocateCompanyInfo.getEmails(processContext);
 		if (Company.LOAD_OK.equals(company.getLoadOK()) && CollectionUtils.isEmpty(emails)) {
