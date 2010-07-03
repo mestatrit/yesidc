@@ -122,6 +122,26 @@ i:= i+1;
 select chn_des_uat2.seq_sub_db_id.nextval into j  from dual;
 end loop;
 end;
+--
+declare
+  LastValue  number;
+  endValue number;
+begin
+  endValue:=1000;
+  loop
+    select A.currval into LastValue from dual;
+    exit when LastValue >= endValue;
+  end loop;
+end;
+/
+--
+ALTER SEQUENCE SEQ_C_EMAIL  
+minvalue 1
+INCREMENT BY 1  
+MAXVALUE 9999999999999999999999999999  
+minvalue 1
+cache 20;
+--NOCACHE ;
 
 --13.保证创建的标识符在每个数据库里都是唯一的。
 select SYS_GUID()  from dual;

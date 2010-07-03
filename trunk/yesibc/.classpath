@@ -40,7 +40,6 @@
 	<classpathentry kind="lib" path="Components/main/lib/servlet-api-2.4.jar"/>
 	<classpathentry kind="lib" path="Components/main/lib/slf4j-api-1.5.6.jar"/>
 	<classpathentry kind="lib" path="Components/main/lib/slf4j-ext-1.5.6.jar"/>
-	<classpathentry kind="lib" path="Components/main/lib/spring-2.0.jar"/>
 	<classpathentry kind="lib" path="Components/main/lib/springside-joddform-2.0.jar"/>
 	<classpathentry kind="lib" path="Components/main/lib/standard-1.1.2.jar"/>
 	<classpathentry kind="lib" path="Components/main/lib/struts-1.2.9.jar"/>
@@ -88,12 +87,31 @@
 	<classpathentry kind="lib" path="Components/workflow/jbpm/lib/jbpm-identity.jar"/>
 	<classpathentry kind="lib" path="Components/workflow/jbpm/lib/jbpm-jpdl.jar"/>
 	<classpathentry kind="lib" path="Components/workflow/jbpm/lib/spring-modules-jbpm31.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="Components/test/lib/easymock-2.2.jar"/>
 	<classpathentry kind="lib" path="Components/test/lib/easymockclassextension-2.2.jar"/>
 	<classpathentry kind="lib" path="Components/test/lib/selenium-java-client-driver-0.9.0.jar"/>
 	<classpathentry kind="lib" path="Components/test/lib/selenium-server-0.9.0.jar"/>
 	<classpathentry kind="lib" path="Components/test/lib/spring-mock-2.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.5.0"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-webmvc-struts.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-aop.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-beans.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-core.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-web.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-webmvc.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-context-support.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-context.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-jdbc.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-jms.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-orm.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-test.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-tx.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/spring2.5.6/modules/spring-webmvc-portlet.jar"/>
+	<classpathentry kind="lib" path="Components/test/lib/dbunit-2.1.jar"/>
+	<classpathentry kind="lib" path="Components/security/jcaptcha-1.0.jar"/>
+	<classpathentry kind="lib" path="Components/security/jcaptcha-api-1.0.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/ext/springside3-core-3.2.2.jar"/>
+	<classpathentry kind="lib" path="Components/Spring/ext/springside3-extension-3.2.2.jar"/>
+	<classpathentry kind="lib" path="Components/test/lib/junit-4.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
