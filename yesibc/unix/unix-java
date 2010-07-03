@@ -1,0 +1,6 @@
+1.设置JAVA_HOME
+----~/.profile----
+JAVA_HOME=/usr/jdk/latest
+export JAVA_HOME
+----
+source ~/.profile
