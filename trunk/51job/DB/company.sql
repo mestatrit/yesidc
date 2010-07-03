@@ -11,4 +11,8 @@ tc_contact_email t4,tc_email t5
 where t.id=t1.company_id
 and t4.contact_header_id = t1.id
 and t4.com_email_id = t5.id
+and t.company_name like '%湖北三磊实业（集团）有限公司%'
 order by t.update_date desc
+
+select * from t_company t where t.company_name like '%湖北三磊实业（集团）有限公司%'
+order by t.id
