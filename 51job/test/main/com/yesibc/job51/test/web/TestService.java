@@ -32,7 +32,7 @@ public class TestService extends TestCase {
 	}
 
 	public void testSaveNewHeader() {
-		Company com = CompanyJobContext.getCompanies("51job_2286609");
+		Company com = CompanyJobContext.getComInCache("51job_2286609");
 		List<ComContactHeader> comContactHeaders = com.getComContactHeaders();
 
 		if (comContactHeaders == null || comContactHeaders.isEmpty()) {
@@ -64,7 +64,7 @@ public class TestService extends TestCase {
 	}
 
 	public void testMail2ExistCom() {
-		Company com = CompanyJobContext.getCompanies("51job_2286609");
+		Company com = CompanyJobContext.getComInCache("51job_2286609");
 		String email = "ttt@ttt.com";
 		if (CompanyJobContext.emails.contains(email)) {
 			log.info("==Email found:" + email);
