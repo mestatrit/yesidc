@@ -23,6 +23,7 @@ having count(*) > 1
 )
 
 select count(*) from t_company t
+--103565
 
 select   min(id)  as   id   from   t_company   group   by   company_code having count(*) > 1
 

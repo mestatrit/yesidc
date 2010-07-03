@@ -3,17 +3,14 @@ group by t.page_type
 
 /**
 --result 1
-1	3	651289	2010/6/4 16:57:05
-2	2	57505	  2010/6/4 16:57:05
---result 2
-1	3	657885	2010/6/4 17:27:49
-2	2	57085	  2010/6/4 17:27:49
---result 3
-1	3	726411	2010/6/5 0:32:52
-2	2	52502	  2010/6/5 0:32:52
+1	3	1325603	2010/6/23 0:56:01
+
+
 **/
 
-select to_char(t.create_date,'yyyy-MM-dd hh24:mi:ss'),t.* from t_webpages t where t.url = 'http://search.51job.com/job/42179120,c.html'
+select to_char(t.create_date,'yyyy-MM-dd hh24:mi:ss'),t.* from t_webpages t where 1=1
+and t.memo = '41277886' 
+t.url = 'http://search.51job.com/job/42179120,c.html'
 
 select count(*) from
 (
@@ -25,6 +22,7 @@ select to_char(t.create_date,'yyyy-MM-dd hh24:mi:ss'),t.* from t_webpages t wher
 and t.page_type = '3'
 order by t.update_date desc
 
+select * from  t_webpages t order by t.id
 
 select count(*)
   from (select min(id) as id,url, count(*)
