@@ -49,6 +49,116 @@
   
 文章出处：DIY部落(http://www.diybl.com/course/7_databases/oracle/Oracleshl/2008717/133577.html)
 
+==============================================================================================
+  1oracle表空间操作详解
+  2
+  3作者：   来源：    更新日期：2006-01-04 
+  
+  4 删除用户 drop user user_name cascade;
+  
+  5 
+  6  
+  7建立表空间
+  8
+  9CREATE TABLESPACE data01
+ 10DATAFILE '/oracle/oradata/db/DATA01.dbf' SIZE 500M
+ 11UNIFORM SIZE 128k;             #指定区尺寸为128k,如不指定，区尺寸默认为64k
+ 12
+ 13删除表空间
+ 14
+ 15DROP TABLESPACE data01 INCLUDING CONTENTS AND DATAFILES;
+ 16
+ 17修改表空间大小
+     alter database datafile '/path/NADDate05.dbf' resize 100M                
+
+        移动表至另一表空间
+        alter table move tablespace room1;
+ 18一、建立表空间
+ 19
+ 20CREATE TABLESPACE data01
+ 21DATAFILE '/oracle/oradata/db/DATA01.dbf' SIZE 500M
+ 22UNIFORM SIZE 128k;             #指定区尺寸为128k,如不指定，区尺寸默认为64k
+ 23
+ 24二、建立UNDO表空间
+ 25
+ 26CREATE UNDO TABLESPACE UNDOTBS02
+ 27DATAFILE '/oracle/oradata/db/UNDOTBS02.dbf' SIZE 50M
+ 28
+ 29#注意：在OPEN状态下某些时刻只能用一个UNDO表空间，如果要用新建的表空间，必须切换到该表空间:
+ 30
+ 31ALTER SYSTEM SET undo_tablespace=UNDOTBS02;
+ 32
+ 33三、建立临时表空间
+ 34
+ 35CREATE TEMPORARY TABLESPACE temp_data
+ 36TEMPFILE '/oracle/oradata/db/TEMP_DATA.dbf' SIZE 50M
+ 37
+ 38四、改变表空间状态
+ 39
+ 401.使表空间脱机
+ 41
+ 42ALTER TABLESPACE game OFFLINE;
+ 43
+ 44如果是意外删除了数据文件，则必须带有RECOVER选项
+ 45
+ 46ALTER TABLESPACE game OFFLINE FOR RECOVER;
+ 47
+ 482.使表空间联机
+ 49
+ 50ALTER TABLESPACE game ONLINE;
+ 51
+ 52
+ 533.使数据文件脱机
+ 54
+ 55ALTER DATABASE DATAFILE 3 OFFLINE;
+ 56
+ 574.使数据文件联机
+ 58
+ 59ALTER DATABASE DATAFILE 3 ONLINE;
+ 60
+ 615.使表空间只读
+ 62
+ 63ALTER TABLESPACE game READ ONLY;
+ 64
+ 656.使表空间可读写
+ 66
+ 67ALTER TABLESPACE game READ WRITE;
+ 68
+ 69五、删除表空间
+ 70
+ 71DROP TABLESPACE data01 INCLUDING CONTENTS AND DATAFILES;
+ 72
+ 73六、扩展表空间
+ 74
+ 75首先查看表空间的名字和所属文件
+ 76
+ 77select tablespace_name, file_id, file_name,
+ 78round(bytes/(1024*1024),0) total_space
+ 79from dba_data_files
+ 80order by tablespace_name;
+ 81
+ 821.增加数据文件
+ 83  ALTER TABLESPACE game
+ 84  ADD DATAFILE '/oracle/oradata/db/GAME02.dbf' SIZE 1000M;
+ 85
+ 862.手动增加数据文件尺寸
+ 87  ALTER DATABASE DATAFILE '/oracle/oradata/db/GAME.dbf'
+ 88  RESIZE 4000M;
+ 89
+ 903.设定数据文件自动扩展
+ 91  ALTER DATABASE DATAFILE '/oracle/oradata/db/GAME.dbf
+ 92  AUTOEXTEND ON NEXT 100M
+ 93  MAXSIZE 10000M;
+ 94
+ 95设定后查看表空间信息
+ 96
+ 97  SELECT A.TABLESPACE_NAME,A.BYTES TOTAL,B.BYTES USED, C.BYTES FREE,
+ 98  (B.BYTES*100)/A.BYTES "% USED",(C.BYTES*100)/A.BYTES "% FREE"
+ 99  FROM SYS.SM$TS_AVAIL A,SYS.SM$TS_USED B,SYS.SM$TS_FREE C
+100  WHERE A.TABLESPACE_NAME=B.TABLESPACE_NAME AND A.TABLESPACE_NAME=C.TABLESPACE_NAME; 
+==============================================================
+
+
 Q1：LSNRCTL> status 监听端点概要..   (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=TEST)(PORT=1521))) 
 监听程序不支持服务 命令执行成功 
 A1：

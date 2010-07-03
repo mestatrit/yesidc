@@ -73,3 +73,16 @@ ORA-01112: 未启动介质恢复
 
 SQL> alter database open resetlogs;
 alter database open resetlogs
+
+==================================================================
+1.SQL> startup mount
+select * from v$log_history t order by t.sequence# desc
+
+2.rman target sys/myworld
+
+3.RMAN> run{
+2> recover database until sequence 509;
+3> }
+
+4.SQL> alter database open resetlogs;
+
