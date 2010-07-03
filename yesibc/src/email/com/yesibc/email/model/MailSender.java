@@ -9,6 +9,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import com.yesibc.core.utils.StringUtils;
+
 import cn.cetelem.track.AlertUtils;
 
 /**
@@ -19,7 +21,7 @@ import cn.cetelem.track.AlertUtils;
 public class MailSender implements java.io.Serializable {
 
 	private static Log log = LogFactory.getLog(MailSender.class);
-	
+
 	/**
 	 * 
 	 */
@@ -179,13 +181,26 @@ public class MailSender implements java.io.Serializable {
 		return simpleBody;
 	}
 
-	public void sendBySimple() {
+	public void sendBySimple(String msg) {
 		if (senderServer == null || mailMessage == null) {
 			AlertUtils.sendAlert("[" + mailName + "] senderServer or mailMessage can not be null!\n" + simpleBody);
 			return;
 		}
 		log.error(simpleBody);
 		mailMessage.setText(simpleBody);
+		if (msg != null) {
+			if (msg.length() > 120) {
+				mailMessage.setSubject(StringUtils.subStringByByte(msg, 0, 120));
+			} else {
+				mailMessage.setSubject(msg);
+			}
+		} else {
+			if (simpleBody != null && simpleBody.length() > 120) {
+				mailMessage.setSubject(StringUtils.subStringByByte(simpleBody, 0, 120));
+			} else {
+				mailMessage.setSubject(simpleBody);
+			}
+		}
 		senderServer.send(mailMessage);
 	}
 
