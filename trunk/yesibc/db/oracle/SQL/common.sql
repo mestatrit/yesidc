@@ -19,7 +19,7 @@ alter database datafile '/opt/oracle/oradata/orcl/itc.dbf' resize 50m;
 
 --4.用户权限
 create user cfccc identified by cfccc;
-alter user des_app default tablespace cfccc
+alter user cfccc default tablespace cfccc
 temporary tablespace temp;
 grant create session,connect,resource to cfccc;
 grant select, insert, update, delete on CHN_INST.APPLICATION_BASIC to CHN_NEWECREDIT;

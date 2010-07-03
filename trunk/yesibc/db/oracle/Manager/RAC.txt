@@ -1,0 +1,2 @@
+使用真正应用集群 (RAC) 和自动存储管理 (ASM) 在 Windows 上安装 Oracle 数据库 10g
+http://www.oracle.com/technology/global/cn/obe/obe10gdb_vmware/install/racinstallwin2k/racinstallwin2k.htm
