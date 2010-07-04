@@ -49,6 +49,19 @@ public class LogJdkvm {
 
 			logMemory.info("Heap usage:" + heapUsage + "Mb" + ",Non-Heap usage:" + noHeapUsage + "Mb");
 
+			if ((heapUsage + noHeapUsage) > 950) {
+				long start = System.currentTimeMillis();
+				logMemory.info("Memory is greater than 900 Mb. GC start!");
+				
+				System.gc();
+				
+				nonHeapMemoryUsage = mem.getNonHeapMemoryUsage();
+				heapUsage = divide(heapMemoryUsage.getUsed(), (1024 * 1024), 4);
+				noHeapUsage = divide(nonHeapMemoryUsage.getUsed(), (1024 * 1024), 4);
+				
+				logMemory.info("Memory is greater than 950 Mb. GC End!Times:" + (System.currentTimeMillis() - start));
+			}
+
 			// cl = (ClassLoadingMXBean)
 			// ManagementFactory.getClassLoadingMXBean();
 			// 当前加载到 Java 虚拟机中的类的数量

@@ -10,15 +10,14 @@ import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.model.Code;
 import com.yesibc.job51.web.support.LogHandler;
 
-public class Address extends BaseCode 
-{
+public class Address extends BaseCode {
 
 	/**
 	 * @param str
 	 * @return
 	 */
 	public static Map<Long, Code> getAddress(String str) {
-		if(TOP_CODES == null){
+		if (TOP_CODES == null) {
 			refreshAll();
 		}
 		if (StringUtils.isEmpty(str)) {
@@ -34,6 +33,7 @@ public class Address extends BaseCode
 		Code c = null;
 		boolean have = false;
 		for (Map.Entry<String, Code> entry : CONTRIES.entrySet()) {
+			have = false;
 			c = (Code) entry.getValue();
 			if (str.indexOf(c.getCname()) > -1) {
 				for (String filter : ClawerConstants.FILTERS_ADDRESS) {
@@ -44,12 +44,14 @@ public class Address extends BaseCode
 				}
 				if (!have) {
 					map.put(CODE_LEVEL_SECOND, c);
+					break;
 				}
 			}
 		}
 
 		have = false;
 		for (Map.Entry<String, Code> entry : PROVINCES.entrySet()) {
+			have = false;
 			c = (Code) entry.getValue();
 			if (str.indexOf(c.getCname()) > -1) {
 				for (String filter : ClawerConstants.FILTERS_ADDRESS) {
@@ -60,12 +62,14 @@ public class Address extends BaseCode
 				}
 				if (!have) {
 					map.put(CODE_LEVEL_THIRD, c);
+					break;
 				}
 			}
 		}
 
 		have = false;
 		for (Map.Entry<String, Code> entry : CITIES.entrySet()) {
+			have = false;
 			c = (Code) entry.getValue();
 			if (str.indexOf(c.getCname()) > -1) {
 				for (String filter : ClawerConstants.FILTERS_ADDRESS) {
@@ -76,6 +80,7 @@ public class Address extends BaseCode
 				}
 				if (!have) {
 					map.put(CODE_LEVEL_FOURTH, c);
+					break;
 				}
 			}
 		}
@@ -122,19 +127,21 @@ public class Address extends BaseCode
 
 			BaseCode.PROVINCES.put(code.getCode(), code);
 
-			//LogHandler.info("Start put cities to Province:" + code.getCname());
+			// LogHandler.info("Start put cities to Province:" +
+			// code.getCname());
 			put2cities(code.getChildren());
-			//LogHandler.info("Endign put cities to Province:" + code.getCname());
+			// LogHandler.info("Endign put cities to Province:" +
+			// code.getCname());
 		}
 	}
 
 	private static void put2cities(List<Code> codes) {
 
-		//if (codes == null) {
-		//	LogHandler.info("null cityes!");
-		//} else {
-		//	LogHandler.info("codes=" + codes.size());
-		//}
+		// if (codes == null) {
+		// LogHandler.info("null cityes!");
+		// } else {
+		// LogHandler.info("codes=" + codes.size());
+		// }
 
 		int i = 0;
 		String temp = null;
@@ -144,7 +151,7 @@ public class Address extends BaseCode
 				continue;
 			}
 
-			//LogHandler.info("city=" + code.getCname());
+			// LogHandler.info("city=" + code.getCname());
 			for (String city : ClawerConstants.CITY_FILTERS) {
 				if (code.getCname().indexOf(city) < 0) {
 					continue;

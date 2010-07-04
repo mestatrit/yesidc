@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.yesibc.core.exception.NestedRuntimeException;
 import com.yesibc.core.spring.SpringContext;
 import com.yesibc.job51.common.support.Address;
@@ -16,6 +19,7 @@ import com.yesibc.job51.model.Code;
 
 public abstract class BaseCode {
 
+	protected static Log log = LogFactory.getLog(BaseCode.class);
 	public final static String ADDRESS = "address";
 	public final static String WORK_YEAR = "work.year";
 	public final static String SALARY_YEARLY = "salary.yearly";

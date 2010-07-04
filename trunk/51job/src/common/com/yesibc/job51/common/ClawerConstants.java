@@ -74,6 +74,14 @@ public class ClawerConstants {
 	public final static long EXPIRED_DAYS = 180;
 
 	/**
+	 * punctuation.bracket.left=\u3010 punctuation.bracket.right=\u3011;
+	 * punctuation.comma=\uFF0C
+	 **/
+	public final static String PUNCTUATION_BRACKET_LEFT = ClawerUtils.getValByKey("punctuation.bracket.left");;
+	public final static String PUNCTUATION_BRACKET_RIGHT = ClawerUtils.getValByKey("punctuation.bracket.right");;
+	public final static String PUNCTUATION_COMMA = ClawerUtils.getValByKey("punctuation.comma");;
+
+	/**
 	 * <pre>
 	 * #基 本 信 息
 	 * basic.info=\u57FA\u672C\u4FE1\u606F
@@ -273,7 +281,7 @@ public class ClawerConstants {
 	public final static String[] PROVINCE_FILTERS = ClawerUtils.getValByKey("province.filter.list").split(",");
 	public final static String[] CITY_FILTERS = ClawerUtils.getValByKey("city.filter.list").split(",");
 	public final static String[] FILTERS_ADDRESS = ClawerUtils.getValByKey("filters.address").split(",");
-	
+
 	public final static String JOB_NO_FOUND = ClawerUtils.getValByKey("job.no.found");
 
 	public static final String ALERT_ERROR = "0001";
