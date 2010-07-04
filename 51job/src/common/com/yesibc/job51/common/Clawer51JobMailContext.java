@@ -17,7 +17,7 @@ public class Clawer51JobMailContext extends MailContext {
 			try {
 				i++;
 				email.setSimpleBody("MailSender [" + i + "]!!!!!!!!!");
-				email.sendBySimple();
+				email.sendBySimple("Error test");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
