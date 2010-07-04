@@ -1,5 +1,6 @@
 package com.yesibc.job51.web.search;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -24,7 +25,6 @@ public class ParseJobdetail {
 	public static void parseJobdetail(ProcessContext processContext) throws ApplicationException {
 
 		if (!CompanyInfoSupport.jobPageValidate(processContext)) {
-			log.info(processContext.getLogTitle() + " Job page not KO!");
 			return;
 		}
 
@@ -43,7 +43,11 @@ public class ParseJobdetail {
 		if (!ClawerConstants.TEST_DAO) {
 			CompanyInfoHandlerService companyInfoHandlerService = (CompanyInfoHandlerService) SpringContext
 					.getBean("companyInfoHandlerService");
-			companyInfoHandlerService.update(company);
+			if (company.getId() != null) {
+				companyInfoHandlerService.update(company);
+			} else {
+				companyInfoHandlerService.save(company);
+			}
 			log.info(processContext.getLogTitle() + " Update company to DB is OK!Time is "
 					+ (System.currentTimeMillis() - l));
 		}
@@ -71,12 +75,39 @@ public class ParseJobdetail {
 			}
 
 			if (company == null) {
-				throw new ApplicationException(processContext.getLogTitle() + " Get company is null! Company is "
-						+ companyId);
+				company = new Company();
+				getCompanyFromJobPage(processContext, company, url, companyId);
 			}
+
 			CompanyJobContext.putCompany(companyId, company);
 		}
 		return company;
+	}
+
+	public static void getCompanyFromJobPage(ProcessContext processContext, Company com, String url, String companyId)
+			throws ApplicationException {
+		String name = null;
+		String title = processContext.getBrowser().getTitle();
+		title = title.substring(title.indexOf(ClawerConstants.PUNCTUATION_BRACKET_LEFT), title
+				.indexOf(ClawerConstants.PUNCTUATION_BRACKET_RIGHT));
+		name = title.substring((title.lastIndexOf(ClawerConstants.PUNCTUATION_COMMA) + 1));
+
+		com.setCompanyName(name);
+		com.setUrl(url);
+		com.setCompanyCode(companyId);
+		CompanyInfoSupport.setCompanyCommon(com, true);
+		com.setUpdateDate(new Date());
+		com.setLoadOK(Company.LOAD_KO);
+		try {
+			if (!ClawerConstants.TEST_DAO && com.getId() == null) {
+				CompanyInfoHandlerService companyInfoHandlerService = (CompanyInfoHandlerService) SpringContext
+						.getBean("companyInfoHandlerService");
+				companyInfoHandlerService.save(com);
+			}
+		} catch (Exception e) {
+			throw new ApplicationException("Save company error!" + com.getCompanyName() + "," + com.getUrl(), e);
+		}
+		log.info(processContext.getLogTitle() + " New company:" + companyId + "," + name);
 	}
 
 	public static void main(String[] args) {

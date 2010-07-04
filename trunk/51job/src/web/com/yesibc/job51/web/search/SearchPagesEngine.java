@@ -67,7 +67,7 @@ public class SearchPagesEngine extends Thread {
 			}
 
 		} catch (Exception e) {
-			ErrorHandler.handleError(processContext.getBrowser(), processContext, e);
+			ErrorHandler.handleError(processContext, e);
 		} finally {
 			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(true);
 		}

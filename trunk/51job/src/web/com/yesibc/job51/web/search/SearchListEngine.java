@@ -74,7 +74,7 @@ public class SearchListEngine extends Thread {
 			}
 
 		} catch (Exception e) {
-			ErrorHandler.handleError(processContext.getBrowser(), processContext, e);
+			ErrorHandler.handleError(processContext, e);
 		} finally {
 			WebrendererContext.WEBRENDER_ENTITIES.get(index).setLoaded(true);
 			// log.info("=========finish.get(BrowserSupport.WAIT_TAG_KEY)=========="+finish.get(BrowserSupport.WAIT_TAG_KEY));

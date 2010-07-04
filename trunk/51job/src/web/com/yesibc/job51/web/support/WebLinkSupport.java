@@ -205,7 +205,7 @@ public class WebLinkSupport {
 					i++;
 					Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
 
-					if (i > 12) {
+					if (i > ClawerConstants.WAITING_TIMES) {
 						entry.getValue().setLoaded(true);
 						ErrorHandler.errorLogAndMail(tag + "Check running web waiting error when checkRunning!Time:"
 								+ ClawerConstants.WAITING_TIME_LOADING * i);
