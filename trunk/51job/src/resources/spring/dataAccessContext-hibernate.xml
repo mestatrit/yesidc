@@ -41,7 +41,7 @@
 					org.hibernate.dialect.Oracle9Dialect
 				</prop>
 
-				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.show_sql">${jdbc.sql.show}</prop>
 
 				<prop key="hibernate.jdbc.fetch_size">50</prop>
 				<prop key="hibernate.jdbc.batch_size">30</prop>
