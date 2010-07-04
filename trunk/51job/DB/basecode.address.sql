@@ -2600,7 +2600,7 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (12161, 11108, '232723', '', '', 'MoHeXian', '漠河县', '', '', 5, 3,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (11009, 10048, '310000', '', '', 'ShangHaiShi', '上海市', '', '', 3, 9,sysdate,sysdate, 'YTB', 'YTB');
+values (11009, 10048, '310000', '', '', 'ShangHaiShi', '上海', '', '', 3, 9,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11109, 11009, '310100', '', '', 'ShangHaiShiXiaQu', '上海市辖区', '', '', 4, 1,sysdate,sysdate, 'YTB', 'YTB');
