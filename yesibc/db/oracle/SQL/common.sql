@@ -18,6 +18,8 @@ alter tablespace users add datafile '/opt/oracle/oradata/orcl/itc.dbf' size 25m;
 alter database datafile '/opt/oracle/oradata/orcl/itc.dbf' resize 50m;
 
 --4.用户权限
+select * from dba_users/all_users/user_users; 
+select * from tab/dba_tables/dba_objects/cat; 
 create user cfccc identified by cfccc;
 alter user cfccc default tablespace cfccc
 temporary tablespace temp;
