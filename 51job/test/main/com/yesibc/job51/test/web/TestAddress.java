@@ -16,7 +16,7 @@ public class TestAddress {
 
 	public static void main(String[] args) {
 
-		String addresses[] = { "浙江宏磊铜业股份有限公司", "深圳市爱默特模具有限公司" };
+		String addresses[] = { "上海市黄浦区南京东路800号东方商厦北楼新一百大厦18楼B、C座" };
 
 		log.info(addresses);
 
@@ -30,30 +30,22 @@ public class TestAddress {
 			Code code = map.get(BaseCode.CODE_LEVEL_SECOND);
 			if (code != null) {
 				System.out.println("name=CODE_LEVEL_SECOND!" + code.getCname());
+			} else {
+				System.out.println("name=CODE_LEVEL_SECOND is null!");
 			}
 
 			code = map.get(BaseCode.CODE_LEVEL_THIRD);
 			if (code != null) {
 				System.out.println("name=CODE_LEVEL_THIRD!" + code.getCname());
-				Code co = new Code();
-				Long lo = new Long(11011);
-				co.setId(lo);
-				System.out.println("1==");
-				System.out.println(code == co);
-				BaseCodeDao baseCodeDao = (BaseCodeDao) SpringContext.getBean("baseCodeDao");
-				co = baseCodeDao.getById(lo);
-				System.out.println("2==");
-				System.out.println(code == co);
-				System.out.println("3==");
-				System.out.println(code.getId().equals(lo));
-				System.out.println("4==");
+			} else {
+				System.out.println("name=CODE_LEVEL_SECOND is null!");
 			}
 
 			code = map.get(BaseCode.CODE_LEVEL_FOURTH);
 			if (code != null) {
 				System.out.println("name=CODE_LEVEL_FOURTH!" + code.getCname());
-				System.out.println("name=CODE_LEVEL_FOURTH1!" + code.getParent().getCname());
-				System.out.println("name=CODE_LEVEL_FOURTH2!" + code.getParent().getParent().getCname());
+			} else {
+				System.out.println("name=CODE_LEVEL_SECOND is null!");
 			}
 
 		}
