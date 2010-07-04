@@ -42,7 +42,9 @@
 			</column>
 		</property>
 		<property name="nameLast" type="java.lang.String">
-			<column name="姓" length="50" />
+			<column name="NAME_LAST" length="50">
+				<comment>姓</comment>
+			</column>
 		</property>
 		<property name="nameNick1" type="java.lang.String">
 			<column name="NAME_NICK1" length="50">

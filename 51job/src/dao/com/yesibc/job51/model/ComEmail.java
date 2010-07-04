@@ -31,6 +31,8 @@ public class ComEmail implements java.io.Serializable {
 	private String createUser;
 	private String updateUser;
 	
+	private String url;
+
 	private Code fromWhere;
 	private String fromWhereName;
 
@@ -136,7 +138,7 @@ public class ComEmail implements java.io.Serializable {
 		return "ComEmail [comContactHeaders=" + comContactHeaders + ", createDate=" + createDate + ", createUser="
 				+ createUser + ", email=" + email + ", fromWhere=" + fromWhere + ", fromWhereName=" + fromWhereName
 				+ ", id=" + id + ", mailType=" + mailType + ", reciever=" + reciever + ", updateDate=" + updateDate
-				+ ", updateUser=" + updateUser + "]";
+				+ ", updateUser=" + updateUser + ", url=" + url + "]";
 	}
 
 	public String getReciever() {
@@ -145,6 +147,14 @@ public class ComEmail implements java.io.Serializable {
 
 	public void setReciever(String reciever) {
 		this.reciever = reciever;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 

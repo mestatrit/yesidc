@@ -65,5 +65,10 @@
 				<comment>更新者</comment>
 			</column>
 		</property>
+		<property name="url" type="java.lang.String">
+			<column name="URL" length="1000">
+				<comment>email in web's url</comment>
+			</column>
+		</property>
 	</class>
 </hibernate-mapping>
