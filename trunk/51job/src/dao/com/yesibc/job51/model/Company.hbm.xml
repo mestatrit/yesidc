@@ -17,7 +17,7 @@
 			</column>
 		</property>
 		<property name="url" type="java.lang.String">
-			<column name="URL" length="200">
+			<column name="URL" length="1000">
 				<comment>company url in web</comment>
 			</column>
 		</property>
