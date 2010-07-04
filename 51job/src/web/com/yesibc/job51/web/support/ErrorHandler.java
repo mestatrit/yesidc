@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 
 import cn.cetelem.track.AlertUtils;
 
-import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
 import com.yesibc.job51.common.Clawer51JobMailContext;
 import com.yesibc.job51.common.ClawerConstants;
@@ -30,7 +29,7 @@ public class ErrorHandler {
 		}
 	}
 
-	public static void handleError(IBrowserCanvas browser, ProcessContext processContext, Exception e) {
+	public static void handleError(ProcessContext processContext, Exception e) {
 		String str = null;
 		String msg = null;
 		if (e != null) {
@@ -38,8 +37,8 @@ public class ErrorHandler {
 			msg = e.getMessage();
 		}
 		String html = null;
-		if (browser.getDocument() != null && browser.getDocument().getBody() != null) {
-			html = browser.getDocument().getBody().getOuterHTML();
+		if (processContext.getBrowser().getDocument() != null && processContext.getBrowser().getDocument().getBody() != null) {
+			html = processContext.getBrowser().getDocument().getBody().getOuterHTML();
 		} else {
 			html = "Can't get HTML contents.";
 		}
@@ -49,7 +48,7 @@ public class ErrorHandler {
 			processContext.setErrorMs(msg + "\n" + str);
 		}
 
-		ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " Parsing [" + browser.getURL() + "] is error!"
+		ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " Parsing [" + processContext.getBrowser().getURL() + "] is error!"
 				+ msg + "\n HTML contents Start===========\n:" + html
 				+ "\n HTML contents End===========\n ExceptionTrace:" + str);
 	}
@@ -70,7 +69,7 @@ public class ErrorHandler {
 			public void run() {
 				getErrorTimes();
 				Clawer51JobMailContext.EMAILS.get(num).setSimpleBody(errMsg);
-				Clawer51JobMailContext.EMAILS.get(num).sendBySimple();
+				Clawer51JobMailContext.EMAILS.get(num).sendBySimple(null);
 			}
 		}.start();
 	}
@@ -81,7 +80,7 @@ public class ErrorHandler {
 			public void run() {
 				getErrorTimes();
 				Clawer51JobMailContext.EMAILS.get(num).setSimpleBody(errMsg + "!\n Exception:" + eStr);
-				Clawer51JobMailContext.EMAILS.get(num).sendBySimple();
+				Clawer51JobMailContext.EMAILS.get(num).sendBySimple(errMsg);
 			}
 		}.start();
 	}

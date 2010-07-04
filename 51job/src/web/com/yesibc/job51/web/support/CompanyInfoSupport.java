@@ -33,6 +33,7 @@ public class CompanyInfoSupport {
 	public static boolean jobPageValidate(ProcessContext processContext) throws ApplicationException {
 		String html = processContext.getBrowser().getDocument().getBody().getOuterHTML();
 		if (html != null && html.indexOf(ClawerConstants.JOB_NO_FOUND) > -1) {
+			log.info(processContext.getLogTitle() + ClawerConstants.JOB_NO_FOUND);
 			return false;
 		}
 
@@ -69,9 +70,7 @@ public class CompanyInfoSupport {
 		}
 
 		String linkman = LocateCompanyInfo.getLinkman(processContext);
-		if (!"".equals(linkman)) {
-			setLinkMan2CompanyHeaders(position, company, linkman);
-		}
+		setLinkMan2CompanyHeaders(position, company, linkman);
 
 		if (!CollectionUtils.isEmpty(emails)) {
 			setEmail2CompanyHeaders(position, company, emails);
@@ -165,6 +164,13 @@ public class CompanyInfoSupport {
 		comAppend.setUpdateUser(ClawerConstants.UPDATE_USER);
 	}
 
+	/**
+	 * 
+	 * @param processContext
+	 * @param company
+	 * @param address
+	 * @return
+	 */
 	public static int setAddress(ProcessContext processContext, Company company, String address) {
 		boolean isCompanyName = false;
 		boolean noAddress = false;
@@ -194,8 +200,17 @@ public class CompanyInfoSupport {
 				map = Address.getAddress(address);
 
 				if (map == null || map.isEmpty()) {
-					set2ComCH(company, address, comCHs);
-					log.info(processContext.getLogTitle() + ADDR_TAG + address + " is no mapped!");
+					if (!isCompanyName) {
+						address = company.getCompanyName();
+						map = Address.getAddress(address);
+					}
+
+					if (map == null || map.isEmpty()) {
+						set2ComCH(company, address, comCHs);
+						log.info(processContext.getLogTitle() + ADDR_TAG + address + " is no mapped!");
+					} else {
+						return setAddr2CH(processContext, company, address, map, comCHs);
+					}
 				} else {
 					if (isCompanyName) {
 						log.info(processContext.getLogTitle() + ADDR_TAG + address + " is from company Name.");
@@ -214,6 +229,7 @@ public class CompanyInfoSupport {
 		ComContactHeader ca = null;
 		boolean old = false;
 		int i = 0;
+		String temp = "";
 		if (company.getComContactHeaders() != null && !company.getComContactHeaders().isEmpty()) {
 			for (ComContactHeader cch : company.getComContactHeaders()) {
 				if (cch.getCity() != null) { //
@@ -251,12 +267,14 @@ public class CompanyInfoSupport {
 		if (code != null) {
 			ca.setCountry(code);
 			ca.setCountryName(code.getCname());
+			temp = temp + code.getCname();
 		}
 
 		code = map.get(BaseCode.CODE_LEVEL_THIRD);
 		if (code != null) {
 			ca.setProvince(code);
 			ca.setProvinceName(code.getCname());
+			temp = temp + "," + code.getCname();
 			if (ca.getCountry() == null) {
 				ca.setCountry(code.getParent());
 				ca.setCountryName(code.getParent().getCname());
@@ -267,6 +285,7 @@ public class CompanyInfoSupport {
 		if (code != null) {
 			ca.setCity(code);
 			ca.setCityName(code.getCname());
+			temp = temp + "," + code.getCname();
 			if (ca.getProvince() == null) {
 				ca.setProvince(code.getParent());
 				ca.setProvinceName(code.getParent().getCname());
@@ -277,7 +296,8 @@ public class CompanyInfoSupport {
 			}
 		}
 
-		log.info(processContext.getLogTitle() + ADDR_TAG + address + " is mapped! Current HeaderInfo size:" + i);
+		log.info(processContext.getLogTitle() + ADDR_TAG + address + " is mapped[" + temp
+				+ "]!Current HeaderInfo size:" + i);
 		return i;
 	}
 
@@ -367,7 +387,11 @@ public class CompanyInfoSupport {
 	}
 
 	public static void setLinkMan2CompanyHeaders(int have, Company company, String linkman) {
-		company.getComContactHeaders().get(have).setDefaultName(linkman);
+		if (!"".equals(linkman)) {
+			company.getComContactHeaders().get(have).setDefaultName(linkman);
+		} else {
+			company.getComContactHeaders().get(have).setDefaultName(company.getCompanyName());
+		}
 	}
 
 	public static void setEmail2CompanyHeaders(int position, Company company, List<String> emails) {

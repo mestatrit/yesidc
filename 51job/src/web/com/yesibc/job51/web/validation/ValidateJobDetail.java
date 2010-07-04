@@ -15,6 +15,7 @@ import com.yesibc.core.components.webrenderer.WebrendererSupport;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.job51.common.ClawerConstants;
 import com.yesibc.job51.model.Company;
+import com.yesibc.job51.web.search.ParseJobdetail;
 import com.yesibc.job51.web.search.WebrendererContext;
 import com.yesibc.job51.web.support.CompanyInfoSupport;
 import com.yesibc.job51.web.support.ErrorHandler;
@@ -104,9 +105,15 @@ public class ValidateJobDetail {
 		String companyId = CompanyInfoSupport.getCompanyCode(url);
 		companyId = ClawerConstants.FROM_WHERE_51JOB + "_" + CompanyInfoSupport.getCompanyCode(url);
 		Company company = ValidateWorkFLow.testCompanies.get(companyId);
+			
 		if (company == null) {
+			company = new Company();
+			ParseJobdetail.getCompanyFromJobPage(processContext, company, url, companyId);
 			throw new ApplicationException(processContext.getLogTitle() + " Get company is null!");
 		}
+		
+		ParseJobdetail.getCompanyFromJobPage(processContext, company, url, companyId);
+		
 		ParseCompanyDetailSupport.parseToCompany(company, processContext);
 		log.info(processContext.getLogTitle() + " Parse Com Detail OK!\n" + company.toString());
 	}

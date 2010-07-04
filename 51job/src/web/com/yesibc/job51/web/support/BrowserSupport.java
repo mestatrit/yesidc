@@ -31,7 +31,8 @@ public class BrowserSupport {
 			BrowserSupport.onDocumnetComplete(processContext.getBrowser(), finish);
 			processContext.getBrowser().loadURL(processContext.getUrl());
 			if (!waiting(processContext, index, finish)) {
-				throw new ApplicationException(ErrorHandler.WAIT_ERROR_SYSTEM + " Waiting overtime.");
+				throw new ApplicationException(processContext.getLogTitle() + ErrorHandler.WAIT_ERROR_SYSTEM
+						+ " Waiting overtime.");
 			} else {
 				log.warn(processContext.getLogTitle() + " Load wait error and redo OK!");
 			}
