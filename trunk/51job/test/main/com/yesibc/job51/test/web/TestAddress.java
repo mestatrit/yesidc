@@ -16,7 +16,7 @@ public class TestAddress {
 
 	public static void main(String[] args) {
 
-		String addresses[] = { "上海市黄浦区南京东路800号东方商厦北楼新一百大厦18楼B、C座" };
+		String addresses[] = { "福建石狮市德润织造有限公司" };
 
 		log.info(addresses);
 
@@ -48,6 +48,12 @@ public class TestAddress {
 				System.out.println("name=CODE_LEVEL_SECOND is null!");
 			}
 
+			code = map.get(BaseCode.CODE_LEVEL_FIFTH);
+			if (code != null) {
+				System.out.println("name=CODE_LEVEL_FIFTH!" + code.getCname());
+			} else {
+				System.out.println("name=CODE_LEVEL_FIFTH is null!");
+			}
 		}
 	}
 
