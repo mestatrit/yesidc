@@ -101,6 +101,24 @@ public class ClawerUtils {
 		ThreadPool.loadPool(ClawerConstants.THREADS_NUMBER).execute(thread);
 	}
 
+	public static String[] splitByTag(String str,String[] tag) {
+		String[] sa = null;
+		boolean split = false;
+		for (String temp : tag) {
+			if(str.indexOf(temp) > -1){
+				split = true;
+				sa = str.split(temp);
+				break;
+			}
+		}
+		
+		if(!split){
+			sa = new String[] {str};
+		}		
+		
+		return sa;
+	}
+	
 	/**
 	 * @param args
 	 */

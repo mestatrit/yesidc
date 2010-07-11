@@ -75,9 +75,7 @@ public class ValidateJobDetail {
 					+ (System.currentTimeMillis() - l));
 			l = System.currentTimeMillis();
 
-			parseCompany();
-
-			parseEmailFromJobs();
+			ParseJobdetail.parseJobdetail(processContext);
 
 			log.info(processContext.getLogTitle() + "Parsing [" + browser.getURL() + "] is OK!Time is "
 					+ (System.currentTimeMillis() - l));
@@ -90,6 +88,7 @@ public class ValidateJobDetail {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void parseCompany() throws ApplicationException {
 		String[] txts = { ClawerConstants.COMPANY_URL_NAME };
 		List<IElement> ies = WebrendererSupport.getElements(processContext.getBrowser().getDocument().getAll()
@@ -112,8 +111,7 @@ public class ValidateJobDetail {
 			throw new ApplicationException(processContext.getLogTitle() + " Get company is null!");
 		}
 		
-		ParseJobdetail.getCompanyFromJobPage(processContext, company, url, companyId);
-		
+
 		ParseCompanyDetailSupport.parseToCompany(company, processContext);
 		log.info(processContext.getLogTitle() + " Parse Com Detail OK!\n" + company.toString());
 	}

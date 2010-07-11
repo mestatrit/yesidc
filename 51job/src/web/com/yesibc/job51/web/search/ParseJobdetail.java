@@ -30,10 +30,15 @@ public class ParseJobdetail {
 
 		Company company = getCompany(processContext);
 		List<String> emails = LocateCompanyInfo.getEmails(processContext);
-		if (Company.LOAD_OK.equals(company.getLoadOK()) && CollectionUtils.isEmpty(emails)) {
-			log.info(processContext.getLogTitle() + "Email existed or no found.Company:" + company.getCompanyName());
-			return;
+		if (Company.LOAD_OK.equals(company.getLoadOK())) {
+			if (CollectionUtils.isEmpty(emails)) {
+				log
+						.info(processContext.getLogTitle() + "Email existed or no found.Company:"
+								+ company.getCompanyName());
+				return;
+			}
 		}
+
 		long l = System.currentTimeMillis();
 		CompanyInfoSupport.parseToCompany(company, emails, processContext);
 		log.info(processContext.getLogTitle() + " Parse company is OK!Time is " + (System.currentTimeMillis() - l));

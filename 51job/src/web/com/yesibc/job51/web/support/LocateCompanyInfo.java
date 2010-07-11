@@ -346,7 +346,7 @@ public class LocateCompanyInfo {
 			String temp = ies.get(0).getInnerHTML();
 			int i = temp.indexOf(ClawerConstants.COMPANY_FAX);
 			if (i > 0) {
-				temp = temp.substring(i + ClawerConstants.COMPANY_FAX.length());
+				temp = StringUtils.trim2Empty(temp.substring(i + ClawerConstants.COMPANY_FAX.length()));
 				return temp;
 			} else {
 				return "";
@@ -389,7 +389,7 @@ public class LocateCompanyInfo {
 			String temp = ies.get(0).getInnerHTML();
 			int i = temp.indexOf(ClawerConstants.COMPANY_TEL);
 			if (temp.length() > (i + 2)) {
-				return temp.substring(i + 2);
+				return StringUtils.trim2Empty(temp.substring(i + 2));
 			} else {
 				return "";
 			}
@@ -519,7 +519,7 @@ public class LocateCompanyInfo {
 			String temp = ies.get(0).getInnerHTML();
 			int i = temp.indexOf(ClawerConstants.COMPANY_MOBILE);
 			if (temp.length() > (i + 5)) {
-				return temp.substring(i + 5);
+				return StringUtils.trim2Empty(temp.substring(i + 5));
 			} else {
 				return "";
 			}
