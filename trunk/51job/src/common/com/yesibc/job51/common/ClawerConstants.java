@@ -9,15 +9,15 @@ import com.yesibc.job51.model.Code;
 public class ClawerConstants {
 
 	// public final static boolean TEST = true;
-	public static boolean TEST_DAO = true;
+	public static boolean TEST_DAO = false;
 
-	public static boolean TEST_WEB = true;
+	public static boolean TEST_WEB = false;
 
-	public static boolean TEST_WEB_REQUEST = true;
+	public static boolean TEST_WEB_REQUEST = false;
 
 	public static boolean SHOW_FRAME = false;
 
-	public static int TEST_WEB_NUM = 2;
+	public static int TEST_WEB_NUM = 4;
 
 	public static int THREADS_NUMBER = TEST_WEB_NUM;
 
@@ -67,7 +67,8 @@ public class ClawerConstants {
 
 	public final static long WAITING_TIMES_EXT = 5;
 
-	public final static String[] EMAIL_SPLITS = { ";", "," };
+	public final static String[] EMAIL_SPLITS = { ";", ","," " };
+	public final static String[] TEL_SPLITS = { ";", ","," " };
 
 	public final static String EMAIL_ERROR_SUBJECT = "Error from Project 51job!";
 

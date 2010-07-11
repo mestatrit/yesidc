@@ -137,7 +137,7 @@ public class BrowserSupport {
 
 		IBrowserCanvas browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
 		processContext.setBrowser(browser);
-		processContext.setLogTitle(title);
+		processContext.setLogTitle(title + " ");
 		if (ClawerConstants.SHOW_FRAME) {
 			WebrendererContext.WEBRENDER_ENTITIES.get(index).getFrame().setTitle(processContext.getLogTitle());
 		}

@@ -13,6 +13,7 @@ import com.yesibc.core.utils.CollectionUtils;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.common.BaseCode;
 import com.yesibc.job51.common.ClawerConstants;
+import com.yesibc.job51.common.ClawerUtils;
 import com.yesibc.job51.common.support.Address;
 import com.yesibc.job51.model.Code;
 import com.yesibc.job51.model.ComAppend;
@@ -21,8 +22,6 @@ import com.yesibc.job51.model.ComContactInfo;
 import com.yesibc.job51.model.ComEmail;
 import com.yesibc.job51.model.Company;
 import com.yesibc.job51.model.sub.ComContactFax;
-import com.yesibc.job51.model.sub.ComContactMobile;
-import com.yesibc.job51.model.sub.ComContactTel;
 import com.yesibc.job51.web.search.ProcessContext;
 
 public class CompanyInfoSupport {
@@ -325,63 +324,42 @@ public class CompanyInfoSupport {
 		}
 
 		if (!"".equals(fax)) {
-			setFax(processContext, fax, ccis);
+			setContactInfo(processContext, fax, company.getComContactHeaders().get(position).getDefaultName(),
+					ComContactInfo.CONTRACT_TAG_FAX, ccis);
 		}
 		if (!"".equals(tel)) {
-			setTel(processContext, tel, ccis);
+			setContactInfo(processContext, tel, company.getComContactHeaders().get(position).getDefaultName(),
+					ComContactInfo.CONTRACT_TAG_TEL, ccis);
 		}
-		if (!"".equals(tel)) {
-			setMobile(processContext, mobile, ccis);
+		if (!"".equals(mobile)) {
+			setContactInfo(processContext, mobile, company.getComContactHeaders().get(position).getDefaultName(),
+					ComContactInfo.CONTRACT_TAG_MOBILE, ccis);
 		}
 	}
 
-	private static void setTel(ProcessContext processContext, String tel, List<ComContactInfo> ccis) {
-		String[] sa = tel.split(" ");
+	private static void setContactInfo(ProcessContext processContext, String fax, String reciever, String type,
+			List<ComContactInfo> ccis) {
+		String[] sa = ClawerUtils.splitByTag(fax, ClawerConstants.TEL_SPLITS);
+
 		for (String s : sa) {
+			boolean have = false;
+
 			for (ComContactInfo ccInfo : ccis) {
-				if (!s.equals(ccInfo.getContractNo())) {
-					ComContactInfo cci = new ComContactTel();
-					cci.setContractNo(s);
-					setComContactInfoCommon(cci, true);
-					ccis.add(cci);
-					log.info(processContext.getLogTitle() + " TEL:" + s + " is added.");
-				} else {
-					log.info(processContext.getLogTitle() + " TEL:" + s + " is already existed.");
+				if (s.equals(StringUtils.trim2Empty(ccInfo.getContractNo()))) {
+					have = true;
+					break;
 				}
 			}
-		}
-	}
 
-	private static void setMobile(ProcessContext processContext, String mobile, List<ComContactInfo> ccis) {
-		String[] sa = mobile.split(" ");
-		for (String s : sa) {
-			for (ComContactInfo ccInfo : ccis) {
-				if (!s.equals(ccInfo.getContractNo())) {
-					ComContactInfo cci = new ComContactMobile();
-					cci.setContractNo(s);
-					setComContactInfoCommon(cci, true);
-					ccis.add(cci);
-					log.info(processContext.getLogTitle() + " Mobile:" + s + " is added.");
-				} else {
-					log.info(processContext.getLogTitle() + " Mobile:" + s + " is already existed.");
-				}
-			}
-		}
-	}
-
-	private static void setFax(ProcessContext processContext, String fax, List<ComContactInfo> ccis) {
-		String[] sa = fax.split(" ");
-		for (String s : sa) {
-			for (ComContactInfo ccInfo : ccis) {
-				if (!s.equals(ccInfo.getContractNo())) {
-					ComContactInfo cci = new ComContactFax();
-					cci.setContractNo(s);
-					setComContactInfoCommon(cci, true);
-					ccis.add(cci);
-					log.info(processContext.getLogTitle() + " Fax:" + s + " is added.");
-				} else {
-					log.info(processContext.getLogTitle() + " Fax:" + s + " is already existed.");
-				}
+			if (have) {
+				log.info(processContext.getLogTitle() + type + " :" + s + " is already existed.");
+			} else {
+				ComContactInfo cci = ComContactInfo.getConcactInfoByType(type);
+				cci.setContractNo(s);
+				cci.setReciever(reciever);
+				setComContactInfoCommon(cci, true);
+				ccis.add(cci);
+				log.info(processContext.getLogTitle() + type + " :" + s + " is added.");
 			}
 		}
 	}
