@@ -22,12 +22,29 @@ public class Test1 extends TestCase {
 	/**
 	 * @param name
 	 */
-	public void test1(String name) {
-		long l = System.currentTimeMillis();
-		BrowserFactory.setLicenseData(ClawerConstants.WEBRENDERER_ID,
-				ClawerConstants.WEBRENDERER_SN);
-		log.info(ClawerConstants.PROC_LOG + "Load license OK! Time is "
-				+ (System.currentTimeMillis() - l));
+	public void test1() {
+		String fax = "(021)56779300,56779300";
+		String[] sa = null;
+		boolean split = false;
+		for (String temp : ClawerConstants.TEL_SPLITS) {
+			System.out.println("=TEL_SPLITS=" + temp);
+			if(fax.indexOf(temp) > -1){
+				split = true;
+				sa = fax.split(temp);
+				System.out.println("=split= true");
+				break;
+			}
+		}
+		
+		if(!split){
+			sa = new String[] {fax};
+		}
+		
+		System.out.println("=sa.length=" + sa.length);
+		
+		for(String temp : sa){
+			System.out.println("==" + temp);
+		}
 	}
 
 	/*
