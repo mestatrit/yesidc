@@ -33,7 +33,7 @@ public class ValidateSearchUrl {
 	private static String PAGE_URL_TEMPLATE = "http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000"
 			+ "&district=0000&funtype=2400,0100,2500&industrytype=01,37,38&issuedate=9&providesalary=99"
 			+ "&keywordtype=2&curr_page=2&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99"
-			+ "&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14";
+			+ "&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=0&fromType=14";
 	private static String PAGE_URL_TEMPLATE_OK = PAGE_URL_TEMPLATE.replace(tag2, tagok).replace(tag1, tagok);
 
 	public static long WAITING = 0;
@@ -148,6 +148,8 @@ public class ValidateSearchUrl {
 		url = browser.getURL();
 		url = url.replace(tag2, tagok).replace(tag1, tagok);
 		if (!PAGE_URL_TEMPLATE_OK.equals(url)) {
+			log.info("====" + PAGE_URL_TEMPLATE_OK);
+			log.info("====" + url);
 			throw new ApplicationException("Paging url is error." + url);
 		}
 
@@ -160,4 +162,9 @@ public class ValidateSearchUrl {
 		return browser.getDocument();
 	}
 
+	public static void main(String[] args){
+		String str1 = "&degreefrom=99&jobterm=01&lonlat=00&radius=-1&ord_field=0&list_type=1&fromType=14";
+		String str2 = "&degreefrom=99&jobterm=01&lonlat=00&radius=-1&ord_field=0&list_type=0&fromType=14";
+		System.out.println(str1.equals(str2));
+	}
 }
