@@ -21,7 +21,6 @@ import com.yesibc.job51.model.ComContactHeader;
 import com.yesibc.job51.model.ComContactInfo;
 import com.yesibc.job51.model.ComEmail;
 import com.yesibc.job51.model.Company;
-import com.yesibc.job51.model.sub.ComContactFax;
 import com.yesibc.job51.web.search.ProcessContext;
 
 public class CompanyInfoSupport {
@@ -323,17 +322,19 @@ public class CompanyInfoSupport {
 			company.getComContactHeaders().get(position).setComContactInfos(ccis);
 		}
 
+		String reciever = StringUtils.trim2Empty(company.getComContactHeaders().get(position).getDefaultName());
+		if ("".equals(reciever)) {
+			reciever = company.getCompanyName();
+		}
+
 		if (!"".equals(fax)) {
-			setContactInfo(processContext, fax, company.getComContactHeaders().get(position).getDefaultName(),
-					ComContactInfo.CONTRACT_TAG_FAX, ccis);
+			setContactInfo(processContext, fax, reciever, ComContactInfo.CONTRACT_TAG_FAX, ccis);
 		}
 		if (!"".equals(tel)) {
-			setContactInfo(processContext, tel, company.getComContactHeaders().get(position).getDefaultName(),
-					ComContactInfo.CONTRACT_TAG_TEL, ccis);
+			setContactInfo(processContext, tel, reciever, ComContactInfo.CONTRACT_TAG_TEL, ccis);
 		}
 		if (!"".equals(mobile)) {
-			setContactInfo(processContext, mobile, company.getComContactHeaders().get(position).getDefaultName(),
-					ComContactInfo.CONTRACT_TAG_MOBILE, ccis);
+			setContactInfo(processContext, mobile, reciever, ComContactInfo.CONTRACT_TAG_MOBILE, ccis);
 		}
 	}
 
@@ -378,13 +379,18 @@ public class CompanyInfoSupport {
 			oldEmails = new ArrayList<ComEmail>();
 			company.getComContactHeaders().get(position).setComEmails(oldEmails);
 		}
+		
+		String reciever = StringUtils.trim2Empty(company.getComContactHeaders().get(position).getDefaultName());
+		if ("".equals(reciever)) {
+			reciever = company.getCompanyName();
+		}
 
 		for (String email : emails) {
 			ComEmail ce = new ComEmail();
 			oldEmails.add(ce);
 			ce.setMailType(ComEmail.MAIL_TYPE_COMPANY_SHARE);
 			ce.setEmail(email);
-			ce.setReciever(company.getComContactHeaders().get(position).getDefaultName());
+			ce.setReciever(reciever);
 			setComEmailCommon(ce, true);
 		}
 	}

@@ -84,6 +84,26 @@ public class Address extends BaseCode {
 				}
 			}
 		}
+		
+		if(!map.containsKey(CODE_LEVEL_FOURTH)){
+			have = false;
+			for (Map.Entry<String, Code> entry : DISTRICTS.entrySet()) {
+				have = false;
+				c = (Code) entry.getValue();
+				if (str.indexOf(c.getCname()) > -1) {
+					for (String filter : ClawerConstants.FILTERS_ADDRESS) {
+						if (str.indexOf(c.getCname() + filter) > -1) {
+							have = true;
+							break;
+						}
+					}
+					if (!have) {
+						map.put(CODE_LEVEL_FIFTH, c);
+						break;
+					}
+				}
+			}
+		}
 
 		return map;
 	}
@@ -174,12 +194,33 @@ public class Address extends BaseCode {
 	}
 
 	private static void put2districts(List<Code> children) {
+		int i = 0;
+		String temp = null;
+		String temp1 = null;
 		for (Code code : children) {
 			if (StringUtils.isEmpty(code.getCname())) {
 				continue;
 			}
+
+			// LogHandler.info("city=" + code.getCname());
+			for (String district : ClawerConstants.CITY_FILTERS) {
+				if (code.getCname().indexOf(district) < 0) {
+					continue;
+				}
+
+				i = code.getCname().lastIndexOf(district);
+				if (i < 1) {
+					continue;
+				}
+				temp = code.getCname().substring(0, i);
+				temp1 = code.getCname().substring(0, (code.getCname().length() - district.length()));
+
+				if (temp.equals(temp1)) {
+					code.setCname(temp);
+				}
+			}
 			BaseCode.DISTRICTS.put(code.getCode(), code);
-		}
+		}	
 	}
 
 	public static void main(String[] args) {
