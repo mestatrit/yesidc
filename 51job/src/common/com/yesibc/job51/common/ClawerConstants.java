@@ -9,11 +9,11 @@ import com.yesibc.job51.model.Code;
 public class ClawerConstants {
 
 	// public final static boolean TEST = true;
-	public static boolean TEST_DAO = false;
+	public static boolean TEST_DAO = true;
 
-	public static boolean TEST_WEB = false;
+	public static boolean TEST_WEB = true;
 
-	public static boolean TEST_WEB_REQUEST = false;
+	public static boolean TEST_WEB_REQUEST = true;
 
 	public static boolean SHOW_FRAME = false;
 

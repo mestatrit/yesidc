@@ -3,6 +3,9 @@ package com.yesibc.job51.web.support;
 import java.util.Date;
 import java.util.Map.Entry;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.dom.IElement;
 import com.webrenderer.swing.event.NetworkAdapter;
@@ -15,6 +18,7 @@ import com.yesibc.job51.web.search.WebrendererContext;
 
 public class WebLinkSupport {
 
+	private static Log log = LogFactory.getLog(WebLinkSupport.class);
 	private static boolean finish = false;
 	private static long COUNTLOADED = 0;
 	private static long WAITING_CONNECTION = 10000;
@@ -219,20 +223,21 @@ public class WebLinkSupport {
 
 	}
 
-	public static void refreshContextAndReconnInternet(String title, boolean errReconn) throws ApplicationException {
+	public synchronized static void refreshContextAndReconnInternet(String title, boolean errReconn) throws ApplicationException {
 		try {
 			CONN_TAG = false;
+			
+			reconnDate = new Date();
+			if (errReconn) {
+				if ((System.currentTimeMillis() - reconnDate.getTime()) < ClawerConstants.RECONNECT_INTERVAL) {
+					log.warn(ErrorHandler.WAIT_ERROR_SYSTEM
+							+ " refreshContextAndReconnInternet! reconn times is to close!");
+					return;
+				}
+			}
 
 			checkRunningWeb(title, -1);
 
-			reconnDate = new Date();
-
-			if (errReconn) {
-				if ((System.currentTimeMillis() - reconnDate.getTime()) < ClawerConstants.RECONNECT_INTERVAL) {
-					throw new ApplicationException(ErrorHandler.WAIT_ERROR_SYSTEM
-							+ " refreshContextAndReconnInternet! reconn times is to close!");
-				}
-			}
 
 			title = title + "[" + (++COUNTLOADED) + "]";
 			LogHandler.info(title + " start!");
