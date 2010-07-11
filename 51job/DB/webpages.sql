@@ -1,10 +1,16 @@
 select t.page_type,count(*),sysdate from t_webpages t where t.status='1'
 group by t.page_type
 
+select count(*) from t_company
+
+select * from  t_webpages t order by t.update_date desc
+select * from  t_company t order by t.update_date desc
 /**
 --result 1
-1	3	1313512	2010/7/4 14:54:23
+1	3	1313736	2010-7-10 23:39:26
+1	3	1312872	2010-7-11 9:08:53
 
+1	103570
 **/
 
 select to_char(t.create_date,'yyyy-MM-dd hh24:mi:ss'),t.* from t_webpages t where 1=1
