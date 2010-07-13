@@ -43,9 +43,9 @@ import com.yesibc.job51.web.support.ErrorHandler;
 
 public class CompanyJobContext {
 
-	private static Cache companyCache = (Cache) SpringContext.getBean("companyCache");
-	private static Cache pageCache = (Cache) SpringContext.getBean("pageCache");
-	private static Cache jobCache = (Cache) SpringContext.getBean("jobCache");
+	public static Cache companyCache = (Cache) SpringContext.getBean("companyCache");
+	public static Cache pageCache = (Cache) SpringContext.getBean("pageCache");
+	public static Cache jobCache = (Cache) SpringContext.getBean("jobCache");
 
 	public final static BeanCopier ompanyCopier = BeanCopier.create(Company.class, Company.class, false);
 
