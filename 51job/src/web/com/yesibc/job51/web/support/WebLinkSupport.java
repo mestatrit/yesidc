@@ -23,7 +23,15 @@ public class WebLinkSupport {
 	private static long COUNTLOADED = 0;
 	private static long WAITING_CONNECTION = 10000;
 	private static Date reconnDate = null;
-	public static boolean CONN_TAG = true;
+	private static boolean CONN_TAG = true;
+
+	public synchronized static boolean getConnTag() {
+		return CONN_TAG;
+	}
+	
+	public synchronized static void setConnTag(boolean connTag) {
+		CONN_TAG = connTag;
+	}	
 
 	private static void reconnectInternet(String rid) throws ApplicationException {
 		finish = false;
@@ -193,9 +201,9 @@ public class WebLinkSupport {
 	}
 
 	public static void checkRunningWeb(String tag, int index) {
-		int i = 0;
 		int j = 0;
 		for (Entry<Integer, WebRenderEntity> entry : WebrendererContext.WEBRENDER_ENTITIES.entrySet()) {
+			int i = 0;
 
 			if (entry.getKey() == ClawerConstants.THREADS_NUMBER || entry.getKey() == index) {
 				j++;
@@ -223,10 +231,11 @@ public class WebLinkSupport {
 
 	}
 
-	public synchronized static void refreshContextAndReconnInternet(String title, boolean errReconn) throws ApplicationException {
+	public synchronized static void refreshContextAndReconnInternet(String title, boolean errReconn)
+			throws ApplicationException {
 		try {
 			CONN_TAG = false;
-			
+
 			reconnDate = new Date();
 			if (errReconn) {
 				if ((System.currentTimeMillis() - reconnDate.getTime()) < ClawerConstants.RECONNECT_INTERVAL) {
@@ -237,7 +246,6 @@ public class WebLinkSupport {
 			}
 
 			checkRunningWeb(title, -1);
-
 
 			title = title + "[" + (++COUNTLOADED) + "]";
 			LogHandler.info(title + " start!");

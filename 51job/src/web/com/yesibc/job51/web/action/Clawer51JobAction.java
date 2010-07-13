@@ -244,6 +244,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 					if (current >= size) {
 						break;
 					}
+
+					checkWaitingConn();
+
 					SearchJobDetailEngine sce = jobs.get(thread);
 					if (sce != null && sce.isAlive()) {
 						continue;
@@ -259,9 +262,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 				errorTimes = waitingParseJobs(jobs, errorTimes);
 
-				if (WebLinkSupport.CONN_TAG) {
+				if (WebLinkSupport.getConnTag()) {
 					newRecTimes = reConn(threadNumber, recTimes, currentOfAll);
-					if(newRecTimes>recTimes){
+					if (newRecTimes > recTimes) {
 						errorTimes = 0;
 					}
 					recTimes = newRecTimes;
@@ -280,6 +283,12 @@ public class Clawer51JobAction extends BaseAction2Support {
 		log.info("parse parseJobsDetails.Times[" + l / (1000 * 60) + "s]. Error[" + error + "]. URL_COMPANIES="
 				+ CompanyJobContext.getCompaniesLength() + ",URL_JOBS=" + CompanyJobContext.getJobsLengthInCache()
 				+ ",Email=" + CompanyJobContext.getEmailsLength() + ".");
+	}
+
+	private void checkWaitingConn() throws InterruptedException {
+		if (!WebLinkSupport.getConnTag()) {
+			Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
+		}
 	}
 
 	private void parseSearchPages(String requestId, String reqLog, int threadNumber) {
@@ -312,7 +321,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			int loop = 0;
 			int currentOfAll = 0;
 			int newRecTimes = 0;
-			
+
 			Map<Integer, SearchPagesEngine> sces = new HashMap<Integer, SearchPagesEngine>();
 
 			while (true) {
@@ -333,6 +342,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 					if (current >= size) {
 						break;
 					}
+
+					checkWaitingConn();
+
 					SearchPagesEngine sce = sces.get(thread);
 					if (sce != null && sce.isAlive()) {
 						continue;
@@ -348,9 +360,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 				errorTimes = waitingSearchPages(sces, errorTimes);
 
-				if (WebLinkSupport.CONN_TAG) {
+				if (WebLinkSupport.getConnTag()) {
 					newRecTimes = reConn(threadNumber, recTimes, currentOfAll);
-					if(newRecTimes>recTimes){
+					if (newRecTimes > recTimes) {
 						errorTimes = 0;
 					}
 					recTimes = newRecTimes;
@@ -407,6 +419,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 					if (current >= size) {
 						break;
 					}
+
+					checkWaitingConn();
+
 					SearchListEngine sce = lists.get(thread);
 					if (sce != null && sce.isAlive()) {
 						continue;
@@ -422,9 +437,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 				errorTimes = waitingSearchList(lists, errorTimes);
 
-				if (WebLinkSupport.CONN_TAG) {
+				if (WebLinkSupport.getConnTag()) {
 					newRecTimes = reConn(threadNumber, recTimes, currentOfAll);
-					if(newRecTimes>recTimes){
+					if (newRecTimes > recTimes) {
 						errorTimes = 0;
 					}
 					recTimes = newRecTimes;
@@ -453,7 +468,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			recTimes++;
 			try {
 				WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchPages!"
-						+ recTimes + "!", false);
+						+ recTimes + "!", true);
 			} catch (Exception e) {
 				log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!recTimes=" + recTimes + ".", e);
 			}

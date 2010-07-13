@@ -13,6 +13,9 @@ import java.math.BigDecimal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.yesibc.job51.web.search.CompanyJobContext;
+import com.yesibc.job51.web.support.WebLinkSupport;
+
 public class LogJdkvm {
 
 	// static String test =
@@ -27,6 +30,8 @@ public class LogJdkvm {
 	static double noHeapUsage = 0;
 	static String javaHome = "";
 	static boolean check = true;
+	private int i = 0;
+	private double limit = 850;
 
 	public void logJdkvm() {
 		try {
@@ -47,19 +52,48 @@ public class LogJdkvm {
 			heapUsage = divide(heapMemoryUsage.getUsed(), (1024 * 1024), 4);
 			noHeapUsage = divide(nonHeapMemoryUsage.getUsed(), (1024 * 1024), 4);
 
-			logMemory.info("Heap usage:" + heapUsage + "Mb" + ",Non-Heap usage:" + noHeapUsage + "Mb");
+			i++;
+			logMemory.info("[" + i + "] Heap usage:" + heapUsage + "Mb" + ",Non-Heap usage:" + noHeapUsage + "Mb");
 
-			if ((heapUsage + noHeapUsage) > 950) {
-				long start = System.currentTimeMillis();
-				logMemory.info("Memory is greater than 900 Mb. GC start!");
-				
-				System.gc();
-				
-				nonHeapMemoryUsage = mem.getNonHeapMemoryUsage();
-				heapUsage = divide(heapMemoryUsage.getUsed(), (1024 * 1024), 4);
-				noHeapUsage = divide(nonHeapMemoryUsage.getUsed(), (1024 * 1024), 4);
-				
-				logMemory.info("Memory is greater than 950 Mb. GC End!Times:" + (System.currentTimeMillis() - start));
+			if ((heapUsage + noHeapUsage) > limit) {
+
+				if (WebLinkSupport.getConnTag()) {
+					WebLinkSupport.setConnTag(false);
+				}
+
+				try {
+
+					WebLinkSupport.checkRunningWeb("Check web running when GC!", -1);
+
+					CompanyJobContext.jobCache.removeAll();
+					CompanyJobContext.companyCache.removeAll();
+					CompanyJobContext.pageCache.removeAll();
+
+					mem = (MemoryMXBean) ManagementFactory.getMemoryMXBean();
+					nonHeapMemoryUsage = mem.getNonHeapMemoryUsage();
+					heapUsage = divide(heapMemoryUsage.getUsed(), (1024 * 1024), 4);
+					noHeapUsage = divide(nonHeapMemoryUsage.getUsed(), (1024 * 1024), 4);
+
+					logMemory.info("After remove cache! Heap usage:" + heapUsage + "Mb" + ",Non-Heap usage:"
+							+ noHeapUsage + "Mb");
+
+					long start = System.currentTimeMillis();
+					logMemory.info("Memory is greater than " + limit + " Mb. GC start!");
+
+					System.gc();
+
+					mem = (MemoryMXBean) ManagementFactory.getMemoryMXBean();
+					nonHeapMemoryUsage = mem.getNonHeapMemoryUsage();
+					heapUsage = divide(heapMemoryUsage.getUsed(), (1024 * 1024), 4);
+					noHeapUsage = divide(nonHeapMemoryUsage.getUsed(), (1024 * 1024), 4);
+
+					logMemory.info("Memory is greater than " + limit + " Mb. GC End!Times:"
+							+ (System.currentTimeMillis() - start));
+
+				} finally {
+					WebLinkSupport.setConnTag(false);
+				}
+
 			}
 
 			// cl = (ClassLoadingMXBean)
@@ -92,6 +126,11 @@ public class LogJdkvm {
 		BigDecimal b1 = new BigDecimal(v1);
 		BigDecimal b2 = new BigDecimal(v2);
 		return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+	}
+
+	public static void main(String[] args) {
+		LogJdkvm lj = new LogJdkvm();
+		lj.logJdkvm();
 	}
 
 }

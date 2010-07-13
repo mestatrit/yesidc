@@ -29,7 +29,7 @@
 			<column name="CONTRACT_NO" length="50" />
 		</property>
 		<property name="reciever" type="java.lang.String">
-			<column name="RECIEVER" length="50" />
+			<column name="RECIEVER" length="100" />
 		</property>
 		<property name="createDate" type="timestamp">
 			<column name="CREATE_DATE" />

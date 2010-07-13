@@ -34,7 +34,7 @@
 		</property>
 		
 		<property name="reciever" type="java.lang.String">
-			<column name="RECIEVER" length="50" >
+			<column name="RECIEVER" length="100" >
 				<comment>收件人称呼</comment>
 			</column>
 		</property>
