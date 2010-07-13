@@ -8,6 +8,7 @@ import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.spring.SpringContext;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.job51.dao.CompanyDao;
@@ -48,13 +49,19 @@ public class TestCompanyDao extends TestCase {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		log.info("save header!");
 		try {
-			testUpdateHeader();
+			List<ComEmail> ces = testGetMails();
+			log.info("save header!"+ces.size());
+			
+			//testUpdateHeader();
 			// testSaveHeader();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static List<ComEmail> testGetMails() throws ApplicationException {
+		return companyDao.getComEmails("www.cdqxfjz@126.com");
 	}
 
 	public static void testSaveHeader() {
