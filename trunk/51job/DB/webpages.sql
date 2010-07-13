@@ -5,10 +5,21 @@ select count(*) from t_company
 
 select * from  t_webpages t order by t.update_date desc
 select * from  t_company t order by t.update_date desc
+select * from  tc_email  t --where t.email='yunjiework@126.com' 
+order by t.update_date desc
+select * from  tc_contact_info   t --where t.email='yunjiework@126.com' 
+order by t.update_date desc 
+for update
+select * from  tc_contact_header    t --where t.email='yunjiework@126.com' 
+order by t.update_date desc
+
 /**
 --result 1
-1	3	1313736	2010-7-10 23:39:26
-1	3	1312872	2010-7-11 9:08:53
+1	3	1310962	2010-7-12 1:50:24
+1	3	1310254	2010-7-12 2:23:48
+1	3	1308959	2010-7-12 8:09:58
+1	3	1307611	2010-7-12 21:30:33
+1	3	1306426	2010-7-13 8:20:31
 
 1	103570
 **/
