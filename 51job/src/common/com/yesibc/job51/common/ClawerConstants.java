@@ -40,6 +40,10 @@ public class ClawerConstants {
 	public final static String TAG_SPACE_HTML = "&nbsp;";
 	public final static String TAG_SPACE_TRIM = "";
 
+	public static long PAUSE_SERVER_INTERVAL = 1000*60*60*2;
+	public static long PAUSE_SERVER_SLEEP_TIMES = (1000*60*2)/2000;
+
+	
 	public static int REFRESH_MUILTI_THREADS_NUMBER = Integer.parseInt(ClawerUtils
 			.getServerConfByKey("refresh.muilti.threads.number"));
 
@@ -63,7 +67,7 @@ public class ClawerConstants {
 
 	public final static long WAITING_TIME_SECONDS = 2;
 
-	public final static long WAITING_TIMES = 65;
+	public final static long WAITING_TIMES = 60;
 
 	public final static long WAITING_TIMES_EXT = 5;
 

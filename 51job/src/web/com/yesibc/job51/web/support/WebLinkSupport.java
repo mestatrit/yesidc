@@ -25,13 +25,33 @@ public class WebLinkSupport {
 	private static Date reconnDate = null;
 	private static boolean CONN_TAG = true;
 
-	public synchronized static boolean getConnTag() {
+	public static boolean checkWaitingConn(String title) {
+		int i = 0;
+		try {
+			while (true) {
+				if (WebLinkSupport.getConnTag()) {
+					return true;
+				}
+				i++;
+				Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
+				if (i % 5 == 0) {
+					log.info(title + "!checkWaitingConn!==[" + i * 2 + "]");
+				}
+			}
+		} catch (Exception e) {
+			ErrorHandler.errorLogAndMail(title + "!checkWaitingConn!", e);
+			return false;
+		}
+
+	}
+
+	private synchronized static boolean getConnTag() {
 		return CONN_TAG;
 	}
-	
+
 	public synchronized static void setConnTag(boolean connTag) {
 		CONN_TAG = connTag;
-	}	
+	}
 
 	private static void reconnectInternet(String rid) throws ApplicationException {
 		finish = false;
@@ -201,14 +221,11 @@ public class WebLinkSupport {
 	}
 
 	public static void checkRunningWeb(String tag, int index) {
-		int j = 0;
 		for (Entry<Integer, WebRenderEntity> entry : WebrendererContext.WEBRENDER_ENTITIES.entrySet()) {
 			int i = 0;
 
 			if (entry.getKey() == ClawerConstants.THREADS_NUMBER || entry.getKey() == index) {
-				j++;
-				LogHandler.info(tag + "Check running web waiting time:" + entry.getKey()
-						+ " don't needed to be checked[" + j + "].");
+				LogHandler.info(tag + " Don't need to be checked.Index:" + entry.getKey());
 				continue;
 			}
 
@@ -219,8 +236,10 @@ public class WebLinkSupport {
 
 					if (i > ClawerConstants.WAITING_TIMES) {
 						entry.getValue().setLoaded(true);
+						WebrendererContext.reFreshContext(entry.getKey(), tag + "-" + i);
 						ErrorHandler.errorLogAndMail(tag + "Check running web waiting error when checkRunning!Time:"
 								+ ClawerConstants.WAITING_TIME_LOADING * i);
+						break;
 					}
 				} catch (InterruptedException e) {
 					ErrorHandler.errorLogAndMail("Error when check running web!", e);
