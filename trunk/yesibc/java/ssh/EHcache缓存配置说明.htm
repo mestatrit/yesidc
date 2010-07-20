@@ -1,0 +1,425 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>EHcache缓存配置说明 - 清风的柔软时光 - JavaEye技术网站</title>
+    <meta name="description" content="配置文件例子： ehcache&gt;     &lt;diskStore path=&quot;java.io.tmpdir&quot;/&gt;     &lt;defaultCache             maxElementsInMemory=&quot;10000&quot;             eternal=&quot;false&quot;             timeT ..." />
+    <meta name="keywords" content=" Java综合 EHcache缓存配置说明" />
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="search" type="application/opensearchdescription+xml" href="/open_search.xml" title="JavaEye" />
+    <link href="/rss" rel="alternate" title="清风的柔软时光" type="application/rss+xml" />
+    <link href="http://www.javaeye.com/stylesheets/blog.css?1274179894" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://www.javaeye.com/stylesheets/themes/blog/blue.css?1260254891" media="screen" rel="stylesheet" type="text/css" />
+    <script src="http://www.javaeye.com/javascripts/application.js?1273630177" type="text/javascript"></script>
+      
+  <link href="http://www.javaeye.com/javascripts/syntaxhighlighter/SyntaxHighlighter.css?1268040798" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/syntaxhighlighter/shCoreCommon.js?1238329845" type="text/javascript"></script>
+<script src="http://www.javaeye.com/javascripts/hotkey.js?1238403289" type="text/javascript"></script>
+  <style>
+    div#main {background-color: transparent; border: 0; padding: 0px; width: 740px;}
+  </style>
+  <link href="http://www.javaeye.com/javascripts/editor/css/ui.css?1222156967" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/editor/compress.js?1265622452" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="blog_site_nav">
+  <a href="http://www.javaeye.com/" class="homepage">首页</a>
+  <a href="http://www.javaeye.com/news">新闻</a>
+  <a href="http://www.javaeye.com/forums">论坛</a>
+  <a href="http://www.javaeye.com/ask">问答</a>
+  <a href="http://www.javaeye.com/blogs">博客</a>
+  <a href="http://www.javaeye.com/job">招聘</a>
+  <a href="#" onclick="return false;" id="msna"><u>更多</u> <small>▼</small></a>
+  <div class="quick_menu" style="display:none;">
+    <a href="http://www.javaeye.com/wiki">专栏</a>
+    <a href="http://www.javaeye.com/articles">文摘</a>
+    <a href="http://www.javaeye.com/groups">圈子</a>
+    <a href="http://www.javaeye.com/google_search">搜索</a>
+  </div>
+</div>
+      <div id="user_nav">
+      <a href="http://bibye-domain.javaeye.com" title="查看我的博客首页" class="welcome">欢迎bibiye</a>
+    
+      <a href="http://app.javaeye.com/messages" title="发送站内短信">收件箱</a>
+    
+    
+      <a href="http://app.javaeye.com" title="我的应用首页">我的应用</a>
+    
+    <div class="quick_menu" style="display:none;">
+      <a href="http://app.javaeye.com/feed" title="我关注的好友动态消息">我的关注</a>
+      <a href="http://app.javaeye.com/feed/my" title="我参与的话题更新的消息">我的参与</a>
+      <a href="http://app.javaeye.com/chat" title="用闲聊发表简短的话题">我的闲聊</a>
+      <a href="http://app.javaeye.com/mygroup" title="我加入的圈子最新话题">我的圈子</a>
+      <a href="http://app.javaeye.com/links" title="我收藏的网络资源链接">我的收藏</a>
+      <a href="http://app.javaeye.com/myresume" title="我的个人简历">我的简历</a>
+    </div>
+        <a href="http://bibye-domain.javaeye.com/admin" title="管理我的博客">我的博客</a>
+    <a href="http://app.javaeye.com/profile" title="修改我的个人设置">设置</a>
+    <a href="/logout" class="nobg" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'put'); f.appendChild(m);f.submit();return false;">退出</a>
+  </div>
+    </div>
+
+    <div id="page">
+      <div id="branding" class="clearfix">
+        <div id="blog_name"><h1><a href="/">清风的柔软时光</a></h1></div>
+        <div id="blog_preview">
+          
+        </div>
+        <div id="blog_domain">永久域名 <a href="/">http://scholers.javaeye.com</a></div>
+      </div>
+      
+      <div>
+      <script type="text/javascript">
+      alimama_pid="mm_10764389_2033220_8257823"; 
+      alimama_titlecolor="0000FF"; 
+      alimama_descolor ="000000"; 
+      alimama_bgcolor="FFFFFF"; 
+      alimama_bordercolor="E6E6E6"; 
+      alimama_linkcolor="008000"; 
+      alimama_bottomcolor="FFFFFF"; 
+      alimama_anglesize="0"; 
+      alimama_bgpic="0"; 
+      alimama_icon="0"; 
+      alimama_sizecode="14"; 
+      alimama_width=468; 
+      alimama_height=60; 
+      alimama_type=2; 
+      </script>
+      <script src="http://a.alimama.cn/inf.js" type=text/javascript>
+      </script>  
+    </div>
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+          
+
+
+<div class="blog_main"> 
+  <div class="blog_nav">
+    
+    <div class="pre_next">
+      <a href="/blog/638000" class="next" title="FindBugs错误问题详解">FindBugs错误问题详解</a>
+      |
+      <a href="/blog/625084" class="pre" title="从电信运营商的利润说起">从电信运营商的利润说起</a>
+    </div>
+  </div>
+  <div class="blog_title">
+    <div class="date"><span class='year'>2010</span><span class='sep_year'>-</span><span class='month'>04</span><span class='sep_month'>-</span><span class='day'>01</span></div>
+    <h3><a href="/blog/630373">EHcache缓存配置说明</a></h3>
+                <strong>文章分类:<a href="http://www.javaeye.com/blogs/category/java" style="text-decoration:none;padding-right:10px;">Java编程</a></strong>    
+  </div>
+
+  <div class="blog_content">
+    配置文件例子：<br />ehcache&gt;<br />&nbsp;&nbsp;&nbsp; &lt;diskStore path="java.io.tmpdir"/&gt;<br />&nbsp;&nbsp;&nbsp; &lt;defaultCache<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; maxElementsInMemory="10000"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; eternal="false"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; timeToIdleSeconds="120"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; timeToLiveSeconds="120"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; overflowToDisk="true"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; maxElementsOnDisk="10000000"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; diskPersistent="false"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; diskExpiryThreadIntervalSeconds="120"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; memoryStoreEvictionPolicy="LRU"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /&gt;<br />&lt;/ehcache&gt;<br /><br /> <br />&nbsp;&nbsp;&nbsp; <br /><br />1. 预览<br />&nbsp;&nbsp; Ehcache 从 Hibernate 发展而来，逐渐涵盖了Cahce界的全部功能，是目前发展势头最好的一个项目。<br /><br />标准缓存 <br />分布式缓存(基于RMI/JGroups/JMS) <br />URL，页面片段缓存(类似OSCache的相关部分) <br />中央缓存服务器(类似Memcached) <br /><br />2. 基本功能与配置<br />&nbsp;&nbsp;&nbsp;&nbsp; Ehcache的基本功能，可以从配置文件中学习。详见Ehcache的文档<br /><br />&nbsp;&nbsp;&nbsp;&nbsp; 总的来说，缓存与HashMap的最大不同，就是缓存设想内存是有限的，缓存的时效性也是有限的，所以可以设定内存数量的大小，可以执行失效算法 ，可以在内存满了的时候，按照最少访问等算法将缓存直接移除或切换到硬盘上。<br /><br />&nbsp;&nbsp;&nbsp;&nbsp; 另外注意，ehcache的CacheManager本身有一定的默认值。而在没有指定ehcache.xml的情况下， 会使用ehcache.jar里自带的ehcache_failsafe.xml，<br /><br />2.1 对象在内存中的最大数量<br />&nbsp;&nbsp;&nbsp;&nbsp; 因为内存是有限的，所以必须用maxElementsInMemory(必填项)设置每类对象在内存中的最大数量。ehcache_failsafe.xml 中为10000。<br /><br />2.2 到达内存中最大量时的过期/移出算法<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 过期算法: 如果缓存已经失效，人道毁灭之。失效算法由3个参数组成：<br /><br />eternal(必填项):如果为true，则永不过期，忽略后两个参数的设置。ehcache_failsafe.xml 为false. <br />timeToIdleSeconds: 空闲无访问时间，默认为0，永不过时。ehcache_failsafe.xml 设为120秒。 <br />timeToLiveSeconds: 空闲无访问时间，默认为0，永不过时。ehcache_failsafe.xml 设为120秒。 <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 移出算法：如果经过失效算法后，还是有很多有效的缓存，则执行清除算法。清除算法由两个参数组成：<br /><br />memoryStoreEvictionPolicy: 默认为LRU(最近最少访问),另有先进先出(FIFO)，最少访问次数(LFU) <br />overflowToDisk(必填项) 为true，则将清除出来的缓存持久化到磁盘，否则人道毁灭之。 <br /><br />2.3 储存到硬盘<br />maxElementsOnDisk，默认为0，无限多。ehcache_failsafe.xml为10000000。 <br />diskExpiryThreadIntervalSeconds：使用过期算法清除磁盘中失效对象的间隔，默认为120秒。&nbsp; <br />diskSpoolBufferSizeMB ，默认为30M。 <br /><br />2.4&nbsp; 重启时缓存持久化<br /> diskPersistent 当应用重启时，可将缓存先持久化到硬盘，重启后再行载入，节省大量的重新从数据库载入。但只适合那些缓存不怎么变化，或者有特殊机制保证重启后应用能接收到重启这段时间里缓存变化信息的情况。 <br /><br /><br />3. 分布式缓存<br />&nbsp;&nbsp;&nbsp;&nbsp; Ehcache 有传统的RMI，1.5版的JGroups，1.6版的JMS，随大流还是先用RMI的好些。<br /><br />&nbsp;&nbsp; 3.1设置自身<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 这里设置在localhost的40001端口上侦听。如果要互相同步的CahceManager不都在一台机器上的话，hostName应该是实际IP。)<br /><br /> 	&lt;cacheManagerPeerListenerFactory class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"<br />		properties="hostName=localhost, port=40001,socketTimeoutMillis=2000" /&gt;&nbsp; <br /><br />&nbsp;&nbsp; 3.2 设置需要同步的对方服务器及缓存对象，<br />&nbsp;&nbsp;&nbsp; 这里设置与40002端口上的CacheManager同步User与Role对象，如果还有第三台机器，则继续用|分割，继续往下列。同理，在40002端口上的cacheManager的ehcache.xml里，就需要配置与400001,40003的互通）<br /><br />&nbsp;&nbsp;&nbsp; 也有自动发现，广播的简单配法，但对广播天然恐惧，还是辛苦一点一个个静态列表配置文件的写了，虽然有点烦。<br /><br /> &lt;cacheManagerPeerProviderFactory class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"<br />		properties="peerDiscovery=manual,<br /> 		rmiUrls=//localhost:40002/org.springside.examples.miniweb.entity.user.User|//localhost:40002/org.springside.examples.miniweb.entity.user.Role"/&gt;&nbsp;&nbsp; <br /><br /> 3.3 缓存对象的配置<br />&nbsp;&nbsp; 往每一个需要缓存的对象加入子对象cacheEventListenerFactory<br /><br />&nbsp;&nbsp;&nbsp;&nbsp; &lt;cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; properties="replicateAsynchronously=true,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; replicatePuts=true,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; replicateUpdates=true,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; replicateUpdatesViaCopy=true,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; replicateRemovals=true<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; asynchronousReplicationIntervalMillis=&lt;number of milliseconds"&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; propertySeparator="," /&gt;<br /><br />replicateAsynchronously&nbsp; 对象同步是否异步完成，默认为true。如果比较紧急就设为false。 在一致性时间性要求不强的时候，设为异步可大大提供性能，因为它是异步立即返回的，而且可以批量提交。 <br /><br />replicateUpdatesViaCopy 是否将对象变更复制到所有节点，还是只是发送一个失效信息，让对方该缓存失效，当对方需要该缓存时重新计算载入。<br />默认为true。鉴于对象复制的消耗挺大的，又有锁的问题，而且对方也未必需要该对象，所以此属性建议设为false。如果业务上真的需要设为true时，就可考虑使用Terracotta了。 <br /><br />replicatePuts、replicateUpdates、replicateRemovals&nbsp; 增删改是否同步，默认都为true。但因为我们前面选择了失效算法，所以replicatePuts 要设为false。 <br /><br />&nbsp; 所以我们一般的设置如下：<br /><br /> &lt;cache name="org.springside.examples.miniweb.entity.user.User" maxElementsInMemory="500" overflowToDisk="true"<br />		eternal="true"&gt;<br />		&lt;cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"<br />			properties="replicateAsynchronously=false,replicatePuts=false,replicateUpdatesViaCopy=false" /&gt;<br />	&lt;/cache&gt;<br /><br /> 3.4 Shutdown<br />&nbsp;&nbsp; 在分布式环境或持久化硬盘时，需要调用CacheManager的shutdown操作，Hibernate会自动shutdown它自己的cacheManager，如果在hibernate之外使用，你需要增加：<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;listener&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;listener-class&gt;net.sf.ehcache.constructs.web.ShutdownListener&lt;/listener-class&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp; &lt;/listener&gt;<br /><br />4.JMS式并发同步<br />&nbsp;&nbsp;&nbsp; 与其他同步方式相比，JMS同步支持了非Cache节点的程序对Cahce的修改。<br /><br />&nbsp;&nbsp; 在分布式缓存中有一种需求：应用节点更改数据库数据后，需要通知所有缓存集群的节点，通常大家都是自行通过JMS实现的，而Ehcache的JMS Replicator 提供了一种标准的方案，提供PUT,REMOVE,REMOVE_ALL的标准操作。<br />
+  </div>
+
+  
+
+  
+  
+  
+
+  <div class="blog_nav">
+    <div class="pre_next">
+      <a href="/blog/638000" class="next" title="FindBugs错误问题详解">FindBugs错误问题详解</a>
+      |
+      <a href="/blog/625084" class="pre" title="从电信运营商的利润说起">从电信运营商的利润说起</a>
+    </div>
+  </div>
+
+  <div class="blog_bottom">
+    <ul>
+      <li>21:46</li>
+      <li>浏览 (99)</li>
+            <li><a href="#comments">评论</a> (0)</li>
+      <li>分类: <a href="/category/79850">技术</a></li>
+      
+      
+        <li><a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=EHcache%E7%BC%93%E5%AD%98%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E&amp;user_favorite%5Burl%5D=http%3A%2F%2Fscholers.javaeye.com%2Fblog%2F630373' target='_blank' class='favorite'>收藏</a></li>
+        
+      
+      
+      <li class='last'><a href="http://www.javaeye.com/wiki/topic/630373" target="_blank" class="more">相关推荐</a></li>
+    </ul>
+  </div>
+
+  <div class="blog_comment">
+    <h5>评论</h5>
+    <a id="comments" name="comments"></a>
+    
+    
+    
+  </div>
+
+  <div class="blog_comment">
+    <h5>发表评论</h5>
+          
+      
+        <form action="/blog/630373" id="comment_form" method="post" onsubmit="return false;">          
+
+
+  <input type="hidden" id="editor_bbcode_flag"/>
+
+
+
+<div id="editor_main"><textarea class="validate-richeditor bad-words min-length-5" cols="40" id="editor_body" name="comment[body]" rows="20" style="width: 500px; height: 350px;"></textarea></div>
+
+
+<script type="text/javascript">
+  var editor = new Control.TextArea.Editor("editor_body", "bbcode", false);
+</script>
+          <p style="text-align:right;padding-right:30px;">(快捷键 Alt+S / Ctrl+Enter) <input class="submit" id="quick_reply_button" name="commit" type="submit" value="提交" /></p>
+        </form>
+        <script type="text/javascript">
+          new HotKey("s",function() {$('quick_reply_button').click();},{altKey: true, ctrlKey: false});
+          new HotKey(new Number(13),function() {$('quick_reply_button').click();},{altKey: false, ctrlKey: true});
+
+          new Validation("comment_form", {immediate: false, onFormValidate: function(result, form){
+    
+            if(result) {
+              new Ajax.Request('/blog/create_comment/630373', {
+                onFailure:function(response){
+                  $('comments').insert({after:response.responseText})
+                  form.spinner.hide();
+                  Element.scrollTo($('comments'));
+                },
+                onSuccess:function(response){
+                  Element.scrollTo($('comments'));
+                  $('comments').insert({after:response.responseText})
+                  $('editor_body').value = "";
+                  form.spinner.hide();
+                }, parameters:Form.serialize(form)
+              });
+            }
+    
+        }});
+        </script>
+      
+      </div>
+</div>
+
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  fix_image_size($$('div.blog_content img'), 700);
+  function quote_comment(id) {
+    new Ajax.Request('/editor/quote', {
+      parameters: {'id':id, 'type':'Post'},
+      onSuccess:function(response){editor.bbcode_editor.textarea.insertAfterSelection(response.responseText);}
+    });
+  }
+</script>
+
+
+
+        </div>
+
+        <div id="local">
+          <div class="local_top"></div>
+          <div id="blog_owner">
+            <div id="blog_owner_logo"><a href='http://scholers.javaeye.com'><img alt="scholers的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/148272/d369d4ac-b4ce-3ff6-99af-d6bdbf70832f.jpg?1253284071" title="scholers的博客: 清风的柔软时光" /></a></div>
+            <div id="blog_owner_name">scholers</div>
+          </div>
+          
+            <div id="twitter_decorate">&nbsp;</div>
+            <div id="twitter" class="twitter clearfix">
+              
+年过完了，安心工作！
+<br/><em><a href="http://scholers.javaeye.com/blog/chat/61002">2010-03-04</a>
+ 通过网页
+ 
+</em>
+       <a href="http://app.javaeye.com/chat?twitter%5Bbody%5D=%40scholers+&amp;twitter%5Breply_to_id%5D=61002" title="回复这个闲聊"><img alt="Reply_twitter" src="http://www.javaeye.com/images/app/reply_twitter.gif?1232617931" /></a>
+              <div class="right"><a href="/blog/chat">&gt;&gt;更多闲聊</a></div>
+            </div>
+          
+          <div id="blog_actions">
+            <ul>
+              <li>浏览: 5571 次</li>
+              <li>性别: <img alt="Icon_minigender_1" src="http://www.javaeye.com/images/icon_minigender_1.gif?1192779195" title="男" /></li>
+              <li>来自: 杭州</li>
+              <li><img src='/images/status/offline.gif'/></li>
+              <li>
+                <a href="/blog/profile" class="profile">详细资料</a>
+                <a href="/blog/guest_book" class="guest_book">留言簿</a>
+              </li>
+              
+                <li>
+                  <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=scholers" class="message" title="发送站内短信">发短消息</a>
+                  
+                    <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=scholers" class="subscription" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;">关注</a>
+                  
+                </li>
+              
+            </ul>
+            <h5>搜索本博客</h5>
+            <form action="/blog/search" method="get">              <input class="text" id="query" name="query" style="margin-left: 10px;width: 110px;" type="text" />
+              <input class="submit" type="submit" value="搜索" />
+            </form>          </div>
+          
+            <div id="user_visits" class="clearfix">
+              <h5>最近访客 <span style='font-weight:normal;font-size:12px;padding-left:30px;'><a href="/blog/user_visits">&gt;&gt;更多访客</a></span></h5>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://bibye-domain.javaeye.com' target='_blank'><img alt="bibiye的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="bibiye的博客: bibiye" /></a></div>
+                  <div class="left"><a href='http://bibye-domain.javaeye.com' target='_blank'>bibiye</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://nbcoder.javaeye.com' target='_blank'><img alt="nbcoder的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/205690/71b751ad-09a8-3382-8cbd-9b7f674c51e1-thumb.bmp?1265869774" title="nbcoder的博客: 爱自已" /></a></div>
+                  <div class="left"><a href='http://nbcoder.javaeye.com' target='_blank'>nbcoder</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://zmodem.javaeye.com' target='_blank'><img alt="zmodem的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="zmodem的博客: " /></a></div>
+                  <div class="left"><a href='http://zmodem.javaeye.com' target='_blank'>zmodem</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://javanacl.javaeye.com' target='_blank'><img alt="JavaNaCl的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="JavaNaCl的博客: " /></a></div>
+                  <div class="left"><a href='http://javanacl.javaeye.com' target='_blank'>JavaNaCl</a></div>
+                </div>
+              
+            </div>
+          
+                      <div id="blog_menu">
+              <h5>博客分类</h5>
+              <ul>
+                <li><a href="/">全部博客 (41)</a></li>
+                
+                  <li><a href="/category/79850">技术 (33)</a></li>
+                
+                  <li><a href="/category/79851">情感 (2)</a></li>
+                
+                  <li><a href="/category/79852">旅游 (2)</a></li>
+                
+                  <li><a href="/category/95840">电影 (2)</a></li>
+                
+                  <li><a href="/category/106481">管理 (2)</a></li>
+                
+              </ul>
+            </div>
+            
+            
+            <div id="blog_others">
+              <h5>其他分类</h5>
+              <ul>
+                <li><a href="/blog/favorite">我的收藏</a> (15)</li>
+                                                <li><a href="/blog/topic">我的论坛主题贴</a> (8)</li>
+                <li><a href="/blog/post">我的所有论坛贴</a> (63)</li>
+                <li><a href="/blog/article">我的精华良好贴</a> (0)</li>
+                              </ul>
+            </div>
+            
+            <div id="recent_groups">
+              <h5>最近加入圈子</h5>
+              <ul>
+                
+              </ul>
+            </div>
+            
+                          <div id="month_blogs">
+                <h5>存档</h5>
+                <ul>
+                  
+                    <li><a href="/blog/monthblog/2010-05">2010-05</a> (5)</li>
+                  
+                    <li><a href="/blog/monthblog/2010-04">2010-04</a> (5)</li>
+                  
+                    <li><a href="/blog/monthblog/2010-03">2010-03</a> (8)</li>
+                  
+                  <li><a href="/blog/monthblog_more">更多存档...</a></li>
+                </ul>
+              </div>
+                        <div id="recent_comments">
+              <h5>最新评论</h5>
+              <ul>
+                
+                  <li>
+                    <a href="/blog/625084#comments" title="从电信运营商的利润说起">从电信运营商的利润说起</a><br/>
+                    腾讯科技讯5月12日消息，中国领先的互联网服务和移动及电信增值服务供应商–腾讯控股 ...<br/>
+                    -- by <a href='http://scholers.javaeye.com' target='_blank'>scholers</a>
+                  </li>
+                
+                  <li>
+                    <a href="/blog/625084#comments" title="从电信运营商的利润说起">从电信运营商的利润说起</a><br/>
+                    skypengyc 写道聯通還是由機會的，人家那叫術業有專攻，不能說還傻傻的賣IP ...<br/>
+                    -- by <a href='http://scholers.javaeye.com' target='_blank'>scholers</a>
+                  </li>
+                
+                  <li>
+                    <a href="/blog/625084#comments" title="从电信运营商的利润说起">从电信运营商的利润说起</a><br/>
+                    聯通還是由機會的，人家那叫術業有專攻，不能說還傻傻的賣IPHONE。移動之所以進入 ...<br/>
+                    -- by <a href='http://skypengyc.javaeye.com' target='_blank'>skypengyc</a>
+                  </li>
+                
+                  <li>
+                    <a href="/blog/625084#comments" title="从电信运营商的利润说起">从电信运营商的利润说起</a><br/>
+                    sw1982 写道腾讯再伟大，也比不过public自己的儿子。qq扣你1块钱，可 ...<br/>
+                    -- by <a href='http://zjriso.javaeye.com' target='_blank'>zjriso</a>
+                  </li>
+                
+                  <li>
+                    <a href="/blog/625084#comments" title="从电信运营商的利润说起">从电信运营商的利润说起</a><br/>
+                    spyker 写道scholers 写道ankyhe 写道这个问题我们分析过好久。 ...<br/>
+                    -- by <a href='http://scholers.javaeye.com' target='_blank'>scholers</a>
+                  </li>
+                
+              </ul>
+            </div>
+            <div id="comments_top">
+              <h5>评论排行榜</h5>
+              <ul>
+                
+                  <li><a href="/blog/625084" title="从电信运营商的利润说起">从电信运营商的利润说起</a></li>
+                
+                  <li><a href="/blog/572651" title="在亚信的二三事">在亚信的二三事</a></li>
+                
+                  <li><a href="/blog/471041" title="ArrayList对象引用的问题">ArrayList对象引用的问题</a></li>
+                
+                  <li><a href="/blog/624065" title="手机统一缴费系统设想">手机统一缴费系统设想</a></li>
+                
+                  <li><a href="/blog/618465" title="短信排队系统设想">短信排队系统设想</a></li>
+                
+              </ul>
+            </div>
+            <div id="rss">
+              <ul>
+                <li><a href="/rss" target="_blank"><img alt="Rss" src="http://www.javaeye.com/images/rss.png?1195448807" /></a></li>
+                <li><a href="http://fusion.google.com/add?feedurl=http://scholers.javaeye.com/rss" target="_blank"><img alt="Rss_google" src="http://www.javaeye.com/images/rss_google.gif?1197872161" /></a></li>
+                <li><a href="http://www.xianguo.com/subscribe.php?url=http://scholers.javaeye.com/rss" target="_blank"><img alt="Rss_xianguo" src="http://www.javaeye.com/images/rss_xianguo.jpg?1206446465" /></a></li>
+                <li><a href="http://www.google.com/search?hl=zh-CN&q=RSS">[什么是RSS?]</a></li>
+              </ul>
+            </div>
+            <div class="local_bottom"></div>
+          
+        </div>
+      </div>
+
+      <div id="footer" class="clearfix">
+        <div id="copyright">
+          <hr/>
+          声明：JavaEye文章版权属于作者，受法律保护。没有作者书面许可不得转载。若作者同意转载，必须以超链接形式标明文章原始出处和作者。<br />
+          &copy; 2003-2010 JavaEye.com.   All rights reserved. 上海炯耐计算机软件有限公司 [ 沪ICP备05023328号 ]
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.javaeye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&logged_in=yes" + "' width='0' height='0' />");
+</script>
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-10724778-1");
+pageTracker._trackPageview();
+</script>
+      
+  </body>
+</html>
