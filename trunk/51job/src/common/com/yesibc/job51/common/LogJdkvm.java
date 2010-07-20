@@ -36,7 +36,7 @@ public class LogJdkvm {
 	public void logJdkvm() {
 		try {
 			if (!check) {
-				logMemory.error("Error and no check!");
+				logMemory.error("No need to be checked!");
 			}
 
 			// Java 虚拟机内存系统的管理接口。 MemoryMXBean
@@ -57,12 +57,13 @@ public class LogJdkvm {
 
 			if ((heapUsage + noHeapUsage) > limit) {
 
-				if (WebLinkSupport.getConnTag()) {
-					WebLinkSupport.setConnTag(false);
-				}
+				// 检查是否在进行重新连接的操作。如果有，则等待。
+				WebLinkSupport.checkWaitingConn("!logVM!");
 
 				try {
-
+					check = false;					
+					WebLinkSupport.setConnTag(false);
+					
 					WebLinkSupport.checkRunningWeb("Check web running when GC!", -1);
 
 					CompanyJobContext.jobCache.removeAll();
@@ -87,11 +88,12 @@ public class LogJdkvm {
 					heapUsage = divide(heapMemoryUsage.getUsed(), (1024 * 1024), 4);
 					noHeapUsage = divide(nonHeapMemoryUsage.getUsed(), (1024 * 1024), 4);
 
-					logMemory.info("Memory is greater than " + limit + " Mb. GC End!Times:"
-							+ (System.currentTimeMillis() - start));
+					logMemory.info("GC End!Heap usage:" + heapUsage + "Mb" + ",Non-Heap usage:" + noHeapUsage
+							+ "Mb.Times:" + (System.currentTimeMillis() - start));
 
 				} finally {
-					WebLinkSupport.setConnTag(false);
+					WebLinkSupport.setConnTag(true);
+					check=true;
 				}
 
 			}

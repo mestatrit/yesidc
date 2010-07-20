@@ -31,8 +31,10 @@ public class Clawer51JobAction extends BaseAction2Support {
 	private static final long serialVersionUID = -8228026649441186987L;
 	private static Log log = LogFactory.getLog(Clawer51JobAction.class);
 	private static String finishTag = "false";
-	private static long callTimes = System.currentTimeMillis();
+	private static long start = System.currentTimeMillis();
+	private static long start_holding = System.currentTimeMillis();
 	long i = 0;
+	int pauseTimes = 0;
 
 	// 总线程
 	private final static String totalThreadTag = "ToT-[";
@@ -49,7 +51,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 	public String refresh() {
 
-		i = (System.currentTimeMillis() - callTimes) / (1000 * 60);
+		i = (System.currentTimeMillis() - start) / (1000 * 60);
 		getRequest().setAttribute("finishTag", finishTag);
 		getRequest().setAttribute("callTimes", i);
 		// log.info("Times:" + i + "s.");
@@ -245,7 +247,8 @@ public class Clawer51JobAction extends BaseAction2Support {
 						break;
 					}
 
-					checkWaitingConn();
+					// 检查是否在进行重新连接的操作。如果有，则等待。
+					WebLinkSupport.checkWaitingConn("!SearchJobs11!");
 
 					SearchJobDetailEngine sce = jobs.get(thread);
 					if (sce != null && sce.isAlive()) {
@@ -262,9 +265,9 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 				errorTimes = waitingParseJobs(jobs, errorTimes);
 
-				if (WebLinkSupport.getConnTag()) {
+				if (WebLinkSupport.checkWaitingConn("!SearchJobs22!")) {// 如果没有重新连接的操作，则进入是否需要重新的判断。
 					newRecTimes = reConn(threadNumber, recTimes, currentOfAll);
-					if (newRecTimes > recTimes) {
+					if (newRecTimes > recTimes) { // 如果重新连接，错误数从0开始计。
 						errorTimes = 0;
 					}
 					recTimes = newRecTimes;
@@ -283,12 +286,6 @@ public class Clawer51JobAction extends BaseAction2Support {
 		log.info("parse parseJobsDetails.Times[" + l / (1000 * 60) + "s]. Error[" + error + "]. URL_COMPANIES="
 				+ CompanyJobContext.getCompaniesLength() + ",URL_JOBS=" + CompanyJobContext.getJobsLengthInCache()
 				+ ",Email=" + CompanyJobContext.getEmailsLength() + ".");
-	}
-
-	private void checkWaitingConn() throws InterruptedException {
-		if (!WebLinkSupport.getConnTag()) {
-			Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
-		}
 	}
 
 	private void parseSearchPages(String requestId, String reqLog, int threadNumber) {
@@ -343,7 +340,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 						break;
 					}
 
-					checkWaitingConn();
+					WebLinkSupport.checkWaitingConn("!SearchPages11!");
 
 					SearchPagesEngine sce = sces.get(thread);
 					if (sce != null && sce.isAlive()) {
@@ -360,7 +357,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 				errorTimes = waitingSearchPages(sces, errorTimes);
 
-				if (WebLinkSupport.getConnTag()) {
+				if (WebLinkSupport.checkWaitingConn("!SearchPages22!")) {// 如果没有重新连接的操作，则进入是否需要重新的判断。
 					newRecTimes = reConn(threadNumber, recTimes, currentOfAll);
 					if (newRecTimes > recTimes) {
 						errorTimes = 0;
@@ -420,7 +417,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 						break;
 					}
 
-					checkWaitingConn();
+					WebLinkSupport.checkWaitingConn("!SearchList11!");
 
 					SearchListEngine sce = lists.get(thread);
 					if (sce != null && sce.isAlive()) {
@@ -437,7 +434,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 
 				errorTimes = waitingSearchList(lists, errorTimes);
 
-				if (WebLinkSupport.getConnTag()) {
+				if (WebLinkSupport.checkWaitingConn("!SearchList22!")) {// 如果没有重新连接的操作，则进入是否需要重新的判断。
 					newRecTimes = reConn(threadNumber, recTimes, currentOfAll);
 					if (newRecTimes > recTimes) {
 						errorTimes = 0;
@@ -463,7 +460,25 @@ public class Clawer51JobAction extends BaseAction2Support {
 				+ CompanyJobContext.getCompaniesLength());
 	}
 
-	private int reConn(int threadNumber, int recTimes, int currentOfAll) {
+	private int reConn(int threadNumber, int recTimes, int currentOfAll) throws InterruptedException {
+		long now = System.currentTimeMillis() - start_holding;
+		if ((now - ClawerConstants.PAUSE_SERVER_INTERVAL) > 0) {
+			start_holding = System.currentTimeMillis();
+			log.info("Pause Server for times [" + (++pauseTimes) + "].");
+			int times = 0;
+			while (true) {
+				times++;
+				Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
+				if (times % 10 == 0) {
+					log.info("Pause Server for time:" + 2 * times + "S.");
+				}
+				if (times > ClawerConstants.PAUSE_SERVER_SLEEP_TIMES) {
+					break;
+				}
+			}
+		}
+
+		// 如果已经访问了线程数*某一倍数，则进行重新连接。
 		if (currentOfAll % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER * threadNumber) == 0) {
 			recTimes++;
 			try {
@@ -524,6 +539,14 @@ public class Clawer51JobAction extends BaseAction2Support {
 		return errorTimes;
 	}
 
+	/**
+	 * 1.如果多线程中有异常，重新连接。 2.从Map里删除已经执行完成的对象，以便新的线程放到MAP里去执行。
+	 * 3.如果线程中的错误数超过一定数量，系统退出。
+	 * 
+	 * @param jobs
+	 * @param errorTimes
+	 * @return
+	 */
 	private int waitingParseJobs(Map<Integer, SearchJobDetailEngine> jobs, int errorTimes) {
 		SearchJobDetailEngine spe = null;
 		boolean error = false;
@@ -562,7 +585,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			} else {
 				try {
 					WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG
-							+ "REC By SearchPages when error!recTimes=" + errorTimes + ".", true);
+							+ "REC By ParseJobs when error!recTimes=" + errorTimes + ".", true);
 				} catch (Exception e) {
 					log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!recTimes=" + errorTimes + ".", e);
 				}
