@@ -26,6 +26,8 @@ public class LocateCompanyInfo {
 	private static Log logManual = LogFactory.getLog(ClawerConstants.MANUAL_LOG);
 	// private static Log log = LogFactory.getLog(LocateCompanyInfo.class);
 
+	private static int ADDR_LENGTH = 100;
+
 	private static final String COMPANY_LIST_ID = "resultList";
 
 	private static final String[] CRR_COMPANY_DETAIL_TAGS = { ClawerConstants.COMPANY_INDUSTRY,
@@ -286,9 +288,22 @@ public class LocateCompanyInfo {
 			int j = temp.indexOf("<");
 
 			if (j > (i + 2)) {
-				return temp.substring((i + 2), j).replace("&nbsp;", "");
+				temp = temp.substring((i + 2), j).replace("&nbsp;", "");
+				if (temp.length() > ADDR_LENGTH) {
+					temp = StringUtils.subStringByByte(temp, 0, ADDR_LENGTH * 2);
+				}
+				return temp;
 			} else if (temp.length() > (i + 2)) {
-				return temp.substring(i + 2).replace("&nbsp;", "");
+				temp = temp.substring(i + 2).replace("&nbsp;", "");
+				if (temp.indexOf("<") > -1) {// 去年地址后面的链接。
+					temp = temp.substring(0, temp.indexOf("<"));
+				}
+				if (temp.length() > ADDR_LENGTH) {
+					if (StringUtils.absoluteLength(temp) > ADDR_LENGTH * 2) {
+						temp = StringUtils.subStringByByte(temp, 0, ADDR_LENGTH * 2);
+					}
+				}
+				return temp;
 			} else {
 				return "";
 			}
