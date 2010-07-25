@@ -1,0 +1,742 @@
+
+
+<html><head><meta http-equiv=content-type content="text/html; charset=gb2312"><title>js获得浏览器高度和宽度 参数_兼容 ie firefox_百度空间      </title>
+<body>
+<center>
+
+<div><b>
+js获得浏览器高度和宽度 参数
+</b>
+</div>
+<br>
+<div align=left>
+ document.body.scrollTop
+就是滚动条顶部到网页顶部的这段距离
+window.pageYOffset是NS专用属性，它的含义和IE下的document.body.scrollTop一样  
+</div>
+
+
+
+
+<table style="table-layout:fixed;width:100%"><tr><td><div id="blog_text" class="cnt"  ><p>document.documentElement.clientHeight --&gt;浏览器的高度</p>
+<p>document.documentElement.scrollHeight 全文的高度</p>
+<p>document.documentElement.scrollTop滚去的高度</p>
+<p> </p>
+<p>&lt;script&gt;</p>
+<p>function getInfo()<br>
+{<br>
+&nbsp;&nbsp;&nbsp;  var s = &quot;&quot;;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 网页可见区域宽：&quot;+ document.body.clientWidth;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 网页可见区域高：&quot;+ document.body.clientHeight;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 网页可见区域宽：&quot;+ document.body.offsetWidth + &quot; (包括边线和滚动条的宽)&quot;;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 网页可见区域高：&quot;+ document.body.offsetHeight + &quot; (包括边线的宽)&quot;;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 网页正文全文宽：&quot;+ document.body.scrollWidth;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 网页正文全文高：&quot;+ document.body.scrollHeight;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 网页被卷去的高(ff)：&quot;+ document.body.scrollTop;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 网页被卷去的高(ie)：&quot;+ document.documentElement.scrollTop;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 网页被卷去的左：&quot;+ document.body.scrollLeft;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 网页正文部分上：&quot;+ window.screenTop;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 网页正文部分左：&quot;+ window.screenLeft;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 屏幕分辨率的高：&quot;+ window.screen.height;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 屏幕分辨率的宽：&quot;+ window.screen.width;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 屏幕可用工作区高度：&quot;+ window.screen.availHeight;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 屏幕可用工作区宽度：&quot;+ window.screen.availWidth;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 你的屏幕设置是 &quot;+ window.screen.colorDepth +&quot; 位彩色&quot;;<br>
+&nbsp;&nbsp;&nbsp;  s += &quot; 你的屏幕设置 &quot;+ window.screen.deviceXDPI +&quot; 像素/英寸&quot;;<br>
+&nbsp;&nbsp;&nbsp;  //alert (s);<br>
+}<br>
+getInfo();<br>
+&lt;/script&gt;<br>
+<br>
+在IE、FireFox、Opera下都可以使用<br>
+document.body.clientWidth<br>
+document.body.clientHeight<br>
+即可获得，很简单，很方便。<br>
+而在公司项目当中：<br>
+Opera仍然使用<br>
+document.body.clientWidth<br>
+document.body.clientHeight<br>
+可是IE和FireFox则使用<br>
+document.documentElement.clientWidth<br>
+document.documentElement.clientHeight<br>
+原来是W3C的标准在作怪啊<br>
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<a href="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</a>&quot;&gt;<br>
+如果在页面中添加这行标记的话</p>
+<p>在IE中：<br>
+document.body.clientWidth ==&gt; BODY对象宽度<br>
+document.body.clientHeight ==&gt; BODY对象高度<br>
+document.documentElement.clientWidth ==&gt; 可见区域宽度<br>
+document.documentElement.clientHeight ==&gt; 可见区域高度<br>
+在FireFox中：<br>
+document.body.clientWidth ==&gt; BODY对象宽度<br>
+document.body.clientHeight ==&gt; BODY对象高度<br>
+document.documentElement.clientWidth ==&gt; 可见区域宽度<br>
+document.documentElement.clientHeight ==&gt; 可见区域高度<br>
+?<br>
+在Opera中： <br>
+document.body.clientWidth ==&gt; 可见区域宽度<br>
+document.body.clientHeight ==&gt; 可见区域高度<br>
+document.documentElement.clientWidth ==&gt; 页面对象宽度（即BODY对象宽度加上Margin宽）<br>
+document.documentElement.clientHeight ==&gt; 页面对象高度（即BODY对象高度加上Margin高）<br>
+而如果没有定义W3C的标准，则<br>
+IE为：<br>
+document.documentElement.clientWidth ==&gt; 0<br>
+document.documentElement.clientHeight ==&gt; 0<br>
+FireFox为：<br>
+document.documentElement.clientWidth ==&gt; 页面对象宽度（即BODY对象宽度加上Margin宽）document.documentElement.clientHeight ==&gt; 页面对象高度（即BODY对象高度加上Margin高）<br>
+Opera为：<br>
+document.documentElement.clientWidth ==&gt; 页面对象宽度（即BODY对象宽度加上Margin宽）document.documentElement.clientHeight ==&gt; 页面对象高度（即BODY对象高度加上Margin高）</p>
+<p> </p>
+<p> </p>
+<p>//获取滚动条的高度<br>
+function getPageScroll(){<br>
+var yScroll;<br>
+if (self.pageYOffset) {</p>
+<p>yScroll = self.pageYOffset;<br>
+alert(yScroll)<br>
+} else if (document.documentElement &amp;&amp; document.documentElement.scrollTop){ // Explorer 6 Strict<br>
+<br>
+yScroll = document.documentElement.scrollTop;<br>
+alert(yScroll)<br>
+} else if (document.body) {// all other Explorers<br>
+yScroll = document.body.scrollTop;<br>
+alert(&quot;zhoujian&quot;)<br>
+//alert(yScroll)<br>
+//alert(&quot;zj&quot;+document.body.scrollTop)<br>
+}<br>
+arrayPageScroll = new Array('',yScroll)<br>
+//alert(yScroll)<br>
+return arrayPageScroll;<br>
+}<br>
+//获取页面实际大小<br>
+function getPageSize(){ <br>
+&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  var xScroll, yScroll; <br>
+&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  if (window.innerHeight &amp;&amp; window.scrollMaxY) {&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  xScroll = document.body.scrollWidth; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  yScroll = window.innerHeight + window.scrollMaxY; <br>
+&nbsp;&nbsp;&nbsp;  } else if (document.body.scrollHeight &gt; document.body.offsetHeight){ // all but Explorer Mac <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  xScroll = document.body.scrollWidth; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  yScroll = document.body.scrollHeight; <br>
+&nbsp;&nbsp;&nbsp;  } else { // Explorer Mac...would also work in Explorer 6 Strict, Mozilla and Safari <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  xScroll = document.body.offsetWidth; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  yScroll = document.body.offsetHeight; <br>
+&nbsp;&nbsp;&nbsp;  } <br>
+&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  var windowWidth, windowHeight; <br>
+&nbsp;&nbsp;&nbsp;  if (self.innerHeight) {&nbsp;&nbsp;&nbsp;  // all except Explorer <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  windowWidth = self.innerWidth; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  windowHeight = self.innerHeight; <br>
+&nbsp;&nbsp;&nbsp;  } else if (document.documentElement &amp;&amp; document.documentElement.clientHeight) { // Explorer 6 Strict Mode <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  windowWidth = document.documentElement.clientWidth; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  windowHeight = document.documentElement.clientHeight; <br>
+&nbsp;&nbsp;&nbsp;  } else if (document.body) { // other Explorers <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  windowWidth = document.body.clientWidth; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  windowHeight = document.body.clientHeight; <br>
+&nbsp;&nbsp;&nbsp;  }&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  // for small pages with total height less then height of the viewport <br>
+&nbsp;&nbsp;&nbsp;  if(yScroll &lt; windowHeight){ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  pageHeight = windowHeight; <br>
+&nbsp;&nbsp;&nbsp;  } else { <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  pageHeight = yScroll; <br>
+&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+&nbsp;&nbsp;&nbsp;  // for small pages with total width less then width of the viewport <br>
+&nbsp;&nbsp;&nbsp;  if(xScroll &lt; windowWidth){&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  pageWidth = windowWidth; <br>
+&nbsp;&nbsp;&nbsp;  } else { <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  pageWidth = xScroll; <br>
+&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+&nbsp;&nbsp;&nbsp;  arrayPageSize = new Array(pageWidth,pageHeight,windowWidth,windowHeight) <br>
+&nbsp;&nbsp;&nbsp;  return arrayPageSize; <br>
+}</p>
+<p> </p></div></td></tr></table>
+
+<br>
+
+<div class="opt">
+
+<a href="/sansna/blog/category/Javascript" title="查看该分类中所有文章">类别：Javascript</a>
+
+| <a  href="#" onclick="addToShare(); return false;" target="_blank"><img src="http://img.baidu.com/hi/img/share.gif" border="0" align="absbottom"  /></a>
+
+
+
+
+	
+
+	| <a title="将此文章添加到百度搜藏" href="http://cang.baidu.com/do/add" onClick="return addToFavor();" target="_blank">添加到搜藏</a>
+
+	
+    | <a title="将此文章分享到i贴吧" href="#" onclick="addToiTieba(); return false;"  target="_blank">分享到i贴吧</a>
+
+
+    | 浏览(<span id="result"></span>)
+
+	| <a href="#send">评论</a>&nbsp;(0)
+
+
+
+<script language="javascript">
+
+/*<![CDATA[*/
+
+var pre = [true,'属性设置 取值', '属性设置 取值','/sansna/blog/item/50b43f9b4a35c8bcc9eaf4fc.html'];
+
+var post = [true,'字符串长度 中文和ascii','字符串长度 中文和ascii', '/sansna/blog/item/9344bc45a50e1d2fcefca356.html'];
+
+if(pre[0] || post[0]){
+
+	document.write('<div style="height:5px;line-height:5px;">&nbsp;</div><div id="in_nav">');
+
+	if(pre[0]){
+
+		document.write('上一篇：<a href="' + pre[3] + '" title="' + pre[1] + '">' +  pre[2] + '</a>&nbsp;&nbsp;&nbsp;&nbsp;');
+
+	}
+
+	if(post[0]){
+
+		document.write('下一篇：<a href="' + post[3] + '" title="' + post[1] + '">' +  post[2] + '</a>');
+
+	}
+
+	document.write('</div>');
+
+}
+
+/*]]>*/
+
+</script>
+
+
+
+</div>
+
+
+
+<div class="line">&nbsp;</div>
+
+
+
+
+
+
+
+    
+<style type="text/css">
+
+/*<![CDATA[*/
+
+#in_related_doc a { text-decoration:none; }
+
+/*]]>*/
+
+</style>
+
+<div id="in_related_tmp"></div>
+
+<script language="javascript" type="text/javascript">
+
+/*<![CDATA[*/
+
+function HI_MOD_IN_RELATED_DOC_CALLBACK(arg){
+
+    if(arg.length <= 1) return false;
+
+    var hasMore = arg[0];
+
+    var D=function(A,B){A[A.length]=B;}
+
+    if(arg.length % 2 == 0) D(arg, ["","","",""]);
+
+
+
+    var html = ['<div id="in_related_doc"><div class="tit">相关文章：</div>'];
+
+    D(html, '<table cellpadding="0" cellspacing="3" border="0">');
+
+    for(var i = 1, j = arg.length; i < j; i += 2){
+
+        D(html, '<tr>');
+
+        D(html, '<td width="15px"><a style="font-size:25px" >&#8226;</a></td><td><a href="http://hi.baidu.com/' + arg[i][3] + '/blog/item/' + arg[i][2] + '.html" target="_blank" title="' + arg[i][0] + '">' + arg[i][1] + '</a>');
+
+        D(html, new Array(10).join('\u3000'));
+
+        D(html, '</td>');
+
+        if(arg[i + 1][0] != "")
+
+            D(html, '<td width="15px"><a style="font-size:25px" >&#8226;</a></td><td><a href="http://hi.baidu.com/' + arg[i + 1][3] + '/blog/item/' + arg[i + 1][2] + '.html" target="_blank" title="' + arg[i + 1][0] + '">' + arg[i + 1][1] + '</a></td>');
+
+        else
+
+            D(html, '<td>&nbsp;</td><td>&nbsp;</td>');
+
+        D(html, '</tr>');
+
+    }
+
+    if(hasMore) D(html, '<tr><td colspan="4"><a target="_blank" href="/sys/search?pageno=1&type=7&sort=1&word=js%BB%F1%B5%C3%E4%AF%C0%C0%C6%F7%B8%DF%B6%C8%BA%CD%BF%ED%B6%C8%20%B2%CE%CA%FD&item=b39342548590415d574e0059">更多&gt;&gt;</a></td></tr>');
+
+    D(html, '</table></div><div class="line">&nbsp;</div>');
+
+
+
+    var div = document.getElementById('in_related_tmp');
+
+    if(div){
+
+        div.innerHTML = html.join('');
+
+        while(div.firstChild){
+
+            div.parentNode.insertBefore(div.firstChild, div);
+
+        }
+
+        div.parentNode.removeChild(div);
+
+    }
+
+	window.setTimeout("tracker_init('in_related_doc')",100);
+
+}
+
+
+
+if(RelatedDocData == -1){	// not supported xhr
+
+    var script = document.createElement('script');
+
+    script.type = 'text/javascript';
+
+    script.src = '/sys/search?type=8&word=js%BB%F1%B5%C3%E4%AF%C0%C0%C6%F7%B8%DF%B6%C8%BA%CD%BF%ED%B6%C8%20%B2%CE%CA%FD&item=b39342548590415d574e0059&t=' + new Date().getTime();
+
+    document.getElementsByTagName('HEAD')[0].appendChild(script);
+
+}else if(RelatedDocData == null){
+
+	GetAndEval = true;
+
+}else{
+
+	eval(RelatedDocData);
+
+}
+
+
+
+/*]]>*/
+
+</script>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="in_reader">
+
+<div class="tit">最近读者：</div>
+
+
+
+<script>
+
+
+
+	var g_spAnnony=true;
+
+
+
+
+
+var g_read=[
+
+
+
+["mengzhiyin007","599b6d656e677a686979696e3030373e06","mengzhiyin007"],
+
+
+
+["shitou254","b65cced2caafcdb74700","我石头"],
+
+
+
+["guanggao619","82676775616e6767616f3631394707","guanggao619"],
+
+
+
+["bbyvette","f7d26262797665747465ed02","bbyvette"],
+
+
+
+["guzeqiang","420b6b696e67626f79383731303238c106","kingboy871028"],
+
+
+
+["yuanzwf","f6467975616e7a7766b502","yuanzwf"],
+
+
+
+["%CC%E1%CE%CA%B4%EF%C8%CB","aaa5746977656e646172656ef806","tiwendaren"],
+
+
+
+["allanwang","c02e416c6c616e477579730b05","AllanGuys"],
+
+
+
+{}
+
+];
+
+g_read.length=g_read.length-1;
+
+
+
+var _rh1="";
+
+var _rh2="";
+
+
+
+function wrreader(){
+
+	_rh1 += '<table width="100%" ><tr>';
+
+	_rh2+='<tr>';
+
+	if(g_spAnnony){
+
+		_rh1+='<td align="center" width="10%" ><img border="0" width="55" height="55" src="http://img.baidu.com/hi/img/portraitn.jpg"></td>';
+
+		_rh2+='<td>&nbsp;</td>';
+
+		if(g_read.length>0){
+
+			_rh1+='<td align="left" width="12%">';
+
+		}else{
+
+			_rh1+='<td align="left" width="100%">';
+
+		}
+
+		_rh1+='<a href="https://passport.baidu.com/?login&tpl=sp&tpl_reg=sp&u='+myref+'" target="_self" onclick="BdUtil.relogin(); return false;">登录</a>后，您就出现在这里。</td>';
+
+		_rh2+='<td>&nbsp;</td>'
+
+	}
+
+	if(g_read.length==0){
+
+		if(!g_spAnnony){
+
+			_rh1+='<td align=left width="100%">最近还没有登录用户看过这篇文章……</td>';
+
+			_rh2+='<td>&nbsp;</td>';
+
+		}
+
+	}else{
+
+		for(i=0,len=g_read.length;i<len;i++){
+
+			_rh1+='<td align="center" valign="bottom" width="10%" class="user"><a href="/'+g_read[i][0]+'" target="_blank" class="ucard" pid='+g_read[i][1]+'><img border="0" src="http://tx.bdimg.com/sys/portraitn/item/'+g_read[i][1]+'.jpg"></a></td>';
+
+			_rh2+='<td align="center" valign="top" class="user"><a href="/'+g_read[i][0]+'" target="_blank" class="ucard" pid="'+g_read[i][1]+'">'+g_read[i][2]+'</a></td>';
+
+		}
+
+	}
+
+	_rh1+='<td width="100%"></td></tr>';
+
+	_rh2+='<td></td></tr></table>';
+
+	document.write(_rh1+_rh2);
+
+}
+
+
+
+wrreader();
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+	</div>
+
+
+
+<div class="line">&nbsp;</div>
+
+
+
+
+
+
+
+<script language="JavaScript">
+
+allkey=allkey+"72d5b8199344bc4542a9ad65_b39342548590415d574e0059_";
+
+</script>
+
+
+
+<div id="in_comment">
+
+<a name="comment"></a>
+
+<div class="tit">网友评论：</div>
+
+<script>
+
+function writecmt(type,id,cmtname,cmturl,portraitId){
+
+	var html1="";
+
+	cmturl=cmturl.replace("https://","http://");
+
+	if(type==1){
+
+			html1="<a href='"+cmturl+"' target='_blank' class='ucard' pid="+portraitId+"><img  border='0' src='http://tx.bdimg.com/sys/portraitn/item/"+portraitId+".jpg'><br>"+cmtname+"</a>";
+
+	}else{
+
+		if(cmtname=="" || cmtname=="匿名网友"){
+
+			if(cmturl==""){
+
+				html1="<a>匿名网友</a>";
+
+			}else{
+
+				html1="<a href='"+cmturl+"' target='_blank' title='"+cmturl+"'>"+cmtname+"</a>";
+
+			}
+
+		}else{
+
+			if(cmturl==""){
+
+				html1="<div class='f14' style='display:inline'>网友:<a>"+cmtname+"</a></div>";
+
+			}else{
+
+				html1="<div class='f14' style='display:inline'>网友:<a href='"+cmturl+"' target='_blank' title='"+cmturl+"'>"+cmtname+"</a></div>";
+
+			}
+
+		}
+
+	}
+
+	document.write(html1);
+
+}
+
+function filterCmtContent(n){
+
+	if(!BdBrowser.isIE){
+
+		var defaultfilter1='<span style="filter:glow(color=#000000,strength=2);height:0px;color:#000000">';
+
+		var defaultfilter2='<span style="height: 0px; color: rgb(0, 0, 0);">';
+
+		var commentDiv=document.getElementById(n);
+
+		var divs=commentDiv.getElementsByTagName('div');
+
+		var d,tmp;
+
+		for( var i=0,len=divs.length;i<len;i++){
+
+			d=divs[i];
+
+			if(d.getAttribute('name')=='cmtcontent'){
+
+				tmp=d.innerHTML;
+
+				tmp=tmp.replace(/<span style="filter:glow\(color=#([0-9a-z]{3,6}),strength=2\);height:0px;color:#([0-9a-z]{3,6})">/ig,defaultfilter1);
+
+				tmp=tmp.replace('<span style="height: 0px; color: rgb(255, 255, 255);">',defaultfilter2);
+
+				d.innerHTML=tmp;
+
+			}
+
+		}
+
+	}
+
+}
+
+
+
+</script>
+
+
+
+
+<div id="page"></div>
+
+
+
+</div>
+
+<script>filterCmtContent('in_comment');</script>
+
+
+
+
+
+
+<div id="in_send">
+
+<a name="send"></a>
+
+<form name="form1" id="popFormSubmit" action="/sansna/commit" method="post" onSubmit="return checkcmtform()">
+
+<input type="hidden" name="bdstoken" value="c9392508c4fbff2c1f757710a79361b9">
+
+<input type="hidden" name="ct" value="8">
+
+<input type="hidden" name="cm" value="1">
+
+<input type="hidden" name="spBlogID" value="b39342548590415d574e0059">
+
+<input type="hidden" name="spRefURL" id="spRefURL" />
+
+<script>
+
+    document.getElementById("spRefURL").value = window.location.href;
+
+</script>
+
+<div class="tit">发表评论：</div>
+
+<table width="620" border="0" cellspacing="5" cellpadding="0">
+
+
+
+
+<tr id="2_err" style="display:none">
+
+<td>&nbsp;</td>
+
+<td><div class="error" id="2_err_con"></div></td>
+
+</tr>
+
+
+
+<tr>
+
+<td valign="top" class="f14" id="reTitle">内　容：</td>
+
+<td>
+	<textarea name="spBlogCmtText" id="spBlogCmtText" style="width:520px;height:155px"  tabindex="3" onFocus="hidErr(3);" onclick="BdUtil.relogin(); return false;" ></textarea>
+</td>
+
+</tr>
+
+<tr id="3_err" style="display:none">
+
+<td>&nbsp;</td>
+
+<td><div class="error" id="3_err_con"></div></td>
+
+</tr>
+ 
+
+
+
+<tr>
+
+<td valign="top"class="f14">&nbsp;</td>
+
+<td valign="top" class="f14"><input id="btn_ok" name="btn_ok" type="submit" onclick="BdUtil.relogin(); return false;" value="发表评论" tabindex=5>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="cancleReLink" onClick="canclereply(); return false;" style="display:none; font-size:12px;color:#666;">取消回复</a></td>
+
+</tr>
+
+</table>
+
+</form>
+
+</div>
+
+
+
+
+
+
+
+
+
+<br>
+
+</div>
+
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" height="8">
+
+<tr><td class="modbl" width="7">&nbsp;</td>
+
+<td class="modbc">&nbsp;</td>
+
+<td class="modbr" width="7">&nbsp;</td>
+
+</tr></table>
+
+
+
+
+
+
+
+
+
+</div>
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+</body></html>
