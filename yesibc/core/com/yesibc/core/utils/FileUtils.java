@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
@@ -355,6 +356,15 @@ public class FileUtils {
 			return buffer.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static String readByRelativePath(String filePath, String encode) {
+		InputStream is = FileUtils.class.getResourceAsStream(filePath);
+		if (is != null) {
+			return StringUtils.getStream2String(is, encode);
+		} else {
 			return null;
 		}
 	}
