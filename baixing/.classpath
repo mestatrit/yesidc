@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/main/web"/>
-	<classpathentry kind="src" path="src/test"/>
-	<classpathentry kind="src" path="src/etc"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src/main/web"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src/test"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src/etc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/clawer_core"/>
 	<classpathentry kind="lib" path="/yesibc/lib/activation-1.1.jar"/>
