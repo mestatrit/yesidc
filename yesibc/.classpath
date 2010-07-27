@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="**/.svn/*" kind="src" path="src/email"/>
-	<classpathentry excluding="**/.svn/*" kind="src" path="test"/>
-	<classpathentry excluding="**/.svn/*" kind="src" path="examples"/>
-	<classpathentry excluding="**/.svn/*" kind="src" path="track"/>
-	<classpathentry excluding="**/.svn/*" kind="src" path="core"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src/email"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="test"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="examples"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="track"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="core"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.5.0"/>
 	<classpathentry kind="lib" path="lib/activation-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/activeio-core-3.1.2.jar"/>
