@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="**/.svn/*" kind="src" path="src/dao"/>
-	<classpathentry excluding="**/.svn/*" kind="src" path="src/common"/>
-	<classpathentry excluding="**/.svn/*" kind="src" path="src/service"/>
-	<classpathentry excluding="**/.svn/*" kind="src" path="src/web"/>
-	<classpathentry excluding="**/.svn/*" kind="src" path="src/resources"/>
-	<classpathentry excluding="**/.svn/*" kind="src" path="test/main"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src/dao"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src/common"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src/service"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src/web"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="src/resources"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="test/main"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/yesibc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/yesibc/lib/activation-1.1.jar"/>
