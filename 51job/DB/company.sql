@@ -13,6 +13,7 @@ and t4.contact_header_id = t1.id
 and t4.com_email_id = t5.id
 --and t.company_name like '%成都市欧文制漆化工有限公司%'
 --and t5.email = 'flyflower007@sina.com.cn'
+and t1.address1='深圳市南山区深南大道9028号-3益田假日广场3层'
 order by t.update_date desc
 
 select * from t_company t where 1=1
