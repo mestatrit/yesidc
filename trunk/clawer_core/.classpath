@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="main/dao"/>
-	<classpathentry kind="src" path="main/common"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="main/dao"/>
+	<classpathentry excluding="**/.svn/**" kind="src" path="main/common"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/yesibc"/>
 	<classpathentry kind="lib" path="/yesibc/lib/activation-1.1.jar"/>
