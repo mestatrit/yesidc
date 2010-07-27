@@ -162,5 +162,5 @@
 	<classpathentry kind="lib" path="lib/xom-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/xwork-core-2.1.6.jar"/>
 	<classpathentry kind="lib" path="lib/yuicompressor-2.4.2.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
