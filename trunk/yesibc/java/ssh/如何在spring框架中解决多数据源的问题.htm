@@ -1,0 +1,1028 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>如何在spring框架中解决多数据源的问题 - Spring - Java - JavaEye论坛</title>
+    <meta name="description" content="在我们的项目中遇到这样一个问题：我们的项目需要连接多个数据库，而且不同的客户在每次访问中根据需要会去访问不同的数据库。我们以往在spring和hibernate框架中总是配置一个数据源，因而sessionFactory的dataSource属性总是指向这个数据源并且恒定不变，所有DAO在使用sessionFactory的时候都是通过这个数据源访问数据库。但是现在，由于项目的需要，我们的DAO在访问s ..." />
+    <meta name="keywords" content="设计模式 Spring Java" />
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link href="/rss/board/Java" rel="alternate" title="JavaEye论坛" type="application/rss+xml" />
+    <link rel="search" type="application/opensearchdescription+xml" href="/open_search.xml" title="JavaEye" />
+    <link href="http://www.javaeye.com/stylesheets/forum.css?1279766874" media="screen" rel="stylesheet" type="text/css" />
+    <script src="http://www.javaeye.com/javascripts/application.js?1273630177" type="text/javascript"></script>
+      <link href="http://www.javaeye.com/javascripts/syntaxhighlighter/SyntaxHighlighter.css?1268040798" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/syntaxhighlighter/shCoreCommon.js?1238329845" type="text/javascript"></script>
+<script src="http://www.javaeye.com/javascripts/hotkey.js?1238403289" type="text/javascript"></script>
+          <script src="http://www.javaeye.com/javascripts/dragdrop.js?1231828836" type="text/javascript"></script>
+          </head>
+  <body>
+    <div id="page">
+      <div id="header">
+        <div class="clearfix"><div id="user_nav">
+      <a href="http://bibye-domain.javaeye.com" title="查看我的博客首页" class="welcome">欢迎bibiye</a>
+    
+      <a href="http://app.javaeye.com/messages" title="发送站内短信">收件箱</a>
+    
+    
+      <a href="http://app.javaeye.com" title="我的应用首页">我的应用</a>
+    
+    <div class="quick_menu" style="display:none;">
+      <a href="http://app.javaeye.com/feed" title="我关注的好友动态消息">我的关注</a>
+      <a href="http://app.javaeye.com/feed/my" title="我参与的话题更新的消息">我的参与</a>
+      <a href="http://app.javaeye.com/chat" title="用闲聊发表简短的话题">我的闲聊</a>
+      <a href="http://app.javaeye.com/mygroup" title="我加入的圈子最新话题">我的圈子</a>
+      <a href="http://app.javaeye.com/links" title="我收藏的网络资源链接">我的收藏</a>
+      <a href="http://app.javaeye.com/myresume" title="我的个人简历">我的简历</a>
+    </div>
+        <a href="http://bibye-domain.javaeye.com/admin" title="管理我的博客">我的博客</a>
+    <a href="http://app.javaeye.com/profile" title="修改我的个人设置">设置</a>
+    <a href="/logout" class="nobg" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'put'); f.appendChild(m);f.submit();return false;">退出</a>
+  </div></div>
+        <div class="clearfix">
+          <div id="branding">
+            <a href="http://www.javaeye.com"><img alt="JavaEye-最棒的软件开发交流社区" src="http://www.javaeye.com/images/logo.gif?1268015091" title="JavaEye-最棒的软件开发交流社区" /></a>
+          </div>
+          <div id="gg"><embed play="true" src="http://ftp.javaeye.com/public/csdn/oracle/JavaOne728_90.swf" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" height="90" loop="true" menu="true" width="728"></embed></div>
+        </div>
+      </div>
+
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+          
+
+<div class="clearfix">
+  <div class="crumbs">
+    <a href="/forums">论坛首页</a> <span class="arrow">&rarr;</span>
+    <a href="/forums/board/Java">Java编程和Java企业应用版</a> <span class="arrow">&rarr;</span>
+    <a href="/forums/tag/Spring">Spring</a> <span class="arrow">&rarr;</span>
+    <h1>如何在spring框架中解决多数据源的问题</h1>
+  </div>
+</div>
+
+<div id="forum_tag_list">
+  <a href='/forums/board/Java'>全部</a>
+      <a href='/forums/tag/Hibernate'>Hibernate</a>
+      <a href='/forums/tag/Spring'>Spring</a>
+      <a href='/forums/tag/Struts'>Struts</a>
+      <a href='/forums/tag/iBATIS'>iBATIS</a>
+      <a href='/forums/tag/J2EE'>企业应用</a>
+      <a href='/forums/tag/Design-Pattern'>设计模式</a>
+      <a href='/forums/tag/DAO'>DAO</a>
+      <a href='/forums/tag/Object-Domain'>领域模型</a>
+      <a href='/forums/tag/OO'>OO</a>
+      <a href='/forums/tag/Tomcat'>Tomcat</a>
+      <a href='/forums/tag/SOA'>SOA</a>
+      <a href='/forums/tag/JBoss'>JBoss</a>
+      <a href='/forums/tag/Swing'>Swing</a>
+      <a href='/forums/tag/Java'>Java综合</a>
+  </div>
+
+<div class="actions">
+  <div class="buttons"></div>
+  <div class="wrapper">
+    <div id="forum_recommended_f4"><a href='/clicks/324' target='_blank'><span style="font-weight:bold;color:red">myApps快速开发平台，配置即开发、所见即所得，节约85%工作量
+</span></a></div>
+    <div class="pagination"><span class="disabled prev_page">&laquo; 上一页</span> <span class="current">1</span> <a href="/topic/72486?page=2" rel="next">2</a> <a href="/topic/72486?page=3">3</a> <a href="/topic/72486?page=4">4</a> <a href="/topic/72486?page=5">5</a> <a href="/topic/72486?page=6">6</a> <a href="/topic/72486?page=2" class="next_page" rel="next">下一页 &raquo;</a></div>
+    <div class="info">浏览 28740 次</div>
+  </div>
+</div>
+
+
+
+<table id="forum_main" cellspacing="1">
+  <thead>
+    <tr>
+      <th colspan="2" class="topic_title">
+        <div class="wrapper"><span class='locked'>锁定老贴子</span> <a href="/topic/72486">主题：如何在spring框架中解决多数据源的问题</a></div>
+        <div id='topic_rate_box'><a href="#" onclick="rate_topic('good'); return false;">精华帖</a> (6) :: <a href="#" onclick="rate_topic('mid'); return false;">良好帖</a> (0) :: <a href="#" onclick="rate_topic('new'); return false;">新手帖</a> (0) :: <a href="#" onclick="rate_topic('hidden'); return false;">隐藏帖</a> (0)</div>
+      </th>
+    </tr>
+    <tr>
+      <td class="first_col">作者</td>
+      <td class="last_col">正文</td>
+    </tr>
+  </thead>
+  <tbody id="posts">
+    <tr id="266343">
+  <td class="postauthor">
+    <ul>
+      <li class="name">fangang</li>
+      <li>等级: <img src="/images/star4.gif" alt="四星会员" title="四星会员"/></li>
+      <li><a href='http://fangang.javaeye.com' target='_blank'><img alt="fangang的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/74033/afde4fad-c188-3342-8b92-5665216f0ef4.gif?1236837293" title="fangang的博客: 充满诗意的联盟" /></a></li>
+      <li>文章: 186</li>
+      <li>积分: 416</li>
+      <li>来自: 北京</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        &nbsp;&nbsp;
+        发表时间：2007-04-19&nbsp;&nbsp;
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=%E5%A6%82%E4%BD%95%E5%9C%A8spring%E6%A1%86%E6%9E%B6%E4%B8%AD%E8%A7%A3%E5%86%B3%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E7%9A%84%E9%97%AE%E9%A2%98&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F72486' target='_blank' class='favorite'>收藏</a>
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+        
+              <script type="text/javascript">
+      var hunters = ["\u003Ca href='/jobs/787' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u6c5f\u82cf: \u003C/span\u003E \u3010\u5357\u4eac\u3011\u9ad8\u85aa20--30\u4e07\u62db\u8058php\u67b6\u6784\u5e08\u003C/a\u003E","\u003Ca href='/jobs/712' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u5317\u4eac: \u003C/span\u003E Java\u641c\u7d22\u5de5\u7a0b\u5e08\u003C/a\u003E","\u003Ca href='/jobs/519' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u5b89\u5fbd: \u003C/span\u003E \u5408\u80a5,\u676d\u5dde,\u82cf\u5dde\uff1a\u8bda\u8058java\u9ad8\u7ea7\u5f00\u53d1\u5de5\u7a0b\u5e08\u003C/a\u003E","\u003Ca href='/jobs/628' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u4e0a\u6d77: \u003C/span\u003E \u4e0a\u6d77\uff0c\u5317\u4eac\uff1a\u62db\u8058java\u5f00\u53d1\u5de5\u7a0b\u5e08\u003C/a\u003E","\u003Ca href='/jobs/713' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u5317\u4eac: \u003C/span\u003E Ruby\u9ad8\u7ea7\u5de5\u7a0b\u5e08\u003C/a\u003E","\u003Ca href='/jobs/518' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u5b89\u5fbd: \u003C/span\u003E \u5408\u80a5,\u676d\u5dde,\u82cf\u5dde\uff1a\u8bda\u8058java\u67b6\u6784\u5e08\u003C/a\u003E"]
+      var hunter_id = Math.ceil(Math.random() * hunters.length) - 1;
+      if(hunter_id == -1) hunter_id = 0;
+    </script>
+    <div id="hunter_recommended" style="background:#fff;border: 1px solid #ccc; padding: 4px;margin-bottom: 10px;">
+      <span id="hunters_nav" style="margin-right:5px;">
+        <a href="#" onclick="hunter_id <= 0 ? hunter_id = hunters.length - 1 : hunter_id--; $('hunters').update(hunters[hunter_id]);return false;" style="border:1px solid #ccc;padding: 0 3px;size: 13px;text-decoration: none;">&lt;</a>
+        <a href="#" onclick="hunter_id >= hunters.length - 1 ? hunter_id = 0 : hunter_id++; $('hunters').update(hunters[hunter_id]);return false;" style="border:1px solid #ccc;padding: 0 3px;size :13px;text-decoration: none;">&gt;</a>
+      </span>
+      猎头职位: <span id="hunters"><script type="text/javascript">document.write(hunters[hunter_id]);</script></span>
+    </div>
+
+        
+      
+                                            <div id="related_topics">相关文章: <span class="close"><a href="#" onclick="$('related_topics').hide();if($('hunter_recommended')){$('hunter_recommended').style.width='780px';} return false;" title="关闭">&nbsp;</a></span>
+              <ul>
+                                    <li><a href='http://www.javaeye.com/topic/91667' title='再析在spring框架中解决多数据源的问题' target='_blank'>再析在spring框架中解决多数据源的问题</a></li>
+                                      <li><a href='http://www.javaeye.com/topic/72505' title='如何在spring框架中解决多数据源的问题（下）' target='_blank'>如何在spring框架中解决多数据源的问题（下）</a></li>
+                                      <li><a href='http://www.javaeye.com/topic/21122' title='动态切换多数据源' target='_blank'>动态切换多数据源</a></li>
+                                  </ul>
+                <br/><span>推荐圈子: <a href="http://jbpm.group.javaeye.com" target="_blank">JBPM @net</a></span>
+                <br/><a href="/wiki/topic/72486" target="_blank">更多相关推荐</a>
+              </div>
+              <script type="text/javascript">
+                if($('hunter_recommended')) {
+                  $('hunter_recommended').setStyle({cssFloat: 'left', width: '557px'})
+                }
+                new Draggable("related_topics");
+              </script>
+                              
+        <p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''><span style=''>在我们的项目中遇到这样一个问题：我们的项目需要连接多个数据库，而且不同的客户在每次访问中根据需要会去访问不同的数据库。我们以往在</span><span>spring</span><span style=''>和</span><span>hibernate</span><span style=''>框架中总是配置一个数据源，因而</span><span>sessionFactory</span><span style=''>的</span><span>dataSource</span><span style=''>属性总是指向这个数据源并且恒定不变，所有</span><span>DAO</span><span style=''>在使用</span><span>sessionFactory</span><span style=''>的时候都是通过这个数据源访问数据库。但是现在，由于项目的需要，我们的</span><span>DAO</span><span style=''>在访问</span><span>sessionFactory</span><span style=''>的时候都不得不在多个数据源中不断切换，问题就出现了：如何让</span><span>sessionFactory</span><span style=''>在执行数据持久化的时候，根据客户的需求能够动态切换不同的数据源？我们能不能在</span><span>spring</span><span style=''>的框架下通过少量修改得到解决？是否有什么设计模式可以利用呢？</span></span>   </p>
+<h2><span style=''>问题的分析</span></h2>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>我首先想到在</span><span>spring</span><span style=''>的</span><span>applicationContext</span><span style=''>中配置所有的</span><span>dataSource</span><span style=''>。这些</span><span>dataSource</span><span style=''>可能是各种不同类型的，比如不同的数据库：</span><span>Oracle</span><span style=''>、</span><span>SQL Server</span><span style=''>、</span><span>MySQL</span><span style=''>等，也可能是不同的数据源：比如</span><span>apache </span><span style=''>提供的</span><span>org.apache.commons.dbcp.BasicDataSource</span><span style=''>、</span><span>spring</span><span style=''>提供的</span><span>org.springframework.jndi.JndiObjectFactoryBean</span><span style=''>等。然后</span><span>sessionFactory</span><span style=''>根据客户的每次请求，将</span><span>dataSource</span><span style=''>属性设置成不同的数据源，以到达切换数据源的目的。</span></p>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>但是，我很快发现一个问题：当多用户同时并发访问数据库的时候会出现资源争用的问题。这都是“单例模式”惹的祸。众所周知，我们在使用</span><span>spring</span><span style=''>框架的时候，在</span><span>beanFactory</span><span style=''>中注册的</span><span>bean</span><span style=''>基本上都是采用单例模式，即</span><span>spring</span><span style=''>在启动的时候，这些</span><span>bean</span><span style=''>就装载到内存中，并且每个</span><span>bean</span><span style=''>在整个项目中只存在一个对象。正因为只存在一个对象，对象的所有属性，更准确说是实例变量，表现得就如同是个静态变量（实际上“静态”与“单例”往往是非常相似的两个东西，我们常常用“静态”来实现“单例”）。拿我们的问题来说，</span><span>sessionFactory</span><span style=''>在整个项目中只有一个对象，它的实例变量</span><span>dataSource</span><span style=''>也就只有一个，就如同一个静态变量一般。如果不同的用户都不断地去修改</span><span>dataSource</span><span style=''>的值，必然会出现多用户争用一个变量的问题，对系统产生隐患。</span></p>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>通过以上的分析，解决多数据源访问问题的关键，就集中在</span><span>sessionFactory</span><span style=''>在执行数据持久化的时候，能够通过某段代码去根据客户的需要动态切换数据源，并解决资源争用的问题。</span></p>
+<h2><span style=''>问题的解决</span></h2>
+<h4 style='margin-left: 21pt; text-indent: -21pt;'><span><span>(一)<span style='font-family: &apos;Times New Roman&apos;;'>            </span></span></span><span style=''>采用</span><span>Decorator</span><span style=''>设计模式</span></h4>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>要解决这个问题，我的思路锁定在了这个</span><span>dataSource</span><span style=''>上了。如果</span><span>sessionFactory</span><span style=''>指向的</span><span>dataSource</span><span style=''>可以根据客户的需求去连接客户所需要的真正的数据源，即提供动态切换数据源的功能，那么问题就解决了。那么我们怎么做呢？去修改那些我们要使用的</span><span>dataSource</span><span style=''>源码吗？这显然不是一个好的方案，我们希望我们的修改与原</span><span>dataSource</span><span style=''>代码是分离的。根据以上的分析，使用</span><span>GoF</span><span style=''>设计模式中的</span><span>Decorator</span><span style=''>模式（装饰者模式）应当是我们可以选择的最佳方案。</span></p>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>什么是“</span><span style='font-size: 10.5pt; font-family: &apos;Times New Roman&apos;;'>Decorator</span><span style=''>模式”？简单点儿说就是当我们需要修改原有的功能，但我们又不愿直接去修改原有的代码时，设计一个</span><span style='font-size: 10.5pt; font-family: &apos;Times New Roman&apos;;'>Decorator</span><span style=''>套在原有代码外面。当我们使用</span><span style='font-size: 10.5pt; font-family: &apos;Times New Roman&apos;;'>Decorator</span><span style=''>的时候与原类完全一样，当</span><span style='font-size: 10.5pt; font-family: &apos;Times New Roman&apos;;'>Decorator</span><span style=''>的某些功能却已经修改为了我们需要修改的功能。</span><span style='font-size: 10.5pt; font-family: &apos;Times New Roman&apos;;'>Decorator</span><span style=''>模式的结构如图。</span></p>
+<p class='MsoNormal' align='center'><span style=''><img src='../../../upload/picture/pic/3753/0a7ad179-b609-4fb5-ae49-d266f0fb9ee5.jpg' height='183' alt='' width='480'/></span></p>
+<p class='MsoNormal'><span style=''><span style=''><span style=''>我们本来需要修改图中所有具体的</span><span>Component</span><span style=''>类的一些功能，但却并不是去直接修改它们的代码，而是在它们的外面增加一个</span><span>Decorator</span><span style=''>。</span><span>Decorator</span><span style=''>与具体的</span><span>Component</span><span style=''>类都是继承的</span><span>AbstractComponent</span><span style=''>，因此它长得和具体的</span><span>Component</span><span style=''>类一样，也就是说我们在使用</span><span>Decorator</span><span style=''>的时候就如同在使用</span><span>ConcreteComponentA</span><span style=''>或者</span><span>ConcreteComponentB</span><span style=''>一样，甚至那些使用</span><span>ConcreteComponentA</span><span style=''>或者</span><span>ConcreteComponentB</span><span style=''>的客户程序都不知道它们用的类已经改为了</span><span>Decorator</span><span style=''>，但是</span><span>Decorator</span><span style=''>已经对具体的</span><span>Component</span><span style=''>类的部分方法进行了修改，执行这些方法的结果已经不同了。</span></span></span></p>
+<h4 style='margin-left: 21pt; text-indent: -21pt;'><span><span>(二)<span style='font-family: &apos;Times New Roman&apos;;'>            </span></span></span><span style=''>设计</span><span>MultiDataSource</span><span style=''>类</span></h4>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>现在回到我们的问题，我们需要对</span><span>dataSource</span><span style=''>的功能进行变更，但又不希望修改</span><span>dataSource</span><span style=''>中的任何代码。我这里指的</span><span>dataSource</span><span style=''>是所有实现</span><span>javax.sql.DataSource</span><span style=''>接口的类，我们常用的包括</span><span>apache </span><span style=''>提供的</span><span>org.apache.commons.dbcp.BasicDataSource</span><span style=''>、</span><span>spring</span><span style=''>提供的</span><span>org.springframework.jndi.JndiObjectFactoryBean</span><span style=''>等，这些类我们不可能修改它们本身，更不可能对它们一个个地修改以实现动态分配数据源的功能，同时，我们又希望使用</span><span>dataSource</span><span style=''>的</span><span>sessionFactory</span><span style=''>根本就感觉不到这样的变化。</span><span>Decorator</span><span style=''>模式就正是解决这个问题的设计模式。</span></p>
+<p class='MsoNormal'><span style=''>首先写一个</span><span>Decorator</span><span style=''>类，我取名叫</span><span>MultiDataSource，通过它来动态切换数据源</span><span style=''>。同时在配置文件中将sessionFactory的dataSource属性由原来的某个具体的dataSource改为MultiDataSource。如图：</span></p>
+<p class='MsoNormal' align='center'><span style=''><img src='../../../upload/picture/pic/3751/e853e195-11a9-4836-9e3c-83db72d6ed39.jpg' height='283' alt='' width='480'/></span></p>
+<p class='MsoNormal'><span>对比原<span>Decorator</span><span style=''>模式，</span><span>AbstractComponent</span><span style=''>是一个抽象类，但在这里我们可以将这个抽象类用接口来代替，即</span><span>DataSource</span><span style=''>接口，而</span><span>ConcreteComponent</span><span style=''>就是那些</span><span>DataSource</span><span style=''>的实现类，如</span><span>BasicDataSource</span><span style=''>、</span><span>JndiObjectFactoryBean</span><span style=''>等。</span>MultiDataSource</span><span style=''>封装了具体的dataSource，并实现了数据源动态切换：</span></p>
+<p><span style=''>
+</span></p><div class='code_title'>java 代码</div>
+<span style=''>
+<div class='dp-highlighter'><ol class='dp-j'>
+<li class='alt'><span><span class='keyword'>public</span><span> </span><span class='keyword'>class</span><span> MultiDataSource </span><span class='keyword'>implements</span><span> DataSource {   </span></span> </li>
+<li><span>    </span><span class='keyword'>private</span><span> DataSource dataSource = </span><span class='keyword'>null</span><span>;   </span> </li>
+<li class='alt'><span class='keyword'>public</span><span> MultiDataSource(DataSource dataSource){   </span> </li>
+<li><span>        </span><span class='keyword'>this</span><span>.dataSource = dataSource;   </span> </li>
+<li class='alt'><span>    }   </span> </li>
+<li><span>    </span><span class='comment'>/* (non-Javadoc) </span>  </li>
+<li class='alt'><span><span class='comment'>     * @see javax.sql.DataSource#getConnection() </span> </span> </li>
+<li><span><span class='comment'>     */</span><span>  </span></span> </li>
+<li class='alt'><span>    </span><span class='keyword'>public</span><span> Connection getConnection() </span><span class='keyword'>throws</span><span> SQLException {   </span> </li>
+<li><span>        </span><span class='keyword'>return</span><span> getDataSource().getConnection();   </span> </li>
+<li class='alt'><span>    }   </span> </li>
+<li><span>    </span><span class='comment'>//其它DataSource接口应当实现的方法 </span><span>  </span> </li>
+<li class='alt'><span>  </span> </li>
+<li><span>    </span><span class='keyword'>public</span><span> DataSource getDataSource(){   </span> </li>
+<li class='alt'><span>        </span><span class='keyword'>return</span><span> </span><span class='keyword'>this</span><span>.dataSource;   </span> </li>
+<li><span>        }   </span> </li>
+<li class='alt'><span>    }   </span> </li>
+<li><span>    </span><span class='keyword'>public</span><span> </span><span class='keyword'>void</span><span> setDataSource(DataSource dataSource) {   </span> </li>
+<li class='alt'><span>        </span><span class='keyword'>this</span><span>.dataSource = dataSource;   </span> </li>
+<li><span>    }   </span> </li>
+<li class='alt'><span>}   </span> </li>
+</ol></div>
+<p class='MsoNormal' style='text-indent: 17.95pt;'>客户在发出请求的时候，将dataSourceName放到request中，然后把request中的数据源名通过调用new <span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>MultiDataSource(dataSource)</span><span style=''>时可以告诉</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>MultiDataSource</span><span style=''>客户需要的数据源，就可以实现动态切换数据源了。但细心的朋友会发现这在单例的情况下就是问题的，因为</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>MultiDataSource</span><span style=''>在系统中只有一个对象，它的实例变量</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>dataSource</span><span style=''>也只有一个，就如同一个静态变量一般。正因为如此，</span><span style=''>单例模式让许多设计模式都不得不需要更改，这将在我的《“单例”更改了我们的设计模式》中详细讨论。那么，我们在单例模式下如何设计呢？</span></p>
+<h4 style='margin-left: 21pt; text-indent: -21pt;'><span><span>(三)<span style='font-family: &apos;Times New Roman&apos;;'>            </span></span></span><span style=''>单例模式下的</span><span>MultiDataSource</span></h4>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>在单例模式下，由于我们在每次调用</span><span>MultiDataSource</span><span style=''>的方法的时候，</span><span>dataSource</span><span style=''>都可能是不同的，所以我们不能将</span><span>dataSource</span><span style=''>放在实例变量</span><span>dataSource</span><span style=''>中，最简单的方式就是在方法</span><span>getDataSource()</span><span style=''>中增加参数，告诉</span><span>MultiDataSource</span><span style=''>我到底调用的是哪个</span><span>dataSource</span><span style=''>：</span></p>
+<span style=''>
+<div class='code_title'>java 代码</div>
+<div class='dp-highlighter'><ol class='dp-j'>
+<li class='alt'><span><span class='keyword'>public</span><span> DataSource getDataSource(String dataSourceName){   </span></span> </li>
+<li><span>        log.debug(</span><span class='string'>"dataSourceName:"</span><span>+dataSourceName);   </span> </li>
+<li class='alt'><span>        </span><span class='keyword'>try</span><span>{   </span> </li>
+<li><span>            </span><span class='keyword'>if</span><span>(dataSourceName==</span><span class='keyword'>null</span><span>||dataSourceName.equals(</span><span class='string'>""</span><span>)){   </span> </li>
+<li class='alt'><span>                </span><span class='keyword'>return</span><span> </span><span class='keyword'>this</span><span>.dataSource;   </span> </li>
+<li><span>            }   </span> </li>
+<li class='alt'><span>            </span><span class='keyword'>return</span><span> (DataSource)</span><span class='keyword'>this</span><span>.applicationContext.getBean(dataSourceName);   </span> </li>
+<li><span>        }</span><span class='keyword'>catch</span><span>(NoSuchBeanDefinitionException ex){   </span> </li>
+<li class='alt'><span>            </span><span class='keyword'>throw</span><span> </span><span class='keyword'>new</span><span> DaoException(</span><span class='string'>"There is not the dataSource </span> </li>
+<li><span>        }   </span> </li>
+<li class='alt'><span>    }   </span> </li>
+</ol></div>
+<p class='MsoNormal' style='text-indent: 17.95pt;'>值得一提的是，我需要的数据源已经都在<span>spring</span><span style=''>的配置文件中注册，</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>dataSourceName</span><span style=''>就是其对应的</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>id</span><span style=''>。</span></p>
+<span style=''>
+<div class='code_title'>xml 代码</div>
+<div class='dp-highlighter'><ol class='dp-xml'>
+<li class='alt'><span><span class='tag'>&lt;</span><span class='tag-name'>bean</span><span> </span><span class='attribute'>id</span><span>=</span><span class='attribute-value'>"dataSource1"</span><span>  </span></span> </li>
+<li><span>    </span><span class='attribute'>class</span><span>=</span><span class='attribute-value'>"org.apache.commons.dbcp.BasicDataSource"</span><span class='tag'>&gt;</span><span>  </span> </li>
+<li class='alt'><span>    </span><span class='tag'>&lt;</span><span class='tag-name'>property</span><span> </span><span class='attribute'>name</span><span>=</span><span class='attribute-value'>"driverClassName"</span><span class='tag'>&gt;</span><span>  </span> </li>
+<li><span>        </span><span class='tag'>&lt;</span><span class='tag-name'>value</span><span class='tag'>&gt;</span><span>oracle.jdbc.driver.OracleDriver</span><span class='tag'><span class='tag-name'>value</span><span class='tag'>&gt;</span><span>  </span> </span></li>
+<li class='alt'><span>    </span><span class='tag'><span class='tag-name'>property</span><span class='tag'>&gt;</span><span> </span></span> </li>
+<li class='alt'><span>    ......   </span> </li>
+<li class='alt'><span class='tag'><span class='tag-name'>bean</span><span class='tag'>&gt;</span><span>  </span> </span></li>
+<li><span class='tag'>&lt;</span><span class='tag-name'>bean</span><span> </span><span class='attribute'>id</span><span>=</span><span class='attribute-value'>"dataSource2"</span><span>  </span> </li>
+<li class='alt'><span>    </span><span class='attribute'>class</span><span>=</span><span class='attribute-value'>"org.apache.commons.dbcp.BasicDataSource"</span><span class='tag'>&gt;</span><span>  </span> </li>
+<li><span>    </span><span class='tag'>&lt;</span><span class='tag-name'>property</span><span> </span><span class='attribute'>name</span><span>=</span><span class='attribute-value'>"driverClassName"</span><span class='tag'>&gt;</span><span>  </span> </li>
+<li class='alt'><span>        </span><span class='tag'>&lt;</span><span class='tag-name'>value</span><span class='tag'>&gt;</span><span>oracle.jdbc.driver.OracleDriver</span><span class='tag'><span class='tag-name'>value</span><span class='tag'>&gt;</span><span> </span></span> </li>
+<li><span>    </span><span class='tag'><span class='tag-name'>property</span><span class='tag'>&gt;</span><span>  </span> </span> </li>
+<li class='alt'><span>    ......   </span> </li>
+<li><span class='tag'><span class='tag-name'>bean</span><span class='tag'>&gt;</span><span>  </span> </span> </li>
+</ol></div>
+<p class='MsoNormal' style='text-indent: 17.95pt;'>为了得到<span>spring</span><span style=''>的</span><span>ApplicationContext</span><span style=''>，</span><span>MultiDataSource</span><span style=''>类必须实现接口</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>org.springframework.context.ApplicationContextAware</span><span style=''>，并且实现方法：</span></p>
+<div class='code_title'>java 代码</div>
+<div class='dp-highlighter'><ol class='dp-j'>
+<li class='alt'><span><span class='keyword'>private</span><span> ApplicationContext applicationContext = </span><span class='keyword'>null</span><span>;   </span></span> </li>
+<li><span class='keyword'>public</span><span> </span><span class='keyword'>void</span><span> setApplicationContext(ApplicationContext applicationContext) </span><span class='keyword'>throws</span><span> BeansException {   </span> </li>
+<li class='alt'><span>        </span><span class='keyword'>this</span><span>.applicationContext = applicationContext;   </span> </li>
+<li><span>    }   </span> </li>
+</ol></div>
+<p class='MsoNormal' style='text-indent: 17.95pt;'>如此这样，我就可以通过<strong><span style='font-size: 10pt; color: #7f0055; font-family: &apos;Courier New&apos;;'>this</span></strong><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>.</span><span style='font-size: 10pt; color: #0000c0; font-family: &apos;Courier New&apos;;'>applicationContext</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>.getBean(dataSourceName)</span><span style=''>得到</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>dataSource</span><span style=''>了。</span></p>
+<h4 style='margin-left: 21pt; text-indent: -21pt;'><span><span>(四)<span style='font-family: &apos;Times New Roman&apos;;'>            </span></span></span><span style=''>通过线程传递</span><span>dataSourceName</span></h4>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>查看以上设计，</span><span>MultiDataSource</span><span style=''>依然无法运行，因为用户在发出请求时，他需要连接什么数据库，其数据源名是放在</span><span>request</span><span style=''>中的，要将</span><span>request</span><span style=''>中的数据源名传给</span><span>MultiDataSource</span><span style=''>，需要经过</span><span>BUS</span><span style=''>和</span><span>DAO</span><span style=''>，也就是说为了把数据源名传给</span><span>MultiDataSource</span><span style=''>，</span><span>BUS</span><span style=''>和</span><span>DAO</span><span style=''>的所有方法都要增加</span><span>dataSourceName</span><span style=''>的参数，这是我们不愿看到的。写一个类，通过线程的方式跳过</span><span>BUS</span><span style=''>和</span><span>DAO</span><span style=''>直接传递给</span><span>MultiDataSource</span><span style=''>是一个不错的设计：</span></p>
+<p class='MsoNormal' align='center' style='text-indent: 17.95pt;'><span style=''><img src='../../../upload/picture/pic/3752/58696c8a-fd62-4a7f-b6f1-1973c1ef7954.jpg' height='146' alt='' width='480'/></span></p>
+<span style=''>
+<div class='code_title'>java 代码</div>
+<div class='dp-highlighter'><ol class='dp-j'>
+<li class='alt'><span><span class='keyword'>public</span><span> </span><span class='keyword'>class</span><span> SpObserver {   </span></span> </li>
+<li><span>    </span><span class='keyword'>private</span><span> </span><span class='keyword'>static</span><span> ThreadLocal local = </span><span class='keyword'>new</span><span> ThreadLocal();   </span> </li>
+<li class='alt'><span>    </span><span class='keyword'>public</span><span> </span><span class='keyword'>static</span><span> </span><span class='keyword'>void</span><span> putSp(String sp) {   </span> </li>
+<li><span>        local.set(sp);   </span> </li>
+<li class='alt'><span>    }   </span> </li>
+<li><span>    </span><span class='keyword'>public</span><span> </span><span class='keyword'>static</span><span> String getSp() {   </span> </li>
+<li class='alt'><span>        </span><span class='keyword'>return</span><span> (String)local.get();   </span> </li>
+<li><span>    }   </span> </li>
+<li class='alt'><span>}   </span> </li>
+</ol></div>
+<p class='MsoNormal' style='text-indent: 17.95pt;'>做一个<span>filter</span><span style=''>，每次客户发出请求的时候就调用</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>SpObserver.<em>petSp</em>(</span><span>dataSourceName</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>)</span><span style=''>，将</span><span>request</span><span style=''>中的</span><span>dataSourceName</span><span style=''>传递给</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>SpObserver</span><span style=''>对象。</span><span style=''>最后修改</span><span>MultiDataSource</span><span style=''>的方法</span><span>getDataSource()</span><span style=''>：</span></p>
+<div class='code_title'>java 代码</div>
+<div class='dp-highlighter'><ol class='dp-j'>
+<li class='alt'><span><span class='keyword'>public</span><span> DataSource getDataSource(){   </span></span> </li>
+<li><span>        String sp = SpObserver.getSp();   </span> </li>
+<li class='alt'><span>        </span><span class='keyword'>return</span><span> getDataSource(sp);   </span> </li>
+<li><span>    }   </span> </li>
+</ol></div>
+<p class='MsoNormal' style='text-indent: 17.95pt;'>完整的<span>MultiDataSource</span><span style=''>代码在附件中。</span></p>
+<h4 style='margin-left: 21pt; text-indent: -21pt;'><span><span>(五)<span style='font-family: &apos;Times New Roman&apos;;'>            </span></span></span><span style=''>动态添加数据源</span></h4>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>通过以上方案，我们解决了动态分配数据源的问题，但你可能提出疑问：方案中的数据源都是配置在</span><span>spring</span><span style=''>的</span><span>ApplicationContext</span><span style=''>中，如果我在程序运行过程中动态添加数据源怎么办？这确实是一个问题，而且在我们的项目中也确实遇到。</span><span>spring</span><span style=''>的</span><span>ApplicationContext</span><span style=''>是在项目启动的时候加载的。加载以后，我们如何动态地加载新的</span><span>bean</span><span style=''>到</span><span>ApplicationContext</span><span style=''>中呢？我想到如果用</span><span>spring</span><span style=''>自己的方法解决这个问题就好了。所幸的是，在查看</span><span>spring</span><span style=''>的源代码后，我找到了这样的代码，编写了</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>DynamicLoadBean</span><span style=''>类，只要</span><span style=''>调用<span>loadBean()</span><span style=''>方法，就可以将某个或某几个配置文件中的</span><span>bean</span><span style=''>加载到</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>ApplicationContext</span><span style=''>中（见附件）。不通过配置文件直接加载对象，在</span><span style='font-size: 10pt; color: #000000; font-family: &apos;Courier New&apos;;'>spring</span><span style=''>的源码中也有，感兴趣的朋友可以自己研究。</span></span></p>
+<h4 style='margin-left: 21pt; text-indent: -21pt;'><span><span>(六)<span style='font-family: &apos;Times New Roman&apos;;'>            </span></span></span><span style=''>在</span><span>spring</span><span style=''>中配置</span></h4>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>在完成了所有这些设计以后，我最后再唠叨一句。我们应当在</span><span>spring</span><span style=''>中做如下配置：</span></p>
+<span style=''>
+<div class='code_title'>xml 代码</div>
+<div class='dp-highlighter'><ol class='dp-xml'>
+<li class='alt'><span><span class='tag'>&lt;</span><span class='tag-name'>bean</span><span> </span><span class='attribute'>id</span><span>=</span><span class='attribute-value'>"dynamicLoadBean"</span><span> </span><span class='attribute'>class</span><span>=</span><span class='attribute-value'>"com.htxx.service.dao.DynamicLoadBean"</span><span class='tag'>&gt;</span><span class='tag'><span class='tag-name'>bean</span><span class='tag'>&gt;</span><span>  </span></span> </span></li>
+<li><span class='tag'>&lt;</span><span class='tag-name'>bean</span><span> </span><span class='attribute'>id</span><span>=</span><span class='attribute-value'>"dataSource"</span><span> </span><span class='attribute'>class</span><span>=</span><span class='attribute-value'>"com.htxx.service.dao.MultiDataSource"</span><span class='tag'>&gt;</span><span>  </span> </li>
+<li class='alt'><span>        </span><span class='tag'>&lt;</span><span class='tag-name'>property</span><span> </span><span class='attribute'>name</span><span>=</span><span class='attribute-value'>"dataSource"</span><span class='tag'>&gt;</span><span>  </span> </li>
+<li><span>            </span><span class='tag'>&lt;</span><span class='tag-name'>ref</span><span> </span><span class='attribute'>bean</span><span>=</span><span class='attribute-value'>"dataSource1"</span><span> </span><span class='tag'>/&gt;</span><span>  </span> </li>
+<li class='alt'><span>        </span><span class='tag'><span class='tag-name'>property</span><span class='tag'>&gt;</span><span>  </span> </span></li>
+<li><span>    </span><span class='tag'><span class='tag-name'>bean</span><span class='tag'>&gt;</span><span>  </span> </span></li>
+<li class='alt'><span>    </span><span class='tag'>&lt;</span><span class='tag-name'>bean</span><span> </span><span class='attribute'>id</span><span>=</span><span class='attribute-value'>"sessionFactory"</span><span> </span><span class='attribute'>class</span><span>=</span><span class='attribute-value'>"org.springframework.orm.hibernate3.LocalSessionFactoryBean"</span><span class='tag'>&gt;</span><span>  </span> </li>
+<li><span>        </span><span class='tag'>&lt;</span><span class='tag-name'>property</span><span> </span><span class='attribute'>name</span><span>=</span><span class='attribute-value'>"dataSource"</span><span class='tag'>&gt;</span><span>  </span> </li>
+<li class='alt'><span>            </span><span class='tag'>&lt;</span><span class='tag-name'>ref</span><span> </span><span class='attribute'>bean</span><span>=</span><span class='attribute-value'>"dataSource"</span><span> </span><span class='tag'>/&gt;</span><span>  </span> </li>
+<li><span>        </span><span class='tag'><span class='tag-name'>property</span><span class='tag'>&gt;</span><span>  </span> </span></li>
+<li class='alt'><span>        ......   </span> </li>
+<li><span>    </span><span class='tag'><span class='tag-name'>bean</span><span class='tag'>&gt;</span><span>  </span> </span></li>
+</ol></div>
+<p class='MsoNormal' style='text-indent: 17.95pt;'>其中<span>dataSource</span><span style=''>属性实际上更准确地说应当是</span><span>defaultDataSource</span><span style=''>，即</span><span>spring</span><span style=''>启动时以及在客户没有指定数据源时应当指定的默认数据源。</span> </p>
+<h2><span style=''>该方案的优势</span></h2>
+<p> </p>
+<span style=''>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>以上方案与其它方案相比，它有哪些优势呢？</span></p>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>首先，这个方案完全是在</span><span>spring</span><span style=''>的框架下解决的，数据源依然配置在</span><span>spring</span><span style=''>的配置文件中，</span><span>sessionFactory</span><span style=''>依然去配置它的</span><span>dataSource</span><span style=''>属性，它甚至都不知道</span><span>dataSource</span><span style=''>的改变。唯一不同的是在真正的</span><span>dataSource</span><span style=''>与</span><span>sessionFactory</span><span style=''>之间增加了一个</span><span>MultiDataSource</span><span style=''>。</span></p>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>其次，实现简单，易于维护。这个方案虽然我说了这么多东西，其实都是分析，真正需要我们写的代码就只有</span><span>MultiDataSource</span><span style=''>、</span><span>SpObserver</span><span style=''>两个类。</span><span>MultiDataSource</span><span style=''>类真正要写的只有</span><span>getDataSource()</span><span style=''>和</span><span>getDataSource(sp)</span><span style=''>两个方法，而</span><span>SpObserver</span><span style=''>类更简单了。实现越简单，出错的可能就越小，维护性就越高。</span></p>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>最后，这个方案可以使单数据源与多数据源兼容。这个方案完全不影响</span><span>BUS</span><span style=''>和</span><span>DAO</span><span style=''>的编写。如果我们的项目在开始之初是单数据源的情况下开发，随着项目的进行，需要变更为多数据源，则只需要修改</span><span>spring</span><span style=''>配置，并少量修改</span><span>MVC</span><span style=''>层以便在请求中写入需要的数据源名，变更就完成了。如果我们的项目希望改回单数据源，则只需要简单修改配置文件。这样，为我们的项目将增加更多的弹性。</span></p>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><strong>特别说明：实例中的DynamicLoadBean在web环境下运行会出错，需要将类中AbstractApplicationContext改为org.springframework.context.ConfigurableApplicationContext。</strong></p>
+<p class='MsoNormal' style='text-indent: 17.95pt;'><span style=''>相关博客：<a href='http://www.javaeye.com/topic/91667'>再析在spring框架中解决多数据源的问题</a> </span></p>
+</span></span></span></span></span></span><p/>
+      </div>
+      
+  <div class="attachments">
+    
+      
+        <ul>
+          <li><a href="http://dl.javaeye.com/topics/download/11b45eb4-9732-4fcb-85de-dd88238958b2">example.rar</a> (32.1 KB)</li>
+          <li>描述: 源码及示例</li>
+          <li>下载次数: 2734</li>
+        </ul>
+      
+    
+    
+  </div>
+
+              <div id="topic_copyright">声明：JavaEye文章版权属于作者，受法律保护。没有作者书面许可不得转载。 </div>
+        <div id="forum_recommended_f5"><span>推荐链接</span><ul><li><a href='/clicks/358' target='_blank'><span style="font-weight:bold;color:red">Flash平台应用开发大赛 总额3.8万奖金等你赢</span></a></li><li><a href='/clicks/373' target='_blank'><img src="http://ftp.javaeye.com/public/csdn/adobe_720_60.gif" width="720" height="60" alt="adobe" title="adobe"/>
+
+</a></li></ul></div>
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://fangang.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://fangang.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=fangang" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://fangang.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=fangang" class="icon_rss" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;" title="关注作者">&nbsp</a>
+              </div>
+                        </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="266895">
+  <td class="postauthor">
+    <ul>
+      <li class="name">jianfeng008cn</li>
+      <li>等级: <img src="/images/star5.gif" alt="五星会员" title="五星会员"/></li>
+      <li><a href='http://jianfeng008cn.javaeye.com' target='_blank'><img alt="jianfeng008cn的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/32601/96edba5f-36f8-484c-961c-d78d7b632389.gif?1236833383" title="jianfeng008cn的博客: 业余程序员" /></a></li>
+      <li>文章: 687</li>
+      <li>积分: 713</li>
+      <li>来自: 湖州</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        &nbsp;&nbsp;
+        发表时间：2007-04-20&nbsp;&nbsp;
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=jianfeng008cn%E5%9B%9E%E8%B4%B4%3A%E5%A6%82%E4%BD%95%E5%9C%A8spring%E6%A1%86%E6%9E%B6%E4%B8%AD%E8%A7%A3%E5%86%B3%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E7%9A%84%E9%97%AE%E9%A2%98&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F72486%23266895' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+      
+        我觉得你配置多个sessionfactory bean从他向下都配置一套不就OK了 不知道你为什么要保证只有一个sessionfacty 不就是多加几个bean嘛
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://jianfeng008cn.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://jianfeng008cn.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=jianfeng008cn" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://jianfeng008cn.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=jianfeng008cn" class="icon_rss" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;" title="关注作者">&nbsp</a>
+                  <a href="#266895" title="jianfeng008cn回帖:如何在spring框架中解决多数据源的问题">回帖地址</a>
+              </div>
+                        <div id='post_rate_box_266895' class='post_rate_box'><a href='#' onclick='rate_post(266895, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(266895, "hidden"); return false;' class='hidden' title='差'>2</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="266899">
+  <td class="postauthor">
+    <ul>
+      <li class="name">jianfeng008cn</li>
+      <li>等级: <img src="/images/star5.gif" alt="五星会员" title="五星会员"/></li>
+      <li><a href='http://jianfeng008cn.javaeye.com' target='_blank'><img alt="jianfeng008cn的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/32601/96edba5f-36f8-484c-961c-d78d7b632389.gif?1236833383" title="jianfeng008cn的博客: 业余程序员" /></a></li>
+      <li>文章: 687</li>
+      <li>积分: 713</li>
+      <li>来自: 湖州</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        &nbsp;&nbsp;
+        发表时间：2007-04-20&nbsp;&nbsp;
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=jianfeng008cn%E5%9B%9E%E8%B4%B4%3A%E5%A6%82%E4%BD%95%E5%9C%A8spring%E6%A1%86%E6%9E%B6%E4%B8%AD%E8%A7%A3%E5%86%B3%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E7%9A%84%E9%97%AE%E9%A2%98&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F72486%23266899' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+      
+        意思意思吧 下面这样的东西分别搞几套就好了<br /><br /><pre name="code" class="java">
+&lt;bean id="dmDataSource"&gt;
+&lt;bean id="dmSessionFactory"&gt;
+&lt;bean id="dmTransactionInterceptor"&gt;
+&lt;bean id="dmTransactionManager"&gt;
+
+&lt;bean
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator"&gt;
+		&lt;property name="beanNames"&gt;
+			&lt;value&gt;*Service&lt;/value&gt;
+		&lt;/property&gt;
+		&lt;property name="interceptorNames"&gt;
+			&lt;list&gt;
+				&lt;value&gt;dmTransactionInterceptor&lt;/value&gt;
+			&lt;/list&gt;
+		&lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;bean
+		class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor"&gt;
+		&lt;property name="transactionInterceptor"
+			ref="dmTransactionInterceptor" /&gt;
+	&lt;/bean&gt;
+
+	&lt;bean id="dmPersistence"
+		class=""&gt;
+		&lt;property name="sessionFactory" ref="dmSessionFactory" /&gt;
+&lt;/bean&gt;
+</pre>
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://jianfeng008cn.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://jianfeng008cn.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=jianfeng008cn" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://jianfeng008cn.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=jianfeng008cn" class="icon_rss" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;" title="关注作者">&nbsp</a>
+                  <a href="#266899" title="jianfeng008cn回帖:如何在spring框架中解决多数据源的问题">回帖地址</a>
+              </div>
+                        <div id='post_rate_box_266899' class='post_rate_box'><a href='#' onclick='rate_post(266899, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(266899, "hidden"); return false;' class='hidden' title='差'>2</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="269740">
+  <td class="postauthor">
+    <ul>
+      <li class="name">fangang</li>
+      <li>等级: <img src="/images/star4.gif" alt="四星会员" title="四星会员"/></li>
+      <li><a href='http://fangang.javaeye.com' target='_blank'><img alt="fangang的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/74033/afde4fad-c188-3342-8b92-5665216f0ef4.gif?1236837293" title="fangang的博客: 充满诗意的联盟" /></a></li>
+      <li>文章: 186</li>
+      <li>积分: 416</li>
+      <li>来自: 北京</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        &nbsp;&nbsp;
+        发表时间：2007-04-23&nbsp;&nbsp;
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=fangang%E5%9B%9E%E8%B4%B4%3A%E5%A6%82%E4%BD%95%E5%9C%A8spring%E6%A1%86%E6%9E%B6%E4%B8%AD%E8%A7%A3%E5%86%B3%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E7%9A%84%E9%97%AE%E9%A2%98&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F72486%23269740' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+      
+        感谢jianfeng008cn的评论，但是你也许还没有明白我要解决的问题。在spring的配置中，即使搞几套dataSource和sessionFactory，每个DAO使用哪个sessionFactory都是在配置中定死了的，比如：<br /><pre name="code" class="xml">&lt;bean id="departmentDao" class="com.htxx.service.dao.departmentDao"&gt;
+    	&lt;property name="sessionFactory"&gt;&lt;ref bean="sessionFactory"/&gt;&lt;/property&gt;
+    &lt;/bean&gt;</pre><br />每个sessionFactory使用哪个dataSource也是在配置中定死了的<br /><pre name="code" class="xml">&lt;bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"&gt;
+		&lt;property name="dataSource"&gt;
+			&lt;ref bean="dataSource" /&gt;
+		&lt;/property&gt;
+	&lt;/bean&gt;</pre><br />现在我希望在项目运行时动态分配每个DAO执行持久化使用哪个数据库，这样的需求并不是在spring中多搞几套dataSource和sessionFactory就能解决的。
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://fangang.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://fangang.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=fangang" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://fangang.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=fangang" class="icon_rss" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;" title="关注作者">&nbsp</a>
+                  <a href="#269740" title="fangang回帖:如何在spring框架中解决多数据源的问题">回帖地址</a>
+              </div>
+                        <div id='post_rate_box_269740' class='post_rate_box'><a href='#' onclick='rate_post(269740, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(269740, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="270113">
+  <td class="postauthor">
+    <ul>
+      <li class="name">byk</li>
+      <li>等级: 初级会员</li>
+      <li><a href='http://byk.javaeye.com' target='_blank'><img alt="byk的博客" class="logo" src="http://www.javaeye.com/images/user-logo.gif?1194185304" title="byk的博客: byk" /></a></li>
+      <li>文章: 35</li>
+      <li>积分: 66</li>
+      <li>来自: ...</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        &nbsp;&nbsp;
+        发表时间：2007-04-24&nbsp;&nbsp;
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=byk%E5%9B%9E%E8%B4%B4%3A%E5%A6%82%E4%BD%95%E5%9C%A8spring%E6%A1%86%E6%9E%B6%E4%B8%AD%E8%A7%A3%E5%86%B3%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E7%9A%84%E9%97%AE%E9%A2%98&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F72486%23270113' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+      
+        <div class="quote_title">fangang 写道</div><div class="quote_div">感谢jianfeng008cn的评论，但是你也许还没有明白我要解决的问题。在spring的配置中，即使搞几套dataSource和sessionFactory，每个DAO使用哪个sessionFactory都是在配置中定死了的，比如：<br /><pre name="code" class="xml">&lt;bean id="departmentDao" class="com.htxx.service.dao.departmentDao"&gt;
+    	&lt;property name="sessionFactory"&gt;&lt;ref bean="sessionFactory"/&gt;&lt;/property&gt;
+    &lt;/bean&gt;</pre><br />每个sessionFactory使用哪个dataSource也是在配置中定死了的<br /><pre name="code" class="xml">&lt;bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"&gt;
+		&lt;property name="dataSource"&gt;
+			&lt;ref bean="dataSource" /&gt;
+		&lt;/property&gt;
+	&lt;/bean&gt;</pre><br />现在我希望在项目运行时动态分配每个DAO执行持久化使用哪个数据库，这样的需求并不是在spring中多搞几套dataSource和sessionFactory就能解决的。</div><br /><br /><br />根据数据源配多个同样的sessionFactory和dao,把dao注到一个map里,动态调用dao不就更简单???
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://byk.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://byk.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=byk" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://byk.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=byk" class="icon_rss" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;" title="关注作者">&nbsp</a>
+                  <a href="#270113" title="byk回帖:如何在spring框架中解决多数据源的问题">回帖地址</a>
+              </div>
+                        <div id='post_rate_box_270113' class='post_rate_box'><a href='#' onclick='rate_post(270113, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(270113, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="271448">
+  <td class="postauthor">
+    <ul>
+      <li class="name">fangang</li>
+      <li>等级: <img src="/images/star4.gif" alt="四星会员" title="四星会员"/></li>
+      <li><a href='http://fangang.javaeye.com' target='_blank'><img alt="fangang的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/74033/afde4fad-c188-3342-8b92-5665216f0ef4.gif?1236837293" title="fangang的博客: 充满诗意的联盟" /></a></li>
+      <li>文章: 186</li>
+      <li>积分: 416</li>
+      <li>来自: 北京</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        &nbsp;&nbsp;
+        发表时间：2007-04-25&nbsp;&nbsp;
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=fangang%E5%9B%9E%E8%B4%B4%3A%E5%A6%82%E4%BD%95%E5%9C%A8spring%E6%A1%86%E6%9E%B6%E4%B8%AD%E8%A7%A3%E5%86%B3%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E7%9A%84%E9%97%AE%E9%A2%98&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F72486%23271448' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+      
+        <div class="quote_title">byk 写道</div><div class="quote_div">根据数据源配多个同样的sessionFactory和dao,把dao注到一个map里,动态调用dao不就更简单???<br /></div><br />非常高兴byk跟我讨论这个问题。事实上，我将多个数据源配置到applicationContext其本身就是一个map。查看源码就可以发现spring的beanFactory就是使用map来管理配置在spring中的所有bean。我们这个问题的关键是“动态调用”，也就是dao如何去动态调用dataSource。解决了动态调用的问题，我们这个问题就解决了。而我通过创建MultiDataSource既解决了动态调用的问题，又与原系统兼容。
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://fangang.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://fangang.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=fangang" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://fangang.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=fangang" class="icon_rss" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;" title="关注作者">&nbsp</a>
+                  <a href="#271448" title="fangang回帖:如何在spring框架中解决多数据源的问题">回帖地址</a>
+              </div>
+                        <div id='post_rate_box_271448' class='post_rate_box'><a href='#' onclick='rate_post(271448, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(271448, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="272165">
+  <td class="postauthor">
+    <ul>
+      <li class="name">klyuan</li>
+      <li>等级: <img src="/images/star5.gif" alt="五星会员" title="五星会员"/></li>
+      <li><a href='http://klyuan.javaeye.com' target='_blank'><img alt="klyuan的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/43103/3f0d7c9e-6ae3-465b-b37b-8d4e2d2c4078.jpg?1236834374" title="klyuan的博客: klyuan" /></a></li>
+      <li>文章: 201</li>
+      <li>积分: 502</li>
+      <li>来自: 深圳</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        &nbsp;&nbsp;
+        发表时间：2007-04-25&nbsp;&nbsp;
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=klyuan%E5%9B%9E%E8%B4%B4%3A%E5%A6%82%E4%BD%95%E5%9C%A8spring%E6%A1%86%E6%9E%B6%E4%B8%AD%E8%A7%A3%E5%86%B3%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E7%9A%84%E9%97%AE%E9%A2%98&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F72486%23272165' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+      
+        把完整的贴出来看看吧
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://klyuan.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://klyuan.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=klyuan" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://klyuan.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=klyuan" class="icon_rss" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;" title="关注作者">&nbsp</a>
+                  <a href="#272165" title="klyuan回帖:如何在spring框架中解决多数据源的问题">回帖地址</a>
+              </div>
+                        <div id='post_rate_box_272165' class='post_rate_box'><a href='#' onclick='rate_post(272165, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(272165, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="272513">
+  <td class="postauthor">
+    <ul>
+      <li class="name">fangang</li>
+      <li>等级: <img src="/images/star4.gif" alt="四星会员" title="四星会员"/></li>
+      <li><a href='http://fangang.javaeye.com' target='_blank'><img alt="fangang的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/74033/afde4fad-c188-3342-8b92-5665216f0ef4.gif?1236837293" title="fangang的博客: 充满诗意的联盟" /></a></li>
+      <li>文章: 186</li>
+      <li>积分: 416</li>
+      <li>来自: 北京</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        &nbsp;&nbsp;
+        发表时间：2007-04-26&nbsp;&nbsp;
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=fangang%E5%9B%9E%E8%B4%B4%3A%E5%A6%82%E4%BD%95%E5%9C%A8spring%E6%A1%86%E6%9E%B6%E4%B8%AD%E8%A7%A3%E5%86%B3%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E7%9A%84%E9%97%AE%E9%A2%98&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F72486%23272513' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+      
+        <div class="quote_title">klyuan 写道</div><div class="quote_div">把完整的贴出来看看吧</div>我已经修改了这篇文章，将原来的上、下两篇精简为一篇。完整的代码以及示例也在附件中了
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://fangang.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://fangang.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=fangang" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://fangang.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=fangang" class="icon_rss" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;" title="关注作者">&nbsp</a>
+                  <a href="#272513" title="fangang回帖:如何在spring框架中解决多数据源的问题">回帖地址</a>
+              </div>
+                        <div id='post_rate_box_272513' class='post_rate_box'><a href='#' onclick='rate_post(272513, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(272513, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="272969">
+  <td class="postauthor">
+    <ul>
+      <li class="name">huangxx</li>
+      <li>等级: 初级会员</li>
+      <li><a href='http://huangxx.javaeye.com' target='_blank'><img alt="huangxx的博客" class="logo" src="http://www.javaeye.com/images/user-logo.gif?1194185304" title="huangxx的博客: huangxx" /></a></li>
+      <li>文章: 18</li>
+      <li>积分: 30</li>
+      <li>来自: ...</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        &nbsp;&nbsp;
+        发表时间：2007-04-26&nbsp;&nbsp;
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=huangxx%E5%9B%9E%E8%B4%B4%3A%E5%A6%82%E4%BD%95%E5%9C%A8spring%E6%A1%86%E6%9E%B6%E4%B8%AD%E8%A7%A3%E5%86%B3%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E7%9A%84%E9%97%AE%E9%A2%98&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F72486%23272969' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+      
+        这样岂不是不能用HIBERNATETEMPLATE？
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://huangxx.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://huangxx.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=huangxx" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://huangxx.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=huangxx" class="icon_rss" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;" title="关注作者">&nbsp</a>
+                  <a href="#272969" title="huangxx回帖:如何在spring框架中解决多数据源的问题">回帖地址</a>
+              </div>
+                        <div id='post_rate_box_272969' class='post_rate_box'><a href='#' onclick='rate_post(272969, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(272969, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+<tr id="273036">
+  <td class="postauthor">
+    <ul>
+      <li class="name">rainlife</li>
+      <li>等级: <img src="/images/dimd1.gif" alt="一钻会员" title="一钻会员"/></li>
+      <li><a href='http://rainlife.javaeye.com' target='_blank'><img alt="rainlife的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/50908/31b56b46-c66d-43e8-87eb-75b3e3252edd.jpg?1236835135" title="rainlife的博客: Rain Life" /></a></li>
+      <li>文章: 699</li>
+      <li>积分: 1034</li>
+      <li>来自: 我也来自火星？</li>
+      <li><img src='/images/status/offline.gif'/></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        &nbsp;&nbsp;
+        发表时间：2007-04-26&nbsp;&nbsp;
+        
+      </div>
+      <div class="links">
+        
+          
+          
+            
+            <a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=rainlife%E5%9B%9E%E8%B4%B4%3A%E5%A6%82%E4%BD%95%E5%9C%A8spring%E6%A1%86%E6%9E%B6%E4%B8%AD%E8%A7%A3%E5%86%B3%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E7%9A%84%E9%97%AE%E9%A2%98&amp;user_favorite%5Burl%5D=http%3A%2F%2Fwww.javaeye.com%2Ftopic%2F72486%23273036' target='_blank' class='favorite'>收藏</a>
+            
+            
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+      
+        怎么图片看不出来？那些空白的方框是图片吧？
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href='http://rainlife.javaeye.com' class='icon_www' title='浏览作者的博客'>&nbsp;</a>
+        <a href='http://rainlife.javaeye.com/blog/profile' class='icon_profile' title='浏览作者资料'>&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=rainlife" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href='http://rainlife.javaeye.com/blog/guest_book' class='icon_guestbook' title='给作者留言'>&nbsp;</a>
+        <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=rainlife" class="icon_rss" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;" title="关注作者">&nbsp</a>
+                  <a href="#273036" title="rainlife回帖:如何在spring框架中解决多数据源的问题">回帖地址</a>
+              </div>
+                        <div id='post_rate_box_273036' class='post_rate_box'><a href='#' onclick='rate_post(273036, "good"); return false;' class='good' title='好'>0</a> <a href='#' onclick='rate_post(273036, "hidden"); return false;' class='hidden' title='差'>0</a> </div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+
+  </tbody>
+</table>
+
+
+<div class="actions">
+  <div class="buttons"></div>
+  <div class="wrapper"><div class="pagination"><span class="disabled prev_page">&laquo; 上一页</span> <span class="current">1</span> <a href="/topic/72486?page=2" rel="next">2</a> <a href="/topic/72486?page=3">3</a> <a href="/topic/72486?page=4">4</a> <a href="/topic/72486?page=5">5</a> <a href="/topic/72486?page=6">6</a> <a href="/topic/72486?page=2" class="next_page" rel="next">下一页 &raquo;</a></div></div>
+</div>
+
+<div>
+  <div class="crumbs">
+    <a href="/forums">论坛首页</a> <span class="arrow">&rarr;</span>
+    <a href="/forums/board/Java">Java编程和Java企业应用版</a>
+     <span class="arrow">&rarr;</span> <a href='/forums/tag/Spring'>Spring</a>
+    <br/><br/>跳转论坛:<select id="forum_urlname" name="forum[urlname]" onchange="window.location='/forums/board/'+this.value"><option value="Java" selected="selected">Java编程和Java企业应用</option>
+<option value="web">Web前端技术</option>
+<option value="mobile">移动编程和手机应用开发</option>
+<option value="cpp">C/C++编程</option>
+<option value="Ruby">Ruby编程</option>
+<option value="Python">Python编程</option>
+<option value="PHP">PHP编程</option>
+<option value="Flash">Flash编程和RIA</option>
+<option value="dotnet">Microsoft .Net</option>
+<option value="Tech">综合技术</option>
+<option value="develop">软件开发和项目管理</option>
+<option value="Industry">行业应用</option>
+<option value="New">入门讨论</option>
+<option value="Job">招聘求职</option>
+<option value="Life">海阔天空</option></select>
+     
+      <ul id="recommended_jobs" style="list-style-type:none;border:1px solid #f8aa4f;width:400px;height:110px;margin-top:5px;padding:7px 0;overflow:hidden;" onmousemove="marqueeing = false;" onmouseout="marqueeing = true;">
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/804" target="_blank" title="福建:福州几维网络诚聘游戏服务端程序员(Java)">福建: 福州几维网络诚聘游戏服务端程序员(Java)</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/750" target="_blank" title="北京:杰嘉迪诚聘高级Java程序员">北京: 杰嘉迪诚聘高级Java程序员</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/728" target="_blank" title="北京:chinacache诚聘Java应用架构师">北京: chinacache诚聘Java应用架构师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/824" target="_blank" title="上海:上海汉得诚聘高级基础架构研发工程师——前端研发方向">上海: 上海汉得诚聘高级基础架构研发工程师——前端</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/736" target="_blank" title="浙江:巨联信息诚聘JAVA架构师">浙江: 巨联信息诚聘JAVA架构师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/734" target="_blank" title="北京:盈通万维诚聘高级Java软件工程师">北京: 盈通万维诚聘高级Java软件工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/633" target="_blank" title="广东:恩瑞索诚聘高级java软件工程师">广东: 恩瑞索诚聘高级java软件工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/817" target="_blank" title="北京:Laszlo Systems 诚聘高级Java程序员">北京: Laszlo Systems 诚聘高级Java程序员</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/806" target="_blank" title="北京:上海幽幽诚聘手机网游服务器端开发工程师">北京: 上海幽幽诚聘手机网游服务器端开发工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/682" target="_blank" title="上海:恺英网络诚聘JS工程师">上海: 恺英网络诚聘JS工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/794" target="_blank" title="广东:穆迪moody's诚聘Java Developer">广东: 穆迪moody's诚聘Java Developer</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/733" target="_blank" title="北京:北京优捷信达诚聘搜索引擎/网络爬虫工程师">北京: 北京优捷信达诚聘搜索引擎/网络爬虫工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/769" target="_blank" title="北京:掌中魔力诚聘java资深工程师">北京: 掌中魔力诚聘java资深工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/726" target="_blank" title="北京:chinacache诚聘高级Java开发工程师（后台应用）">北京: chinacache诚聘高级Java开发工程师（后台应用</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/712" target="_blank" title="北京:JavaEye猎头诚聘Java搜索工程师">北京: JavaEye猎头诚聘Java搜索工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="/jobs/779" target="_blank" title="浙江:VMKID诚聘Java开发工程师(J2SE)（Client端方向）">浙江: VMKID诚聘Java开发工程师(J2SE)（Client端方</a></li>
+        
+      </ul>
+      <script type="text/javascript">
+        var marqueeing = true;
+        function marquee(){
+          if(marqueeing) {
+            var container=document.getElementById("recommended_jobs");
+            container.appendChild(container.firstChild);
+          }
+        }
+        setInterval("marquee()", 4000);
+      </script>
+    
+  </div>
+
+  
+</div>
+
+<div style="display:none">
+  <form action="/posts/rate" id="post_rate_form" method="post" onsubmit="new Ajax.Request('/posts/rate', {asynchronous:true, evalScripts:true, parameters:Form.serialize(this)}); return false;">
+    <input type="hidden" id="post_rate_id" name="id"/>
+    <input type="hidden" id="post_rate_type" name="type"/>
+  </form></div>
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  fix_image_size($$('div.postbody img'), 760);
+
+  function rate_post(id, type) {
+    Element.update('post_rate_box_' + id, '提交中...');
+    new Ajax.Request('/posts/rate', {asynchronous:true, evalScripts:true, parameters:{"id":id, "type":type}});
+  }
+
+  function rate_topic(type) {
+    Element.update('topic_rate_box', '提交中...');
+    new Ajax.Request('/topics/rate', {asynchronous:true, evalScripts:true, parameters:{"id":72486, "type":type}});
+  }
+</script>
+
+
+
+        </div>
+        <div id="nav">
+  <div class="wrapper">
+    <ul>
+            <li><a href="http://www.javaeye.com/">首页</a></li>
+      <li><a href="http://www.javaeye.com/news">新闻</a></li>
+      <li><a href="http://www.javaeye.com/forums" class='selected'>论坛</a></li>
+      <li><a href="http://www.javaeye.com/ask">问答</a></li>
+      <li><a href="http://www.javaeye.com/wiki">专栏</a></li>
+      <li><a href="http://www.javaeye.com/blogs">博客</a></li>
+      <!--<li><a href="http://www.javaeye.com/articles">文摘</a></li>//-->
+      <li><a href="http://www.javaeye.com/groups">圈子</a></li>
+      <li><a href="http://www.javaeye.com/job">招聘</a></li>
+      <li><a href="http://www.javaeye.com/index/service">服务</a></li>
+      <li class="last"><a href="http://www.javaeye.com/search">搜索</a></li>
+    </ul>
+  </div>
+</div>
+
+<div id="channel_nav">
+  <ul>
+    <li><a href="http://java.javaeye.com" >Java</a></li>
+    <li><a href="http://webapp.javaeye.com" >Web</a></li>
+    <li><a href="http://ruby.javaeye.com" >Ruby</a></li>
+    <li><a href="http://python.javaeye.com" >Python</a></li>
+    <li><a href="http://agile.javaeye.com" >敏捷</a></li>
+    <li><a href="http://mysql.javaeye.com" >MySQL</a></li>
+    <li><a href="http://runqian.javaeye.com" >润亁报表</a></li>
+    <li class="last"><a href="http://book.javaeye.com" >图书</a></li>
+  </ul>
+</div>
+
+      </div>
+      <div id="footer">
+  <div id="site_nav">
+    <ul>
+      <li><a href="/index/service">广告服务</a></li>
+      <li><a href="http://webmaster.javaeye.com">JavaEye黑板报</a></li>
+      <li><a href="/index/aboutus">关于我们</a></li>
+      <li><a href="/index/contactus">联系我们</a></li>
+      <li class="last"><a href="/index/friend_links">友情链接</a></li>
+    </ul>
+  </div>
+  <div id="copyright">
+    &copy; 2003-2010 JavaEye.com.   上海炯耐计算机软件有限公司版权所有 [ <a href="http://www.miibeian.gov.cn">                                                                                           沪ICP备05023328号</a> ]
+  </div>
+</div>
+
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.javaeye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&logged_in=yes" + "' width='0' height='0' />");
+</script>
+  </body>
+</html>
