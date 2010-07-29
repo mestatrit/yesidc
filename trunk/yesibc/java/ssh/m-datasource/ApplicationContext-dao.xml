@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="dynamicLoadBean" class="com.htxx.service.dao.DynamicLoadBean"></bean>
+	<bean id="daoSupport" class="com.htxx.service.dao.DaoSupportHibernate3Imp">
+    	<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+    </bean>
+	<bean id="genericDao" class="com.htxx.service.dao.BasicDao">
+		<property name="daoSupport"><ref bean="daoSupport"/></property>
+	</bean>
+	<bean id="nativeJdbcExtractor" 
+		class="org.springframework.jdbc.support.nativejdbc.SimpleNativeJdbcExtractor">
+	</bean>
+</beans>
