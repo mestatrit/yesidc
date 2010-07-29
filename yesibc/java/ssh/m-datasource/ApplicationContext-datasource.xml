@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="dataSource1"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>oracle.jdbc.driver.OracleDriver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:oracle:thin:@localhost:1521:test</value>
+		</property>
+		<property name="username">
+			<value>test</value>
+		</property>
+		<property name="password">
+			<value>test</value>
+		</property>
+	</bean>
+	<bean id="dataSource2"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>oracle.jdbc.driver.OracleDriver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:oracle:thin:@192.168.5.17:1521:hxzfjc</value>
+		</property>
+		<property name="username">
+			<value>fan</value>
+		</property>
+		<property name="password">
+			<value>111111</value>
+		</property>
+	</bean>
+</beans>

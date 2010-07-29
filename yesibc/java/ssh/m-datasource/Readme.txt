@@ -1,0 +1,2 @@
+filter.java是我文中提的那个filter，包名得改改，web.xml中需要配置这个filter
+DepartmentBus.java仅仅是一个示例
