@@ -13,8 +13,11 @@
 				<param name="sequence">SEQ_P_CONTACT_INFO</param>
 			</generator>
 		</id>
-		<discriminator column="type" not-null="true" type="string" />
-		
+		<property name="type" type="java.lang.String">
+			<column name="TYPE" length="15">
+				<comment>类型</comment>
+			</column>
+		</property>
 		<many-to-one name="fromWhere" class="Code" foreign-key="FK_C_CONTACT_INFO_FROM_WHERE">
 			<column name="FROM_WHERE">
 				<comment>数据来源代码</comment>
@@ -48,23 +51,6 @@
 			fetch="select" foreign-key="FK_P_CONTACT_PERSON">
 			<column name="PERSON_ID" />
 		</many-to-one>
-
-		
-		<subclass name="com.yesibc.job51.model.sub.ComContactFax"
-			discriminator-value="fax">
-		</subclass>
-		<subclass name="com.yesibc.job51.model.sub.ComContactTel"
-			discriminator-value="tel">
-		</subclass>
-		<subclass name="com.yesibc.job51.model.sub.ComContactMobile"
-			discriminator-value="mobile">
-		</subclass>
-		<subclass name="com.yesibc.job51.model.sub.ComContactQQ"
-			discriminator-value="qq">
-		</subclass>
-		<subclass name="com.yesibc.job51.model.sub.ComContactWW"
-			discriminator-value="ww">
-		</subclass>
 
 	</class>
 

@@ -13,7 +13,7 @@ import com.yesibc.job51.model.sub.ComContactWW;
  * TeCAddr entity. @author MyEclipse Persistence Tools
  */
 
-public class ComContactInfo implements java.io.Serializable {
+public class ComContactInfo extends ContactInfo  {
 
 	// Fields
 
@@ -27,12 +27,6 @@ public class ComContactInfo implements java.io.Serializable {
 	
 	private Code fromWhere;
 	private String fromWhereName;
-	
-	public final static String CONTRACT_TAG_MOBILE = "mobile";
-	public final static String CONTRACT_TAG_TEL = "tel";
-	public final static String CONTRACT_TAG_FAX = "fax";
-	public final static String CONTRACT_TAG_QQ = "qq";
-	public final static String CONTRACT_TAG_WW = "ww";
 	
 	private Date createDate;
 	private Date updateDate;
