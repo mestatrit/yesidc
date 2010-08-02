@@ -8,10 +8,7 @@ import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.NodeClassFilter;
-import org.htmlparser.filters.OrFilter;
-import org.htmlparser.nodes.TextNode;
 import org.htmlparser.tags.LinkTag;
-import org.htmlparser.tags.TitleTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 

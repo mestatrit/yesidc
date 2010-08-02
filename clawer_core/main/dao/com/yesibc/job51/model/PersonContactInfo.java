@@ -1,19 +1,12 @@
 package com.yesibc.job51.model;
 
 import java.util.Date;
-import java.util.List;
-
-import com.yesibc.job51.model.sub.ComContactFax;
-import com.yesibc.job51.model.sub.ComContactMobile;
-import com.yesibc.job51.model.sub.ComContactQQ;
-import com.yesibc.job51.model.sub.ComContactTel;
-import com.yesibc.job51.model.sub.ComContactWW;
 
 /**
  * TeCAddr entity. @author MyEclipse Persistence Tools
  */
 
-public class PersonContactInfo implements java.io.Serializable {
+public class PersonContactInfo extends ContactInfo  {
 
 	// Fields
 
@@ -23,20 +16,12 @@ public class PersonContactInfo implements java.io.Serializable {
 	private static final long serialVersionUID = 3197774547449040020L;
 	private Long id;
 	private String contractNo;
+	private String type;
 	private String reciever;
 	
 	private Code fromWhere;
 	private String fromWhereName;
 	
-	public final static String CONTRACT_TAG_MOBILE = "mobile";
-	public final static String CONTRACT_TAG_TEL = "tel";
-	public final static String CONTRACT_TAG_FAX = "fax";
-	public final static String CONTRACT_TAG_QQ = "qq";
-	public final static String CONTRACT_TAG_WW = "ww";
-	public final static String CONTRACT_TAG_SKYPE = "Skype";
-	public final static String CONTRACT_TAG_MSN = "msn";
-	public final static String CONTRACT_TAG_FETION = "fetion";
-	public final static String CONTRACT_TAG_GTALK = "gtalk";
 	
 	private Date createDate;
 	private Date updateDate;
@@ -57,8 +42,22 @@ public class PersonContactInfo implements java.io.Serializable {
 	}
 
 
+	public String getType() {
+		return type;
+	}
 
-	// Property accessors
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
+	}
+
 
 	public Long getId() {
 		return this.id;
@@ -126,9 +125,11 @@ public class PersonContactInfo implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "PersonContactInfo [contractNo=" + contractNo + ", createDate=" + createDate + ", createUser="
-				+ createUser + ", fromWhere=" + fromWhere + ", fromWhereName=" + fromWhereName + ", id=" + id
-				+ ", person=" + person + ", reciever=" + reciever + ", updateDate=" + updateDate + ", updateUser="
+		return "PersonContactInfo [contractNo=" + contractNo + ", createDate="
+				+ createDate + ", createUser=" + createUser + ", fromWhere="
+				+ fromWhere + ", fromWhereName=" + fromWhereName + ", id=" + id
+				+ ", person=" + person + ", reciever=" + reciever + ", type="
+				+ type + ", updateDate=" + updateDate + ", updateUser="
 				+ updateUser + "]";
 	}
 
@@ -139,21 +140,4 @@ public class PersonContactInfo implements java.io.Serializable {
 	public void setReciever(String reciever) {
 		this.reciever = reciever;
 	}
-
-	public static PersonContactInfo getConcactInfoByType(String type) {
-		if(PersonContactInfo.CONTRACT_TAG_FAX.equals(type)){
-			return new ComContactFax();
-		}else if(PersonContactInfo.CONTRACT_TAG_TEL.equals(type)){
-			return new ComContactTel();
-		}else if(PersonContactInfo.CONTRACT_TAG_MOBILE.equals(type)){
-			return new ComContactMobile();
-		}else if(PersonContactInfo.CONTRACT_TAG_QQ.equals(type)){
-			return new ComContactQQ();
-		}else if(PersonContactInfo.CONTRACT_TAG_WW.equals(type)){
-			return new ComContactWW();
-		}else{
-			return new PersonContactInfo();
-		}
-	}
-
 }
