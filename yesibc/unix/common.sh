@@ -3,8 +3,10 @@
  ./artifactory.sh >> log2010-03-10.log &
  ./artifactory.sh > log2010-03-10.log &
 
-2.#cvs中设置可写
+2.#cvs相关
 chown -R jvm:jvm *
+cvs co -d  <directory> -r  <branchname> <module-name>
+cvs co -r  <branchname> <module-name>
 
 3.几种查看Linux版本信息的方法：
 3.1. uname -a
@@ -106,3 +108,6 @@ cut命令有5个参数，其中-c,-b,-f分别表示"character", "byte"以及"fie
 按分隔符截取：echo hello, world | cut -f 2 -d " "则输出"world"（截取以空格分割的第二部分） 
 echo Long, long ago | cut -f 2,3 -d " "则输出" Long, ago"（截取以空格分割的第2、3部分，注意输出的结果也以-d指定的分隔符分割） 
 使用"-s"安静地忽略没有给出地分隔符地行：echo hello |cut -d "!" -f 1 -s则什么也不输出（因为行中没有"!"字符）
+
+#scp
+scp -r ./agence uat4@10.164.146.23:/app/apache/uat4/cat01/webapps 
