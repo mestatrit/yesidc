@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import com.yesibc.core.utils.DateUtils;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.core.web.BaseAction2Support;
-import com.yesibc.job51.common.ClawerConstants;
+import com.yesiic.common.ClawerConstants;
 
 public class MainAction extends BaseAction2Support {
 

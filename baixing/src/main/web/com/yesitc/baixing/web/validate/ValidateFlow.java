@@ -16,9 +16,9 @@ import org.htmlparser.util.ParserException;
 import com.webrenderer.swing.IBrowserCanvas;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.utils.FileUtils;
-import com.yesibc.job51.common.BrowserSupport;
-import com.yesibc.job51.common.ClawerConstants;
-import com.yesibc.job51.common.ProcessContext;
+import com.yesiic.common.BrowserSupport;
+import com.yesiic.common.ClawerConstants;
+import com.yesiic.common.ProcessContext;
 
 public class ValidateFlow {
 
