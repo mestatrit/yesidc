@@ -16,12 +16,12 @@ import com.webrenderer.swing.IBrowserCanvas;
 import com.webrenderer.swing.event.NetworkAdapter;
 import com.webrenderer.swing.event.NetworkEvent;
 import com.yesibc.core.exception.ApplicationException;
-import com.yesibc.job51.common.ClawerConstants;
-import com.yesibc.job51.common.ErrorHandler;
-import com.yesibc.job51.common.LogHandler;
-import com.yesibc.job51.common.ProcessContext;
-import com.yesibc.job51.common.WebRenderEntity;
-import com.yesibc.job51.common.WebrendererContext;
+import com.yesiic.common.ClawerConstants;
+import com.yesiic.common.ErrorHandler;
+import com.yesiic.common.LogHandler;
+import com.yesiic.common.ProcessContext;
+import com.yesiic.common.WebRenderEntity;
+import com.yesiic.common.WebrendererContext;
 
 public class TestRolling {
 
