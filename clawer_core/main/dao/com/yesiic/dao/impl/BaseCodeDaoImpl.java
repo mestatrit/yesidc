@@ -3,7 +3,7 @@ package com.yesiic.dao.impl;
 import org.hibernate.stat.Statistics;
 
 import com.yesibc.core.dao.HibernateEntityDao;
-import com.yesibc.job51.common.BaseCode;
+import com.yesiic.common.BaseCode;
 import com.yesiic.dao.BaseCodeDao;
 import com.yesiic.model.Code;
 

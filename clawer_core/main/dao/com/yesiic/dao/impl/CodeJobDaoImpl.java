@@ -1,7 +1,7 @@
 package com.yesiic.dao.impl;
 
 import com.yesibc.core.dao.HibernateEntityDao;
-import com.yesibc.job51.common.BaseCode;
+import com.yesiic.common.BaseCode;
 import com.yesiic.dao.CodeJobDao;
 import com.yesiic.model.Code;
 import com.yesiic.model.CodeJob;
