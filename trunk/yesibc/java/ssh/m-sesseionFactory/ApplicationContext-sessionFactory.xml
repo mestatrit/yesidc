@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="dataSource1"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>oracle.jdbc.driver.OracleDriver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:oracle:thin:@localhost:1521:oemrep</value>
+		</property>
+		<property name="username">
+			<value>test</value>
+		</property>
+		<property name="password">
+			<value>test</value>
+		</property>
+	</bean>
+	<bean id="dataSource2"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>oracle.jdbc.driver.OracleDriver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:oracle:thin:@localhost:1521:oemrep</value>
+		</property>
+		<property name="username">
+			<value>demo</value>
+		</property>
+		<property name="password">
+			<value>demo</value>
+		</property>
+	</bean>
+	<bean id="sessionFactory1"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource1" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle9Dialect</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.cglib.use_reflection_optimizer">false</prop>
+				<prop key="hibernate.jdbc.fetch_size">50</prop>
+				<prop key="hibernate.jdbc.batch_size">20</prop>
+			</props>
+		</property>
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>classpath:/com/htxx/demo/model</value>			
+			</list>
+		</property>
+	</bean>
+	<bean id="sessionFactory2"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource2" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle9Dialect</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.cglib.use_reflection_optimizer">false</prop>
+				<prop key="hibernate.jdbc.fetch_size">50</prop>
+				<prop key="hibernate.jdbc.batch_size">20</prop>
+			</props>
+		</property>
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>classpath:/com/htxx/demo1/model</value>			
+			</list>
+		</property>
+	</bean>
+	<bean id="sessionFactory" class="com.htxx.service.dao.MultiSessionFactory">
+		<property name="sessionFactory"><ref bean="sessionFactory1"/></property>
+	</bean>
+	<bean id="multiSessionFactoryTest" class="com.htxx.demo.MultiSessionFactoryTest">
+		<property name="dao"><ref bean="genericDao"/></property>
+	</bean>
+	<bean id="daoSupport" class="com.htxx.service.dao.DaoSupportHibernate3Imp">
+    	<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+    </bean>
+	<bean id="genericDao" class="com.htxx.service.dao.BasicDao">
+		<property name="daoSupport"><ref bean="daoSupport"/></property>
+	</bean>
+</beans>
