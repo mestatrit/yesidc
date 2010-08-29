@@ -1,0 +1,1171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0062)http://www.blogjava.net/pdw2009/archive/2008/05/25/202725.html -->
+<html><head id="Head"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>
+	spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava
+</title><meta id="metaKeywords" name="keywords" content="spring+atomikos+JTA完整例子"><link type="text/css" rel="stylesheet" href="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/common.css"><link id="MainCss" type="text/css" rel="stylesheet" href="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/style.css"><link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://www.blogjava.net/pdw2009/rss.aspx"></head>
+<body>
+    <form name="Form1" method="post" action="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava.htm" onsubmit="javascript:return WebForm_OnSubmit();" id="Form1">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="">
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="">
+<input type="hidden" name="__VIEWSTATE" id="
+__VIEWSTATE" value="">
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['Form1'];
+if (!theForm) {
+    theForm = document.Form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/WebResource.axd" type="text/javascript"></script>
+
+<script language="JavaScript">
+									function ctlent(evt,id)
+											{
+												if(evt.ctrlKey && evt.keyCode == 13)
+												{	
+													try
+													{
+														TempSave(id);
+													}
+													catch(ex)
+													{
+													}
+													finally
+													{
+													    __doPostBack('AjaxHolder$PostComment$btnSubmit','')
+													}
+												}
+		
+												}</script>
+												<script language="JavaScript">function SetReplyAuhor(author){document.getElementById('AjaxHolder_PostComment_tbComment').value+="@"+author+"\n";document.getElementById('AjaxHolder_PostComment_tbComment').focus();return false}</script>
+<script src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/ScriptResource.axd" type="text/javascript"></script>
+<script src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/ScriptResource(1).axd" type="text/javascript"></script>
+<script src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/ScriptResource(2).axd" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+function WebForm_OnSubmit() {
+if (typeof(ValidatorOnSubmit) == "function" && ValidatorOnSubmit() == false) return false;
+return true;
+}
+//]]>
+</script>
+
+        本站不再更新，欢迎光临 
+<a href="http://php.11519.net/5jblog">java开发技术网</a>
+<!--done-->
+<div id="header">
+	
+<!--done-->
+<div class="header">
+	<div class="headerText">
+		<a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.blogjava.net/pdw2009/">努力创造未来！</a><br>
+		本站不再更新，欢迎光临 
+<a href="http://php.11519.net/5jblog">java开发技术网</a>
+	</div>
+</div>
+
+</div>
+
+<div id="mytopmenu">
+	
+		<div id="mylinks">
+<!--done-->
+&nbsp;&nbsp;
+&nbsp;&nbsp;
+<a id="MyLinks1_NewPostLink" class="menu" href="http://www.blogjava.net/pdw2009/admin/EditPosts.aspx?opt=1">新随笔</a>
+<a id="MyLinks1_ContactLink" class="menu" href="http://www.blogjava.net/pdw2009/contact.aspx?id=1">联系</a>&nbsp;&nbsp;
+&nbsp;&nbsp;
+<a id="MyLinks1_Admin" class="menu" href="http://www.blogjava.net/pdw2009/admin/EditPosts.aspx">管理</a>
+</div>
+		<div id="mystats">
+<!--done-->
+随笔-228&nbsp;
+评论-190&nbsp;
+文章-8&nbsp;
+trackbacks-0
+</div>
+	
+</div>
+<div id="centercontent">
+	
+					
+<!--done-->
+<div class="post">
+	<div class="postTitle">
+		<a id="viewpost1_TitleUrl" class="postTitle2" href="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava.htm">spring+atomikos+JTA完整例子</a>
+	</div>
+	看完了经乾的《TUXEDO系统经典》后，觉得tuxedo的事务处理功能是无比强大，当时心里就想如果能用JAVA来实现Tuxedo所有功能，那将是一个无比强大的分布式事务处理系统。当我看到atomikos时，我知我找到自己一心要寻找的事务处理工具。atomikos目前中文文档还很少，更没有完整的中文文档，本人读书甚少。没有能力能她的E文文档翻译成中文。今天是学习atomikos的第一天，终于把一个简单的例子做完，现在贴出来与大家共享，接下来俺要好好看她的E文文档了。applicationContext.xml配置<br>
+<div style="border-right: #cccccc 1px solid; padding-right: 5px; border-top: #cccccc 1px solid; padding-left: 4px; font-size: 13px; padding-bottom: 4px; border-left: #cccccc 1px solid; width: 98%; word-break: break-all; padding-top: 4px; border-bottom: #cccccc 1px solid; background-color: #eeeeee"><span style="color: #000000">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #008000">&lt;!--</span><span style="color: #008000">Atomikos&nbsp;&nbsp;JTA&nbsp;事务&nbsp;begin</span><span style="color: #008000">--&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">bean&nbsp;</span><span style="color: #ff0000">id</span><span style="color: #0000ff">="dataSource1"</span><span style="color: #ff0000">&nbsp;class</span><span style="color: #0000ff">="com.atomikos.jdbc.SimpleDataSourceBean"</span><span style="color: #ff0000">&nbsp;init-method</span><span style="color: #0000ff">="init"</span><span style="color: #ff0000">&nbsp;destroy-method</span><span style="color: #0000ff">="close"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="uniqueResourceName"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">mysql/main</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="xaDataSourceClassName"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #008000">&lt;!--</span><span style="color: #008000">&nbsp;使用Mysql&nbsp;XADataSource(mysql&gt;=5.0,&nbsp;Connector/J&gt;=5.0才可以支持XADatasource)</span><span style="color: #008000">--&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="xaDataSourceProperties"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">URL=jdbc:mysql://localhost:3306/test?useUnicode=true</span><span style="color: #ff0000">&amp;amp;</span><span style="color: #000000">characterEncoding=utf-8;user=root;password=123456</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="exclusiveConnectionMode"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">true</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="connectionPoolSize"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">3</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="validatingQuery"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">SELECT&nbsp;1</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">bean</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">bean&nbsp;</span><span style="color: #ff0000">id</span><span style="color: #0000ff">="dataSource2"</span><span style="color: #ff0000">&nbsp;class</span><span style="color: #0000ff">="com.atomikos.jdbc.SimpleDataSourceBean"</span><span style="color: #ff0000">&nbsp;init-method</span><span style="color: #0000ff">="init"</span><span style="color: #ff0000">&nbsp;destroy-method</span><span style="color: #0000ff">="close"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="uniqueResourceName"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">mysql/secondary</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="xaDataSourceClassName"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #008000">&lt;!--</span><span style="color: #008000">&nbsp;使用Mysql&nbsp;XADataSource(mysql&gt;=5.0,&nbsp;Connector/J&gt;=5.0才可以支持XADatasource)</span><span style="color: #008000">--&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="xaDataSourceProperties"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">URL=jdbc:mysql://localhost:3306/aotsf?useUnicode=true</span><span style="color: #ff0000">&amp;amp;</span><span style="color: #000000">characterEncoding=utf-8;user=root;password=123456</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="exclusiveConnectionMode"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">true</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="connectionPoolSize"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">3</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="validatingQuery"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">SELECT&nbsp;1</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">bean</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">bean&nbsp;</span><span style="color: #ff0000">id</span><span style="color: #0000ff">="atomikosTransactionManager"</span><span style="color: #ff0000">&nbsp;class</span><span style="color: #0000ff">="com.atomikos.icatch.jta.UserTransactionManager"</span><span style="color: #ff0000">&nbsp;init-method</span><span style="color: #0000ff">="init"</span><span style="color: #ff0000">&nbsp;destroy-method</span><span style="color: #0000ff">="close"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="forceShutdown"</span><span style="color: #0000ff">&gt;&lt;</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">true</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">value</span><span style="color: #0000ff">&gt;&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">bean</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">bean&nbsp;</span><span style="color: #ff0000">id</span><span style="color: #0000ff">="atomikosUserTransaction"</span><span style="color: #ff0000">&nbsp;class</span><span style="color: #0000ff">="com.atomikos.icatch.jta.UserTransactionImp"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="transactionTimeout"</span><span style="color: #ff0000">&nbsp;value</span><span style="color: #0000ff">="300"</span><span style="color: #0000ff">/&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">bean</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">bean&nbsp;</span><span style="color: #ff0000">id</span><span style="color: #0000ff">="springTransactionManager"</span><span style="color: #ff0000">&nbsp;class</span><span style="color: #0000ff">="org.springframework.transaction.jta.JtaTransactionManager"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="transactionManager"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">ref&nbsp;</span><span style="color: #ff0000">bean</span><span style="color: #0000ff">="atomikosTransactionManager"</span><span style="color: #0000ff">/&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="userTransaction"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">ref&nbsp;</span><span style="color: #ff0000">bean</span><span style="color: #0000ff">="atomikosUserTransaction"</span><span style="color: #0000ff">/&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">bean</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">bean&nbsp;</span><span style="color: #ff0000">id</span><span style="color: #0000ff">="atomikosTransactionProxy"</span><span style="color: #ff0000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class</span><span style="color: #0000ff">="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"</span><span style="color: #ff0000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;abstract</span><span style="color: #0000ff">="true"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="transactionManager"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">ref&nbsp;</span><span style="color: #ff0000">bean</span><span style="color: #0000ff">="springTransactionManager"</span><span style="color: #ff0000">&nbsp;</span><span style="color: #0000ff">/&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="transactionAttributes"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">props</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">prop&nbsp;</span><span style="color: #ff0000">key</span><span style="color: #0000ff">="*"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">PROPAGATION_REQUIRED,-Exception</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">prop</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">props</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">bean</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">bean&nbsp;</span><span style="color: #ff0000">id</span><span style="color: #0000ff">="jdbcBookDAO"</span><span style="color: #ff0000">&nbsp;class</span><span style="color: #0000ff">="dao.jdbc.BookDAO"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="dataSource"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">ref&nbsp;</span><span style="color: #ff0000">bean</span><span style="color: #0000ff">="dataSource1"</span><span style="color: #0000ff">/&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">bean</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">bean&nbsp;</span><span style="color: #ff0000">id</span><span style="color: #0000ff">="jdbcTestDAO"</span><span style="color: #ff0000">&nbsp;class</span><span style="color: #0000ff">="dao.jdbc.TestDAO"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="dataSource"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">ref&nbsp;</span><span style="color: #ff0000">bean</span><span style="color: #0000ff">="dataSource2"</span><span style="color: #0000ff">/&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">bean</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">bean&nbsp;</span><span style="color: #ff0000">id</span><span style="color: #0000ff">="atomikosJTAServiceDemo"</span><span style="color: #ff0000">&nbsp;parent</span><span style="color: #0000ff">="atomikosTransactionProxy"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="target"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">bean&nbsp;</span><span style="color: #ff0000">class</span><span style="color: #0000ff">="service.AtomikosJTAServiceDemo"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="jdbcBookDAO"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">ref&nbsp;</span><span style="color: #ff0000">bean</span><span style="color: #0000ff">="jdbcBookDAO"</span><span style="color: #0000ff">/&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">property&nbsp;</span><span style="color: #ff0000">name</span><span style="color: #0000ff">="jdbcTestDAO"</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;</span><span style="color: #800000">ref&nbsp;</span><span style="color: #ff0000">bean</span><span style="color: #0000ff">="jdbcTestDAO"</span><span style="color: #0000ff">/&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">bean</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">property</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">&lt;/</span><span style="color: #800000">bean</span><span style="color: #0000ff">&gt;</span><span style="color: #000000"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #008000">&lt;!--</span><span style="color: #008000">Atomikos&nbsp;&nbsp;JTA&nbsp;事务&nbsp;end&nbsp;&nbsp;</span><span style="color: #008000">--&gt;</span></div>
+<br>
+DAO层代码<br>
+<div style="border-right: #cccccc 1px solid; padding-right: 5px; border-top: #cccccc 1px solid; padding-left: 4px; font-size: 13px; padding-bottom: 4px; border-left: #cccccc 1px solid; width: 98%; word-break: break-all; padding-top: 4px; border-bottom: #cccccc 1px solid; background-color: #eeeeee"><span style="color: #0000ff">package</span><span style="color: #000000">&nbsp;dao.jdbc;<br>
+<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;org.springframework.jdbc.core.JdbcTemplate;<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;org.springframework.jdbc.core.support.JdbcDaoSupport;<br>
+<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;domain.Book;<br>
+<br>
+</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">class</span><span style="color: #000000">&nbsp;BookDAO&nbsp;</span><span style="color: #0000ff">extends</span><span style="color: #000000">&nbsp;JdbcDaoSupport{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">void</span><span style="color: #000000">&nbsp;addBook(Book&nbsp;book){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">try</span><span style="color: #000000">{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JdbcTemplate&nbsp;jt</span><span style="color: #000000">=</span><span style="color: #000000">getJdbcTemplate();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;str_sql</span><span style="color: #000000">=</span><span style="color: #000000">"</span><span style="color: #000000">insert&nbsp;into&nbsp;Book(isbn,bookname,author,note)VALUES(?,?,?,?)</span><span style="color: #000000">"</span><span style="color: #000000">;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String[]&nbsp;args</span><span style="color: #000000">=</span><span style="color: #000000">{book.getIsbn(),book.getBookname(),book.getAuthor(),book.getNote()};<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jt.update(str_sql,&nbsp;args);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span><span style="color: #0000ff">catch</span><span style="color: #000000">(RuntimeException&nbsp;e){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(</span><span style="color: #000000">"</span><span style="color: #000000">添加Book失败<img src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/dot.gif" alt=""></span><span style="color: #000000">"</span><span style="color: #000000">);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">throw</span><span style="color: #000000">&nbsp;e;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}<br>
+</span></div>
+<br>
+<div style="border-right: #cccccc 1px solid; padding-right: 5px; border-top: #cccccc 1px solid; padding-left: 4px; font-size: 13px; padding-bottom: 4px; border-left: #cccccc 1px solid; width: 98%; word-break: break-all; padding-top: 4px; border-bottom: #cccccc 1px solid; background-color: #eeeeee"><span style="color: #0000ff">package</span><span style="color: #000000">&nbsp;dao.jdbc;<br>
+<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;org.springframework.jdbc.core.JdbcTemplate;<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;org.springframework.jdbc.core.support.JdbcDaoSupport;<br>
+<br>
+<br>
+</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">class</span><span style="color: #000000">&nbsp;TestDAO&nbsp;</span><span style="color: #0000ff">extends</span><span style="color: #000000">&nbsp;JdbcDaoSupport{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">void</span><span style="color: #000000">&nbsp;addBook(Integer&nbsp;id,&nbsp;String&nbsp;email){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">try</span><span style="color: #000000">{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JdbcTemplate&nbsp;jt</span><span style="color: #000000">=</span><span style="color: #000000">getJdbcTemplate();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;str_sql</span><span style="color: #000000">=</span><span style="color: #000000">"</span><span style="color: #000000">insert&nbsp;into&nbsp;test(id,email)VALUES(?,?)</span><span style="color: #000000">"</span><span style="color: #000000">;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object[]&nbsp;args</span><span style="color: #000000">=</span><span style="color: #000000">{id,email};<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jt.update(str_sql,&nbsp;args);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span><span style="color: #0000ff">catch</span><span style="color: #000000">(RuntimeException&nbsp;e){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(</span><span style="color: #000000">"</span><span style="color: #000000">添加Test失败<img src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/dot.gif" alt=""></span><span style="color: #000000">"</span><span style="color: #000000">);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">throw</span><span style="color: #000000">&nbsp;e;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}<br>
+</span></div>
+<br>
+事层代码<br>
+<div style="border-right: #cccccc 1px solid; padding-right: 5px; border-top: #cccccc 1px solid; padding-left: 4px; font-size: 13px; padding-bottom: 4px; border-left: #cccccc 1px solid; width: 98%; word-break: break-all; padding-top: 4px; border-bottom: #cccccc 1px solid; background-color: #eeeeee"><span style="color: #0000ff">package</span><span style="color: #000000">&nbsp;service;<br>
+<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;dao.jdbc.BookDAO;<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;dao.jdbc.TestDAO;<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;domain.Book;<br>
+<br>
+</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">class</span><span style="color: #000000">&nbsp;AtomikosJTAServiceDemo&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">private</span><span style="color: #000000">&nbsp;BookDAO&nbsp;jdbcBookDAO;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">private</span><span style="color: #000000">&nbsp;TestDAO&nbsp;jdbcTestDAO;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;String&nbsp;ok(){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(</span><span style="color: #000000">"</span><span style="color: #000000">开始<img src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/dot.gif" alt="">.</span><span style="color: #000000">"</span><span style="color: #000000">);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jdbcTestDAO.addBook(Integer.valueOf(</span><span style="color: #000000">"</span><span style="color: #000000">2</span><span style="color: #000000">"</span><span style="color: #000000">),&nbsp;</span><span style="color: #000000">"</span><span style="color: #000000">pdw2009&nbsp;&nbsp;tom.com</span><span style="color: #000000">"</span><span style="color: #000000">);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Book&nbsp;book</span><span style="color: #000000">=</span><span style="color: #0000ff">new</span><span style="color: #000000">&nbsp;Book();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;book.setIsbn(</span><span style="color: #000000">"</span><span style="color: #000000">ccdada66</span><span style="color: #000000">"</span><span style="color: #000000">);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;book.setAuthor(</span><span style="color: #000000">"</span><span style="color: #000000">小东</span><span style="color: #000000">"</span><span style="color: #000000">);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;book.setNote(</span><span style="color: #000000">"</span><span style="color: #000000">JTA测试</span><span style="color: #000000">"</span><span style="color: #000000">);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;book.setBookname(</span><span style="color: #000000">"</span><span style="color: #000000">Atomikos学习</span><span style="color: #000000">"</span><span style="color: #000000">);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jdbcBookDAO.addBook(book);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(</span><span style="color: #000000">"</span><span style="color: #000000">结束<img src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/dot.gif" alt="">.</span><span style="color: #000000">"</span><span style="color: #000000">);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">return</span><span style="color: #000000">&nbsp;</span><span style="color: #000000">"</span><span style="color: #000000">ok</span><span style="color: #000000">"</span><span style="color: #000000">;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;BookDAO&nbsp;getJdbcBookDAO()&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">return</span><span style="color: #000000">&nbsp;jdbcBookDAO;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">void</span><span style="color: #000000">&nbsp;setJdbcBookDAO(BookDAO&nbsp;jdbcBookDAO)&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">this</span><span style="color: #000000">.jdbcBookDAO&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;jdbcBookDAO;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;TestDAO&nbsp;getJdbcTestDAO()&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">return</span><span style="color: #000000">&nbsp;jdbcTestDAO;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">void</span><span style="color: #000000">&nbsp;setJdbcTestDAO(TestDAO&nbsp;jdbcTestDAO)&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">this</span><span style="color: #000000">.jdbcTestDAO&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;jdbcTestDAO;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+}<br>
+</span></div>
+测试用例<br>
+<div style="border-right: #cccccc 1px solid; padding-right: 5px; border-top: #cccccc 1px solid; padding-left: 4px; font-size: 13px; padding-bottom: 4px; border-left: #cccccc 1px solid; width: 98%; word-break: break-all; padding-top: 4px; border-bottom: #cccccc 1px solid; background-color: #eeeeee"><span style="color: #0000ff">package</span><span style="color: #000000">&nbsp;services;<br>
+<br>
+<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">static</span><span style="color: #000000">&nbsp;org.junit.Assert.</span><span style="color: #000000">*</span><span style="color: #000000">;<br>
+<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;org.junit.After;<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;org.junit.AfterClass;<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;org.junit.Before;<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;org.junit.BeforeClass;<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;org.junit.Test;<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;org.springframework.context.ApplicationContext;<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;org.springframework.context.support.ClassPathXmlApplicationContext;<br>
+<br>
+</span><span style="color: #0000ff">import</span><span style="color: #000000">&nbsp;service.AtomikosJTAServiceDemo;<br>
+<br>
+</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">class</span><span style="color: #000000">&nbsp;AtomikosJTAServiceDemoTest&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ApplicationContext&nbsp;acx</span><span style="color: #000000">=</span><span style="color: #0000ff">null</span><span style="color: #000000">;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;AtomikosJTAServiceDemo&nbsp;atomikosJTAServiceDemo</span><span style="color: #000000">=</span><span style="color: #0000ff">null</span><span style="color: #000000">;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@BeforeClass<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">static</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">void</span><span style="color: #000000">&nbsp;setUpBeforeClass()&nbsp;</span><span style="color: #0000ff">throws</span><span style="color: #000000">&nbsp;Exception&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@AfterClass<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">static</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">void</span><span style="color: #000000">&nbsp;tearDownAfterClass()&nbsp;</span><span style="color: #0000ff">throws</span><span style="color: #000000">&nbsp;Exception&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Before<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">void</span><span style="color: #000000">&nbsp;setUp()&nbsp;</span><span style="color: #0000ff">throws</span><span style="color: #000000">&nbsp;Exception&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;acx</span><span style="color: #000000">=</span><span style="color: #0000ff">new</span><span style="color: #000000">&nbsp;ClassPathXmlApplicationContext(</span><span style="color: #000000">"</span><span style="color: #000000">applicationContext.xml</span><span style="color: #000000">"</span><span style="color: #000000">);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;atomikosJTAServiceDemo</span><span style="color: #000000">=</span><span style="color: #000000">(AtomikosJTAServiceDemo)&nbsp;acx.getBean(</span><span style="color: #000000">"</span><span style="color: #000000">atomikosJTAServiceDemo</span><span style="color: #000000">"</span><span style="color: #000000">);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@After<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">void</span><span style="color: #000000">&nbsp;tearDown()&nbsp;</span><span style="color: #0000ff">throws</span><span style="color: #000000">&nbsp;Exception&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Test<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">void</span><span style="color: #000000">&nbsp;notnullTest()</span><span style="color: #0000ff">throws</span><span style="color: #000000">&nbsp;Exception{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assertNotNull(atomikosJTAServiceDemo);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@Test<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">void</span><span style="color: #000000">&nbsp;okTest()</span><span style="color: #0000ff">throws</span><span style="color: #000000">&nbsp;Exception{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assertEquals(atomikosJTAServiceDemo.ok(),</span><span style="color: #000000">"</span><span style="color: #000000">ok</span><span style="color: #000000">"</span><span style="color: #000000">);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}<br>
+</span></div>
+<br>
+
+	<div class="postDesc">posted on 2008-05-25 15:19 <a href="http://www.blogjava.net/pdw2009/">有猫相伴的日子</a> 阅读(1993) <a href="http://www.blogjava.net/pdw2009/archive/2008/05/25/202725.html#Post">评论(3)</a> &nbsp;<a href="http://www.blogjava.net/pdw2009/admin/EditPosts.aspx?postid=202725">编辑</a> &nbsp;<a href="http://www.blogjava.net/pdw2009/AddToFavorite.aspx?id=202725">收藏</a>  所属分类: <a href="http://www.blogjava.net/pdw2009/category/17723.html">spring</a> </div>
+</div>
+<img src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/202725.html" width="1" height="1">
+
+<!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+<rdf:Description
+rdf:about="http://www.blogjava.net/pdw2009/archive/2008/05/25/202725.html"
+dc:identifier="http://www.blogjava.net/pdw2009/archive/2008/05/25/202725.html"
+dc:title="spring+atomikos+JTA完整例子"
+trackback:ping="http://www.blogjava.net/pdw2009/services/trackbacks/202725.aspx" />
+</rdf:RDF>
+-->
+
+<script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('AjaxHolder$scriptmanager1', document.getElementById('Form1'));
+Sys.WebForms.PageRequestManager.getInstance()._updateControls(['tAjaxHolder$UpdatePanel1'], [], [], 90);
+//]]>
+</script>
+
+<div id="AjaxHolder_UpdatePanel1">
+	    
+    <a name="pagedcomment"></a>
+<!--done-->
+<br>
+<b>评论:</b>
+<div class="feedbackNoItems"></div>
+	
+
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+			<a title="permalink: re: spring+atomikos+JTA完整例子" href="http://www.blogjava.net/pdw2009/archive/2008/05/25/202725.html#240486">#</a>&nbsp;<a name="240486"></a>re: spring+atomikos+JTA完整例子
+				2008-11-14 11:40 | <a id="AjaxHolder_Comments_CommentList_ctl00_NameLink" target="_blank">xnang</a><br>
+				<div align="left">只知道用spring却不知道底层是如何实现的!!&nbsp;&nbsp;<a onclick="return SetReplyAuhor(&quot;xnang&quot;)" href="http://www.blogjava.net/pdw2009/archive/2008/05/25/202725.html#post">回复</a>&nbsp;&nbsp;<a title="查看该作者发表过的评论" href="http://www.blogjava.net/comment?author=xnang" target="_blank">更多评论</a><br><a id="AjaxHolder_Comments_CommentList_ctl00_DeleteLink" href="javascript:__doPostBack('AjaxHolder$Comments$CommentList$ctl00$DeleteLink','')"></a>&nbsp;&nbsp;<a id="AjaxHolder_Comments_CommentList_ctl00_EditLink"></a></div>
+			</div>
+			
+			
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+			<a title="permalink: re: spring+atomikos+JTA完整例子" href="http://www.blogjava.net/pdw2009/archive/2008/05/25/202725.html#241981">#</a>&nbsp;<a name="241981"></a>re: spring+atomikos+JTA完整例子
+				2008-11-22 16:58 | <a id="AjaxHolder_Comments_CommentList_ctl01_NameLink" target="_blank">pdw2009</a><br>
+				<div align="left">@xnang
+<br>是的,因为没时间,现在也用不到,所以就不去研究它了&nbsp;&nbsp;<a onclick="return SetReplyAuhor(&quot;pdw2009&quot;)" href="http://www.blogjava.net/pdw2009/archive/2008/05/25/202725.html#post">回复</a>&nbsp;&nbsp;<a title="查看该作者发表过的评论" href="http://www.blogjava.net/comment?author=pdw2009" target="_blank">更多评论</a><br><a id="AjaxHolder_Comments_CommentList_ctl01_DeleteLink" href="javascript:__doPostBack('AjaxHolder$Comments$CommentList$ctl01$DeleteLink','')"></a>&nbsp;&nbsp;<a id="AjaxHolder_Comments_CommentList_ctl01_EditLink"></a></div>
+			</div>
+			
+			
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+			<a title="permalink: re: spring+atomikos+JTA完整例子[未登录]" href="http://www.blogjava.net/pdw2009/archive/2008/05/25/202725.html#304774">#</a>&nbsp;<a name="304774"></a>re: spring+atomikos+JTA完整例子[未登录]<a name="Post"></a>
+				2009-12-04 14:51 | <a id="AjaxHolder_Comments_CommentList_ctl02_NameLink" target="_blank">L</a><br>
+				<div align="left">atomikos 需要些什么包?&nbsp;&nbsp;<a onclick="return SetReplyAuhor(&quot;L&quot;)" href="http://www.blogjava.net/pdw2009/archive/2008/05/25/202725.html#post">回复</a>&nbsp;&nbsp;<a title="查看该作者发表过的评论" href="http://www.blogjava.net/comment?author=L" target="_blank">更多评论</a><br><a id="AjaxHolder_Comments_CommentList_ctl02_DeleteLink" href="javascript:__doPostBack('AjaxHolder$Comments$CommentList$ctl02$DeleteLink','')"></a>&nbsp;&nbsp;<a id="AjaxHolder_Comments_CommentList_ctl02_EditLink"></a></div>
+			</div>
+			
+			
+		</div>
+	
+
+
+
+
+<style>
+td { font-size: 12px }
+.commentTextBox 
+{ 
+    font-family : Verdana; 
+    font-size: 13px;
+ }
+</style>
+<!--Beging Temp Save-->
+<style>.userData { BEHAVIOR: url(#default#userdata) }
+	</style>
+<div class="userData" id="CommentsPersistDiv"></div>
+
+<script type="text/javascript">
+function pageLoad()
+{
+    Sys.WebForms.PageRequestManager.getInstance().add_initializeRequest(handleInitializeRequest);
+    //Sys.WebForms.PageRequestManager.getInstance().add_endRequest(handleEndRequest);
+}
+
+function handleInitializeRequest(sender, args)
+{
+    var prm = Sys.WebForms.PageRequestManager.getInstance();
+    var eid = args.get_postBackElement().id;
+    if (eid.indexOf("DeleteLink")>0) 
+    {
+       args.get_postBackElement().innerHTML = "<font color='red'>正在删除...</font>";         
+    }    
+    else if (eid.indexOf("btnSubmit")>0) 
+    {
+       document.getElementById("AjaxHolder_PostComment_ltSubmitMsg").innerHTML="正在提交...";
+       document.getElementById("AjaxHolder_PostComment_btnSubmit").disabled = true;       
+    }   
+    else if(eid.indexOf("refreshList")>0)
+    {
+        document.getElementById("AjaxHolder_PostComment_refreshList").innerHTML="<font color='red'>正在刷新...</font>";
+    }
+   
+}	
+
+function TempSave(ElementID)
+{
+	try
+	{
+	CommentsPersistDiv.setAttribute("CommentContent",document.getElementById(ElementID).value);
+	CommentsPersistDiv.save("CommentXMLStore");
+	}
+	catch(ex)
+	{
+	}
+	
+}
+function Restore(ElementID)
+{
+	CommentsPersistDiv.load("CommentXMLStore");
+	document.getElementById(ElementID).value=CommentsPersistDiv.getAttribute("CommentContent");
+}	
+			
+			
+</script>
+<!--Ene TempSave-->
+<div id="divRefreshComments" style="text-align:right;margin-right:10px;margin-bottom:5px;font-size:12px"><a href="http://www.blogjava.net/RequireRegister.aspx">新用户注册</a>&nbsp;&nbsp;<a id="AjaxHolder_PostComment_refreshList" href="javascript:__doPostBack('AjaxHolder$PostComment$refreshList','')">刷新评论列表</a>&nbsp;&nbsp;</div>
+<div class="commentform">
+<script type="text/javascript" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/google_service.js">
+</script>
+<script type="text/javascript">
+var c_enable_dfp = true;
+if (navigator.userAgent.indexOf("Chrome/6.0.401.1") > 0) {
+c_enable_dfp = false;
+}
+if (c_enable_dfp) {
+try{
+  GS_googleAddAdSenseService("ca-pub-4210569241504288");
+  GS_googleEnableAllServices();
+  } catch (e) { }
+}
+</script><script src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/google_ads.js"></script>
+<script type="text/javascript">
+if (c_enable_dfp) {
+try{
+  GA_googleAddSlot("ca-pub-4210569241504288", "blogjava_commentbox_up");
+  GA_googleAddSlot("ca-pub-4210569241504288", "blogjava_blogpost_bottom");
+  GA_googleAddSlot("ca-pub-4210569241504288", "blogjava_blogpost_bottom1");
+  } catch (e) { }
+}
+</script>
+<script type="text/javascript">
+if (c_enable_dfp) {
+try{
+  GA_googleFetchAds();
+  } catch (e) { }
+}
+</script>
+<span id="AjaxHolder_PostComment_ltSubmitMsg" style="color:Red;"></span>
+<br>
+<a name="Feedback"></a>
+	<div id="AjaxHolder_PostComment_divCommnentArea">
+		</div><table cellspacing="1" cellpadding="1" border="0">
+	
+		<tbody><tr>
+		<td colspan="3">
+		<div style="line-height:150%;display:none;">
+		推荐链接：<br>
+		<a href="http://a4.yeshj.com/rd/35698/" target="_blank" class="site_hot">百度诚聘搜索核心技术研发工程师</a><br>
+		<a href="http://a4.yeshj.com/rd/35931/" target="_blank">China-Pub十周年庆：好友组团抢惊喜礼品</a><br>
+		<a href="http://www.cnblogs.com/cmt/archive/2010/06/08/1753881.html" target="_blank">博客园2010T恤正式发布</a><br>
+		<a href="http://space.cnblogs.com/q/" target="_blank">博客园程序员问答平台</a><br>
+		</div>
+		<div id="itnews_block" style="line-height:150%;" class="other_info_list">IT新闻：<br>· <a href="http://news.cnblogs.com/n/70850/" target="_blank">英特尔网站意外曝光下一代Atom芯片细节</a><br>· <a href="http://news.cnblogs.com/n/70849/" target="_blank">Google十大已经放弃网络项目：Google视频居首</a><br>· <a href="http://news.cnblogs.com/n/70848/" target="_blank">Digg称年收入已达上千万美元 将任命新CEO</a><br>· <a href="http://news.cnblogs.com/n/70847/" target="_blank">24款让人上瘾的免费Linux游戏</a><br>· <a href="http://news.cnblogs.com/n/70846/" target="_blank">亚马逊Kindle 3爆中文名字“金读”，疑大陆同步上市</a><br></div>
+		<div>
+		技术专题：<br>
+		<a href="http://kb.cnblogs.com/zt/jquery/" title="jQuery" target="_blank">jQuery</a>&nbsp; &nbsp;<a href="http://kb.cnblogs.com/zt/android/" title="Android" target="_blank">Android</a>&nbsp; &nbsp;<a href="http://kb.cnblogs.com/zt/ipad/" title="iPad" target="_blank">iPad</a>
+		</div>
+		</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+<script type="text/javascript">
+try{
+  GA_googleFillSlot("blogjava_commentbox_up");
+  } catch (e) { }
+</script><script src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/ads"></script><div id="google_ads_div_blogjava_commentbox_up">
+<ins style="width: 468px; height: 60px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; display: inline-table; position: relative; "><ins style="width: 468px; height: 60px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; display: block; position: relative; "><iframe id="google_ads_iframe_blogjava_commentbox_up" name="google_ads_iframe_blogjava_commentbox_up" width="468" height="60" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" style="border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; position: absolute; top: 0px; left: 0px; "></iframe></ins></ins></div>
+<script>GA_googleCreateDomIframe('google_ads_div_blogjava_commentbox_up' ,'blogjava_commentbox_up');</script>
+<br></td>
+		</tr>
+		<tr>
+			<td width="75">
+			<td>
+			<td>
+		</tr>
+		<tr>
+			<td>
+			<td colspan="2">
+			<a href="http://www.cnblogs.com/" target="_blank">博客园</a>&nbsp;  <a href="http://space.cnblogs.com/q/" target="_blank">博问</a>&nbsp; <a href="http://news.cnblogs.com/" target="_blank">IT新闻</a>&nbsp; <!--<a href="http://home.cnblogs.com/ing/" target="_blank">闪存</a>&nbsp;  --><a href="http://a4.yeshj.com/rd/36007/" target="_blank">学英语</a>&nbsp;  <a href="http://job.cnblogs.com/cate-java_programmer/" target="_blank">Java程序员招聘</a>
+			</td>
+		</tr>
+		<tr>
+			<td width="55">标题</td>
+			<td><input name="AjaxHolder$PostComment$tbTitle" type="text" value="re: spring+atomikos+JTA完整例子" id="AjaxHolder_PostComment_tbTitle" class="commenttb" style="width:320"></td>
+			<td><span id="AjaxHolder_PostComment_RequiredFieldValidator1" style="color:Red;visibility:hidden;">请输入标题</span></td>
+		</tr>
+		<tr>
+			<td>姓名</td>
+			<td><input name="AjaxHolder$PostComment$tbName" type="text" id="AjaxHolder_PostComment_tbName" class="commenttb" style="width:320"></td>
+			<td><span id="AjaxHolder_PostComment_RequiredFieldValidator2" style="color:Red;visibility:hidden;">请输入你的姓名</span></td>
+		</tr>
+		<tr>
+			<td>主页</td>
+			<td><input name="AjaxHolder$PostComment$tbUrl" type="text" id="AjaxHolder_PostComment_tbUrl" class="commenttb" style="width:320"></td>
+			<td><font face="宋体"></font></td>
+		</tr>
+		<tr>
+			<td align="left" colspan="3">
+				<table id="AjaxHolder_PostComment_tbCaptchaImage" class="CommentForm" cellspacing="0" cellpadding="0" border="0">
+		<tbody><tr>
+			<td colspan="3">
+							<span id="AjaxHolder_PostComment_Requiredfieldvalidator4" style="color:Red;display:none;">请输入验证码</span>
+							<span id="AjaxHolder_PostComment_lblImage" style="color:Red;font-weight:bold;"></span>
+						</td>
+		</tr>
+		<tr>
+			<td width="78">验证码</td>
+			<td><input name="AjaxHolder$PostComment$CodeNumberTextBox" type="text" id="AjaxHolder_PostComment_CodeNumberTextBox">*&nbsp;&nbsp;<img src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/JpegImage.aspx"></td>
+			<td align="left">
+		</tr>
+	</tbody></table>
+	
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">内容(请不要发表任何与政治相关的内容)
+				<span id="AjaxHolder_PostComment_RequiredFieldValidator3" style="color:Red;visibility:hidden;">请输入评论内容</span><br>
+				<textarea name="AjaxHolder$PostComment$tbComment" rows="10" cols="50" id="AjaxHolder_PostComment_tbComment" class="commentTextBox" onkeydown="ctlent(event,&#39;AjaxHolder_PostComment_tbComment&#39;)" style="Width:480;Height:220"></textarea></td>
+		</tr>
+		<tr>
+			<td colspan="3">
+		<span id="AjaxHolder_PostComment_Message" style="color:Red;"></span>
+		</td>
+		</tr><tr>
+			<td colspan="3"><input id="AjaxHolder_PostComment_chkRemember" type="checkbox" name="AjaxHolder$PostComment$chkRemember" checked="checked" tabindex="-1"><label for="AjaxHolder_PostComment_chkRemember">Remember Me?</label></td>
+		</tr>
+		<tr>
+			<td height="23"><input type="submit" name="AjaxHolder$PostComment$btnSubmit" value="提交" onclick="TempSave(&#39;AjaxHolder_PostComment_tbComment&#39;);WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;AjaxHolder$PostComment$btnSubmit&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="AjaxHolder_PostComment_btnSubmit" class="commentButton">
+				</td>
+			<td colspan="2" height="23">&nbsp;
+				<a id="AjaxHolder_PostComment_lnkLogin" href="http://www.blogjava.net/login.aspx?ReturnURL=http://www.blogjava.net/pdw2009/archive/2008/05/25/202725.html&SourceURL=/pdw2009/archive/2008/05/25/202725.html">登录</a>&nbsp;&nbsp;<!--<a id="AjaxHolder_PostComment_linkLoginComment" OnClick="if(document.getElementById('AjaxHolder_PostComment_tbComment').value != '') return confirm('未提交的评论内容将会丢失, 你真的要进入高级评论吗?');" href="http://www.blogjava.net/pdw2009/archive/2008/05/25/202725.html?login=1#Post">使用高级评论</a>&nbsp;&nbsp;<a href="http://www.blogjava.net/RequireRegister.aspx">新用户注册</a>&nbsp;&nbsp;<A href="#Top">返回页首</A>&nbsp;&nbsp;<a id="AjaxHolder_PostComment_lbRestore" OnClick="Restore('AjaxHolder_PostComment_tbComment'); return false;" href="/pdw2009/archive/2008/05/25/202725.html#Post">恢复上次提交</a>&nbsp;&nbsp;-->&nbsp;&nbsp;&nbsp;&nbsp;
+				</td>
+		</tr>
+		<tr>
+			<td colspan="3"><label class="CtrlEnter">[使用Ctrl+Enter键可以直接提交]</label></td>
+		</tr>
+		
+		
+		<tr>
+			<td colspan="3"><!----></td>
+		</tr>
+		<!--
+		<TR>
+			<TD colSpan="3" height="5"></TD>
+		</TR>	
+		-->
+		<tr>
+		<td colspan="3">
+		<a href="http://a4.yeshj.com/rd/34138/" target="_blank">每天10分钟，轻松学英语</a>
+		</td>
+		</tr>
+		<tr>
+		<td colspan="3">
+		<script type="text/javascript">
+		if (c_enable_dfp) {
+		try{
+		  GA_googleFillSlot("blogjava_blogpost_bottom");
+		  } catch (e) { }
+		}
+		</script><script src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/ads(1)"></script><div id="google_ads_div_blogjava_blogpost_bottom">
+<ins style="width: 300px; height: 250px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; display: inline-table; position: relative; "><ins style="width: 300px; height: 250px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; display: block; position: relative; "><iframe id="google_ads_iframe_blogjava_blogpost_bottom" name="google_ads_iframe_blogjava_blogpost_bottom" width="300" height="250" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" style="border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; position: absolute; top: 0px; left: 0px; "></iframe></ins></ins></div>
+<script>GA_googleCreateDomIframe('google_ads_div_blogjava_blogpost_bottom' ,'blogjava_blogpost_bottom');</script>
+		</td>
+		</tr>
+		<tr>			
+		<td colspan="3">
+		<div id="job_block" style="line-height:180%;">推荐职位：<br>· <a href="http://job.cnblogs.com/offer/8551/" target="_blank">ASP.NET程序开发（电子商务网站）(北京电酷互动)</a><br>· <a href="http://job.cnblogs.com/offer/8410/" target="_blank">ASP.NET高级程序员(北京世纪英博)</a><br>· <a href="http://job.cnblogs.com/offer/7948/" target="_blank">PHP高级开发工程师(三六五网络有限公司)</a><br>· <a href="http://job.cnblogs.com/offer/8295/" target="_blank">.NET高级开发工程师(盛拓传媒)</a><br>· <a href="http://job.cnblogs.com/offer/8296/" target="_blank">.NET开发工程师(盛拓传媒)</a><br>· <a href="http://job.cnblogs.com/offer/8301/" target="_blank">高级软件开发工程师 (Back-end 后台)(英孚教育)</a><br>· <a href="http://job.cnblogs.com/offer/8302/" target="_blank">软件开发工程师 (Front-end 前台)(英孚教育)</a><br>· <a href="http://job.cnblogs.com/offer/7246/" target="_blank">高级ASP.NET开发工程师(乐丽网络科技)</a><br></div><div id="cnblogs_posts" style="line-height:180%;">博客园首页随笔：<br>· <a href="http://www.cnblogs.com/ueqtxu/archive/2010/08/15/1800095.html" target="_blank">为dynamic添加智能感知</a><br>· <a href="http://www.cnblogs.com/yufeih/archive/2010/08/15/1800092.html" target="_blank">使用 EffectCustomTool 为 Xna 创建自定义 Shader 特效（二）</a><br>· <a href="http://www.cnblogs.com/devymex/archive/2010/08/15/1799966.html" target="_blank">UVa OJ 121 - Pipe Fitters (装管子)</a><br>· <a href="http://www.cnblogs.com/skyivben/archive/2010/08/15/1800052.html" target="_blank">浅谈 F# 2.0 的两个运行时</a><br>· <a href="http://www.cnblogs.com/warison2008/archive/2010/08/15/1799987.html" target="_blank">我写的不只是小说更是程序人生</a><br></div><div id="job_block" style="line-height:180%;">知识库：<br>· <a href="http://kb.cnblogs.com/page/70835/" target="_blank">大型数据库设计原则</a><br>· <a href="http://kb.cnblogs.com/page/70834/" target="_blank">关于c#静态方法和实例方法的辨析和应用</a><br>· <a href="http://kb.cnblogs.com/page/70821/" target="_blank">百度产品经理探秘：需求把握和正确决策</a><br>· <a href="http://kb.cnblogs.com/page/70820/" target="_blank">用情境搜索开启未来之路</a><br>· <a href="http://kb.cnblogs.com/page/70803/" target="_blank">Silverlight实例教程 - Out of Browser在线更新和Silent安装</a><br></div>
+		</td>
+		</tr>
+		<tr>
+		<td colspan="3">
+<br>
+<script type="text/javascript">
+try{
+  GA_googleFillSlot("blogjava_blogpost_bottom");
+  } catch (e) { }
+</script>
+<br>
+最简洁阅读版式：<br><a href="http://archive.cnblogs.com/b/202725/">spring+atomikos+JTA完整例子</a></td>
+		</tr>
+		<tr>
+			<td colspan="3" height="1">网站导航:<div id="blogsite">
+			<a href="http://www.cnblogs.com/" title="程序员的网上家园">博客园</a>&nbsp;&nbsp;
+			<a href="http://news.cnblogs.com/">IT新闻</a>&nbsp;&nbsp;
+			<a href="http://kb.cnblogs.com/">知识库</a>&nbsp;&nbsp;
+			<a href="http://www.cnweblog.com/">博客生活</a>&nbsp;&nbsp;
+			<a href="http://www.cnitblog.com/">IT博客网</a>&nbsp;&nbsp;
+			<a href="http://www.cppblog.com/">C++博客</a>&nbsp;&nbsp;
+			<a href="http://space.cnblogs.com/q/" title="IT问答">博问</a>&nbsp;&nbsp;
+			<a href="http://www.blogjava.net/pdw2009/archive/2008/05/25/202725.html?opt=admin">管理</a>
+			</div>
+		</td>
+		</tr>
+		<tr>
+			<td colspan="3" height="5">
+<div id="divRelativePosts">
+相关文章:
+	
+			<ul style="margin-top:0px;padding-left:0px;">
+		
+			<li style="list-style:none;display:none">
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl01_Hyperlink1" href="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava.htm">spring+atomikos+JTA完整例子</a>
+			</li>
+		
+			<li style="list-style:none;">
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl02_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2007/10/24/155648.html">struts2和spring2整合（转）</a>
+			</li>
+		
+			<li style="list-style:none;">
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl03_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2007/10/04/150366.html">SpringMVC </a>
+			</li>
+		
+			<li style="list-style:none;">
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl04_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2007/09/28/149392.html">Spring 事务管理和mysql乱码解决</a>
+			</li>
+		
+			<li style="list-style:none;">
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl05_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2007/09/28/149382.html">BeanFactory与Application的区别</a>
+			</li>
+		
+			<li style="list-style:none;">
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl06_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2006/11/25/83507.html">Spring Bean 封装机制学习笔记</a>
+			</li>
+		
+			</ul>
+		
+</div>
+</td>
+		</tr>	
+		<tr>
+			<td colspan="3">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3" height="5">
+		</tr>
+		<tr>
+			<td colspan="3">
+				</td>
+		</tr>		
+	</tbody></table>	
+</div>
+<div id="AjaxHolder_PostComment_ValidationSummary1" style="color:Red;display:none;">
+
+	</div>
+
+</div>
+
+				
+</div>
+<div id="leftcontent" style="display: inline; ">
+	
+		<div id="leftcontentcontainer">
+			
+			<table id="Calendar1_entryCal" class="Cal" cellspacing="0" cellpadding="0" title="Calendar" border="0" style="border-width:1px;border-style:solid;border-collapse:collapse;">
+	<tbody><tr><td colspan="7" style="background-color:Silver;"><table class="CalTitle" cellspacing="0" border="0" style="width:100%;border-collapse:collapse;">
+		<tbody><tr><td class="CalNextPrev" style="width:15%;"><a href="javascript:__doPostBack('Calendar1$entryCal','V3013')" style="color:Black" title="Go to the previous month">&lt;</a></td><td align="center" style="width:70%;">2008年5月</td><td class="CalNextPrev" align="right" style="width:15%;"><a href="javascript:__doPostBack('Calendar1$entryCal','V3074')" style="color:Black" title="Go to the next month">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center" style="width:14%;">27</td><td class="CalOtherMonthDay" align="center" style="width:14%;">28</td><td class="CalOtherMonthDay" align="center" style="width:14%;">29</td><td class="CalOtherMonthDay" align="center" style="width:14%;">30</td><td align="center" style="width:14%;">1</td><td align="center" style="width:14%;">2</td><td class="CalWeekendDay" align="center" style="width:14%;">3</td></tr><tr><td class="CalWeekendDay" align="center" style="width:14%;">4</td><td align="center" style="width:14%;">5</td><td align="center" style="width:14%;">6</td><td align="center" style="width:14%;">7</td><td align="center" style="width:14%;">8</td><td align="center" style="width:14%;">9</td><td class="CalWeekendDay" align="center" style="width:14%;">10</td></tr><tr><td class="CalWeekendDay" align="center" style="width:14%;">11</td><td align="center" style="width:14%;">12</td><td align="center" style="width:14%;">13</td><td align="center" style="width:14%;">14</td><td align="center" style="width:14%;">15</td><td align="center" style="width:14%;">16</td><td class="CalWeekendDay" align="center" style="width:14%;">17</td></tr><tr><td class="CalWeekendDay" align="center" style="width:14%;">18</td><td align="center" style="width:14%;">19</td><td align="center" style="width:14%;">20</td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/pdw2009/archive/2008/05/21.html"><u>21</u></a></td><td align="center" style="width:14%;">22</td><td align="center" style="width:14%;">23</td><td class="CalWeekendDay" align="center" style="width:14%;">24</td></tr><tr><td class="CalWeekendDay" align="center" style="width:14%;"><a href="http://www.blogjava.net/pdw2009/archive/2008/05/25.html"><u>25</u></a></td><td align="center" style="width:14%;">26</td><td align="center" style="width:14%;">27</td><td align="center" style="width:14%;">28</td><td align="center" style="width:14%;">29</td><td align="center" style="width:14%;">30</td><td class="CalWeekendDay" align="center" style="width:14%;">31</td></tr><tr><td class="CalOtherMonthDay" align="center" style="width:14%;">1</td><td class="CalOtherMonthDay" align="center" style="width:14%;">2</td><td class="CalOtherMonthDay" align="center" style="width:14%;">3</td><td class="CalOtherMonthDay" align="center" style="width:14%;">4</td><td class="CalOtherMonthDay" align="center" style="width:14%;">5</td><td class="CalOtherMonthDay" align="center" style="width:14%;">6</td><td class="CalOtherMonthDay" align="center" style="width:14%;">7</td></tr>
+</tbody></table>
+<br>
+			
+<h3>常用链接</h3>
+<ul>
+		<li><a id="SingleColumn1_ctl00_repeaterLinks_ctl01_lnkLinkItem" href="http://www.blogjava.net/pdw2009/MyPosts.html">我的随笔</a></li>
+	
+		<li><a id="SingleColumn1_ctl00_repeaterLinks_ctl02_lnkLinkItem" href="http://www.blogjava.net/pdw2009/MyComments.html">我的评论</a></li>
+	
+		<li><a id="SingleColumn1_ctl00_repeaterLinks_ctl03_lnkLinkItem" href="http://www.blogjava.net/pdw2009/OtherPosts.html">我的参与</a></li>
+	
+		<li><a id="SingleColumn1_ctl00_repeaterLinks_ctl04_lnkLinkItem" href="http://www.blogjava.net/pdw2009/RecentComments.html">最新评论</a></li>
+	</ul>
+<h3>留言簿<span style="font-size:11px;font-weight:normal;">(27)</span></h3>
+<ul>
+	<li>
+		<a id="SingleColumn1_ctl01_lnkMessages" href="http://www.blogjava.net/pdw2009/Contact.aspx?id=1">给我留言</a>
+	</li><li>
+		<a id="SingleColumn1_ctl01_lnkPublicMsgView" href="http://www.blogjava.net/pdw2009/default.aspx?opt=msg">查看公开留言</a>
+	</li><li>
+		<a id="SingleColumn1_ctl01_lnkPrivateMsgView" href="http://www.blogjava.net/pdw2009/admin/MyMessages.aspx">查看私人留言</a>
+	</li>
+</ul>
+
+<!--done-->
+
+		<h1 class="catListTitle">随笔分类<span style="font-size:11px;font-weight:normal">(220)</span></h1>
+		
+				<ul class="catList">
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl01_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/36612.html">Android(5)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl01_RssLink" title="Subscribe to Android(5)" class="listitem" href="http://www.blogjava.net/pdw2009/category/36612.html/rss"><img title="Subscribe to Android(5)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl02_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/30867.html">BI(4)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl02_RssLink" title="Subscribe to BI(4)" class="listitem" href="http://www.blogjava.net/pdw2009/category/30867.html/rss"><img title="Subscribe to BI(4)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl03_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/9731.html">delphi(2)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl03_RssLink" title="Subscribe to delphi(2)" class="listitem" href="http://www.blogjava.net/pdw2009/category/9731.html/rss"><img title="Subscribe to delphi(2)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl04_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/14731.html">drools(1)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl04_RssLink" title="Subscribe to drools(1)" class="listitem" href="http://www.blogjava.net/pdw2009/category/14731.html/rss"><img title="Subscribe to drools(1)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl05_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/13411.html">dwr(9)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl05_RssLink" title="Subscribe to dwr(9)" class="listitem" href="http://www.blogjava.net/pdw2009/category/13411.html/rss"><img title="Subscribe to dwr(9)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl06_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/14799.html">ibatis/hibernate/持久层技术(7)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl06_RssLink" title="Subscribe to ibatis/hibernate/持久层技术(7)" class="listitem" href="http://www.blogjava.net/pdw2009/category/14799.html/rss"><img title="Subscribe to ibatis/hibernate/持久层技术(7)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl07_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/9724.html">j2ee(35)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl07_RssLink" title="Subscribe to j2ee(35)" class="listitem" href="http://www.blogjava.net/pdw2009/category/9724.html/rss"><img title="Subscribe to j2ee(35)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl08_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/7807.html">javascirpt(11)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl08_RssLink" title="Subscribe to javascirpt(11)" class="listitem" href="http://www.blogjava.net/pdw2009/category/7807.html/rss"><img title="Subscribe to javascirpt(11)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl09_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/14802.html">jdk(18)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl09_RssLink" title="Subscribe to jdk(18)" class="listitem" href="http://www.blogjava.net/pdw2009/category/14802.html/rss"><img title="Subscribe to jdk(18)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl10_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/15262.html">linux/unix应用(16)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl10_RssLink" title="Subscribe to linux/unix应用(16)" class="listitem" href="http://www.blogjava.net/pdw2009/category/15262.html/rss"><img title="Subscribe to linux/unix应用(16)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl11_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/39678.html">mysql(1)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl11_RssLink" title="Subscribe to mysql(1)" class="listitem" href="http://www.blogjava.net/pdw2009/category/39678.html/rss"><img title="Subscribe to mysql(1)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl12_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/12603.html">Patterns(14)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl12_RssLink" title="Subscribe to Patterns(14)" class="listitem" href="http://www.blogjava.net/pdw2009/category/12603.html/rss"><img title="Subscribe to Patterns(14)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl13_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/9420.html">pl/sql(34)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl13_RssLink" title="Subscribe to pl/sql(34)" class="listitem" href="http://www.blogjava.net/pdw2009/category/9420.html/rss"><img title="Subscribe to pl/sql(34)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl14_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/15523.html">proxool(1)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl14_RssLink" title="Subscribe to proxool(1)" class="listitem" href="http://www.blogjava.net/pdw2009/category/15523.html/rss"><img title="Subscribe to proxool(1)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl15_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/18294.html">QA(1)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl15_RssLink" title="Subscribe to QA(1)" class="listitem" href="http://www.blogjava.net/pdw2009/category/18294.html/rss"><img title="Subscribe to QA(1)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl16_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/13199.html">quartz(4)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl16_RssLink" title="Subscribe to quartz(4)" class="listitem" href="http://www.blogjava.net/pdw2009/category/13199.html/rss"><img title="Subscribe to quartz(4)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl17_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/17723.html">spring(7)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl17_RssLink" title="Subscribe to spring(7)" class="listitem" href="http://www.blogjava.net/pdw2009/category/17723.html/rss"><img title="Subscribe to spring(7)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl18_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/13870.html">tuxedo技术(2)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl18_RssLink" title="Subscribe to tuxedo技术(2)" class="listitem" href="http://www.blogjava.net/pdw2009/category/13870.html/rss"><img title="Subscribe to tuxedo技术(2)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl19_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/25919.html">unix/windows  C 程序设计(5)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl19_RssLink" title="Subscribe to unix/windows  C 程序设计(5)" class="listitem" href="http://www.blogjava.net/pdw2009/category/25919.html/rss"><img title="Subscribe to unix/windows  C 程序设计(5)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl20_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/13668.html">web-demo(8)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl20_RssLink" title="Subscribe to web-demo(8)" class="listitem" href="http://www.blogjava.net/pdw2009/category/13668.html/rss"><img title="Subscribe to web-demo(8)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl21_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/7806.html">webservices(6)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl21_RssLink" title="Subscribe to webservices(6)" class="listitem" href="http://www.blogjava.net/pdw2009/category/7806.html/rss"><img title="Subscribe to webservices(6)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl22_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/12604.html">workflow(16)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl22_RssLink" title="Subscribe to workflow(16)" class="listitem" href="http://www.blogjava.net/pdw2009/category/12604.html/rss"><img title="Subscribe to workflow(16)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl23_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/26493.html">XML/json相关技术(6)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl23_RssLink" title="Subscribe to XML/json相关技术(6)" class="listitem" href="http://www.blogjava.net/pdw2009/category/26493.html/rss"><img title="Subscribe to XML/json相关技术(6)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl24_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/27001.html">报表(3)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl24_RssLink" title="Subscribe to 报表(3)" class="listitem" href="http://www.blogjava.net/pdw2009/category/27001.html/rss"><img title="Subscribe to 报表(3)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl25_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/18303.html">软件工程(4)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl25_RssLink" title="Subscribe to 软件工程(4)" class="listitem" href="http://www.blogjava.net/pdw2009/category/18303.html/rss"><img title="Subscribe to 软件工程(4)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				</ul>
+			
+	
+		<h1 class="catListTitle">随笔档案<span style="font-size:11px;font-weight:normal">(222)</span></h1>
+		
+				<ul class="catList">
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl01_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2010/04.html">2010年4月 (1)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl02_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2009/05.html">2009年5月 (1)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl03_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2009/04.html">2009年4月 (5)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl04_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2009/03.html">2009年3月 (1)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl05_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2008/11.html">2008年11月 (1)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl06_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2008/10.html">2008年10月 (1)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl07_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2008/09.html">2008年9月 (1)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl08_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2008/08.html">2008年8月 (1)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl09_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2008/07.html">2008年7月 (4)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl10_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2008/06.html">2008年6月 (10)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl11_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2008/05.html">2008年5月 (3)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl12_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2008/04.html">2008年4月 (4)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl13_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2008/03.html">2008年3月 (5)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl14_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2008/02.html">2008年2月 (5)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl15_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2008/01.html">2008年1月 (1)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl16_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2007/12.html">2007年12月 (6)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl17_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2007/11.html">2007年11月 (4)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl18_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2007/10.html">2007年10月 (19)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl19_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2007/09.html">2007年9月 (11)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl20_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2007/08.html">2007年8月 (3)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl21_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2007/07.html">2007年7月 (2)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl22_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2007/06.html">2007年6月 (3)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl23_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2007/05.html">2007年5月 (1)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl24_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2007/04.html">2007年4月 (12)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl25_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2007/03.html">2007年3月 (6)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl26_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2007/02.html">2007年2月 (3)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl27_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2007/01.html">2007年1月 (5)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl28_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2006/12.html">2006年12月 (10)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl29_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2006/11.html">2006年11月 (8)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl30_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2006/10.html">2006年10月 (11)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl31_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2006/09.html">2006年9月 (23)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl32_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2006/08.html">2006年8月 (3)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl33_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2006/07.html">2006年7月 (9)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl34_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2006/06.html">2006年6月 (8)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl35_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2006/05.html">2006年5月 (4)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl36_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2006/04.html">2006年4月 (22)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl37_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2006/03.html">2006年3月 (4)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl38_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archive/2006/02.html">2006年2月 (1)</a></li>
+			
+				</ul>
+			
+	
+		<h1 class="catListTitle">文章分类<span style="font-size:11px;font-weight:normal">(4)</span></h1>
+		
+				<ul class="catList">
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl02_LinkList_ctl01_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/7729.html">javascript(3)</a><a id="SingleColumn1_Categories_CatList_ctl02_LinkList_ctl01_RssLink" title="Subscribe to javascript(3)" class="listitem" href="http://www.blogjava.net/pdw2009/category/7729.html/rss"><img title="Subscribe to javascript(3)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl02_LinkList_ctl02_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/28600.html">mysql(1)</a><a id="SingleColumn1_Categories_CatList_ctl02_LinkList_ctl02_RssLink" title="Subscribe to mysql(1)" class="listitem" href="http://www.blogjava.net/pdw2009/category/28600.html/rss"><img title="Subscribe to mysql(1)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl02_LinkList_ctl03_Link" class="listitem" href="http://www.blogjava.net/pdw2009/category/9421.html">pl/sql</a><a id="SingleColumn1_Categories_CatList_ctl02_LinkList_ctl03_RssLink" title="Subscribe to pl/sql" class="listitem" href="http://www.blogjava.net/pdw2009/category/9421.html/rss"><img title="Subscribe to pl/sql" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				</ul>
+			
+	
+		<h1 class="catListTitle">文章档案<span style="font-size:11px;font-weight:normal">(7)</span></h1>
+		
+				<ul class="catList">
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl03_LinkList_ctl01_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archives/2006/03.html">2006年3月 (4)</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl03_LinkList_ctl02_Link" class="listitem" href="http://www.blogjava.net/pdw2009/archives/2006/02.html">2006年2月 (3)</a></li>
+			
+				</ul>
+			
+	
+		<h1 class="catListTitle">相册</h1>
+		
+				<ul class="catList">
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl04_LinkList_ctl01_Link" class="listitem" href="http://www.blogjava.net/pdw2009/gallery/31454.html">牛仔裤</a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl04_LinkList_ctl02_Link" class="listitem" href="http://www.blogjava.net/pdw2009/gallery/30972.html">猫</a></li>
+			
+				</ul>
+			
+	
+		<h1 class="catListTitle">收藏夹<span style="font-size:11px;font-weight:normal">(4)</span></h1>
+		
+				<ul class="catList">
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl05_LinkList_ctl01_Link" class="listitem" href="http://www.blogjava.net/pdw2009/favorite/21726.html">java(4)</a><a id="SingleColumn1_Categories_CatList_ctl05_LinkList_ctl01_RssLink" title="Subscribe to java(4)" class="listitem" href="http://www.blogjava.net/pdw2009/favorite/21726.html/rss"><img title="Subscribe to java(4)" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				<li class="catListItem"> <a id="SingleColumn1_Categories_CatList_ctl05_LinkList_ctl02_Link" class="listitem" href="http://www.blogjava.net/pdw2009/favorite/21727.html">oracle</a><a id="SingleColumn1_Categories_CatList_ctl05_LinkList_ctl02_RssLink" title="Subscribe to oracle" class="listitem" href="http://www.blogjava.net/pdw2009/favorite/21727.html/rss"><img title="Subscribe to oracle" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml.gif" style="border-width:0px;"></a></li>
+			
+				</ul>
+			
+	
+
+
+<h3>最新评论
+	<a id="SingleColumn1__2e31234_RSSHyperlink1" href="http://www.blogjava.net/pdw2009/CommentsRSS.aspx"><img src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/xml(1).gif" style="border-width:0px;"></a></h3>
+<div class="RecentComment">
+	
+			<ul>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__2e31234_CommentList_ctl01_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2010/08/14/149382.html#328847">1.&nbsp;re: BeanFactory与Application的区别</a>
+			</li>
+			<li style="word-break:break-all">
+				@qq
+<br>那是写吗？是著书立说吗？那叫抄书
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--ddfdfsafdfsda</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__2e31234_CommentList_ctl02_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2010/08/14/149382.html#328846">2.&nbsp;re: BeanFactory与Application的区别</a>
+			</li>
+			<li style="word-break:break-all">
+				@qq
+<br>没语了，典型的托
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--ddfdfsafdfsda</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__2e31234_CommentList_ctl03_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2010/07/21/265193.html#326759">3.&nbsp;re: Android应用程序四大组件</a>
+			</li>
+			<li style="word-break:break-all">
+				adf
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--asdf</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__2e31234_CommentList_ctl04_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2010/06/25/210341.html#324477">4.&nbsp;re: oracle 存储过程事务使用断点回滚[未登录]</a>
+			</li>
+			<li style="word-break:break-all">
+				update 怎么就不能设置 保存点呢？
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--AK</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__2e31234_CommentList_ctl05_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2010/05/19/149382.html#321388">5.&nbsp;re: BeanFactory与Application的区别[未登录]</a>
+			</li>
+			<li style="word-break:break-all">
+				请楼主不要太刁，不要说什么  垃圾中的垃圾
+<br>国内很多人是看，李刚的书慢慢成长起来的，那个时候你在做什么？
+<br>
+<br>你自己去写一本试一试
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--qq</li>
+		
+			</ul>
+		
+</div>
+
+<h3>阅读排行榜</h3>
+<div class="RecentComment">
+	
+			<ul style="word-break:break-all">
+		
+			<li>
+				<a id="SingleColumn1__2a81ff7_TopList_ctl01_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2007/04/07/109044.html">1.&nbsp;ubuntu输入法安装(29053)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2a81ff7_TopList_ctl02_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2007/04/06/108935.html">2.&nbsp;struts2表单标签(转)(10718)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2a81ff7_TopList_ctl03_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2007/01/26/96143.html">3.&nbsp;使用dTree生成部门目录树(6002)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2a81ff7_TopList_ctl04_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2007/01/04/91844.html">4.&nbsp;Ibatis学习随笔(5918)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2a81ff7_TopList_ctl05_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2007/07/23/131857.html">5.&nbsp;dwr2与struts2整合(4327)</a>
+			</li>
+		
+			</ul>
+		
+</div>
+
+<h3>评论排行榜</h3>
+<div class="RecentComment">
+	
+			<ul style="word-break:break-all">
+		
+			<li>
+				<a id="SingleColumn1__1362417_TopList_ctl01_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2007/04/07/109044.html">1.&nbsp;ubuntu输入法安装(11)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__1362417_TopList_ctl02_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2006/05/10/45461.html">2.&nbsp;一篇WebLogic server8.1 JMS入门的不错的文章(转贴)(9)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__1362417_TopList_ctl03_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2008/06/19/209125.html">3.&nbsp;Html Parse 最佳实践(8)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__1362417_TopList_ctl04_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2008/04/17/193728.html">4.&nbsp;java开源的OLAP引擎--mondrian(6)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__1362417_TopList_ctl05_Hyperlink1" href="http://www.blogjava.net/pdw2009/archive/2007/10/08/151180.html">5.&nbsp;javax.mail使用例子(6)</a>
+			</li>
+		
+			</ul>
+		
+</div>
+</div>
+	
+</div>
+
+<!--done-->
+<div class="footer">
+	Powered by: <a href="http://www.cnblogs.com/">博客园</a>	模板提供：<a href="http://blog.hjenglish.com/">沪江博客</a>
+	Copyright ©2010 有猫相伴的日子
+</div>
+
+
+本站不再更新，欢迎光临 
+<a href="http://php.11519.net/5jblog">java开发技术网</a>
+    
+<script type="text/javascript">
+//<![CDATA[
+var Page_ValidationSummaries =  new Array(document.getElementById("AjaxHolder_PostComment_ValidationSummary1"));
+var Page_Validators =  new Array(document.getElementById("AjaxHolder_PostComment_RequiredFieldValidator1"), document.getElementById("AjaxHolder_PostComment_RequiredFieldValidator2"), document.getElementById("AjaxHolder_PostComment_Requiredfieldvalidator4"), document.getElementById("AjaxHolder_PostComment_RequiredFieldValidator3"));
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+var AjaxHolder_PostComment_RequiredFieldValidator1 = document.all ? document.all["AjaxHolder_PostComment_RequiredFieldValidator1"] : document.getElementById("AjaxHolder_PostComment_RequiredFieldValidator1");
+AjaxHolder_PostComment_RequiredFieldValidator1.controltovalidate = "AjaxHolder_PostComment_tbTitle";
+AjaxHolder_PostComment_RequiredFieldValidator1.errormessage = "请输入标题";
+AjaxHolder_PostComment_RequiredFieldValidator1.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
+AjaxHolder_PostComment_RequiredFieldValidator1.initialvalue = "";
+var AjaxHolder_PostComment_RequiredFieldValidator2 = document.all ? document.all["AjaxHolder_PostComment_RequiredFieldValidator2"] : document.getElementById("AjaxHolder_PostComment_RequiredFieldValidator2");
+AjaxHolder_PostComment_RequiredFieldValidator2.controltovalidate = "AjaxHolder_PostComment_tbName";
+AjaxHolder_PostComment_RequiredFieldValidator2.errormessage = "请输入你的姓名";
+AjaxHolder_PostComment_RequiredFieldValidator2.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
+AjaxHolder_PostComment_RequiredFieldValidator2.initialvalue = "";
+var AjaxHolder_PostComment_Requiredfieldvalidator4 = document.all ? document.all["AjaxHolder_PostComment_Requiredfieldvalidator4"] : document.getElementById("AjaxHolder_PostComment_Requiredfieldvalidator4");
+AjaxHolder_PostComment_Requiredfieldvalidator4.controltovalidate = "AjaxHolder_PostComment_CodeNumberTextBox";
+AjaxHolder_PostComment_Requiredfieldvalidator4.errormessage = "请输入验证码";
+AjaxHolder_PostComment_Requiredfieldvalidator4.display = "Dynamic";
+AjaxHolder_PostComment_Requiredfieldvalidator4.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
+AjaxHolder_PostComment_Requiredfieldvalidator4.initialvalue = "";
+var AjaxHolder_PostComment_RequiredFieldValidator3 = document.all ? document.all["AjaxHolder_PostComment_RequiredFieldValidator3"] : document.getElementById("AjaxHolder_PostComment_RequiredFieldValidator3");
+AjaxHolder_PostComment_RequiredFieldValidator3.controltovalidate = "AjaxHolder_PostComment_tbComment";
+AjaxHolder_PostComment_RequiredFieldValidator3.errormessage = "请输入评论内容";
+AjaxHolder_PostComment_RequiredFieldValidator3.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
+AjaxHolder_PostComment_RequiredFieldValidator3.initialvalue = "";
+var AjaxHolder_PostComment_ValidationSummary1 = document.all ? document.all["AjaxHolder_PostComment_ValidationSummary1"] : document.getElementById("AjaxHolder_PostComment_ValidationSummary1");
+AjaxHolder_PostComment_ValidationSummary1.showmessagebox = "True";
+AjaxHolder_PostComment_ValidationSummary1.showsummary = "False";
+//]]>
+</script>
+
+
+<script type="text/javascript">
+//<![CDATA[
+
+var Page_ValidationActive = false;
+if (typeof(ValidatorOnLoad) == "function") {
+    ValidatorOnLoad();
+}
+
+function ValidatorOnSubmit() {
+    if (Page_ValidationActive) {
+        return ValidatorCommonOnSubmit();
+    }
+    else {
+        return true;
+    }
+}
+        
+document.getElementById('AjaxHolder_PostComment_ValidationSummary1').dispose = function() {
+    Array.remove(Page_ValidationSummaries, document.getElementById('AjaxHolder_PostComment_ValidationSummary1'));
+}
+Sys.Application.initialize();
+
+document.getElementById('AjaxHolder_PostComment_RequiredFieldValidator1').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('AjaxHolder_PostComment_RequiredFieldValidator1'));
+}
+
+document.getElementById('AjaxHolder_PostComment_RequiredFieldValidator2').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('AjaxHolder_PostComment_RequiredFieldValidator2'));
+}
+
+document.getElementById('AjaxHolder_PostComment_Requiredfieldvalidator4').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('AjaxHolder_PostComment_Requiredfieldvalidator4'));
+}
+
+document.getElementById('AjaxHolder_PostComment_RequiredFieldValidator3').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('AjaxHolder_PostComment_RequiredFieldValidator3'));
+}
+//]]>
+</script>
+</form>
+    <script type="text/javascript" src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/ShowHidden.js"></script>
+	<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script><script src="./spring+atomikos+JTA完整例子 - 努力创造未来！ - BlogJava_files/ga.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	try {
+	var pageTracker = _gat._getTracker("UA-476124-3");
+	pageTracker._trackPageview();
+	} catch(err) {}</script>
+
+
+</body></html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0038)http://comedsh.javaeye.com/blog/524769 -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr" class=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>JTA/XA: Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站</title>
+    <meta name="description" content="1. xaDataSource 配置如下. (DB2)  &lt;bean id=&quot;xaDataSource&quot; class=&quot;com.atomikos.jdbc.AtomikosDataSourceBean&quot;   init-method=&quot;init&quot; destroy-method=&quot;close&quot;&gt;          ...">
+    <meta name="keywords" content="java jta xa  JTA/XA: Atomikos + Spring + Hibernate 配置 注意事项">
+    <link rel="shortcut icon" href="http://comedsh.javaeye.com/images/favicon.ico" type="image/x-icon">
+    <link rel="search" type="application/opensearchdescription+xml" href="http://comedsh.javaeye.com/open_search.xml" title="JavaEye">
+    <link href="http://comedsh.javaeye.com/rss" rel="alternate" title="comedsh" type="application/rss+xml">
+    <link href="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/blog.css" media="screen" rel="stylesheet" type="text/css">
+<link href="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/blue.css" media="screen" rel="stylesheet" type="text/css">
+    <script src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/application.js" type="text/javascript"></script>
+      
+  <link href="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/SyntaxHighlighter.css" media="screen" rel="stylesheet" type="text/css">
+  <script src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/shCoreCommon.js" type="text/javascript"></script>
+<script src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/hotkey.js" type="text/javascript"></script>
+  <style>
+    div#main {background-color: transparent; border: 0; padding: 0px; width: 740px;}
+  </style>
+  <link href="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/ui.css" media="screen" rel="stylesheet" type="text/css">
+  <script src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/compress.js" type="text/javascript"></script>
+  <style type="text/css">.dp-xml .cdata { color: #ff1493; }.dp-xml .tag, .dp-xml .tag-name { color: #069; font-weight: bold; }.dp-xml .attribute { color: red; }.dp-xml .attribute-value { color: blue; }</style><style type="text/css">.dp-j .annotation { color: #646464; }.dp-j .number { color: #C00000; }</style><style type="text/css">.dp-xml .cdata { color: #ff1493; }.dp-xml .tag, .dp-xml .tag-name { color: #069; font-weight: bold; }.dp-xml .attribute { color: red; }.dp-xml .attribute-value { color: blue; }</style><style type="text/css">.dp-default .number { color: #C00000; }</style><link type="text/css" rel="stylesheet" charset="UTF-8" href="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/translateelement.css"><script type="text/javascript" charset="UTF-8" src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/main_zh-CN.js"></script></head>
+  <body>
+    <div id="header">
+      <div id="blog_site_nav">
+  <a href="http://www.javaeye.com/" class="homepage">首页</a>
+  <a href="http://www.javaeye.com/news">新闻</a>
+  <a href="http://www.javaeye.com/forums">论坛</a>
+  <a href="http://www.javaeye.com/ask">问答</a>
+  <a href="http://www.javaeye.com/blogs">博客</a>
+  <a href="http://www.javaeye.com/job">招聘</a>
+  <a href="http://comedsh.javaeye.com/blog/524769#" onclick="return false;" id="msna"><u>更多</u> <small>▼</small></a>
+  <div class="quick_menu" style="display:none;">
+    <a href="http://www.javaeye.com/wiki">专栏</a>
+    <!--<a href="http://www.javaeye.com/articles">文摘</a>//-->
+    <a href="http://www.javaeye.com/groups">圈子</a>
+    <a href="http://www.javaeye.com/search">搜索</a>
+  </div>
+</div>
+      <div id="user_nav">
+      <a href="http://comedsh.javaeye.com/login" class="welcome" title="登录">您还未登录 !</a>
+    <a href="http://www.javaeye.com/all" style="color:red">我的应用</a>
+    <a href="http://comedsh.javaeye.com/login">登录</a>
+    <a href="http://comedsh.javaeye.com/signup" class="nobg">注册</a>
+  </div>
+    </div>
+
+    <div id="page">
+      <div id="branding" class="clearfix">
+        <div id="blog_name"><h1><a href="http://comedsh.javaeye.com/">comedsh</a></h1></div>
+        <div id="blog_preview">
+          
+        </div>
+        <div id="blog_domain">永久域名 <a href="http://comedsh.javaeye.com/">http://comedsh.javaeye.com</a></div>
+      </div>
+      
+      
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+          
+
+
+<div class="blog_main"> 
+  <div class="blog_nav">
+    
+    <div class="pre_next">
+      <a href="http://comedsh.javaeye.com/blog/526121" class="next" title="Hibernate: 复合主键 (Composite Key) 如何兼容 NULL值">Hibernate: 复合主键 (Composite Key) 如 ...</a>
+      |
+      <a href="http://comedsh.javaeye.com/blog/511951" class="pre" title="RunTime - Funtional Abilities">RunTime - Funtional Abilities</a>
+    </div>
+  </div>
+  <div class="blog_title">
+    <div class="date"><span class="year">2009</span><span class="sep_year">-</span><span class="month">11</span><span class="sep_month">-</span><span class="day">24</span></div>
+    <h3><a href="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站.htm">JTA/XA: Atomikos + Spring + Hibernate 配置 注意事项</a></h3>
+                    关键字: java jta xa
+  </div>
+
+  <div class="blog_content">
+    <h2><span>1. xaDataSource <span>配置如下</span>. (DB2)</span></h2>
+<div class="dp-highlighter"><div class="bar"><div class="tools">Xml代码 <embed src="/javascripts/syntaxhighlighter/clipboard_new.swf" width="14" height="15" flashvars="clipboard=%3Cbean%20id%3D%22xaDataSource%22%20class%3D%22com.atomikos.jdbc.AtomikosDataSourceBean%22%20%0Ainit-method%3D%22init%22%20destroy-method%3D%22close%22%3E%0A%20%20%20%20%20%20%20%20%3C!--%20Set%20unique%20name%20for%20this%20datasource%20--%3E%09%0A%20%20%20%20%20%20%20%20%3Cproperty%20name%3D%22uniqueResourceName%22%3E%3Cvalue%3Edb2%3C%2Fvalue%3E%3C%2Fproperty%3E%0A%20%20%20%20%20%20%20%20%3C!--%20Set%20XADatasource%20class%20name--%3E%0A%20%20%20%20%20%20%20%20%3Cproperty%20name%3D%22xaDataSourceClassName%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cvalue%3Ecom.ibm.db2.jcc.DB2XADataSource%3C%2Fvalue%3E%0A%20%20%20%20%20%20%20%20%3C%2Fproperty%3E%0A%20%20%20%20%20%20%20%20%3Cproperty%20name%3D%22xaProperties%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cprops%3E%0A%09%20%20%20%20%20%20%20%20%3C!--%20Server%20name%20of%20DB2%20server%20--%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cprop%20key%3D%22serverName%22%3Elocalhost%3C%2Fprop%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C!--%20Port%20number%20of%20DB2%20server%20--%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cprop%20key%3D%22portNumber%22%3E50000%3C%2Fprop%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cprop%20key%3D%22databaseName%22%3EmyDb%3C%2Fprop%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cprop%20key%3D%22user%22%3E%3C%2Fprop%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cprop%20key%3D%22password%22%3E%3C%2Fprop%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cprop%20key%3D%22driverType%22%3E2%3C%2Fprop%3E%0A%3C!--%20For%20DB2%20data%20source%2Cthe%20dufault%20isolation%20level%20is%20TRANSACTION_READ_COMMITTED%2C%20--%3E%0A%3C!--%20so%20we%20can%20comment%20out%20the%20line%20below%20--%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C!--%20prop%20key%3D%22defaultIsolationLevel%22%3E2%3C%2Fprop--%3E%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fprops%3E%09%0A%20%20%20%20%20%20%20%20%20%3C%2Fproperty%3E%0A%20%20%20%20%20%20%20%20%20%3C!--%20set%20properties%20for%20datasource%20connection%20pool%20--%3E%0A%20%20%20%20%20%20%20%20%20%3Cproperty%20name%3D%22maxPoolSize%22%3E%3Cvalue%3E10%3C%2Fvalue%3E%3C%2Fproperty%3E%0A%20%20%20%20%20%20%20%20%20%3Cproperty%20name%3D%22minPoolSize%22%3E%3Cvalue%3E2%3C%2Fvalue%3E%3C%2Fproperty%3E%0A%20%20%20%20%20%20%20%20%20%3Cproperty%20name%3D%22loginTimeout%22%3E%3Cvalue%3E30%3C%2Fvalue%3E%3C%2Fproperty%3E%0A%20%20%20%20%20%20%20%20%20%3Cproperty%20name%3D%22reapTimeout%22%3E%3Cvalue%3E20000%3C%2Fvalue%3E%3C%2Fproperty%3E%0A%20%20%20%20%20%20%20%20%20%3C!--%20set%20a%20SQL%20for%20testing%20connection%20--%3E%0A%20%20%20%20%20%20%20%20%20%3Cproperty%20name%3D%22testQuery%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cvalue%3Eselect%201%20from%20MyDb.table%3C%2Fvalue%3E%0A%20%20%20%20%20%20%20%20%20%3C%2Fproperty%3E%20%20%20%20%20%20%20%20%0A%3C%2Fbean%3E%0A" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></div></div><ol start="1" class="dp-xml"><li><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span>&nbsp;</span><span class="attribute">id</span><span>=</span><span class="attribute-value">"xaDataSource"</span><span>&nbsp;</span><span class="attribute">class</span><span>=</span><span class="attribute-value">"com.atomikos.jdbc.AtomikosDataSourceBean"</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li><span><span class="attribute">init-method</span><span>=</span><span class="attribute-value">"init"</span><span>&nbsp;</span><span class="attribute">destroy-method</span><span>=</span><span class="attribute-value">"close"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments">&lt;!--&nbsp;Set&nbsp;unique&nbsp;name&nbsp;for&nbsp;this&nbsp;datasource&nbsp;--&gt;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"uniqueResourceName"</span><span class="tag">&gt;</span><span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>db2</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments">&lt;!--&nbsp;Set&nbsp;XADatasource&nbsp;class&nbsp;name--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"xaDataSourceClassName"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>com.ibm.db2.jcc.DB2XADataSource</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"xaProperties"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">props</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments">&lt;!--&nbsp;Server&nbsp;name&nbsp;of&nbsp;DB2&nbsp;server&nbsp;--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">prop</span><span>&nbsp;</span><span class="attribute">key</span><span>=</span><span class="attribute-value">"serverName"</span><span class="tag">&gt;</span><span>localhost</span><span class="tag">&lt;/</span><span class="tag-name">prop</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments">&lt;!--&nbsp;Port&nbsp;number&nbsp;of&nbsp;DB2&nbsp;server&nbsp;--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">prop</span><span>&nbsp;</span><span class="attribute">key</span><span>=</span><span class="attribute-value">"portNumber"</span><span class="tag">&gt;</span><span>50000</span><span class="tag">&lt;/</span><span class="tag-name">prop</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">prop</span><span>&nbsp;</span><span class="attribute">key</span><span>=</span><span class="attribute-value">"databaseName"</span><span class="tag">&gt;</span><span>myDb</span><span class="tag">&lt;/</span><span class="tag-name">prop</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">prop</span><span>&nbsp;</span><span class="attribute">key</span><span>=</span><span class="attribute-value">"user"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">prop</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">prop</span><span>&nbsp;</span><span class="attribute">key</span><span>=</span><span class="attribute-value">"password"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">prop</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">prop</span><span>&nbsp;</span><span class="attribute">key</span><span>=</span><span class="attribute-value">"driverType"</span><span class="tag">&gt;</span><span>2</span><span class="tag">&lt;/</span><span class="tag-name">prop</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span><span class="comments">&lt;!--&nbsp;For&nbsp;DB2&nbsp;data&nbsp;source,the&nbsp;dufault&nbsp;isolation&nbsp;level&nbsp;is&nbsp;TRANSACTION_READ_COMMITTED,&nbsp;--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span><span class="comments">&lt;!--&nbsp;so&nbsp;we&nbsp;can&nbsp;comment&nbsp;out&nbsp;the&nbsp;line&nbsp;below&nbsp;--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments">&lt;!--&nbsp;prop&nbsp;key="defaultIsolationLevel"&gt;2&lt;/prop--&gt;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">props</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments">&lt;!--&nbsp;set&nbsp;properties&nbsp;for&nbsp;datasource&nbsp;connection&nbsp;pool&nbsp;--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"maxPoolSize"</span><span class="tag">&gt;</span><span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>10</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"minPoolSize"</span><span class="tag">&gt;</span><span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>2</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"loginTimeout"</span><span class="tag">&gt;</span><span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>30</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"reapTimeout"</span><span class="tag">&gt;</span><span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>20000</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments">&lt;!--&nbsp;set&nbsp;a&nbsp;SQL&nbsp;for&nbsp;testing&nbsp;connection&nbsp;--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"testQuery"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>select&nbsp;1&nbsp;from&nbsp;MyDb.table</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre name="code" class="xml" style="display: none; ">&lt;bean id="xaDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" 
+init-method="init" destroy-method="close"&gt;
+        &lt;!-- Set unique name for this datasource --&gt;	
+        &lt;property name="uniqueResourceName"&gt;&lt;value&gt;db2&lt;/value&gt;&lt;/property&gt;
+        &lt;!-- Set XADatasource class name--&gt;
+        &lt;property name="xaDataSourceClassName"&gt;
+                 &lt;value&gt;com.ibm.db2.jcc.DB2XADataSource&lt;/value&gt;
+        &lt;/property&gt;
+        &lt;property name="xaProperties"&gt;
+               &lt;props&gt;
+	        &lt;!-- Server name of DB2 server --&gt;
+                        &lt;prop key="serverName"&gt;localhost&lt;/prop&gt;
+                        &lt;!-- Port number of DB2 server --&gt;
+                        &lt;prop key="portNumber"&gt;50000&lt;/prop&gt;
+                        &lt;prop key="databaseName"&gt;myDb&lt;/prop&gt;
+                        &lt;prop key="user"&gt;&lt;/prop&gt;
+                        &lt;prop key="password"&gt;&lt;/prop&gt;
+                        &lt;prop key="driverType"&gt;2&lt;/prop&gt;
+&lt;!-- For DB2 data source,the dufault isolation level is TRANSACTION_READ_COMMITTED, --&gt;
+&lt;!-- so we can comment out the line below --&gt;
+                        &lt;!-- prop key="defaultIsolationLevel"&gt;2&lt;/prop--&gt;        
+               &lt;/props&gt;	
+         &lt;/property&gt;
+         &lt;!-- set properties for datasource connection pool --&gt;
+         &lt;property name="maxPoolSize"&gt;&lt;value&gt;10&lt;/value&gt;&lt;/property&gt;
+         &lt;property name="minPoolSize"&gt;&lt;value&gt;2&lt;/value&gt;&lt;/property&gt;
+         &lt;property name="loginTimeout"&gt;&lt;value&gt;30&lt;/value&gt;&lt;/property&gt;
+         &lt;property name="reapTimeout"&gt;&lt;value&gt;20000&lt;/value&gt;&lt;/property&gt;
+         &lt;!-- set a SQL for testing connection --&gt;
+         &lt;property name="testQuery"&gt;
+                        &lt;value&gt;select 1 from MyDb.table&lt;/value&gt;
+         &lt;/property&gt;        
+&lt;/bean&gt;
+</pre>
+<p style="padding-left: 30px;"><strong>配置xaDataSource的时候应注意设置 reapTimeout, 其他的可以用默认值.</strong></p>
+<p style="padding-left: 30px;">com.atomikos.jdbc.AtomikosDataSourceBean 继承自 com.atomikos.jdbc.AbstractDataSourceBean</p>
+<p style="padding-left: 30px;">AbstractDataSourceBean 将 reapTimeout定义如下</p>
+<div class="dp-highlighter"><div class="bar"><div class="tools">Java代码 <embed src="/javascripts/syntaxhighlighter/clipboard_new.swf" width="14" height="15" flashvars="clipboard=%2F**%0A%20*%20Sets%20the%20amount%20of%20time%20(in%20seconds)%20that%20the%20connection%20pool%20will%20allow%20a%20connection%0A%20*%20to%20be%20in%20use%2C%20before%20claiming%20it%20back.%20Optional.%20%0A%20*%20%0A%20*%20%40param%20reapTimeout%20The%20timeout%20in%20seconds.%20Zero%20means%20unlimited.%20%0A%20*%20%20%20%20Note%20that%20this%20value%20is%20only%20an%20indication%3B%20%0A%20*%20%20%20%20the%20pool%20will%20check%20regularly%20as%20indicated%20by%20the%20maintenanceInteval%20property.%0A%20*%20%20%20%20Default%20is%20300%20seconds%20(5%20minutes).%0A*%2F%0Apublic%20void%20setReapTimeout(int%20reapTimeout)%20%7B%0A%09this.reapTimeout%20%3D%20reapTimeout%3B%0A%7D" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></div></div><ol start="1" class="dp-j"><li><span><span class="comment">/**</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;*&nbsp;Sets&nbsp;the&nbsp;amount&nbsp;of&nbsp;time&nbsp;(in&nbsp;seconds)&nbsp;that&nbsp;the&nbsp;connection&nbsp;pool&nbsp;will&nbsp;allow&nbsp;a&nbsp;connection</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;*&nbsp;to&nbsp;be&nbsp;in&nbsp;use,&nbsp;before&nbsp;claiming&nbsp;it&nbsp;back.&nbsp;Optional.&nbsp;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;*&nbsp;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;*&nbsp;@param&nbsp;reapTimeout&nbsp;The&nbsp;timeout&nbsp;in&nbsp;seconds.&nbsp;Zero&nbsp;means&nbsp;unlimited.&nbsp;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;Note&nbsp;that&nbsp;this&nbsp;value&nbsp;is&nbsp;only&nbsp;an&nbsp;indication;&nbsp;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;pool&nbsp;will&nbsp;check&nbsp;regularly&nbsp;as&nbsp;indicated&nbsp;by&nbsp;the&nbsp;maintenanceInteval&nbsp;property.</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;Default&nbsp;is&nbsp;300&nbsp;seconds&nbsp;(5&nbsp;minutes).</span>&nbsp;</span></li><li><span><span class="comment">*/</span><span>&nbsp;&nbsp;</span></span></li><li><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;setReapTimeout(</span><span class="keyword">int</span><span>&nbsp;reapTimeout)&nbsp;{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">this</span><span>.reapTimeout&nbsp;=&nbsp;reapTimeout;&nbsp;&nbsp;</span></span></li><li><span>}&nbsp;&nbsp;</span></li></ol></div><pre name="code" class="java" style="display: none; ">/**
+ * Sets the amount of time (in seconds) that the connection pool will allow a connection
+ * to be in use, before claiming it back. Optional. 
+ * 
+ * @param reapTimeout The timeout in seconds. Zero means unlimited. 
+ *    Note that this value is only an indication; 
+ *    the pool will check regularly as indicated by the maintenanceInteval property.
+ *    Default is 300 seconds (5 minutes).
+*/
+public void setReapTimeout(int reapTimeout) {
+	this.reapTimeout = reapTimeout;
+}</pre>
+<p style="padding-left: 30px;">可以看到 reapTimeout 是管理 Connection 被占用的时间. </p>
+<p style="padding-left: 30px;"><em><strong>如果不设置这个值，Atomikos使用默认的5分钟，那么在处理大批量数据读取的时候，一旦超过5分钟，就会抛出类似 Resultset is close 的错误.</strong></em></p>
+<h2>2. Transaction 配置如下&nbsp;&nbsp;&nbsp;</h2>
+<div class="dp-highlighter"><div class="bar"><div class="tools">Xml代码 <embed src="/javascripts/syntaxhighlighter/clipboard_new.swf" width="14" height="15" flashvars="clipboard=%3Cbean%20id%3D%22atomikosTransactionManager%22%0A%20%20%20%20%20%20%20class%3D%22com.atomikos.icatch.jta.UserTransactionManager%22%20%0A%20%20%20%20%20%20%20init-method%3D%22init%22%20destroy-method%3D%22close%22%3E%0A%20%20%20%20%20%20%3Cproperty%20name%3D%22forceShutdown%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cvalue%3Etrue%3C%2Fvalue%3E%0A%20%20%20%20%20%20%20%3C%2Fproperty%3E%0A%3C%2Fbean%3E%0A%3C!--%20use%20com.atomikos.icatch.jta.UserTransactionImp%20as%20transaction%2C%20--%3E%0A%3C!--%20%22transactionTimeout%22%20property%20should%20be%20change%20accord%20to%20product%20environment%2C%20--%3E%0A%3C!--%20it%20defined%20in%20millisecond%20unit--%3E%20%0A%3Cbean%20id%3D%22atomikosUserTransaction%22%20class%3D%22com.atomikos.icatch.jta.UserTransactionImp%22%3E%20%0A%20%20%20%20%20%20%20%3Cproperty%20name%3D%22transactionTimeout%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cvalue%3E20000%3C%2Fvalue%3E%0A%20%20%20%20%20%20%20%3C%2Fproperty%3E%0A%3C%2Fbean%3E%20%20%20%20%20%20%20%0A%0A%3C!--%20define%20JtaTransactionManager--%3E%20%20%20%20%20%20%09%09%0A%26nbsp%3B%3Cbean%20id%3D%22interfaceTransactionManager%22%20%0A%20%20%20%20%20%20%20%20%20%20%20%20class%3D%22org.springframework.transaction.jta.JtaTransactionManager%22%3E%0A%26nbsp%3B%20%20%20%20%20%3Cproperty%20name%3D%22transactionManager%22%3E%0A%26nbsp%3B%20%20%20%20%20%20%20%20%20%20%3Cref%20bean%3D%22atomikosTransactionManager%22%20%2F%3E%0A%20%20%20%20%20%20%3C%2Fproperty%3E%0A%26nbsp%3B%20%20%20%20%20%3Cproperty%20name%3D%22userTransaction%22%3E%0A%26nbsp%3B%20%20%20%20%20%20%20%20%20%20%3Cref%20bean%3D%22atomikosUserTransaction%22%20%2F%3E%0A%26nbsp%3B%20%20%20%20%20%3C%2Fproperty%3E%0A%26nbsp%3B%3C%2Fbean%3E%26nbsp%3B%26nbsp%3B%26nbsp%3B%20%26nbsp%3B%20%20" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></div></div><ol start="1" class="dp-xml"><li><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span>&nbsp;</span><span class="attribute">id</span><span>=</span><span class="attribute-value">"atomikosTransactionManager"</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">class</span><span>=</span><span class="attribute-value">"com.atomikos.icatch.jta.UserTransactionManager"</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">init-method</span><span>=</span><span class="attribute-value">"init"</span><span>&nbsp;</span><span class="attribute">destroy-method</span><span>=</span><span class="attribute-value">"close"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"forceShutdown"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>true</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span><span class="comments">&lt;!--&nbsp;use&nbsp;com.atomikos.icatch.jta.UserTransactionImp&nbsp;as&nbsp;transaction,&nbsp;--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span><span class="comments">&lt;!--&nbsp;"transactionTimeout"&nbsp;property&nbsp;should&nbsp;be&nbsp;change&nbsp;accord&nbsp;to&nbsp;product&nbsp;environment,&nbsp;--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span><span class="comments">&lt;!--&nbsp;it&nbsp;defined&nbsp;in&nbsp;millisecond&nbsp;unit--&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span>&nbsp;</span><span class="attribute">id</span><span>=</span><span class="attribute-value">"atomikosUserTransaction"</span><span>&nbsp;</span><span class="attribute">class</span><span>=</span><span class="attribute-value">"com.atomikos.icatch.jta.UserTransactionImp"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"transactionTimeout"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>20000</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;</span></li><li><span><span class="comments">&lt;!--&nbsp;define&nbsp;JtaTransactionManager--&gt;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;<span class="tag">&lt;</span><span class="tag-name">bean</span><span>&nbsp;</span><span class="attribute">id</span><span>=</span><span class="attribute-value">"interfaceTransactionManager"</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">class</span><span>=</span><span class="attribute-value">"org.springframework.transaction.jta.JtaTransactionManager"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"transactionManager"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">ref</span><span>&nbsp;</span><span class="attribute">bean</span><span>=</span><span class="attribute-value">"atomikosTransactionManager"</span><span>&nbsp;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"userTransaction"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">ref</span><span>&nbsp;</span><span class="attribute">bean</span><span>=</span><span class="attribute-value">"atomikosUserTransaction"</span><span>&nbsp;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;<span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li></ol></div><pre name="code" class="xml" style="display: none; ">&lt;bean id="atomikosTransactionManager"
+       class="com.atomikos.icatch.jta.UserTransactionManager" 
+       init-method="init" destroy-method="close"&gt;
+      &lt;property name="forceShutdown"&gt;
+               &lt;value&gt;true&lt;/value&gt;
+       &lt;/property&gt;
+&lt;/bean&gt;
+&lt;!-- use com.atomikos.icatch.jta.UserTransactionImp as transaction, --&gt;
+&lt;!-- "transactionTimeout" property should be change accord to product environment, --&gt;
+&lt;!-- it defined in millisecond unit--&gt; 
+&lt;bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp"&gt; 
+       &lt;property name="transactionTimeout"&gt;
+             &lt;value&gt;20000&lt;/value&gt;
+       &lt;/property&gt;
+&lt;/bean&gt;       
+
+&lt;!-- define JtaTransactionManager--&gt;      		
+&nbsp;&lt;bean id="interfaceTransactionManager" 
+            class="org.springframework.transaction.jta.JtaTransactionManager"&gt;
+&nbsp;     &lt;property name="transactionManager"&gt;
+&nbsp;          &lt;ref bean="atomikosTransactionManager" /&gt;
+      &lt;/property&gt;
+&nbsp;     &lt;property name="userTransaction"&gt;
+&nbsp;          &lt;ref bean="atomikosUserTransaction" /&gt;
+&nbsp;     &lt;/property&gt;
+&nbsp;&lt;/bean&gt;&nbsp;&nbsp;&nbsp; &nbsp;  </pre>
+<p style="padding-left: 30px;"><strong>配置&nbsp;Atomikos 的 JtaTransaction&nbsp;的时候需注意,&nbsp; 单这样配置, 这里的设置的 20000 秒有可能不会生效。</strong><br>Atomikos 对它的Transaction Manager 有个宏观上的设置. 可以参考<br><a href="http://www.atomikos.com/Documentation/JtaProperties">http://www.atomikos.com/Documentation/JtaProperties</a>&nbsp;<br>注意 com.atomikos.icatch.max_timeout&nbsp; 这个参数. 他的作用是给所有的 Transaction 的 Timeout设置一个最大值（单位是毫秒），默认值是5分钟，如果小于它生效，如果大于它不生效（还是5分钟）。<br>所以，如果没有设置 com.atomikos.icatch.max_timeout&nbsp;&nbsp;&nbsp; 这个参数的话，设置20000秒是不会生效的.</p>
+<p style="padding-left: 30px;">如何设置 com.atomikos.icatch.max_timeout , 文档里面描述，部署一个 jta.properties 文件在 classpath的根目录下(bin目录)，但是不同的atomikos可能不同，我部署的是 transactions.properties文件.</p>
+<p style="padding-left: 30px;">如何设置</p>
+<div class="dp-highlighter"><div class="bar"><div class="tools">Transactions.properties代码 <embed src="/javascripts/syntaxhighlighter/clipboard_new.swf" width="14" height="15" flashvars="clipboard=%23Set%20the%20max%20timeout%20(in%20milliseconds)%20for%20local%20transactions%0Acom.atomikos.icatch.max_timeout%20%3D%2020000000" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></div></div><ol start="1" class="dp-default"><li><span><span>#Set&nbsp;the&nbsp;max&nbsp;timeout&nbsp;(in&nbsp;milliseconds)&nbsp;for&nbsp;local&nbsp;transactions&nbsp;&nbsp;</span></span></li><li><span>com.atomikos.icatch.max_timeout&nbsp;=&nbsp;<span class="number">20000000</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre name="code" class="transactions.properties" style="display: none; ">#Set the max timeout (in milliseconds) for local transactions
+com.atomikos.icatch.max_timeout = 20000000</pre>
+<p style="padding-left: 30px;">&nbsp;这样的话， atomikosUserTransaction 设置的 Timeout 20000 才能生效.</p>
+<p>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; Reference: <a href="http://www.atomikos.com/Documentation">http://www.atomikos.com/Documentation</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; 附: Atomikos 源码</p>
+<p>&nbsp;&nbsp;&nbsp; </p>
+  </div>
+
+  
+  <div class="attachments">
+    
+      
+        <ul>
+          <li><a href="http://dl.javaeye.com/topics/download/87101fbc-b4a8-3833-a247-37e86b6d17c9">AtomikosTransactionsEssentials-3.3.1.part2.rar</a> (5.5 MB)</li>
+          
+          <li>下载次数: 12</li>
+        </ul>
+      
+    
+      
+        <ul>
+          <li><a href="http://dl.javaeye.com/topics/download/1094d2dc-d28b-3677-97e2-fee63054e82f">AtomikosTransactionsEssentials-3.3.1.part1.rar</a> (6.7 MB)</li>
+          
+          <li>下载次数: 14</li>
+        </ul>
+      
+    
+    
+  </div>
+
+
+  <a href="http://comedsh.javaeye.com/clicks/398" target="_blank"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/alipay01.gif" width="468" height="60" alt="支付宝招聘" title="支付宝招聘">
+</a>
+  
+  
+
+  <div class="blog_nav">
+    <div class="pre_next">
+      <a href="http://comedsh.javaeye.com/blog/526121" class="next" title="Hibernate: 复合主键 (Composite Key) 如何兼容 NULL值">Hibernate: 复合主键 (Composite Key) 如 ...</a>
+      |
+      <a href="http://comedsh.javaeye.com/blog/511951" class="pre" title="RunTime - Funtional Abilities">RunTime - Funtional Abilities</a>
+    </div>
+  </div>
+
+  <div class="blog_bottom">
+    <ul>
+      <li>20:03</li>
+      <li>浏览 (468)</li>
+            <li><a href="http://comedsh.javaeye.com/blog/524769#comments">评论</a> (0)</li>
+      <li>分类: <a href="http://comedsh.javaeye.com/category/68368">Java</a></li>
+      
+      
+      
+      <li class="last"><a href="http://www.javaeye.com/wiki/topic/524769" target="_blank" class="more">相关推荐</a></li>
+    </ul>
+  </div>
+
+  <div class="blog_comment">
+    <h5>评论</h5>
+    <a id="comments" name="comments"></a>
+    
+    
+    
+  </div>
+
+  <div class="blog_comment">
+    <h5>发表评论</h5>
+          
+      
+        <form action="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站.htm" id="comment_form" method="post" onsubmit="return false;">          
+
+
+  <input type="hidden" id="editor_bbcode_flag" value="true">
+
+
+
+<div id="editor_main"><div id="editor_wrapper" class="clearfix"><div id="bbcode_emotions"><h5>表情图标</h5><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_biggrin.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_smile.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_sad.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_surprised.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_eek.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_confused.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_cool.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_lol.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_mad.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_razz.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_redface.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_cry.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_evil.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_twisted.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_rolleyes.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_wink.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_exclaim.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_question.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_idea.gif"><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_arrow.gif"></div><div id="bbcode_controllers"><div id="bbcode_toolbar"><input type="button" value="B" id="button_bold"><input type="button" value="I" id="button_italic"><input type="button" value="U" id="button_underline"><input type="button" value="Quote"><input type="button" value="Code"><input type="button" value="List"><input type="button" value="Img"><input type="button" value="URL"><input type="button" value="Flash"><input type="button" value="Table"><br>字体颜色: <select id="select_color"><option value="black" style="color: black;">标准</option><option value="darkred" style="color: darkred;">深红</option><option value="red" style="color: red;">红色</option><option value="orange" style="color: orange;">橙色</option><option value="brown" style="color: brown;">棕色</option><option value="yellow" style="color: yellow;">黄色</option><option value="green" style="color: green;">绿色</option><option value="olive" style="color: olive;">橄榄</option><option value="cyan" style="color: cyan;">青色</option><option value="blue" style="color: blue;">蓝色</option><option value="darkblue" style="color: darkblue;">深蓝</option><option value="indigo" style="color: indigo;">靛蓝</option><option value="violet" style="color: violet;">紫色</option><option value="gray" style="color: gray;">灰色</option><option value="white" style="color: white;">白色</option><option value="black" style="color: black;">黑色</option></select>&nbsp;字体大小: <select id="select_font"><option value="0">标准</option><option value="xx-small">1 (xx-small)</option><option value="x-small">2 (x-small)</option><option value="small">3 (small)</option><option value="medium">4 (medium)</option><option value="large">5 (large)</option><option value="x-large">6 (x-large)</option><option value="xx-large">7 (xx-large)</option></select>&nbsp;对齐: <select id="select_align"><option value="0">标准</option><option value="left">居左</option><option value="center">居中</option><option value="right">居右</option></select></div><div id="bbcode_tooltip">提示：选择您需要装饰的文字, 按上列按钮即可添加上相应的标签</div><textarea class="validate-richeditor bad-words min-length-5" cols="40" id="editor_body" name="comment[body]" rows="20" style="width: 500px; height: 350px;"></textarea></div></div></div>
+
+
+<script type="text/javascript">
+  var editor = new Control.TextArea.Editor("editor_body", "bbcode", false);
+</script>
+          <p style="text-align:right;padding-right:30px;">您还没有登录，请<a href="http://comedsh.javaeye.com/login">登录</a>后发表评论(快捷键 Alt+S / Ctrl+Enter) <input class="submit" id="quick_reply_button" name="commit" type="submit" value="提交"></p>
+        </form>
+        <script type="text/javascript">
+          new HotKey("s",function() {$('quick_reply_button').click();},{altKey: true, ctrlKey: false});
+          new HotKey(new Number(13),function() {$('quick_reply_button').click();},{altKey: false, ctrlKey: true});
+
+          new Validation("comment_form", {immediate: false, onFormValidate: function(result, form){
+    
+            if(confirm('您需要登录以后才能执行这个操作，现在要登录吗？')) window.location.href = '/login';
+    
+        }});
+        </script>
+      
+      </div>
+</div>
+
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  fix_image_size($$('div.blog_content img'), 700);
+  function quote_comment(id) {
+    new Ajax.Request('/editor/quote', {
+      parameters: {'id':id, 'type':'Post'},
+      onSuccess:function(response){editor.bbcode_editor.textarea.insertAfterSelection(response.responseText);}
+    });
+  }
+</script>
+
+
+
+        </div>
+
+        <div id="local">
+          <div class="local_top"></div>
+          <div id="blog_owner">
+            <div id="blog_owner_logo"><a href="http://comedsh.javaeye.com/"><img alt="comedsh的博客" class="logo" src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/b0bfd393-e56d-30d4-95a2-bcb6080e520e.jpg" title="comedsh的博客: comedsh"></a></div>
+            <div id="blog_owner_name">comedsh</div>
+          </div>
+          <div id="blog_actions">
+            <ul>
+              <li>浏览: 6201 次</li>
+              <li>性别: <img alt="Icon_minigender_1" src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/icon_minigender_1.gif" title="男"></li>
+              <li>来自: 成都</li>
+              <li><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/offline.gif"></li>
+              <li>
+                <a href="http://comedsh.javaeye.com/blog/profile" class="profile">详细资料</a>
+                <a href="http://comedsh.javaeye.com/blog/guest_book" class="guest_book">留言簿</a>
+              </li>
+              
+            </ul>
+            <h5>搜索本博客</h5>
+            <form action="http://comedsh.javaeye.com/blog/search" method="get">              <input class="text" id="query" name="query" style="margin-left: 10px;width: 110px;" type="text">
+              <input class="submit" type="submit" value="搜索">
+            </form>          </div>
+          
+            <div id="user_visits" class="clearfix">
+              <h5>最近访客 <span style="font-weight:normal;font-size:12px;padding-left:30px;"><a href="http://comedsh.javaeye.com/blog/user_visits">&gt;&gt;更多访客</a></span></h5>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href="http://flypaper.javaeye.com/" target="_blank"><img alt="flypaper的博客" class="logo" src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/user-logo-thumb.gif" title="flypaper的博客: flypaper"></a></div>
+                  <div class="left"><a href="http://flypaper.javaeye.com/" target="_blank">flypaper</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href="http://gdfloyd.javaeye.com/" target="_blank"><img alt="gdfloyd的博客" class="logo" src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/user-logo-thumb.gif" title="gdfloyd的博客: "></a></div>
+                  <div class="left"><a href="http://gdfloyd.javaeye.com/" target="_blank">gdfloyd</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href="http://wensong.javaeye.com/" target="_blank"><img alt="wensong的博客" class="logo" src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/user-logo-thumb.gif" title="wensong的博客: wensong"></a></div>
+                  <div class="left"><a href="http://wensong.javaeye.com/" target="_blank">wensong</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href="http://supermarshal.javaeye.com/" target="_blank"><img alt="supermarshal的博客" class="logo" src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/user-logo-thumb.gif" title="supermarshal的博客: "></a></div>
+                  <div class="left"><a href="http://supermarshal.javaeye.com/" target="_blank">supermarshal</a></div>
+                </div>
+              
+            </div>
+          
+                      <div id="blog_menu">
+              <h5>博客分类</h5>
+              <ul>
+                <li><a href="http://comedsh.javaeye.com/">全部博客 (60)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/68368">Java (48)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/71635">DATABASE (6)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/73007">PostgreSQL (2)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/68258">DB2 (5)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/72979">JavaScript (4)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/68270">Shell (3)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/68755">Windows (4)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/68834">生活 (8)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/69453">English (0)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/71151">物理 (1)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/71162">Daily Works (1)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/71179">电脑硬件 (5)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/75301">Game (3)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/90709">手机 (0)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/107544">数学 (1)</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/category/117042">project (1)</a></li>
+                
+              </ul>
+            </div>
+            
+            
+            <div id="blog_others">
+              <h5>其他分类</h5>
+              <ul>
+                <li><a href="http://comedsh.javaeye.com/blog/favorite">我的收藏</a> (1)</li>
+                                                <li><a href="http://comedsh.javaeye.com/blog/topic">我的论坛主题贴</a> (0)</li>
+                <li><a href="http://comedsh.javaeye.com/blog/post">我的所有论坛贴</a> (0)</li>
+                <li><a href="http://comedsh.javaeye.com/blog/article">我的精华良好贴</a> (0)</li>
+                              </ul>
+            </div>
+            
+            <div id="recent_groups">
+              <h5>最近加入圈子</h5>
+              <ul>
+                
+              </ul>
+            </div>
+            
+                          <div id="month_blogs">
+                <h5>存档</h5>
+                <ul>
+                  
+                    <li><a href="http://comedsh.javaeye.com/blog/monthblog/2010-08">2010-08</a> (2)</li>
+                  
+                    <li><a href="http://comedsh.javaeye.com/blog/monthblog/2010-07">2010-07</a> (6)</li>
+                  
+                    <li><a href="http://comedsh.javaeye.com/blog/monthblog/2010-06">2010-06</a> (6)</li>
+                  
+                  <li><a href="http://comedsh.javaeye.com/blog/monthblog_more">更多存档...</a></li>
+                </ul>
+              </div>
+                        <div id="recent_comments">
+              <h5>最新评论</h5>
+              <ul>
+                
+                  <li>
+                    <a href="http://comedsh.javaeye.com/blog/707304#comments" title="JAVA通过IP查询详细地址 Step-By-Step ( 纯真IP地址库)">JAVA通过IP查询详细地址 S ...</a><br>
+                    好吧...谢谢...下载并转载<br>
+                    -- by <a href="http://macleo.javaeye.com/" target="_blank">macleo</a>
+                  </li>
+                
+              </ul>
+            </div>
+            <div id="comments_top">
+              <h5>评论排行榜</h5>
+              <ul>
+                
+                  <li><a href="http://comedsh.javaeye.com/blog/707304" title="JAVA通过IP查询详细地址 Step-By-Step ( 纯真IP地址库)">JAVA通过IP查询详细地址 Step-By-Step ( 纯 ...</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/blog/542210" title="DB2 Special Functions">DB2 Special Functions</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/blog/670983" title="Java - JVM: 读书笔记 Chapter 05 The Java Virtual Machine ( Part I Basic )">Java - JVM: 读书笔记 Chapter 05 The Java ...</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/blog/670984" title="Java - JVM: 读书笔记 Chapter 05 The Java Virtual Machine ( Part II Method Area )">Java - JVM: 读书笔记 Chapter 05 The Java ...</a></li>
+                
+                  <li><a href="http://comedsh.javaeye.com/blog/617480" title="我的装机 参考贴">我的装机 参考贴</a></li>
+                
+              </ul>
+            </div>
+            <div id="rss">
+              <ul>
+                <li><a href="http://comedsh.javaeye.com/rss" target="_blank"><img alt="Rss" src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/rss.png"></a></li>
+                <li><a href="http://fusion.google.com/add?feedurl=http://comedsh.javaeye.com/rss" target="_blank"><img alt="Rss_google" src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/rss_google.gif"></a></li>
+                <li><a href="http://www.xianguo.com/subscribe.php?url=http://comedsh.javaeye.com/rss" target="_blank"><img alt="Rss_xianguo" src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/rss_xianguo.jpg"></a></li>
+                <li><a href="http://www.google.com/search?hl=zh-CN&q=RSS">[什么是RSS?]</a></li>
+              </ul>
+            </div>
+            <div class="local_bottom"></div>
+          
+        </div>
+      </div>
+
+      <div id="footer" class="clearfix">
+        <div id="copyright">
+          <hr>
+          声明：JavaEye文章版权属于作者，受法律保护。没有作者书面许可不得转载。若作者同意转载，必须以超链接形式标明文章原始出处和作者。<br>
+          © 2003-2010 JavaEye.com.   All rights reserved. 上海炯耐计算机软件有限公司 [ 沪ICP备05023328号 ]
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.javaeye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&logged_in=no" + "' width='0' height='0' />");
+</script><img src="./JTA XA  Atomikos + Spring + Hibernate 配置 注意事项 - comedsh - JavaEye技术网站_files/saved_resource" width="0" height="0">
+    
+  
+
+<div style="position: absolute; z-index: 1.07374e+009; top: -9999em; -webkit-box-sizing: content-box; width: 200px; height: 42px; display: none; " id=":0.balloonContainer"><iframe id=":0.container" class="goog-te-balloon-frame skiptranslate" frameborder="0" src="javascript:''" style="visibility: visible; -webkit-box-sizing: content-box; width: 200px; height: 42px; "></iframe></div></body></html>
