@@ -11,6 +11,9 @@ select *From user_source;
 CREATE TABLESPACE cfccc
 DATAFILE '/opt/oracle/oradata/orcl/itc.dbf' SIZE 200M
 UNIFORM SIZE 128k;
+alter tablespace #### datafile '###########.dbf'   offline;
+drop tablespace #### including contents add datafiles;
+alter database datafile 'D:\ORACLE\ORADATA\ORADB\DATAFILE_NAME.DBF' offline drop;
 
 --增加额外的数据文件到表空间中
 alter tablespace users add datafile '/opt/oracle/oradata/orcl/itc.dbf' size 25m;
