@@ -1,0 +1,594 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0035)http://www.javaeye.com/topic/147599 -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr" class=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>Spring JTA应用JOTM &amp; Atomikos III Atomikos - Spring - Java - JavaEye论坛</title>
+    <meta name="description" content="前面简单介绍了JOTM如何在Spring中配置，并如何使用它的JTA事务，本节将介绍Atomikos如何与Spring集成，并使用它的JTA事务。 Atomikos,是一个基于Java的开源事务管理器，提供了事务管理和连接池，不需要应用服务器支持，支持JDBC和JMS事务，能提供对Spring，Hibernate的集成，有兴趣多了解的可以直接参考说明文当，有详细的介绍和使用说明。 Atomikos可 ...">
+    <meta name="keywords" content="jta jotm   atomikos Spring Java">
+    <link rel="shortcut icon" href="http://www.javaeye.com/images/favicon.ico" type="image/x-icon">
+    <link href="http://www.javaeye.com/rss/board/Java" rel="alternate" title="JavaEye论坛" type="application/rss+xml">
+    <link rel="search" type="application/opensearchdescription+xml" href="http://www.javaeye.com/open_search.xml" title="JavaEye">
+    <link href="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/forum.css" media="screen" rel="stylesheet" type="text/css">
+    <script src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/application.js" type="text/javascript"></script>
+      <link href="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/SyntaxHighlighter.css" media="screen" rel="stylesheet" type="text/css">
+  <script src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/shCoreCommon.js" type="text/javascript"></script>
+<script src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/hotkey.js" type="text/javascript"></script>
+          <script src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/dragdrop.js" type="text/javascript"></script>
+          <style type="text/css">.dp-j .annotation { color: #646464; }.dp-j .number { color: #C00000; }</style><style type="text/css">.dp-j .annotation { color: #646464; }.dp-j .number { color: #C00000; }</style><style type="text/css">.dp-j .annotation { color: #646464; }.dp-j .number { color: #C00000; }</style><style type="text/css">.dp-j .annotation { color: #646464; }.dp-j .number { color: #C00000; }</style><style type="text/css">.dp-j .annotation { color: #646464; }.dp-j .number { color: #C00000; }</style><style type="text/css">.dp-j .annotation { color: #646464; }.dp-j .number { color: #C00000; }</style><link type="text/css" rel="stylesheet" charset="UTF-8" href="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/translateelement.css"><script type="text/javascript" charset="UTF-8" src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/main_zh-CN.js"></script></head>
+  <body>
+    <div id="page">
+      <div id="header">
+        <div class="clearfix"><div id="user_nav">
+      <a href="http://www.javaeye.com/login" class="welcome" title="登录">您还未登录 !</a>
+    <a href="http://www.javaeye.com/all" style="color:red">我的应用</a>
+    <a href="http://www.javaeye.com/login">登录</a>
+    <a href="http://www.javaeye.com/signup" class="nobg">注册</a>
+  </div></div>
+        <div class="clearfix">
+          <div id="branding">
+            <a href="http://www.javaeye.com/"><img alt="JavaEye-最棒的软件开发交流社区" src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/logo.gif" title="JavaEye-最棒的软件开发交流社区"></a>
+          </div>
+          <div id="gg"><embed play="true" src="http://ftp.javaeye.com/public/csdn/oracle/JavaOne728_90.swf" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" height="90" loop="true" menu="true" width="728"></div>
+        </div>
+      </div>
+
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+          
+
+<div class="clearfix">
+  <div class="crumbs">
+    <a href="http://www.javaeye.com/forums">论坛首页</a> <span class="arrow">→</span>
+    <a href="http://www.javaeye.com/forums/board/Java">Java编程和Java企业应用版</a> <span class="arrow">→</span>
+    <a href="http://www.javaeye.com/forums/tag/Spring">Spring</a> <span class="arrow">→</span>
+    <h1>Spring JTA应用JOTM &amp; Atomikos III Atomikos</h1>
+  </div>
+</div>
+
+<div id="forum_tag_list">
+  <a href="http://www.javaeye.com/forums/board/Java">全部</a>
+      <a href="http://www.javaeye.com/forums/tag/Hibernate">Hibernate</a>
+      <a href="http://www.javaeye.com/forums/tag/Spring">Spring</a>
+      <a href="http://www.javaeye.com/forums/tag/Struts">Struts</a>
+      <a href="http://www.javaeye.com/forums/tag/iBATIS">iBATIS</a>
+      <a href="http://www.javaeye.com/forums/tag/J2EE">企业应用</a>
+      <a href="http://www.javaeye.com/forums/tag/Design-Pattern">设计模式</a>
+      <a href="http://www.javaeye.com/forums/tag/DAO">DAO</a>
+      <a href="http://www.javaeye.com/forums/tag/Object-Domain">领域模型</a>
+      <a href="http://www.javaeye.com/forums/tag/OO">OO</a>
+      <a href="http://www.javaeye.com/forums/tag/Tomcat">Tomcat</a>
+      <a href="http://www.javaeye.com/forums/tag/SOA">SOA</a>
+      <a href="http://www.javaeye.com/forums/tag/JBoss">JBoss</a>
+      <a href="http://www.javaeye.com/forums/tag/Swing">Swing</a>
+      <a href="http://www.javaeye.com/forums/tag/Java">Java综合</a>
+  </div>
+
+<div class="actions">
+  <div class="buttons"></div>
+  <div class="wrapper">
+    <div id="forum_recommended_f4"></div>
+    
+    <div class="info">浏览 3658 次</div>
+  </div>
+</div>
+
+
+
+<table id="forum_main" cellspacing="1">
+  <thead>
+    <tr>
+      <th colspan="2" class="topic_title">
+        <div class="wrapper"><span class="locked">锁定老贴子</span> <a href="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛.htm">主题：Spring JTA应用JOTM &amp; Atomikos III Atomikos</a></div>
+        <div id="topic_rate_box">精华帖 (0) :: 良好帖 (1) :: 新手帖 (0) :: 隐藏帖 (0)</div>
+      </th>
+    </tr>
+    <tr>
+      <td class="first_col">作者</td>
+      <td class="last_col">正文</td>
+    </tr>
+  </thead>
+  <tbody id="posts">
+    <tr id="428563">
+  <td class="postauthor">
+    <ul>
+      <li class="name">tom.duan</li>
+      <li>等级: 初级会员</li>
+      <li><a href="http://tom-duan.javaeye.com/" target="_blank"><img alt="tom.duan的博客" class="logo" src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/user-logo.gif" title="tom.duan的博客: tom.duan"></a></li>
+      <li>文章: 37</li>
+      <li>积分: 70</li>
+      <li>来自: 珠海</li>
+      <li><img src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/offline.gif"></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        &nbsp;&nbsp;
+        发表时间：2007-12-11&nbsp;&nbsp;
+        
+      </div>
+      <div class="links">
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+        
+              <script type="text/javascript">
+      var hunters = ["\u003Ca href='/jobs/628' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u4e0a\u6d77: \u003C/span\u003E \u4e0a\u6d77\uff0c\u5317\u4eac\uff1a\u62db\u8058java\u5f00\u53d1\u5de5\u7a0b\u5e08\u003C/a\u003E","\u003Ca href='/jobs/787' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u6c5f\u82cf: \u003C/span\u003E \u3010\u5357\u4eac\u3011\u9ad8\u85aa20--30\u4e07\u62db\u8058php\u67b6\u6784\u5e08\u003C/a\u003E","\u003Ca href='/jobs/712' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u5317\u4eac: \u003C/span\u003E Java\u641c\u7d22\u5de5\u7a0b\u5e08\u003C/a\u003E","\u003Ca href='/jobs/519' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u5b89\u5fbd: \u003C/span\u003E \u5408\u80a5,\u676d\u5dde,\u82cf\u5dde\uff1a\u8bda\u8058java\u9ad8\u7ea7\u5f00\u53d1\u5de5\u7a0b\u5e08\u003C/a\u003E","\u003Ca href='/jobs/518' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u5b89\u5fbd: \u003C/span\u003E \u5408\u80a5,\u676d\u5dde,\u82cf\u5dde\uff1a\u8bda\u8058java\u67b6\u6784\u5e08\u003C/a\u003E","\u003Ca href='/jobs/713' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u5317\u4eac: \u003C/span\u003E Ruby\u9ad8\u7ea7\u5de5\u7a0b\u5e08\u003C/a\u003E"]
+      var hunter_id = Math.ceil(Math.random() * hunters.length) - 1;
+      if(hunter_id == -1) hunter_id = 0;
+    </script>
+    <div id="hunter_recommended" style="background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 255, 255); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: rgb(204, 204, 204); border-right-color: rgb(204, 204, 204); border-bottom-color: rgb(204, 204, 204); border-left-color: rgb(204, 204, 204); padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-bottom: 10px; float: left; width: 557px; background-position: initial initial; background-repeat: initial initial; ">
+      <span id="hunters_nav" style="margin-right:5px;">
+        <a href="http://www.javaeye.com/topic/147599#" onclick="hunter_id &lt;= 0 ? hunter_id = hunters.length - 1 : hunter_id--; $(&#39;hunters&#39;).update(hunters[hunter_id]);return false;" style="border:1px solid #ccc;padding: 0 3px;size: 13px;text-decoration: none;">&lt;</a>
+        <a href="http://www.javaeye.com/topic/147599#" onclick="hunter_id &gt;= hunters.length - 1 ? hunter_id = 0 : hunter_id++; $(&#39;hunters&#39;).update(hunters[hunter_id]);return false;" style="border:1px solid #ccc;padding: 0 3px;size :13px;text-decoration: none;">&gt;</a>
+      </span>
+      猎头职位: <span id="hunters"><script type="text/javascript">document.write(hunters[hunter_id]);</script><a href="http://www.javaeye.com/jobs/518" target="_blank" style="color:#000;"><span style="font-weight:bold;">安徽: </span> 合肥,杭州,苏州：诚聘java架构师</a></span>
+    </div>
+
+        
+      
+                                            <div id="related_topics" style="position: relative; ">相关文章: <span class="close"><a href="http://www.javaeye.com/topic/147599#" onclick="$(&#39;related_topics&#39;).hide();if($(&#39;hunter_recommended&#39;)){$(&#39;hunter_recommended&#39;).style.width=&#39;780px&#39;;} return false;" title="关闭">&nbsp;</a></span>
+              <ul>
+                                    <li><a href="http://www.javaeye.com/topic/122700" title="使用Atomikos Transactions Essentials实现多数据源JTA分布式事务" target="_blank">使用Atomikos Transactions Essentials实现多数据源JTA分布式事务</a></li>
+                                      <li><a href="http://www.javaeye.com/topic/139884" title="删除jbpm流程实例出错，那位帮我看看" target="_blank">删除jbpm流程实例出错，那位帮我看看</a></li>
+                                      <li><a href="http://www.javaeye.com/topic/213029" title="在自定JTA环境下使用Hibernate的ConnectionProvider导致的session问" target="_blank">在自定JTA环境下使用Hibernate的ConnectionProvider导致的session问</a></li>
+                                  </ul>
+                <br><span>推荐圈子: <a href="http://jbpm.group.javaeye.com/" target="_blank">JBPM @net</a></span>
+                <br><a href="http://www.javaeye.com/wiki/topic/147599" target="_blank">更多相关推荐</a>
+              </div>
+              <script type="text/javascript">
+                if($('hunter_recommended')) {
+                  $('hunter_recommended').setStyle({cssFloat: 'left', width: '557px'})
+                }
+                new Draggable("related_topics");
+              </script>
+                              
+        前面简单介绍了JOTM如何在Spring中配置，并如何使用它的JTA事务，本节将介绍Atomikos如何与Spring集成，并使用它的JTA事务。
+<br>
+<br>Atomikos,是一个基于Java的开源事务管理器，提供了事务管理和连接池，不需要应用服务器支持，支持JDBC和JMS事务，能提供对Spring，Hibernate的集成，有兴趣多了解的可以直接参考说明文当，有详细的介绍和使用说明。
+<br>
+<br>Atomikos可以到http://www.atomikos.com/products.html#ate下载,最新版本是3.2.0
+<br>
+<br>首先,仍然是一个相关的配置文件，用来设置相关的环境,打开解压缩后Atomikos根目录,拷贝jta.properties到classpath中，并修改为如下内容
+<br>jta.properties
+<br><div class="dp-highlighter"><div class="bar"><div class="tools">Java代码 <embed src="/javascripts/syntaxhighlighter/clipboard_new.swf" width="14" height="15" flashvars="clipboard=com.atomikos.icatch.service%3Dcom.atomikos.icatch.standalone.UserTransactionServiceFactory%0Acom.atomikos.icatch.console_file_name%20%3D%20tm.out%0Acom.atomikos.icatch.log_base_name%20%3D%20tmlog%0Acom.atomikos.icatch.tm_unique_name%20%3D%20com.atomikos.spring.jdbc.tm%0Acom.atomikos.icatch.console_log_level%20%3D%20INFO%20%0A" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></div></div><ol start="1" class="dp-j"><li><span><span>com.atomikos.icatch.service=com.atomikos.icatch.standalone.UserTransactionServiceFactory&nbsp;&nbsp;</span></span></li><li><span>com.atomikos.icatch.console_file_name&nbsp;=&nbsp;tm.out&nbsp;&nbsp;</span></li><li><span>com.atomikos.icatch.log_base_name&nbsp;=&nbsp;tmlog&nbsp;&nbsp;</span></li><li><span>com.atomikos.icatch.tm_unique_name&nbsp;=&nbsp;com.atomikos.spring.jdbc.tm&nbsp;&nbsp;</span></li><li><span>com.atomikos.icatch.console_log_level&nbsp;=&nbsp;INFO&nbsp;&nbsp;&nbsp;</span></li></ol></div><pre name="code" class="java" style="display: none; ">com.atomikos.icatch.service=com.atomikos.icatch.standalone.UserTransactionServiceFactory
+com.atomikos.icatch.console_file_name = tm.out
+com.atomikos.icatch.log_base_name = tmlog
+com.atomikos.icatch.tm_unique_name = com.atomikos.spring.jdbc.tm
+com.atomikos.icatch.console_log_level = INFO 
+</pre>
+<br>
+<br>随后，是Spring上下文配置，建立一个名为ApplicationContext-atomikos.xml的Spring上下文
+<br>
+<br>ApplicationContext-atomikos.xml
+<br><div class="dp-highlighter"><div class="bar"><div class="tools">Java代码 <embed src="/javascripts/syntaxhighlighter/clipboard_new.swf" width="14" height="15" flashvars="clipboard=%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Cbeans%20xmlns%3D%22http%3A%2F%2Fwww.springframework.org%2Fschema%2Fbeans%22%0A%20%20%20%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%0A%20%20%20%20xsi%3AschemaLocation%3D%22http%3A%2F%2Fwww.springframework.org%2Fschema%2Fbeans%20http%3A%2F%2Fwww.springframework.org%2Fschema%2Fbeans%2Fspring-beans-2.0.xsd%22%3E%0A%09%3C!--%20XA%20Datasource%20--%3E%0A%09%3Cbean%20id%3D%22datasource1%22%20class%3D%22com.atomikos.jdbc.SimpleDataSourceBean%22%20init-method%3D%22init%22%20destroy-method%3D%22close%22%3E%20%20%20%0A%09%09%3Cproperty%20name%3D%22uniqueResourceName%22%3E%20%20%20%0A%09%09%09%3Cvalue%3Emysql%2Fmain%3C%2Fvalue%3E%20%20%20%0A%09%09%3C%2Fproperty%3E%20%20%20%0A%09%09%3Cproperty%20name%3D%22xaDataSourceClassName%22%3E%20%20%20%0A%09%09%09%3Cvalue%3Ecom.mysql.jdbc.jdbc2.optional.MysqlXADataSource%3C%2Fvalue%3E%20%20%20%0A%09%09%3C%2Fproperty%3E%20%20%20%0A%09%09%3Cproperty%20name%3D%22xaDataSourceProperties%22%3E%20%20%20%0A%09%09%09%3Cvalue%3EURL%3Djdbc%3Amysql%3A%2F%2Flocalhost%3A3306%2Ftest%3Buser%3Droot%3Bpassword%3Dadmin%3C%2Fvalue%3E%20%20%20%0A%09%09%3C%2Fproperty%3E%20%20%20%0A%09%09%3Cproperty%20name%3D%22exclusiveConnectionMode%22%3E%20%20%20%0A%09%09%09%3Cvalue%3Etrue%3C%2Fvalue%3E%20%20%20%0A%09%09%3C%2Fproperty%3E%20%20%20%0A%09%09%3Cproperty%20name%3D%22connectionPoolSize%22%3E%20%20%20%0A%09%09%09%3Cvalue%3E3%3C%2Fvalue%3E%20%20%20%0A%09%09%3C%2Fproperty%3E%20%20%20%0A%09%09%3Cproperty%20name%3D%22validatingQuery%22%3E%20%20%20%0A%09%09%09%3Cvalue%3ESELECT%201%3C%2Fvalue%3E%20%20%20%0A%09%09%3C%2Fproperty%3E%20%20%20%0A%09%3C%2Fbean%3E%0A%09%0A%09%3Cbean%20id%3D%22datasource2%22%20class%3D%22com.atomikos.jdbc.SimpleDataSourceBean%22%20init-method%3D%22init%22%20destroy-method%3D%22close%22%3E%20%20%20%0A%09%09%3Cproperty%20name%3D%22uniqueResourceName%22%3E%20%20%20%0A%09%09%09%3Cvalue%3Emysql%2Fnews%3C%2Fvalue%3E%0A%09%09%3C%2Fproperty%3E%20%20%20%0A%09%09%3Cproperty%20name%3D%22xaDataSourceClassName%22%3E%20%20%20%0A%09%09%09%3Cvalue%3Ecom.mysql.jdbc.jdbc2.optional.MysqlXADataSource%3C%2Fvalue%3E%20%20%20%0A%09%09%3C%2Fproperty%3E%0A%09%09%3Cproperty%20name%3D%22xaDataSourceProperties%22%3E%20%20%20%0A%09%09%09%3Cvalue%3EURL%3Djdbc%3Amysql%3A%2F%2Flocalhost%3A3306%2Ftest2%3Buser%3Droot%3Bpassword%3Dadmin%3C%2Fvalue%3E%20%20%20%0A%09%09%3C%2Fproperty%3E%20%20%20%0A%09%09%3Cproperty%20name%3D%22exclusiveConnectionMode%22%3E%20%20%20%0A%09%09%09%3Cvalue%3Etrue%3C%2Fvalue%3E%20%20%20%0A%09%09%3C%2Fproperty%3E%20%20%20%0A%09%09%3Cproperty%20name%3D%22connectionPoolSize%22%3E%20%20%20%0A%09%09%09%3Cvalue%3E3%3C%2Fvalue%3E%20%20%20%0A%09%09%3C%2Fproperty%3E%20%20%20%0A%09%09%3Cproperty%20name%3D%22validatingQuery%22%3E%20%20%20%0A%09%09%09%3Cvalue%3ESELECT%201%3C%2Fvalue%3E%20%20%20%0A%09%09%3C%2Fproperty%3E%20%20%20%0A%09%3C%2Fbean%3E%0A%09%0A%09%3Cbean%20id%3D%22template1%22%20class%3D%22org.springframework.jdbc.core.JdbcTemplate%22%3E%0A%09%09%3Cproperty%20name%3D%22dataSource%22%20ref%3D%22datasource1%22%20%2F%3E%0A%09%3C%2Fbean%3E%0A%09%0A%09%3Cbean%20id%3D%22template2%22%20class%3D%22org.springframework.jdbc.core.JdbcTemplate%22%3E%0A%09%09%3Cproperty%20name%3D%22dataSource%22%20ref%3D%22datasource2%22%20%2F%3E%0A%09%3C%2Fbean%3E%0A%09%09%0A%09%3Cbean%20id%3D%22atomikosTransactionManager%22%20class%3D%22com.atomikos.icatch.jta.UserTransactionManager%22%20init-method%3D%22init%22%20destroy-method%3D%22close%22%3E%0A%09%09%3Cproperty%20name%3D%22forceShutdown%22%3E%3Cvalue%3Etrue%3C%2Fvalue%3E%3C%2Fproperty%3E%0A%09%3C%2Fbean%3E%0A%09%0A%09%3Cbean%20id%3D%22atomikosUserTransaction%22%20class%3D%22com.atomikos.icatch.jta.UserTransactionImp%22%3E%0A%09%09%3Cproperty%20name%3D%22transactionTimeout%22%20value%3D%22300%22%2F%3E%20%0A%09%3C%2Fbean%3E%0A%0A%09%3Cbean%20id%3D%22springTransactionManager%22%20class%3D%22org.springframework.transaction.jta.JtaTransactionManager%22%3E%0A%09%09%3Cproperty%20name%3D%22transactionManager%22%3E%3Cref%20bean%3D%22atomikosTransactionManager%22%20%20%2F%3E%3C%2Fproperty%3E%0A%09%09%3Cproperty%20name%3D%22userTransaction%22%3E%3Cref%20bean%3D%22atomikosUserTransaction%22%20%20%2F%3E%3C%2Fproperty%3E%0A%09%3C%2Fbean%3E%0A%09%0A%09%3Cbean%20id%3D%22dao1%22%20class%3D%22com.xa.dao.UserDao1%22%3E%0A%09%09%3Cproperty%20name%3D%22jdbcTemplate%22%3E%0A%09%09%09%3Cref%20bean%3D%22template1%22%3E%3C%2Fref%3E%0A%09%09%3C%2Fproperty%3E%0A%09%3C%2Fbean%3E%0A%09%0A%09%3Cbean%20id%3D%22dao2%22%20class%3D%22com.xa.dao.UserDao2%22%3E%0A%09%09%3Cproperty%20name%3D%22jdbcTemplate%22%3E%0A%09%09%09%3Cref%20bean%3D%22template2%22%3E%3C%2Fref%3E%0A%09%09%3C%2Fproperty%3E%0A%09%3C%2Fbean%3E%0A%09%3C!--%20--%3E%0A%09%3Cbean%20id%3D%22userServiceTarget%22%20class%3D%22com.xa.service.UserServiceImpl%22%3E%0A%09%09%3Cproperty%20name%3D%22dao1%22%20ref%3D%22dao1%22%2F%3E%0A%09%09%3Cproperty%20name%3D%22dao2%22%20ref%3D%22dao2%22%2F%3E%0A%09%3C%2Fbean%3E%0A%09%0A%09%3Cbean%20id%3D%22userTest%22%20class%3D%22org.springframework.transaction.interceptor.TransactionProxyFactoryBean%22%3E%20%20%20%20%0A%09%09%3Cproperty%20name%3D%22transactionManager%22%3E%0A%09%09%09%3Cref%20bean%3D%22springTransactionManager%22%2F%3E%0A%09%09%3C%2Fproperty%3E%20%20%20%20%0A%09%09%3Cproperty%20name%3D%22target%22%3E%0A%09%09%09%3Cref%20bean%3D%22userServiceTarget%22%2F%3E%0A%09%09%3C%2Fproperty%3E%0A%09%09%3Cproperty%20name%3D%22transactionAttributes%22%3E%20%20%20%20%20%20%20%20%0A%09%09%09%3Cprops%3E%0A%09%09%09%09%3Cprop%20key%3D%22insert*%22%3EPROPAGATION_REQUIRED%2C-Exception%3C%2Fprop%3E%20%20%20%20%20%20%20%20%20%20%20%20%0A%09%09%09%3C%2Fprops%3E%0A%09%09%3C%2Fproperty%3E%0A%09%3C%2Fbean%3E%0A%3C%2Fbeans%3E%0A" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></div></div><ol start="1" class="dp-j"><li><span><span>&lt;?xml&nbsp;version=</span><span class="string">"1.0"</span><span>&nbsp;encoding=</span><span class="string">"UTF-8"</span><span>?&gt;&nbsp;&nbsp;</span></span></li><li><span>&lt;beans&nbsp;xmlns=<span class="string">"http://www.springframework.org/schema/beans"</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;xmlns:xsi=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;xsi:schemaLocation=<span class="string">"http://www.springframework.org/schema/beans&nbsp;http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;XA&nbsp;Datasource&nbsp;--&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;bean&nbsp;id=<span class="string">"datasource1"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"com.atomikos.jdbc.SimpleDataSourceBean"</span><span>&nbsp;init-method=</span><span class="string">"init"</span><span>&nbsp;destroy-method=</span><span class="string">"close"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"uniqueResourceName"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;mysql/main&lt;/value&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"xaDataSourceClassName"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;com.mysql.jdbc.jdbc2.optional.MysqlXADataSource&lt;/value&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"xaDataSourceProperties"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;URL=jdbc:mysql:<span class="comment">//localhost:3306/test;user=root;password=admin&lt;/value&gt;&nbsp;&nbsp;&nbsp;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"exclusiveConnectionMode"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;<span class="keyword">true</span><span>&lt;/value&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"connectionPoolSize"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;<span class="number">3</span><span>&lt;/value&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"validatingQuery"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;SELECT&nbsp;<span class="number">1</span><span>&lt;/value&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;bean&nbsp;id=<span class="string">"datasource2"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"com.atomikos.jdbc.SimpleDataSourceBean"</span><span>&nbsp;init-method=</span><span class="string">"init"</span><span>&nbsp;destroy-method=</span><span class="string">"close"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"uniqueResourceName"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;mysql/news&lt;/value&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"xaDataSourceClassName"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;com.mysql.jdbc.jdbc2.optional.MysqlXADataSource&lt;/value&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"xaDataSourceProperties"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;URL=jdbc:mysql:<span class="comment">//localhost:3306/test2;user=root;password=admin&lt;/value&gt;&nbsp;&nbsp;&nbsp;</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"exclusiveConnectionMode"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;<span class="keyword">true</span><span>&lt;/value&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"connectionPoolSize"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;<span class="number">3</span><span>&lt;/value&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"validatingQuery"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;SELECT&nbsp;<span class="number">1</span><span>&lt;/value&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;bean&nbsp;id=<span class="string">"template1"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"org.springframework.jdbc.core.JdbcTemplate"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"dataSource"</span><span>&nbsp;ref=</span><span class="string">"datasource1"</span><span>&nbsp;/&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;bean&nbsp;id=<span class="string">"template2"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"org.springframework.jdbc.core.JdbcTemplate"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"dataSource"</span><span>&nbsp;ref=</span><span class="string">"datasource2"</span><span>&nbsp;/&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;bean&nbsp;id=<span class="string">"atomikosTransactionManager"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"com.atomikos.icatch.jta.UserTransactionManager"</span><span>&nbsp;init-method=</span><span class="string">"init"</span><span>&nbsp;destroy-method=</span><span class="string">"close"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"forceShutdown"</span><span>&gt;&lt;value&gt;</span><span class="keyword">true</span><span>&lt;/value&gt;&lt;/property&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;bean&nbsp;id=<span class="string">"atomikosUserTransaction"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"com.atomikos.icatch.jta.UserTransactionImp"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"transactionTimeout"</span><span>&nbsp;value=</span><span class="string">"300"</span><span>/&gt;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;bean&nbsp;id=<span class="string">"springTransactionManager"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"org.springframework.transaction.jta.JtaTransactionManager"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"transactionManager"</span><span>&gt;&lt;ref&nbsp;bean=</span><span class="string">"atomikosTransactionManager"</span><span>&nbsp;&nbsp;/&gt;&lt;/property&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"userTransaction"</span><span>&gt;&lt;ref&nbsp;bean=</span><span class="string">"atomikosUserTransaction"</span><span>&nbsp;&nbsp;/&gt;&lt;/property&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;bean&nbsp;id=<span class="string">"dao1"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"com.xa.dao.UserDao1"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"jdbcTemplate"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ref&nbsp;bean=<span class="string">"template1"</span><span>&gt;&lt;/ref&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;bean&nbsp;id=<span class="string">"dao2"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"com.xa.dao.UserDao2"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"jdbcTemplate"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ref&nbsp;bean=<span class="string">"template2"</span><span>&gt;&lt;/ref&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;--&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;bean&nbsp;id=<span class="string">"userServiceTarget"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"com.xa.service.UserServiceImpl"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"dao1"</span><span>&nbsp;ref=</span><span class="string">"dao1"</span><span>/&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"dao2"</span><span>&nbsp;ref=</span><span class="string">"dao2"</span><span>/&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;bean&nbsp;id=<span class="string">"userTest"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"org.springframework.transaction.interceptor.TransactionProxyFactoryBean"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"transactionManager"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ref&nbsp;bean=<span class="string">"springTransactionManager"</span><span>/&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"target"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ref&nbsp;bean=<span class="string">"userServiceTarget"</span><span>/&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"transactionAttributes"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;props&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;prop&nbsp;key=<span class="string">"insert*"</span><span>&gt;PROPAGATION_REQUIRED,-Exception&lt;/prop&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/props&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/property&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li><li><span>&lt;/beans&gt;&nbsp;&nbsp;</span></li></ol></div><pre name="code" class="java" style="display: none; ">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"&gt;
+	&lt;!-- XA Datasource --&gt;
+	&lt;bean id="datasource1" class="com.atomikos.jdbc.SimpleDataSourceBean" init-method="init" destroy-method="close"&gt;   
+		&lt;property name="uniqueResourceName"&gt;   
+			&lt;value&gt;mysql/main&lt;/value&gt;   
+		&lt;/property&gt;   
+		&lt;property name="xaDataSourceClassName"&gt;   
+			&lt;value&gt;com.mysql.jdbc.jdbc2.optional.MysqlXADataSource&lt;/value&gt;   
+		&lt;/property&gt;   
+		&lt;property name="xaDataSourceProperties"&gt;   
+			&lt;value&gt;URL=jdbc:mysql://localhost:3306/test;user=root;password=admin&lt;/value&gt;   
+		&lt;/property&gt;   
+		&lt;property name="exclusiveConnectionMode"&gt;   
+			&lt;value&gt;true&lt;/value&gt;   
+		&lt;/property&gt;   
+		&lt;property name="connectionPoolSize"&gt;   
+			&lt;value&gt;3&lt;/value&gt;   
+		&lt;/property&gt;   
+		&lt;property name="validatingQuery"&gt;   
+			&lt;value&gt;SELECT 1&lt;/value&gt;   
+		&lt;/property&gt;   
+	&lt;/bean&gt;
+	
+	&lt;bean id="datasource2" class="com.atomikos.jdbc.SimpleDataSourceBean" init-method="init" destroy-method="close"&gt;   
+		&lt;property name="uniqueResourceName"&gt;   
+			&lt;value&gt;mysql/news&lt;/value&gt;
+		&lt;/property&gt;   
+		&lt;property name="xaDataSourceClassName"&gt;   
+			&lt;value&gt;com.mysql.jdbc.jdbc2.optional.MysqlXADataSource&lt;/value&gt;   
+		&lt;/property&gt;
+		&lt;property name="xaDataSourceProperties"&gt;   
+			&lt;value&gt;URL=jdbc:mysql://localhost:3306/test2;user=root;password=admin&lt;/value&gt;   
+		&lt;/property&gt;   
+		&lt;property name="exclusiveConnectionMode"&gt;   
+			&lt;value&gt;true&lt;/value&gt;   
+		&lt;/property&gt;   
+		&lt;property name="connectionPoolSize"&gt;   
+			&lt;value&gt;3&lt;/value&gt;   
+		&lt;/property&gt;   
+		&lt;property name="validatingQuery"&gt;   
+			&lt;value&gt;SELECT 1&lt;/value&gt;   
+		&lt;/property&gt;   
+	&lt;/bean&gt;
+	
+	&lt;bean id="template1" class="org.springframework.jdbc.core.JdbcTemplate"&gt;
+		&lt;property name="dataSource" ref="datasource1" /&gt;
+	&lt;/bean&gt;
+	
+	&lt;bean id="template2" class="org.springframework.jdbc.core.JdbcTemplate"&gt;
+		&lt;property name="dataSource" ref="datasource2" /&gt;
+	&lt;/bean&gt;
+		
+	&lt;bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager" init-method="init" destroy-method="close"&gt;
+		&lt;property name="forceShutdown"&gt;&lt;value&gt;true&lt;/value&gt;&lt;/property&gt;
+	&lt;/bean&gt;
+	
+	&lt;bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp"&gt;
+		&lt;property name="transactionTimeout" value="300"/&gt; 
+	&lt;/bean&gt;
+
+	&lt;bean id="springTransactionManager" class="org.springframework.transaction.jta.JtaTransactionManager"&gt;
+		&lt;property name="transactionManager"&gt;&lt;ref bean="atomikosTransactionManager"  /&gt;&lt;/property&gt;
+		&lt;property name="userTransaction"&gt;&lt;ref bean="atomikosUserTransaction"  /&gt;&lt;/property&gt;
+	&lt;/bean&gt;
+	
+	&lt;bean id="dao1" class="com.xa.dao.UserDao1"&gt;
+		&lt;property name="jdbcTemplate"&gt;
+			&lt;ref bean="template1"&gt;&lt;/ref&gt;
+		&lt;/property&gt;
+	&lt;/bean&gt;
+	
+	&lt;bean id="dao2" class="com.xa.dao.UserDao2"&gt;
+		&lt;property name="jdbcTemplate"&gt;
+			&lt;ref bean="template2"&gt;&lt;/ref&gt;
+		&lt;/property&gt;
+	&lt;/bean&gt;
+	&lt;!-- --&gt;
+	&lt;bean id="userServiceTarget" class="com.xa.service.UserServiceImpl"&gt;
+		&lt;property name="dao1" ref="dao1"/&gt;
+		&lt;property name="dao2" ref="dao2"/&gt;
+	&lt;/bean&gt;
+	
+	&lt;bean id="userTest" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"&gt;    
+		&lt;property name="transactionManager"&gt;
+			&lt;ref bean="springTransactionManager"/&gt;
+		&lt;/property&gt;    
+		&lt;property name="target"&gt;
+			&lt;ref bean="userServiceTarget"/&gt;
+		&lt;/property&gt;
+		&lt;property name="transactionAttributes"&gt;        
+			&lt;props&gt;
+				&lt;prop key="insert*"&gt;PROPAGATION_REQUIRED,-Exception&lt;/prop&gt;            
+			&lt;/props&gt;
+		&lt;/property&gt;
+	&lt;/bean&gt;
+&lt;/beans&gt;
+</pre>
+<br>
+<br>看上下文中的代码，很大部分和JOTM的相似，atomikos使用com.atomikos.jdbc.SimpleDataSourceBean类来创建datasource bean，这里需要特别注意
+<br><div class="dp-highlighter"><div class="bar"><div class="tools">Java代码 <embed src="/javascripts/syntaxhighlighter/clipboard_new.swf" width="14" height="15" flashvars="clipboard=%3Cproperty%20name%3D%22uniqueResourceName%22%3E%20%20%20%0A%09%3Cvalue%3Emysql%2Fmain%3C%2Fvalue%3E%20%20%20%0A%3C%2Fproperty%3E%20%20%0A" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></div></div><ol start="1" class="dp-j"><li><span><span>&lt;property&nbsp;name=</span><span class="string">"uniqueResourceName"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;mysql/main&lt;/value&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;</span></li></ol></div><pre name="code" class="java" style="display: none; ">&lt;property name="uniqueResourceName"&gt;   
+	&lt;value&gt;mysql/main&lt;/value&gt;   
+&lt;/property&gt;  
+</pre>
+<br>
+<br><div class="dp-highlighter"><div class="bar"><div class="tools">Java代码 <embed src="/javascripts/syntaxhighlighter/clipboard_new.swf" width="14" height="15" flashvars="clipboard=%3Cproperty%20name%3D%22uniqueResourceName%22%3E%20%20%20%0A%09%3Cvalue%3Emysql%2Fnews%3C%2Fvalue%3E%0A%3C%2Fproperty%3E%0A" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></div></div><ol start="1" class="dp-j"><li><span><span>&lt;property&nbsp;name=</span><span class="string">"uniqueResourceName"</span><span>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;value&gt;mysql/news&lt;/value&gt;&nbsp;&nbsp;</span></li><li><span>&lt;/property&gt;&nbsp;&nbsp;</span></li></ol></div><pre name="code" class="java" style="display: none; ">&lt;property name="uniqueResourceName"&gt;   
+	&lt;value&gt;mysql/news&lt;/value&gt;
+&lt;/property&gt;
+</pre>
+<br>上面的代码为每个Datasource配置了一个唯一的名称，名称不允许相同，否则将会使用同一个datasource，而不会出现异常。
+<br>
+<br>另外在配置文件中定义了Atomikos的事务管理器，并在Spring的JtaTransactionManager中引用
+<br><div class="dp-highlighter"><div class="bar"><div class="tools">Java代码 <embed src="/javascripts/syntaxhighlighter/clipboard_new.swf" width="14" height="15" flashvars="clipboard=%3Cbean%20id%3D%22atomikosTransactionManager%22%20class%3D%22com.atomikos.icatch.jta.UserTransactionManager%22%20init-method%3D%22init%22%20destroy-method%3D%22close%22%3E%0A%09%09%3Cproperty%20name%3D%22forceShutdown%22%3E%3Cvalue%3Etrue%3C%2Fvalue%3E%3C%2Fproperty%3E%0A%09%3C%2Fbean%3E%0A%09%0A%09%3Cbean%20id%3D%22atomikosUserTransaction%22%20class%3D%22com.atomikos.icatch.jta.UserTransactionImp%22%3E%0A%09%09%3Cproperty%20name%3D%22transactionTimeout%22%20value%3D%22300%22%2F%3E%20%0A%09%3C%2Fbean%3E%0A%0A%09%3Cbean%20id%3D%22springTransactionManager%22%20class%3D%22org.springframework.transaction.jta.JtaTransactionManager%22%3E%0A%09%09%3Cproperty%20name%3D%22transactionManager%22%3E%3Cref%20bean%3D%22atomikosTransactionManager%22%20%20%2F%3E%3C%2Fproperty%3E%0A%09%09%3Cproperty%20name%3D%22userTransaction%22%3E%3Cref%20bean%3D%22atomikosUserTransaction%22%20%20%2F%3E%3C%2Fproperty%3E%0A%09%3C%2Fbean%3E%0A" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></div></div><ol start="1" class="dp-j"><li><span><span>&lt;bean&nbsp;id=</span><span class="string">"atomikosTransactionManager"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"com.atomikos.icatch.jta.UserTransactionManager"</span><span>&nbsp;init-method=</span><span class="string">"init"</span><span>&nbsp;destroy-method=</span><span class="string">"close"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"forceShutdown"</span><span>&gt;&lt;value&gt;</span><span class="keyword">true</span><span>&lt;/value&gt;&lt;/property&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;bean&nbsp;id=<span class="string">"atomikosUserTransaction"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"com.atomikos.icatch.jta.UserTransactionImp"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"transactionTimeout"</span><span>&nbsp;value=</span><span class="string">"300"</span><span>/&gt;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;bean&nbsp;id=<span class="string">"springTransactionManager"</span><span>&nbsp;</span><span class="keyword">class</span><span>=</span><span class="string">"org.springframework.transaction.jta.JtaTransactionManager"</span><span>&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"transactionManager"</span><span>&gt;&lt;ref&nbsp;bean=</span><span class="string">"atomikosTransactionManager"</span><span>&nbsp;&nbsp;/&gt;&lt;/property&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;property&nbsp;name=<span class="string">"userTransaction"</span><span>&gt;&lt;ref&nbsp;bean=</span><span class="string">"atomikosUserTransaction"</span><span>&nbsp;&nbsp;/&gt;&lt;/property&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/bean&gt;&nbsp;&nbsp;</span></li></ol></div><pre name="code" class="java" style="display: none; ">&lt;bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager" init-method="init" destroy-method="close"&gt;
+		&lt;property name="forceShutdown"&gt;&lt;value&gt;true&lt;/value&gt;&lt;/property&gt;
+	&lt;/bean&gt;
+	
+	&lt;bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp"&gt;
+		&lt;property name="transactionTimeout" value="300"/&gt; 
+	&lt;/bean&gt;
+
+	&lt;bean id="springTransactionManager" class="org.springframework.transaction.jta.JtaTransactionManager"&gt;
+		&lt;property name="transactionManager"&gt;&lt;ref bean="atomikosTransactionManager"  /&gt;&lt;/property&gt;
+		&lt;property name="userTransaction"&gt;&lt;ref bean="atomikosUserTransaction"  /&gt;&lt;/property&gt;
+	&lt;/bean&gt;
+</pre>
+<br>
+<br>其它的代码没什么特别，和JOTM配置基本相同，JdbcTemplate，DAO，Service，事务代理等等....
+<br>
+<br>仍然使用TestXa.java，修改成引用ApplicationContext-atomikos.xml的上下文配置
+<br><div class="dp-highlighter"><div class="bar"><div class="tools">Java代码 <embed src="/javascripts/syntaxhighlighter/clipboard_new.swf" width="14" height="15" flashvars="clipboard=protected%20String%5B%5D%20getConfigLocations()%20%7B%0A%09%2F%2Freturn%20new%20String%5B%5D%20%7B%20%22classpath%3AApplicationContext-jotm.xml%22%20%7D%3B%0A%09return%20new%20String%5B%5D%20%7B%20%22classpath%3AApplicationContext-atomikos.xml%22%20%7D%3B%0A%7D%0A" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></div></div><ol start="1" class="dp-j"><li><span><span class="keyword">protected</span><span>&nbsp;String[]&nbsp;getConfigLocations()&nbsp;{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//return&nbsp;new&nbsp;String[]&nbsp;{&nbsp;"classpath:ApplicationContext-jotm.xml"&nbsp;};</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="keyword">new</span><span>&nbsp;String[]&nbsp;{&nbsp;</span><span class="string">"classpath:ApplicationContext-atomikos.xml"</span><span>&nbsp;};&nbsp;&nbsp;</span></span></li><li><span>}&nbsp;&nbsp;</span></li></ol></div><pre name="code" class="java" style="display: none; ">protected String[] getConfigLocations() {
+	//return new String[] { "classpath:ApplicationContext-jotm.xml" };
+	return new String[] { "classpath:ApplicationContext-atomikos.xml" };
+}
+</pre>
+<br>
+<br>运行test，然后查看数据库状态，
+<br>然后修改方法参数使其不违反数据库约束，再运行Test观察数据库 ：）。
+<br>
+      </div>
+      
+              <div id="topic_copyright">声明：JavaEye文章版权属于作者，受法律保护。没有作者书面许可不得转载。 </div>
+        <div id="forum_recommended_f5"><span>推荐链接</span><ul><li><a href="http://www.javaeye.com/clicks/373" target="_blank"><img src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/adobe_720_60.gif" width="720" height="60" alt="adobe" title="adobe">
+
+</a></li></ul></div>
+                    <div id="forum_recommended_f0"><script type="text/javascript"><!--
+google_ad_client = "pub-1076724771190722";
+/* JE论坛文章728x90 */
+google_ad_slot = "4097489287";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript" src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/show_ads.js">
+</script><script src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/expansion_embed.js"></script><script src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/test_domain.js"></script><script>google_protectAndRun("ads_core.google_render_ad", google_handleError, google_render_ad);</script><ins style="display:inline-table;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:728px"><ins id="google_ads_frame1_anchor" style="display:block;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:728px"><iframe allowtransparency="true" frameborder="0" height="90" hspace="0" id="google_ads_frame1" marginheight="0" marginwidth="0" name="google_ads_frame" scrolling="no" src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/ads.htm" style="left:0;position:absolute;top:0" vspace="0" width="728"></iframe></ins></ins></div>
+          </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="http://www.javaeye.com/topic/147599#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href="http://tom-duan.javaeye.com/" class="icon_www" title="浏览作者的博客">&nbsp;</a>
+        <a href="http://tom-duan.javaeye.com/blog/profile" class="icon_profile" title="浏览作者资料">&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=tom.duan" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href="http://tom-duan.javaeye.com/blog/guest_book" class="icon_guestbook" title="给作者留言">&nbsp;</a>
+        <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=tom.duan" class="icon_rss" onclick="var f = document.createElement(&#39;form&#39;); f.style.display = &#39;none&#39;; this.parentNode.appendChild(f); f.method = &#39;POST&#39;; f.action = this.href;f.submit();return false;" title="关注作者">&nbsp;</a>
+              </div>
+                        </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></tr>
+<tr id="590220">
+  <td class="postauthor">
+    <ul>
+      <li class="name">liuzhengd9</li>
+      <li>等级: 初级会员</li>
+      <li><a href="http://liuzhengd9.javaeye.com/" target="_blank"><img alt="liuzhengd9的博客" class="logo" src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/d23d80f8-0bf2-3fc4-ae60-47a2ce838c30.jpg" title="liuzhengd9的博客: "></a></li>
+      <li>文章: 9</li>
+      <li>积分: 0</li>
+      <li>来自: 北京</li>
+      <li><img src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/offline.gif"></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        &nbsp;&nbsp;
+        发表时间：2008-07-02&nbsp;&nbsp;
+        
+      </div>
+      <div class="links">
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+      
+        我按照你的配置了一些，我换成了hibernate3.2.6，为什么报下面这个错误：
+<br>2008-07-02 14:22:24,343 DEBUG [main] (BatchingBatcher.java:44) - Executing batch size: 10
+<br>2008-07-02 14:22:24,359 DEBUG [main] (AbstractBatcher.java:374) - about to close PreparedStatement (open PreparedStatements: 1, globally: 1)
+<br>2008-07-02 14:22:24,359 DEBUG [main] (AbstractPlatformTransactionManager.java:893) - Triggering beforeCompletion synchronization
+<br>2008-07-02 14:22:24,359 DEBUG [main] (TransactionSynchronizationManager.java:199) - Removed value [org.springframework.orm.hibernate3.SessionHolder@b20352] for key [org.hibernate.impl.SessionFactoryImpl@578073] from thread [main]
+<br>2008-07-02 14:22:24,359 DEBUG [main] (AbstractPlatformTransactionManager.java:848) - Initiating transaction rollback after commit exception
+<br>java.lang.IllegalArgumentException: null source
+<br>	at java.util.EventObject.&lt;init&gt;(Unknown Source)
+<br>	at javax.sql.StatementEvent.&lt;init&gt;(Unknown Source)
+<br>	at com.mysql.jdbc.jdbc2.optional.JDBC4PreparedStatementWrapper.close(JDBC4PreparedStatementWrapper.java:70)
+<br>	at org.hibernate.jdbc.AbstractBatcher.closePreparedStatement(AbstractBatcher.java:534)
+<br>	at org.hibernate.jdbc.AbstractBatcher.closeStatement(AbstractBatcher.java:269)
+<br>	at org.hibernate.jdbc.AbstractBatcher.executeBatch(AbstractBatcher.java:249)
+<br>	at org.hibernate.engine.ActionQueue.executeActions(ActionQueue.java:266)
+<br>	at org.hibernate.engine.ActionQueue.executeActions(ActionQueue.java:167)
+<br>	at org.hibernate.event.def.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:298)
+<br>	at org.hibernate.event.def.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:27)
+<br>	at org.hibernate.impl.SessionImpl.flush(SessionImpl.java:1000)
+<br>	at org.springframework.orm.hibernate3.SpringSessionSynchronization.beforeCommit(SpringSessionSynchronization.java:135)
+<br>	at org.springframework.transaction.support.TransactionSynchronizationUtils.triggerBeforeCommit(TransactionSynchronizationUtils.java:72)
+<br>	at org.springframework.transaction.support.AbstractPlatformTransactionManager.triggerBeforeCommit(AbstractPlatformTransactionManager.java:882)
+<br>	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:692)
+<br>	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:678)
+<br>	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:321)
+<br>	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:116)
+<br>	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:171)
+<br>	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:204)
+<br>	at $Proxy7.addMySpringObject(Unknown Source)
+<br>	at myspring.service.impl.MySpringServiceTest.main(MySpringServiceTest.java:26)
+<br>2008-07-02 14:22:24,484 DEBUG [main] (AbstractPlatformTransactionManager.java:922) - Triggering afterCompletion synchronization
+<br>2008-07-02 14:22:24,484 DEBUG [main] (SessionFactoryUtils.java:774) - Closing Hibernate Session
+<br>2008-07-02 14:22:24,484 DEBUG [main] (ConnectionManager.java:441) - releasing JDBC connection [ (open PreparedStatements: 0, globally: 0) (open ResultSets: 0, globally: 0)]
+<br>Exception in thread "main" java.lang.IllegalArgumentException: null source
+<br>	at java.util.EventObject.&lt;init&gt;(Unknown Source)
+<br>	at javax.sql.StatementEvent.&lt;init&gt;(Unknown Source)
+<br>	at com.mysql.jdbc.jdbc2.optional.JDBC4PreparedStatementWrapper.close(JDBC4PreparedStatementWrapper.java:70)
+<br>	at org.hibernate.jdbc.AbstractBatcher.closePreparedStatement(AbstractBatcher.java:534)
+<br>	at org.hibernate.jdbc.AbstractBatcher.closeStatement(AbstractBatcher.java:269)
+<br>	at org.hibernate.jdbc.AbstractBatcher.executeBatch(AbstractBatcher.java:249)
+<br>	at org.hibernate.engine.ActionQueue.executeActions(ActionQueue.java:266)2008-07-02 14:22:24,531 DEBUG [main] (ConnectionManager.java:302) - transaction completed on session with on_close connection release mode; be sure to close the session to release JDBC resources!
+<br>2008-07-02 14:22:24,531 DEBUG [main] (TransactionSynchronizationManager.java:282) - Clearing transaction synchronization
+<br>
+<br>	at org.hibernate.engine.ActionQueue.executeActions(ActionQueue.java:167)
+<br>	at org.hibernate.event.def.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:298)
+<br>	at org.hibernate.event.def.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:27)
+<br>	at org.hibernate.impl.SessionImpl.flush(SessionImpl.java:1000)
+<br>	at org.springframework.orm.hibernate3.SpringSessionSynchronization.beforeCommit(SpringSessionSynchronization.java:135)
+<br>	at org.springframework.transaction.support.TransactionSynchronizationUtils.triggerBeforeCommit(TransactionSynchronizationUtils.java:72)
+<br>	at org.springframework.transaction.support.AbstractPlatformTransactionManager.triggerBeforeCommit(AbstractPlatformTransactionManager.java:882)
+<br>	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:692)
+<br>	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:678)
+<br>	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:321)
+<br>	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:116)
+<br>	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:171)
+<br>	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:204)
+<br>	at $Proxy7.addMySpringObject(Unknown Source)
+<br>	at myspring.service.impl.MySpringServiceTest.main(MySpringServiceTest.java:26)
+<br>
+      </div>
+      
+                </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="http://www.javaeye.com/topic/147599#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href="http://liuzhengd9.javaeye.com/" class="icon_www" title="浏览作者的博客">&nbsp;</a>
+        <a href="http://liuzhengd9.javaeye.com/blog/profile" class="icon_profile" title="浏览作者资料">&nbsp;</a>
+        <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=liuzhengd9" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href="http://liuzhengd9.javaeye.com/blog/guest_book" class="icon_guestbook" title="给作者留言">&nbsp;</a>
+        <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=liuzhengd9" class="icon_rss" onclick="var f = document.createElement(&#39;form&#39;); f.style.display = &#39;none&#39;; this.parentNode.appendChild(f); f.method = &#39;POST&#39;; f.action = this.href;f.submit();return false;" title="关注作者">&nbsp;</a>
+                  <a href="http://www.javaeye.com/topic/147599#590220" title="liuzhengd9回帖:Spring JTA应用JOTM &amp; Atomikos III Atomikos">回帖地址</a>
+              </div>
+                        <div id="post_rate_box_590220" class="post_rate_box"><a href="http://www.javaeye.com/topic/147599#" onclick="return false;" class="good" title="好">0</a> <a href="http://www.javaeye.com/topic/147599#" onclick="return false;" class="hidden" title="差">0</a> 请登录后投票</div>                  </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></tr>
+
+  </tbody>
+</table>
+
+
+<div class="actions">
+  <div class="buttons"></div>
+  <div class="wrapper"></div>
+</div>
+
+<div>
+  <div class="crumbs">
+    <a href="http://www.javaeye.com/forums">论坛首页</a> <span class="arrow">→</span>
+    <a href="http://www.javaeye.com/forums/board/Java">Java编程和Java企业应用版</a>
+     <span class="arrow">→</span> <a href="http://www.javaeye.com/forums/tag/Spring">Spring</a>
+    <br><br>跳转论坛:<select id="forum_urlname" name="forum[urlname]" onchange="window.location=&#39;/forums/board/&#39;+this.value"><option value="Java" selected="selected">Java编程和Java企业应用</option>
+<option value="web">Web前端技术</option>
+<option value="mobile">移动编程和手机应用开发</option>
+<option value="cpp">C/C++编程</option>
+<option value="Ruby">Ruby编程</option>
+<option value="Python">Python编程</option>
+<option value="PHP">PHP编程</option>
+<option value="Flash">Flash编程和RIA</option>
+<option value="dotnet">Microsoft .Net</option>
+<option value="Tech">综合技术</option>
+<option value="develop">软件开发和项目管理</option>
+<option value="Industry">行业应用</option>
+<option value="New">入门讨论</option>
+<option value="Job">招聘求职</option>
+<option value="Life">海阔天空</option></select>
+     
+      <ul id="recommended_jobs" style="list-style-type:none;border:1px solid #f8aa4f;width:400px;height:110px;margin-top:5px;padding:7px 0;overflow:hidden;" onmousemove="marqueeing = false;" onmouseout="marqueeing = true;">
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.javaeye.com/jobs/825" target="_blank" title="上海:上海汉得诚聘高级基础架构研发工程师&mdash;&mdash;IDE方向">上海: 上海汉得诚聘高级基础架构研发工程师——IDE</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.javaeye.com/jobs/712" target="_blank" title="北京:JavaEye猎头诚聘Java搜索工程师">北京: JavaEye猎头诚聘Java搜索工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.javaeye.com/jobs/794" target="_blank" title="广东:穆迪moody&#39;s诚聘Java Developer">广东: 穆迪moody's诚聘Java Developer</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.javaeye.com/jobs/726" target="_blank" title="北京:chinacache诚聘高级Java开发工程师（后台应用）">北京: chinacache诚聘高级Java开发工程师（后台应用</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.javaeye.com/jobs/839" target="_blank" title="北京:glodon诚聘Eclipse插件开发工程师">北京: glodon诚聘Eclipse插件开发工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.javaeye.com/jobs/844" target="_blank" title="广东:动网先锋诚聘Java开发工程师">广东: 动网先锋诚聘Java开发工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.javaeye.com/jobs/838" target="_blank" title="上海:BShare诚聘资深Java Web开发工程师">上海: BShare诚聘资深Java Web开发工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.javaeye.com/jobs/817" target="_blank" title="北京:Laszlo Systems 诚聘高级Java程序员">北京: Laszlo Systems 诚聘高级Java程序员</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.javaeye.com/jobs/728" target="_blank" title="北京:chinacache诚聘Java应用架构师">北京: chinacache诚聘Java应用架构师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.javaeye.com/jobs/804" target="_blank" title="福建:福州几维网络诚聘游戏服务端程序员(Java)">福建: 福州几维网络诚聘游戏服务端程序员(Java)</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.javaeye.com/jobs/800" target="_blank" title="北京:网易（NETEASE）诚聘高级Java开发工程师">北京: 网易（NETEASE）诚聘高级Java开发工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.javaeye.com/jobs/523" target="_blank" title="北京:去哪儿旅游搜索引擎诚聘java开发工程师">北京: 去哪儿旅游搜索引擎诚聘java开发工程师</a></li>
+        
+      </ul>
+      <script type="text/javascript">
+        var marqueeing = true;
+        function marquee(){
+          if(marqueeing) {
+            var container=document.getElementById("recommended_jobs");
+            container.appendChild(container.firstChild);
+          }
+        }
+        setInterval("marquee()", 4000);
+      </script>
+    
+  </div>
+
+  
+</div>
+
+<div style="display:none">
+  <form action="http://www.javaeye.com/posts/rate" id="post_rate_form" method="post" onsubmit="new Ajax.Request(&#39;/posts/rate&#39;, {asynchronous:true, evalScripts:true, parameters:Form.serialize(this)}); return false;">
+    <input type="hidden" id="post_rate_id" name="id">
+    <input type="hidden" id="post_rate_type" name="type">
+  </form></div>
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  fix_image_size($$('div.postbody img'), 760);
+
+  function rate_post(id, type) {
+    Element.update('post_rate_box_' + id, '提交中...');
+    new Ajax.Request('/posts/rate', {asynchronous:true, evalScripts:true, parameters:{"id":id, "type":type}});
+  }
+
+  function rate_topic(type) {
+    Element.update('topic_rate_box', '提交中...');
+    new Ajax.Request('/topics/rate', {asynchronous:true, evalScripts:true, parameters:{"id":147599, "type":type}});
+  }
+</script>
+
+
+
+        </div>
+        <div id="nav">
+  <div class="wrapper">
+    <ul>
+            <li><a href="http://www.javaeye.com/">首页</a></li>
+      <li><a href="http://www.javaeye.com/news">新闻</a></li>
+      <li><a href="http://www.javaeye.com/forums" class="selected">论坛</a></li>
+      <li><a href="http://www.javaeye.com/ask">问答</a></li>
+      <li><a href="http://www.javaeye.com/wiki">专栏</a></li>
+      <li><a href="http://www.javaeye.com/blogs">博客</a></li>
+      <!--<li><a href="http://www.javaeye.com/articles">文摘</a></li>//-->
+      <li><a href="http://www.javaeye.com/groups">圈子</a></li>
+      <li><a href="http://www.javaeye.com/job">招聘</a></li>
+      <li><a href="http://www.javaeye.com/index/service">服务</a></li>
+      <li class="last"><a href="http://www.javaeye.com/search">搜索</a></li>
+    </ul>
+  </div>
+</div>
+
+<div id="channel_nav">
+  <ul>
+    <li><a href="http://java.javaeye.com/">Java</a></li>
+    <li><a href="http://webapp.javaeye.com/">Web</a></li>
+    <li><a href="http://ruby.javaeye.com/">Ruby</a></li>
+    <li><a href="http://python.javaeye.com/">Python</a></li>
+    <li><a href="http://agile.javaeye.com/">敏捷</a></li>
+    <li><a href="http://mysql.javaeye.com/">MySQL</a></li>
+    <li><a href="http://runqian.javaeye.com/">润亁报表</a></li>
+    <li class="last"><a href="http://book.javaeye.com/">图书</a></li>
+  </ul>
+</div>
+
+      </div>
+      <div id="footer">
+  <div id="site_nav">
+    <ul>
+      <li><a href="http://www.javaeye.com/index/service">广告服务</a></li>
+      <li><a href="http://webmaster.javaeye.com/">JavaEye黑板报</a></li>
+      <li><a href="http://www.javaeye.com/index/aboutus">关于我们</a></li>
+      <li><a href="http://www.javaeye.com/index/contactus">联系我们</a></li>
+      <li class="last"><a href="http://www.javaeye.com/index/friend_links">友情链接</a></li>
+    </ul>
+  </div>
+  <div id="copyright">
+    © 2003-2010 JavaEye.com.   上海炯耐计算机软件有限公司版权所有 [ <a href="http://www.miibeian.gov.cn/">�������������������������������������������������������������������������������������������沪ICP备05023328号</a> ]
+  </div>
+</div>
+
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.javaeye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&logged_in=no" + "' width='0' height='0' />");
+</script><img src="./Spring JTA应用JOTM & Atomikos III Atomikos - Spring - Java - JavaEye论坛_files/saved_resource" width="0" height="0">
+  
+
+<div style="position: absolute; z-index: 1.07374e+009; top: -9999em; -webkit-box-sizing: content-box; width: 200px; height: 42px; display: none; " id=":0.balloonContainer"><iframe id=":0.container" class="goog-te-balloon-frame skiptranslate" frameborder="0" src="javascript:''" style="visibility: visible; -webkit-box-sizing: content-box; width: 200px; height: 42px; "></iframe></div></body></html>
