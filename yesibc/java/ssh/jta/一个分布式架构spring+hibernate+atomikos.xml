@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="nativeJdbcExtractor"
+		class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor"
+		lazy-init="true" />
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler"
+		lazy-init="true">
+		<property name="nativeJdbcExtractor">
+			<ref local="nativeJdbcExtractor" />
+		</property>
+	</bean>
+	<bean id="DataSource1" class="com.atomikos.jdbc.SimpleDataSourceBean"
+		init-method="init" destroy-method="close">
+		<property name="uniqueResourceName">
+			<value>XADBMS1</value>
+		</property>
+		<property name="xaDataSourceClassName">
+			<value>oracle.jdbc.xa.client.OracleXADataSource</value>
+		</property>
+		<property name="xaDataSourceProperties">
+			<value>user=;password=;URL=jdbc:oracle:thin:@192.168.2.**:1521:orcl</value>
+		</property>
+		<property name="exclusiveConnectionMode">
+			<value>true</value>
+		</property>
+		<property name="connectionPoolSize" value="10" />
+		<property name="connectionTimeout" value="120" />
+	</bean>
+	<bean id="DataSource2" class="com.atomikos.jdbc.SimpleDataSourceBean"
+		init-method="init" destroy-method="close">
+		<property name="uniqueResourceName">
+			<value>XADBMS2</value>
+		</property>
+		<property name="xaDataSourceClassName">
+			<value>oracle.jdbc.xa.client.OracleXADataSource</value>
+		</property>
+		<property name="xaDataSourceProperties">
+			<value>user=;password=;URL=jdbc:oracle:thin:@192.168.2.**:1521:orcl</value>
+		</property>
+		<property name="exclusiveConnectionMode">
+			<value>true</value>
+		</property>
+		<property name="connectionPoolSize" value="10" />
+		<property name="connectionTimeout" value="120" />
+	</bean>
+
+	<!--
+		====SessionFactory=========================================================================================
+	-->
+	<bean id="hibernateProperties1"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
+				<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JTATransactionFactory</prop>
+				<prop key="hibernate.transaction.manager_lookup_class">com.atomikos.icatch.jta.hibernate3.TransactionManagerLookup</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.query.substitutions">true 1, false 0</prop>
+				<prop key="hibernate.query.factory_class">org.hibernate.hql.classic.ClassicQueryTranslatorFactory</prop>
+				<!-- <prop key="hibernate.hbm2ddl.auto">update</prop>  -->
+				<!--  <prop key="hibernate.cache.use_query_cache">true</prop>-->
+				<!--
+					<prop
+					key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+				-->
+			</props>
+		</property>
+	</bean>
+	<bean id="hibernateProperties2"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
+				<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JTATransactionFactory</prop>
+				<prop key="hibernate.transaction.manager_lookup_class">com.atomikos.icatch.jta.hibernate3.TransactionManagerLookup</prop>
+				<!--  <prop key="hibernate.show_sql">true</prop>  -->
+				<!-- <prop key="hibernate.hbm2ddl.auto">update</prop>  -->
+				<!--  <prop key="hibernate.cache.use_query_cache">true</prop>-->
+				<!--
+					<prop
+					key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+				-->
+			</props>
+		</property>
+	</bean>
+	<bean id="sessionFactory1"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="DataSource1" />
+		</property>
+		<property name="mappingResources">
+			<list>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<ref bean="hibernateProperties1" />
+		</property>
+	</bean>
+	<bean id="sessionFactory2"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="lobHandler" ref="lobHandler" />
+		<property name="dataSource">
+			<ref bean="DataSource2" />
+		</property>
+		<property name="mappingResources">
+			<list>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<ref bean="hibernateProperties2" />
+		</property>
+	</bean>
+	<bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager"
+		init-method="init" destroy-method="close">
+		<property name="forceShutdown">
+			<value>true</value>
+		</property>
+	</bean>
+	<bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
+		<property name="transactionTimeout">
+			<value>120</value>
+		</property>
+	</bean>
+	<bean id="transactionManager"
+		class="org.springframework.transaction.jta.JtaTransactionManager">
+		<property name="transactionManager">
+			<ref bean="atomikosTransactionManager" />
+		</property>
+		<property name="userTransaction">
+			<ref bean="atomikosUserTransaction" />
+		</property>
+	</bean>
+	<!--
+		===@@@@@@@@@@@@@@@=======================================================================================
+	-->
+	<bean id="baseTxProxy" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="transactionAttributeSource">
+			<bean
+				class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="del*">PROPAGATION_REQUIRED</prop>
+				<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	<!--
+		===dao============================================================================================
+	-->
+	<bean id="serverInfoDao" class="com.**.dao.impl.ServerInfoDaoImpl"
+		autowire="byName">
+		<property name="cacheQueries">
+			<value>true</value>
+		</property>
+		<property name="sessionFactory">
+			<ref bean="sessionFactory1" />
+		</property>
+	</bean>
+	<bean id="bdUserinfoDtDao" class="com.**.dao.impl.BdUserinfoDtDaoImpl"
+		autowire="byName">
+		<property name="cacheQueries">
+			<value>true</value>
+		</property>
+		<property name="sessionFactory">
+			<ref bean="sessionFactory2" />
+		</property>
+	</bean>
+	<bean id="pathinfoService" parent="baseTxProxy">
+		<property name="target">
+			<bean class="com.**.service.impl.PathinfoServiceImpl" autowire="byName">
+				<property name="bdUserinfoDtDao">
+					<ref local="bdUserinfoDtDao" />
+				</property>
+				<property name="serverInfoDao">
+					<ref local="serverInfoDao" />
+				</property>
+
+			</bean>
+		</property>
+	</bean>
+</beans>
