@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.yesibc.core.dao.EntityDao;
 import com.yesibc.core.exception.ApplicationException;
-import com.yesiic.model.ComAppend;
-import com.yesiic.model.ComEmail;
-import com.yesiic.model.Company;
+import com.yesiic.company.model.ComAppend;
+import com.yesiic.company.model.ComEmail;
+import com.yesiic.company.model.Company;
 
 public interface CompanyDao extends EntityDao<Company> {
 
