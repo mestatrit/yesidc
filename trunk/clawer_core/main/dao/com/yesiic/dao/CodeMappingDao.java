@@ -1,10 +1,10 @@
 package com.yesiic.dao;
 
 import com.yesibc.core.dao.EntityDao;
-import com.yesiic.model.Code;
-import com.yesiic.model.CodeJob;
+import com.yesiic.base.model.Code;
+import com.yesiic.base.model.CodeMapping;
 
-public interface CodeJobDao  extends EntityDao<CodeJob>{
+public interface CodeMappingDao  extends EntityDao<CodeMapping>{
 
 	public Code queryByCode(String code, String type);
 

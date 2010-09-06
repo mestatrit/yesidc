@@ -3,7 +3,7 @@ package com.yesiic.dao;
 import org.hibernate.stat.Statistics;
 
 import com.yesibc.core.dao.EntityDao;
-import com.yesiic.model.Code;
+import com.yesiic.base.model.Code;
 
 public interface BaseCodeDao  extends EntityDao<Code>{
 	

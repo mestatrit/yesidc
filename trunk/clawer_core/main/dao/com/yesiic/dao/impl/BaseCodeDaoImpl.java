@@ -3,9 +3,9 @@ package com.yesiic.dao.impl;
 import org.hibernate.stat.Statistics;
 
 import com.yesibc.core.dao.HibernateEntityDao;
+import com.yesiic.base.model.Code;
 import com.yesiic.common.BaseCode;
 import com.yesiic.dao.BaseCodeDao;
-import com.yesiic.model.Code;
 
 public class BaseCodeDaoImpl extends HibernateEntityDao<Code> implements
 		BaseCodeDao {
