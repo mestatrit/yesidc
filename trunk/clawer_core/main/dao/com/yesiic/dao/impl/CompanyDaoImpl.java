@@ -14,10 +14,10 @@ import org.hibernate.criterion.Restrictions;
 import com.yesibc.core.dao.HibernateEntityDao;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.utils.StringUtils;
+import com.yesiic.company.model.ComAppend;
+import com.yesiic.company.model.ComEmail;
+import com.yesiic.company.model.Company;
 import com.yesiic.dao.CompanyDao;
-import com.yesiic.model.ComAppend;
-import com.yesiic.model.ComEmail;
-import com.yesiic.model.Company;
 
 @SuppressWarnings("deprecation")
 public class CompanyDaoImpl extends HibernateEntityDao<Company> implements CompanyDao {
