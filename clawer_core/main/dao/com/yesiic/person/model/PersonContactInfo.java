@@ -2,6 +2,9 @@ package com.yesiic.person.model;
 
 import java.util.Date;
 
+import com.yesiic.base.model.Code;
+import com.yesiic.base.model.ContactInfo;
+
 /**
  * TeCAddr entity. @author MyEclipse Persistence Tools
  */
