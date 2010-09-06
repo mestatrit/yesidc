@@ -11,7 +11,7 @@ import org.hibernate.criterion.Restrictions;
 import com.yesibc.core.dao.HibernateEntityDao;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesiic.dao.WebPagesDao;
-import com.yesiic.model.WebPages;
+import com.yesiic.webswith.model.WebPages;
 
 public class WebPagesDaoImpl extends HibernateEntityDao<WebPages> implements WebPagesDao {
 

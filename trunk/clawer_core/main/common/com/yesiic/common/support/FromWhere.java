@@ -2,8 +2,8 @@ package com.yesiic.common.support;
 
 import java.util.List;
 
+import com.yesiic.base.model.Code;
 import com.yesiic.common.BaseCode;
-import com.yesiic.model.Code;
 
 public class FromWhere extends BaseCode {
 

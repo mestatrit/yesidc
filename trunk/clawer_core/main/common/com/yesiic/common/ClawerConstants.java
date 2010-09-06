@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.util.Date;
 
 import com.yesibc.core.utils.DateUtils;
-import com.yesiic.model.Code;
+import com.yesiic.base.model.Code;
 
 public class ClawerConstants {
 
