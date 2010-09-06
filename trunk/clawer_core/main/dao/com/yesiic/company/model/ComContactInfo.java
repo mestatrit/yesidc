@@ -1,13 +1,21 @@
-package com.yesiic.model;
+package com.yesiic.company.model;
 
 import java.util.Date;
 import java.util.List;
+
+import com.yesiic.model.sub.ComContactFax;
+import com.yesiic.model.sub.ComContactMobile;
+import com.yesiic.model.sub.ComContactQQ;
+import com.yesiic.model.sub.ComContactTel;
+import com.yesiic.model.sub.ComContactWW;
+
+
 
 /**
  * TeCAddr entity. @author MyEclipse Persistence Tools
  */
 
-public class ComEmail implements java.io.Serializable {
+public class ComContactInfo extends ContactInfo  {
 
 	// Fields
 
@@ -16,36 +24,27 @@ public class ComEmail implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 3197774547449040020L;
 	private Long id;
-	private String email;
+	private String contractNo;
 	private String reciever;
-	/**
-	 * 个人-1 公司共享-2 公司个人-3 
-	 */
-	private String mailType;
-	public final static String MAIL_TYPE_PRIVATE = "1";
-	public final static String MAIL_TYPE_COMPANY_SHARE = "2";
-	public final static String MAIL_TYPE_COMPANY_PRIVATE = "3";
-
+	
+	private Code fromWhere;
+	private String fromWhereName;
+	
 	private Date createDate;
 	private Date updateDate;
 	private String createUser;
 	private String updateUser;
 	
-	private String url;
-
-	private Code fromWhere;
-	private String fromWhereName;
-
 	private List<ComContactHeader> comContactHeaders;
 
 	// Constructors
 
 	/** default constructor */
-	public ComEmail() {
+	public ComContactInfo() {
 	}
 
 	/** minimal constructor */
-	public ComEmail(Long id) {
+	public ComContactInfo(Long id) {
 		this.id = id;
 	}
 
@@ -59,14 +58,6 @@ public class ComEmail implements java.io.Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public Date getCreateDate() {
@@ -101,12 +92,12 @@ public class ComEmail implements java.io.Serializable {
 		this.updateUser = updateUser;
 	}
 
-	public String getMailType() {
-		return mailType;
+	public String getContractNo() {
+		return contractNo;
 	}
 
-	public void setMailType(String mailType) {
-		this.mailType = mailType;
+	public void setContractNo(String contractNo) {
+		this.contractNo = contractNo;
 	}
 
 	public List<ComContactHeader> getComContactHeaders() {
@@ -135,10 +126,9 @@ public class ComEmail implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "ComEmail [comContactHeaders=" + comContactHeaders + ", createDate=" + createDate + ", createUser="
-				+ createUser + ", email=" + email + ", fromWhere=" + fromWhere + ", fromWhereName=" + fromWhereName
-				+ ", id=" + id + ", mailType=" + mailType + ", reciever=" + reciever + ", updateDate=" + updateDate
-				+ ", updateUser=" + updateUser + ", url=" + url + "]";
+		return "ComContactInfo [contractNo=" + contractNo + ", createDate=" + createDate + ", createUser=" + createUser
+				+ ", fromWhere=" + fromWhere + ", fromWhereName=" + fromWhereName + ", id=" + id + ", reciever="
+				+ reciever + ", updateDate=" + updateDate + ", updateUser=" + updateUser + "]";
 	}
 
 	public String getReciever() {
@@ -149,13 +139,20 @@ public class ComEmail implements java.io.Serializable {
 		this.reciever = reciever;
 	}
 
-	public String getUrl() {
-		return url;
+	public static ComContactInfo getConcactInfoByType(String type) {
+		if(ComContactInfo.CONTRACT_TAG_FAX.equals(type)){
+			return new ComContactFax();
+		}else if(ComContactInfo.CONTRACT_TAG_TEL.equals(type)){
+			return new ComContactTel();
+		}else if(ComContactInfo.CONTRACT_TAG_MOBILE.equals(type)){
+			return new ComContactMobile();
+		}else if(ComContactInfo.CONTRACT_TAG_QQ.equals(type)){
+			return new ComContactQQ();
+		}else if(ComContactInfo.CONTRACT_TAG_WW.equals(type)){
+			return new ComContactWW();
+		}else{
+			return new ComContactInfo();
+		}
 	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
 
 }

@@ -1,6 +1,8 @@
-package com.yesiic.model;
+package com.yesiic.company.model;
 
 import java.util.Date;
+
+import com.yesiic.base.model.Code;
 
 public class ComAppend implements java.io.Serializable {
 
