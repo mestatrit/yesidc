@@ -1,4 +1,4 @@
-package com.yesiic.model;
+package com.yesiic.person.model;
 
 import java.util.Date;
 

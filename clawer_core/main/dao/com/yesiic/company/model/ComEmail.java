@@ -3,6 +3,8 @@ package com.yesiic.company.model;
 import java.util.Date;
 import java.util.List;
 
+import com.yesiic.base.model.Code;
+
 /**
  * TeCAddr entity. @author MyEclipse Persistence Tools
  */

@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.yesiic.base.model.Code;
+
 /**
  * TeCCompany entity. @author MyEclipse Persistence Tools
  */
