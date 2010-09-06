@@ -3,11 +3,8 @@ package com.yesiic.company.model;
 import java.util.Date;
 import java.util.List;
 
-import com.yesiic.model.sub.ComContactFax;
-import com.yesiic.model.sub.ComContactMobile;
-import com.yesiic.model.sub.ComContactQQ;
-import com.yesiic.model.sub.ComContactTel;
-import com.yesiic.model.sub.ComContactWW;
+import com.yesiic.base.model.Code;
+import com.yesiic.base.model.ContactInfo;
 
 
 
@@ -27,6 +24,8 @@ public class ComContactInfo extends ContactInfo  {
 	private String contractNo;
 	private String reciever;
 	
+	private String type;
+
 	private Code fromWhere;
 	private String fromWhereName;
 	
@@ -139,20 +138,12 @@ public class ComContactInfo extends ContactInfo  {
 		this.reciever = reciever;
 	}
 
-	public static ComContactInfo getConcactInfoByType(String type) {
-		if(ComContactInfo.CONTRACT_TAG_FAX.equals(type)){
-			return new ComContactFax();
-		}else if(ComContactInfo.CONTRACT_TAG_TEL.equals(type)){
-			return new ComContactTel();
-		}else if(ComContactInfo.CONTRACT_TAG_MOBILE.equals(type)){
-			return new ComContactMobile();
-		}else if(ComContactInfo.CONTRACT_TAG_QQ.equals(type)){
-			return new ComContactQQ();
-		}else if(ComContactInfo.CONTRACT_TAG_WW.equals(type)){
-			return new ComContactWW();
-		}else{
-			return new ComContactInfo();
-		}
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }
