@@ -2,6 +2,8 @@ package com.yesiic.person.model;
 
 import java.util.Date;
 
+import com.yesiic.base.model.Code;
+
 /**
  * TeEmail entity. @author MyEclipse Persistence Tools
  */
