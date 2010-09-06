@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		$Id: dataAccessContext-hibernate.xml,v 1.4 2007/11/14 09:14:05 abel
+		Exp $
+	-->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName" default-lazy-init="false">
+
+	<bean id="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="minPoolSize" value="${jdbc.minPoolSize}"/>
+		<property name="maxPoolSize" value="${jdbc.maxPoolSize}"/>
+		<property name="initialPoolSize" value="${jdbc.initialPoolSize}"/>
+		<property name="acquireIncrement" value="${jdbc.acquireIncrement}"/>
+		<property name="maxIdleTime" value="${jdbc.maxIdleTime}"/>
+		<property name="maxStatements" value="${jdbc.maxStatements}"/>
+		<property name="idleConnectionTestPeriod" value="${jdbc.idleConnectionTestPeriod}"/>
+		<property name="acquireRetryAttempts" value="${jdbc.acquireRetryAttempts}"/>
+		<property name="breakAfterAcquireFailure" value="${jdbc.breakAfterAcquireFailure}"/>
+		<property name="testConnectionOnCheckout" value="${jdbc.testConnectionOnCheckout}"/>
+	</bean>
+
+
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="mappingDirectoryLocations">
+			<!--property name="mappingResources" -->
+			<list>
+				<value>
+					classpath:/com/yesiic/model/
+				</value>
+				<value>
+					classpath:/com/yesibc/email/model/
+				</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<!--
+					prop
+					key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop//
+				-->
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.Oracle9Dialect
+				</prop>
+
+				<prop key="hibernate.show_sql">${jdbc.sql.show}</prop>
+
+				<prop key="hibernate.jdbc.fetch_size">50</prop>
+				<prop key="hibernate.jdbc.batch_size">30</prop>
+
+				<prop key="hibernate.generate_statistics">true</prop>
+
+				<prop key="hibernate.jdbc.use_streams_for_binary">
+					true
+				</prop>
+				<prop key="hibernate.cache.use_query_cache">false</prop>
+				<prop key="hibernate.cache.use_second_level_cache">
+					false
+				</prop>
+				<prop key="hibernate.cache.provider_class">
+					org.hibernate.cache.EhCacheProvider
+				</prop>
+
+			</props>
+		</property>
+		<property name="lobHandler" ref="oracleLobHandler" />
+	</bean>
+
+	<!--Blob field hander for Oracle9i or Oracle10g-->
+	<bean id="nativeJdbcExtractor"
+		class="org.springframework.jdbc.support.nativejdbc.SimpleNativeJdbcExtractor" />
+	<bean id="oracleLobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler"
+		lazy-init="true">
+		<property name="nativeJdbcExtractor">
+			<ref bean="nativeJdbcExtractor" />
+		</property>
+	</bean>
+
+	<!--  webLogic下的配置 -->
+	<!--
+		bean id="nativeJdbcExtractor"
+		class="org.springframework.jdbc.support.nativejdbc.WebLogicNativeJdbcExtractor"
+		lazy-init="true" /
+	-->
+
+
+	<!--Hibernate TransactionManager-->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+
+	<bean id="mysqlDS"
+		class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init"
+		destroy-method="close">
+		<description>mysql xa datasource</description>
+		<property name="uniqueResourceName">
+			<value>mysql_ds</value>
+		</property>
+		<property name="xaDataSourceClassName">
+			<value>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</value>
+		</property>
+		<property name="xaProperties">
+			<props>
+				<prop key="user">root</prop>
+				<prop key="password">123456</prop>
+				<prop key="URL">jdbc:mysql://localhost:3306/test</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="oracleDS" class="com.atomikos.jdbc.AtomikosDataSourceBean"
+		init-method="init" destroy-method="close">
+		<description>oracle xa datasource</description>
+		<property name="uniqueResourceName">
+			<value>oracle_ds</value>
+		</property>
+		<property name="xaDataSourceClassName">
+			<value>oracle.jdbc.xa.client.OracleXADataSource</value>
+		</property>
+		<property name="xaProperties">
+			<props>
+				<prop key="user">yigo</prop>
+				<prop key="password">yigopwd</prop>
+				<prop key="URL">jdbc:oracle:thin:@192.168.0.3:1521:qiaoxing</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="atomikosUserTransaction"
+		class="com.atomikos.icatch.jta.UserTransactionImp">
+		<description>UserTransactionImp</description>
+		<property name="transactionTimeout" value="300"/>
+	</bean>
+
+	<bean id="atomikosTransactionManager"
+		class="com.atomikos.icatch.jta.UserTransactionManager"
+		init-method="init" destroy-method="close">
+		<description>UserTransactionManager</description>
+		<property name="forceShutdown">
+			<value>true</value>
+		</property>
+	</bean>
+
+	<bean id="springTransactionManager"
+		class="org.springframework.transaction.jta.JtaTransactionManager">
+		<description>JtaTransactionManager</description>
+		<property name="transactionManager">
+			<ref bean="atomikosTransactionManager" />
+		</property>
+		<property name="userTransaction">
+			<ref bean="atomikosUserTransaction" />
+		</property>
+	</bean>
+
+	<bean id="transactionProxyFactoryBean"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		abstract="true">
+		<property name="transactionManager">
+			<ref bean="springTransactionManager" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="insert*">PROPAGATION_REQUIRED,-Exception</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="helloDao" class="com.jta.HelloDaoImpl">
+		<property name="dataSource" ref="mysqlDS" />
+	</bean>
+
+	<bean id="worldDao" class="com.jta.WorldDaoImpl">
+		<property name="dataSource" ref="oracleDS" />
+	</bean>
+
+	<bean id="helloBiz" class="com.jta.HelloBizImpl">
+		<property name="helloDao" ref="helloDao" />
+		<property name="worldDao" ref="worldDao" />
+	</bean>
+
+	<bean id="helloBizProxy" parent="transactionProxyFactoryBean">
+		<property name="target">
+			<ref bean="helloBiz" />
+		</property>
+	</bean>	
+</beans>

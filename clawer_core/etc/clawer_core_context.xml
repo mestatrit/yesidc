@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!-- $Id: applicationContext.xml,v 1.1 2008/09/17 10:18:43 jvm Exp $ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
+	default-autowire="byName" default-lazy-init="false">
+
+	<!-- read configuration file -->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:srv-conf.properties
+				</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- support @Transactional  -->
+	<tx:annotation-driven />
+
+	<!-- support @AspectJ -->
+	<aop:aspectj-autoproxy />
+
+	<!-- Support AOP by AspectJ -->
+	<aop:config proxy-target-class="true">
+		<!--aop:advisor pointcut="execution(* com.yesibc.job51.service.*.*(..))"
+			advice-ref="txAdvice" /-->
+		<aop:advisor pointcut="execution(* com.yesiic.dao.*.*(..))"
+			advice-ref="txAdvice" />
+	</aop:config>
+	
+	
+
+
+	<!--
+		Support transaction. The transaction type of method names like "get*"
+		is readonly.
+	-->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+</beans>
