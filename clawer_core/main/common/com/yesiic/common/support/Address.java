@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.yesibc.core.utils.StringUtils;
+import com.yesiic.base.model.Code;
 import com.yesiic.common.BaseCode;
 import com.yesiic.common.ClawerConstants;
 import com.yesiic.common.LogHandler;
-import com.yesiic.model.Code;
 
 public class Address extends BaseCode {
 

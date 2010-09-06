@@ -2,7 +2,7 @@ package com.yesiic.common;
 
 import com.yesiic.dao.BaseCodeDao;
 import com.yesiic.dao.impl.BaseCodeDaoImpl;
-import com.yesiic.model.Person;
+import com.yesiic.person.model.Person;
 
 public class ParseSupport {
 

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.yesibc.core.dao.EntityDao;
 import com.yesibc.core.exception.ApplicationException;
-import com.yesiic.model.WebPages;
+import com.yesiic.webswith.model.WebPages;
 
 public interface WebPagesDao extends EntityDao<WebPages> {
 

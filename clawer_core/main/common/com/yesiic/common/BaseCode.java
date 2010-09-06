@@ -10,10 +10,10 @@ import org.apache.commons.logging.LogFactory;
 
 import com.yesibc.core.exception.NestedRuntimeException;
 import com.yesibc.core.spring.SpringContext;
+import com.yesiic.base.model.Code;
 import com.yesiic.common.support.Address;
 import com.yesiic.common.support.FromWhere;
 import com.yesiic.dao.BaseCodeDao;
-import com.yesiic.model.Code;
 
 
 public abstract class BaseCode {
