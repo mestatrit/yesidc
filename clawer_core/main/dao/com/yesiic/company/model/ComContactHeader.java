@@ -1,7 +1,9 @@
-package com.yesiic.model;
+package com.yesiic.company.model;
 
 import java.util.Date;
 import java.util.List;
+
+import com.yesiic.base.model.Code;
 
 /**
  * TeCEmail entity. @author MyEclipse Persistence Tools

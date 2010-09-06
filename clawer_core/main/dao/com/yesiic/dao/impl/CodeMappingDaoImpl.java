@@ -6,7 +6,7 @@ import com.yesiic.base.model.CodeMapping;
 import com.yesiic.common.BaseCode;
 import com.yesiic.dao.CodeMappingDao;
 
-public class CodeJobDaoImpl extends HibernateEntityDao<CodeMapping> implements
+public class CodeMappingDaoImpl extends HibernateEntityDao<CodeMapping> implements
 		CodeMappingDao {
 
 	public Code queryByCode(String code, String type) {
