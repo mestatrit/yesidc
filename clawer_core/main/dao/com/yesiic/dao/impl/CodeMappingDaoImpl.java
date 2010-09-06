@@ -1,13 +1,13 @@
 package com.yesiic.dao.impl;
 
 import com.yesibc.core.dao.HibernateEntityDao;
+import com.yesiic.base.model.Code;
+import com.yesiic.base.model.CodeMapping;
 import com.yesiic.common.BaseCode;
-import com.yesiic.dao.CodeJobDao;
-import com.yesiic.model.Code;
-import com.yesiic.model.CodeJob;
+import com.yesiic.dao.CodeMappingDao;
 
-public class CodeJobDaoImpl extends HibernateEntityDao<CodeJob> implements
-		CodeJobDao {
+public class CodeJobDaoImpl extends HibernateEntityDao<CodeMapping> implements
+		CodeMappingDao {
 
 	public Code queryByCode(String code, String type) {
 		Code c = new Code();
