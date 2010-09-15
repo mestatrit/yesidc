@@ -30,6 +30,9 @@ grant create session,connect,resource to cfccc;
 grant select, insert, update, delete on CHN_INST.APPLICATION_BASIC to CHN_NEWECREDIT;
 
 --5.表操作
+--5.0 不同表空间，进行复制表
+copy   from   bid/bid@orcl   to   sky/sky@orcl   append   menuinfo   using   select   *   from   menuinfo 
+
 -- 5.1 Create table
 create table CHN_INST.PLAN
 (
@@ -215,7 +218,7 @@ select * from user_objects where object_type = 'TABLE';
 
 --19.同义词
 create public synonym t1 for "A"."T";
-
+grant create synonym to baixing;
 
 --20.ORA-02266: 表中的唯一/主键被启用的外部关键字引用;
 select * from dba_constraints where r_constraint_name='PK_TIP_INSTANCE'; 
