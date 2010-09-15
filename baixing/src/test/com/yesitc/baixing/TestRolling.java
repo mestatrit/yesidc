@@ -88,8 +88,10 @@ public class TestRolling {
 				continue;
 			}
 			log.info("line="+line + ",name=" + link.getLinkText());
+			
 		}
 	}
+	
 
 	private static String scrolling() {
 		String html = browser.getDocument().getBody().getOuterHTML();

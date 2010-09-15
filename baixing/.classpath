@@ -161,7 +161,6 @@
 	<classpathentry kind="lib" path="/yesibc/lib/xwork-core-2.1.6.jar"/>
 	<classpathentry kind="lib" path="/yesibc/lib/yuicompressor-2.4.2.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/yesibc"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JDK6"/>
 	<classpathentry kind="lib" path="/yesibc/lib/atomikos/atomikos-util.jar"/>
 	<classpathentry kind="lib" path="/yesibc/lib/atomikos/transactions-api.jar"/>
 	<classpathentry kind="lib" path="/yesibc/lib/atomikos/transactions-essentials-all.jar"/>
@@ -177,5 +176,6 @@
 	<classpathentry kind="lib" path="/yesibc/lib/jms.jar"/>
 	<classpathentry kind="lib" path="/yesibc/lib/jmx.jar"/>
 	<classpathentry kind="lib" path="/yesibc/lib/jta.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.5.0"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>
