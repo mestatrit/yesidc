@@ -72,8 +72,8 @@
 			<key column="CODE_TYPE" />
 			<one-to-many class="CodeJob" />
 		</bag>
-		<bag name="codes" table="T_CODE_CODE_JOB" lazy="true" cascade="save-update">
-			<key column="CODE_JOB_ID" foreign-key="FK_CODE_JOB_CODE"></key>
+		<bag name="codes" table="T_CODE_CODE_MAPPING" lazy="true" cascade="save-update">
+			<key column="CODE_MAPPING_ID" foreign-key="FK_CODE_MAPPING_CODE"></key>
 			<many-to-many class="Code" column="CODE_ID" />
 		</bag>
 
