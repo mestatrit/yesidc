@@ -29,8 +29,8 @@ public class TestRolling {
 	static IBrowserCanvas browser = null;
 	static ProcessContext processContext = null;
 	static String url = "http://shanghai.baixing.com/sheji/?areaName=changning";
-	static String START = "长宁网页/平面设计/印刷信息";
-	static String HAVE_EXISTED = "上海市内其它区";
+	static String START = "长宁网页/平面设计/印刷";
+	static String HAVE_EXISTED = "长宁周边的";
 	private static Log log = LogFactory.getLog(TestRolling.class);
 	private static int NEXT_SCROLLING = 500;
 
@@ -70,7 +70,14 @@ public class TestRolling {
 
 	private static void parse2Links(String html) throws ParserException {
 		int start = html.indexOf(START);
+		if(start<0){
+			log.error("Can not get:" + START);
+		}
+		
 		int end = html.indexOf(HAVE_EXISTED);
+		if(end<0){
+			log.error("Can not get:" + HAVE_EXISTED);
+		}
 		
 		String result =  html.substring(start, end);
 		Parser parser;
