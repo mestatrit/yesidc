@@ -21,6 +21,7 @@ drop table T_COMPANY cascade constraints;
 drop table T_PERSON cascade constraints;
 drop table T_WEBPAGES cascade constraints;
 drop table TC_SEARCH_RESULT cascade constraints;
+drop table WEB_ELEMENTS cascade constraints;
 
 drop sequence SEQ_COMPANY;
 drop sequence SEQ_C_APPEND;
@@ -38,6 +39,23 @@ drop sequence SEQ_WEBPAGES;
 drop sequence SEQ_SEARCH_RESULT;
 drop sequence SEQ_P_CONTACT_INFO;
 
+create table WEB_ELEMENTS
+(
+  ID          VARCHAR2(32 CHAR) not null,
+  CODE_TYPE   VARCHAR2(32 CHAR),
+  CODE        VARCHAR2(50 CHAR) default 0 not null,
+  NAME        VARCHAR2(250 CHAR),
+  MEMO        VARCHAR2(250 CHAR),
+  CODE_LEVEL  NUMBER(19) not null,
+  SORT_LIST   NUMBER(19),
+  CREATE_DATE TIMESTAMP(6),
+  UPDATE_DATE TIMESTAMP(6),
+  CREATE_USER VARCHAR2(50 CHAR),
+  UPDATE_USER VARCHAR2(50 CHAR)
+);
+alter table WEB_ELEMENTS  add primary key (ID);
+alter table WEB_ELEMENTS  add unique (CODE_TYPE, CODE);
+alter table WEB_ELEMENTS  add constraint FK_WebElements_TYPE foreign key (CODE_TYPE)  references WEB_ELEMENTS (ID)
 -- Create table
 create table TC_SEARCH_RESULT
 (

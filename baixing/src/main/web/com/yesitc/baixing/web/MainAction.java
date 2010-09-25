@@ -105,6 +105,8 @@ public class MainAction extends BaseAction2Support {
 
 		log.info("Basic info to start:requestId-" + requestId + ",FromDBorFile-" + fromDBorFile + ",threadNumber-"
 				+ threadNumber + ",failedOrNotInt-" + failedOrNotInt);
+		
+		initURLs();
 
 		doing(failedOrNotInt, requestId, reqLog, threadNumber);
 
@@ -113,6 +115,11 @@ public class MainAction extends BaseAction2Support {
 		log.info(reqLog + " is END!Time is [" + (System.currentTimeMillis() - start) / (1000 * 60) + "]m.");
 		finishTag = "true";
 		return SUCCESS;
+	}
+
+	private void initURLs() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private void checking(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
