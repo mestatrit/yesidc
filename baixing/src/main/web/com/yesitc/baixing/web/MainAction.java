@@ -108,7 +108,9 @@ public class MainAction extends BaseAction2Support {
 		
 		initURLs();
 
-		doing(failedOrNotInt, requestId, reqLog, threadNumber);
+		parse1stLevel(failedOrNotInt, requestId, reqLog, threadNumber);
+
+		parse2ndLevel(failedOrNotInt, requestId, reqLog, threadNumber);
 
 		checking(failedOrNotInt, requestId, reqLog, threadNumber);
 
@@ -117,19 +119,42 @@ public class MainAction extends BaseAction2Support {
 		return SUCCESS;
 	}
 
+	/**
+	 * 初始化基础数据，将各链接放到WEBPAGES
+	 */
 	private void initURLs() {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 * 解析WEBPAGES，写详细页的URL到DB里的SearchResult表，解析完成后，将状态置为OK
+	 */
+	private void parse1stLevel(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * 解析SearchResult，将获得的个人信息写到相应的表里，解析完成后，将状态置为OK
+	 */
+	private void parse2ndLevel(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * 检查是否有解析失败的页面，重新再解析一遍
+	 * @param failedOrNotInt
+	 * @param requestId
+	 * @param reqLog
+	 * @param threadNumber
+	 */
 	private void checking(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void doing(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 }
