@@ -101,7 +101,7 @@
 				<comment>公司备注</comment>
 			</column>
 		</property>
-		<many-to-one name="fromWhere" class="Code" fetch="join"
+		<many-to-one name="fromWhere" class="com.yesiic.base.model.Code" fetch="join"
 			foreign-key="FK_COMPANY_FROM_WHERE" cascade="none">
 			<column name="FROM_WHERE">
 				<comment>数据来源代码</comment>
