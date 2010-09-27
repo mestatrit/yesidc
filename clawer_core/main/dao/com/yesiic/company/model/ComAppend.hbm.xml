@@ -22,7 +22,7 @@
 			</column>
 		</property>
 
-		<many-to-one name="fromWhere" class="Code"
+		<many-to-one name="fromWhere" class="com.yesiic.base.model.Code"
 			foreign-key="FK_C_APPEND_FROM_WHERE">
 			<column name="FROM_WHERE">
 				<comment>数据来源代码</comment>
