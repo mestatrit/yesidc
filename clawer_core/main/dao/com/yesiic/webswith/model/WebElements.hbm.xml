@@ -6,11 +6,11 @@
 	-->
 <hibernate-mapping package="com.yesiic.webswith.model">
 	<class name="WebElements" table="WEB_ELEMENTS">
-		<id name="id" type="java.util.UUID" column="ID">
+		<id name="id" column="ID">
 			<generator class="uuid" />
 		</id>
-		<many-to-one class="WebElements" fetch="join" foreign-key="FK_WebElements_TYPE"
-			name="parent">
+		<many-to-one class="WebElements" fetch="join"
+			foreign-key="FK_WebElements_TYPE" name="parent">
 			<column name="CODE_TYPE" unique-key="unique-webElements" />
 		</many-to-one>
 		<property generated="never" lazy="false" name="code"
@@ -49,7 +49,8 @@
 			type="java.lang.String">
 			<column length="50" name="UPDATE_USER" />
 		</property>
-		<bag lazy="false" name="children" table="WEB_ELEMENTS" fetch="join">
+		<bag lazy="false" name="children" fetch="join" table="WEB_ELEMENTS" cascade="all"
+			inverse="true">
 			<key column="CODE_TYPE" />
 			<one-to-many class="WebElements" />
 		</bag>
