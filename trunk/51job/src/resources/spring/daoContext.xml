@@ -3,11 +3,13 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 <beans default-autowire="byName" default-lazy-init="false">
 
-	<bean id="baseCodeDao" class="com.yesibc.job51.dao.impl.BaseCodeDaoImpl" />
-	<bean id="codeJobDao" class="com.yesibc.job51.dao.impl.CodeJobDaoImpl" />
-	<bean id="personDao" class="com.yesibc.job51.dao.impl.PersonDaoImpl" />
-	<bean id="webPagesDao" class="com.yesibc.job51.dao.impl.WebPagesDaoImpl" />
-	<bean id="companyDao" class="com.yesibc.job51.dao.impl.CompanyDaoImpl" />
-	<bean id="emailInfoDao" class="com.yesibc.email.dao.EmailInfoDaoImpl" />
-	<bean id="searchResultDao" class="com.yesibc.job51.dao.impl.SearchResultDaoImpl" />
+	<bean id="dBService" class="com.yesitc.baixing.service.DBService" />
+	<bean id="dao" class="com.yesibc.core.dao.HibernateEntityDao" />
+	<bean id="baseCodeDao" class="com.yesiic.dao.impl.BaseCodeDaoImpl" />
+	<bean id="webElementsDao" class="com.yesiic.dao.impl.WebElementsDaoImpl" />
+	<bean id="personDao" class="com.yesiic.dao.impl.PersonDaoImpl" />
+	<bean id="webPagesDao" class="com.yesiic.dao.impl.WebPagesDaoImpl" />
+	<bean id="companyDao" class="com.yesiic.dao.impl.CompanyDaoImpl" />
+	<bean id="codeMappingDao" class="com.yesiic.dao.impl.CodeMappingDaoImpl" />
+	<bean id="searchResultDao" class="com.yesiic.dao.impl.SearchResultDaoImpl" />
 </beans>

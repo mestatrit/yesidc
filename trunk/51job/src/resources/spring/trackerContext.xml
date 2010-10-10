@@ -46,7 +46,7 @@
 		<property name="mailSubject" ref="subject" />
 	</bean>
 
-	<bean id="subject" class="com.yesibc.job51.common.SubjectFactoryBean">
+	<bean id="subject" class="com.yesiic.common.SubjectFactoryBean">
 		<property name="subject" value="${alert.mail.subject}" />
 	</bean>
 

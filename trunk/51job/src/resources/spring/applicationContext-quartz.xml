@@ -24,7 +24,7 @@
 	</bean>
 
 
-	<bean id="logJdkvm" class="com.yesibc.job51.common.LogJdkvm"
+	<bean id="logJdkvm" class="com.yesiic.common.LogJdkvm"
 		autowire="byName" lazy-init="true">
 	</bean>
 
