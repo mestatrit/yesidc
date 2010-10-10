@@ -29,6 +29,10 @@
 	<aop:config proxy-target-class="true">
 		<aop:advisor pointcut="execution(* com.yesiic.dao.*.*(..))"
 			advice-ref="txAdvice" />
+		<aop:advisor pointcut="execution(* com.yesibc.core.dao.*.*(..))"
+			advice-ref="txAdvice" />
+		<aop:advisor pointcut="execution(* com.yesitc.baixing.*.*(..))"
+			advice-ref="txAdvice" />
 	</aop:config>
 
 	<!--

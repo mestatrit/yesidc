@@ -1,129 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<!--
-		$Id: dataAccessContext-hibernate.xml,v 1.4 2007/11/14 09:14:05 abel
-		Exp $
-	-->
+<!-- $Id: dataAccessContext-hibernate.xml,v 1.5 2008/01/16 05:18:56 abel Exp $ -->
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 <beans default-autowire="byName" default-lazy-init="false">
 
-	<bean id="xaDataSourceMain" class="com.atomikos.jdbc.AtomikosDataSourceBean"
-		init-method="init" destroy-method="close">
-		<property name="uniqueResourceName">
-			<value>xaDataSourceMain</value>
-		</property>
-		<property name="xaDataSourceClassName">
-			<value>${jdbc.xaDataSourceClassName.main}</value>
-		</property>
-		<property name="xaProperties">
-			<props>
-				<prop key="serverName">${jdbc.host.main}</prop>
-				<!-- Port number of DB2 server -->
-				<prop key="portNumber">${jdbc.port.main}</prop>
-				<prop key="databaseName">${jdbc.sid.main}</prop>
-				<prop key="user">${jdbc.username.main}</prop>
-				<prop key="password">${jdbc.password.main}</prop>
-				<prop key="driverType">${jdbc.driverType.main}</prop>
-				<!-- prop key="defaultIsolationLevel">2</prop-->
-			</props>
-		</property>
-		<property name="maxPoolSize">
-			<value>${jdbc.maxPoolSize.main}</value>
-		</property>
-		<property name="minPoolSize">
-			<value>${jdbc.minPoolSize.main}</value>
-		</property>
-		<property name="loginTimeout">
-			<value>${jdbc.loginTimeout.main}</value>
-		</property>
-		<property name="reapTimeout">
-			<value>${jdbc.reapTimeout.main}</value>
-		</property>
-		<property name="testQuery">
-			<value>${jdbc.testQuery.main}</value>
-		</property>
+	<bean id="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="minPoolSize" value="${jdbc.minPoolSize}"/>
+		<property name="maxPoolSize" value="${jdbc.maxPoolSize}"/>
+		<property name="initialPoolSize" value="${jdbc.initialPoolSize}"/>
+		<property name="acquireIncrement" value="${jdbc.acquireIncrement}"/>
+		<property name="maxIdleTime" value="${jdbc.maxIdleTime}"/>
+		<property name="maxStatements" value="${jdbc.maxStatements}"/>
+		<property name="idleConnectionTestPeriod" value="${jdbc.idleConnectionTestPeriod}"/>
+		<property name="acquireRetryAttempts" value="${jdbc.acquireRetryAttempts}"/>
+		<property name="breakAfterAcquireFailure" value="${jdbc.breakAfterAcquireFailure}"/>
+		<property name="testConnectionOnCheckout" value="${jdbc.testConnectionOnCheckout}"/>
 	</bean>
 
-	<bean id="xaDataSourceCore" class="com.atomikos.jdbc.AtomikosDataSourceBean"
-		init-method="init" destroy-method="close">
-		<property name="uniqueResourceName">
-			<value>xaDataSourceCore</value>
-		</property>
-		<property name="xaDataSourceClassName">
-			<value>${jdbc.xaDataSourceClassName.core}</value>
-		</property>
-		<property name="xaProperties">
-			<props>
-				<prop key="serverName">${jdbc.host.core}</prop>
-				<!-- Port number of DB2 server -->
-				<prop key="portNumber">${jdbc.port.core}</prop>
-				<prop key="databaseName">${jdbc.sid.core}</prop>
-				<prop key="user">${jdbc.username.core}</prop>
-				<prop key="password">${jdbc.password.core}</prop>
-				<prop key="driverType">${jdbc.driverType.core}</prop>
-				<!-- prop key="defaultIsolationLevel">2</prop-->
-			</props>
-		</property>
-		<property name="maxPoolSize">
-			<value>${jdbc.maxPoolSize.core}</value>
-		</property>
-		<property name="minPoolSize">
-			<value>${jdbc.minPoolSize.core}</value>
-		</property>
-		<property name="loginTimeout">
-			<value>${jdbc.loginTimeout.core}</value>
-		</property>
-		<property name="reapTimeout">
-			<value>${jdbc.reapTimeout.core}</value>
-		</property>
-		<property name="testQuery">
-			<value>${jdbc.testQuery.core}</value>
-		</property>
-	</bean>
-
-	<bean id="hibernatePropertiesMain"
-		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-		<property name="properties">
-			<props>
-				<prop key="hibernate.dialect">${jdbc.hibernate.dialet.main}</prop>
-				<prop key="hibernate.transaction.factory_class">${hibernate.transaction.factory_class.main}</prop>
-				<prop key="hibernate.transaction.manager_lookup_class">${hibernate.transaction.manager_lookup_class.main}</prop>
-				<prop key="hibernate.show_sql">${jdbc.sql.show.main}</prop>
-				<prop key="hibernate.query.substitutions">${hibernate.query.substitutions.main}</prop>
-				<prop key="hibernate.query.factory_class">${hibernate.query.factory_class.main}</prop>
-				<!--
-					<prop key="hibernate.hbm2ddl.auto">update</prop> <prop
-					key="hibernate.cache.use_query_cache">true</prop> <prop
-					key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
-				-->
-			</props>
-		</property>
-	</bean>
-
-	<bean id="hibernatePropertiesCore"
-		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-		<property name="properties">
-			<props>
-				<prop key="hibernate.dialect">${jdbc.hibernate.dialet.core}</prop>
-				<prop key="hibernate.transaction.factory_class">${hibernate.transaction.factory_class.core}</prop>
-				<prop key="hibernate.transaction.manager_lookup_class">${hibernate.transaction.manager_lookup_class.core}</prop>
-				<prop key="hibernate.show_sql">${jdbc.sql.show.core}</prop>
-				<prop key="hibernate.query.substitutions">${hibernate.query.substitutions.core}</prop>
-				<prop key="hibernate.query.factory_class">${hibernate.query.factory_class.core}</prop>
-				<!--
-					<prop key="hibernate.hbm2ddl.auto">update</prop> <prop
-					key="hibernate.cache.use_query_cache">true</prop> <prop
-					key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
-				-->
-			</props>
-		</property>
-	</bean>
-
-	<bean id="sessionFactoryMain"
+	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="dataSource">
-			<ref bean="xaDataSourceMain" />
+			<ref bean="dataSource" />
 		</property>
 		<property name="mappingDirectoryLocations">
+			<!--property name="mappingResources" -->
 			<list>
 				<value>
 					classpath:/com/yesiic/webswith/model/
@@ -140,58 +45,30 @@
 			</list>
 		</property>
 		<property name="hibernateProperties">
-			<ref bean="hibernatePropertiesMain" />
-		</property>
-		<property name="lobHandler" ref="oracleLobHandler" />
-	</bean>
-
-	<bean id="sessionFactoryCore"
-		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
-		<property name="dataSource">
-			<ref bean="xaDataSourceCore" />
-		</property>
-		<!--property name="mappingDirectoryLocations">
-			<list>
-				<value>
-					classpath:/com/yesiic/base/model/
-				</value>
-			</list>
-		</property-->
-		<property name="hibernateProperties">
-			<ref bean="hibernatePropertiesCore" />
-		</property>
-		<property name="lobHandler" ref="oracleLobHandler" />
-	</bean>
-
-	<!--Blob field hander for Oracle9i or Oracle10g-->
-	<bean id="nativeJdbcExtractor"
-		class="org.springframework.jdbc.support.nativejdbc.SimpleNativeJdbcExtractor" />
-	<bean id="oracleLobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler"
-		lazy-init="true">
-		<property name="nativeJdbcExtractor">
-			<ref bean="nativeJdbcExtractor" />
+			<props>
+				<!-- prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop//-->
+				<prop key="hibernate.dialect">
+					${jdbc.hibernate.dialet}
+				</prop>
+				<prop key="hibernate.show_sql">${jdbc.sql.show}</prop>
+				<prop key="hibernate.generate_statistics">true</prop>
+				<prop key="hibernate.jdbc.use_streams_for_binary">
+					true
+				</prop>
+				<prop key="hibernate.cache.use_query_cache">false</prop>
+				<prop key="hibernate.cache.use_second_level_cache">
+					false
+				</prop>
+				<!--prop key="hibernate.cache.provider_class">
+					org.hibernate.cache.EhCacheProvider
+				</prop-->
+			</props>
 		</property>
 	</bean>
 
-	<bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager"
-		init-method="init" destroy-method="close">
-		<property name="forceShutdown">
-			<value>true</value>
-		</property>
-	</bean>
-	<bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
-		<property name="transactionTimeout">
-			<value>${jdbc.transactionTimeout}</value>
-		</property>
-	</bean>
+	<!--Hibernate TransactionManager-->
 	<bean id="transactionManager"
-		class="org.springframework.transaction.jta.JtaTransactionManager">
-		<property name="transactionManager">
-			<ref bean="atomikosTransactionManager" />
-		</property>
-		<property name="userTransaction">
-			<ref bean="atomikosUserTransaction" />
-		</property>
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
 </beans>
