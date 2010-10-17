@@ -1,6 +1,9 @@
 package com.yesitc.baixing.web;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
@@ -10,6 +13,8 @@ import com.yesibc.core.utils.DateUtils;
 import com.yesibc.core.utils.StringUtils;
 import com.yesibc.core.web.BaseAction2Support;
 import com.yesiic.common.ClawerConstants;
+import com.yesiic.webswith.model.WebElements;
+import com.yesitc.baixing.service.BxUtils;
 
 public class MainAction extends BaseAction2Support {
 
@@ -32,6 +37,7 @@ public class MainAction extends BaseAction2Support {
 	private final static String endTag = "].";
 	private final static int ERROR_TIMES = 16;
 	private final static String FATAL_TAG = "=====================***************================";
+	private static List<String> urls = new ArrayList<String>();
 
 	// 某一线程总任务/当前任务
 	// private String currentOfToC = "]#CrToC-";
@@ -105,7 +111,7 @@ public class MainAction extends BaseAction2Support {
 
 		log.info("Basic info to start:requestId-" + requestId + ",FromDBorFile-" + fromDBorFile + ",threadNumber-"
 				+ threadNumber + ",failedOrNotInt-" + failedOrNotInt);
-		
+
 		initURLs();
 
 		parse1stLevel(failedOrNotInt, requestId, reqLog, threadNumber);
@@ -123,8 +129,31 @@ public class MainAction extends BaseAction2Support {
 	 * 初始化基础数据，将各链接放到WEBPAGES
 	 */
 	private void initURLs() {
-		// TODO Auto-generated method stub
-		
+
+		Map<String, WebElements> types = InitBasicData.getTypes();
+		String temp = null;
+		Map<String, WebElements> map = null;
+		for (Map.Entry<String, WebElements> type : types.entrySet()) {
+			temp = type.getValue().getCode();
+			map = InitBasicData.getAreaBj();
+			for (Map.Entry<String, WebElements> area : map.entrySet()) {
+				urls.add(BxUtils.getDestUrl2(InitBasicData.KEY_AREAS_BJ, area.getValue().getCode(), temp));
+			}
+			log.info("init urls:bj-" + map.size());
+
+			map = InitBasicData.getAreaSh();
+			for (Map.Entry<String, WebElements> area : map.entrySet()) {
+				urls.add(BxUtils.getDestUrl2(InitBasicData.KEY_AREAS_SH, area.getValue().getCode(), temp));
+			}
+			log.info("init urls:sh-" + map.size());
+
+			map = InitBasicData.getAreaOthers();
+			for (Map.Entry<String, WebElements> area : map.entrySet()) {
+				urls.add(BxUtils.getDestUrl1(area.getValue().getCode(), temp));
+			}
+			log.info("init urls:others-" + map.size());
+		}
+
 	}
 
 	/**
@@ -132,7 +161,7 @@ public class MainAction extends BaseAction2Support {
 	 */
 	private void parse1stLevel(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -140,11 +169,12 @@ public class MainAction extends BaseAction2Support {
 	 */
 	private void parse2ndLevel(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
 	 * 检查是否有解析失败的页面，重新再解析一遍
+	 * 
 	 * @param failedOrNotInt
 	 * @param requestId
 	 * @param reqLog
@@ -152,9 +182,7 @@ public class MainAction extends BaseAction2Support {
 	 */
 	private void checking(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
 		// TODO Auto-generated method stub
-		
-	}
 
-	
+	}
 
 }

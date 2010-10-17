@@ -23,6 +23,7 @@ public class InitBasicData {
 	private static Map<String, Map<String, WebElements>> ALL = null;
 	private static Map<String, WebElements> AREA_SH = null;
 	private static Map<String, WebElements> AREA_BJ = null;
+	private static Map<String, WebElements> AREA_COMMON = null;
 
 	private static Map<String, Map<String, WebElements>> getAll() {
 		if (ALL == null) {
@@ -39,14 +40,30 @@ public class InitBasicData {
 	private static void initSpecialArea() {
 		AREA_SH = new HashMap<String, WebElements>();
 		AREA_BJ = new HashMap<String, WebElements>();
+		AREA_COMMON = new HashMap<String, WebElements>();
+
 		for (Map.Entry<String, WebElements> entry : getAreas().entrySet()) {
 			if (isOK(entry.getValue(), KEY_AREAS_BJ)) {
 				AREA_BJ.put(entry.getKey(), entry.getValue());
 			} else if (isOK(entry.getValue(), KEY_AREAS_SH)) {
 				AREA_SH.put(entry.getKey(), entry.getValue());
+			} else {
+				if (filter(entry.getValue())) {
+					continue;
+				}
+				AREA_COMMON.put(entry.getKey(), entry.getValue());
 			}
 		}
 
+	}
+
+	private static boolean filter(WebElements value) {
+		if (KEY_AREAS_BJ.equals(value.getCode())) {
+			return true;
+		} else if (KEY_AREAS_SH.equals(value.getCode())) {
+			return true;
+		}
+		return false;
 	}
 
 	private static boolean isOK(WebElements we, String keyAreasBj) {
@@ -73,6 +90,13 @@ public class InitBasicData {
 			initSpecialArea();
 		}
 		return AREA_SH;
+	}
+
+	public static Map<String, WebElements> getAreaOthers() {
+		if (AREA_COMMON == null) {
+			initSpecialArea();
+		}
+		return AREA_COMMON;
 	}
 
 	public static Map<String, WebElements> getAreas() {
