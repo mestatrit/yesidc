@@ -82,7 +82,7 @@ public class HTMLParserTest {
 			Node node = nodes[i];
 			if (node instanceof TextNode) {
 				TextNode textnode = (TextNode) node;
-				line = textnode.getText();
+				line = "TextNode-" + textnode.getText();
 			} else if (node instanceof LinkTag) {
 				LinkTag link = (LinkTag) node;
 				line = link.getLink();
