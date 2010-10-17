@@ -1,4 +1,4 @@
-package htmlrender;
+package jdk.Threads.htmlrender;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,6 @@ public class HtmlRender {
 
 				final Image image = new Image(info);
 				completionService.submit(new Callable<Image>() {
-					@Override
 					public Image call() throws Exception {
 						image.download();
 						return image;

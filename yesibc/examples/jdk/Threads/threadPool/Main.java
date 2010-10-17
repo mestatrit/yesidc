@@ -1,4 +1,4 @@
-package threadPool;
+package jdk.Threads.threadPool;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -20,7 +20,6 @@ public class Main {
 		
 		Executor executor = Executors.newFixedThreadPool(10);
 		Runnable task = new Runnable() {
-			@Override
 			public void run() {
 				System.out.println("task over");
 			}

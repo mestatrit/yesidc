@@ -1,4 +1,4 @@
-package executorservice;
+package jdk.Threads.executorservice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class ConcurrentCalculator {
 	private int cpuCoreNumber;
 	private List<Future<Long>> tasks = new ArrayList<Future<Long>>();
 
-	// ÄÚ²¿Àà
+	// ï¿½Ú²ï¿½ï¿½ï¿½
 	class SumCalculator implements Callable<Long> {
 		private int[] numbers;
 		private int start;
@@ -42,7 +42,7 @@ public class ConcurrentCalculator {
 	}
 
 	public Long sum(final int[] numbers) {
-		// ¸ù¾ÝCPUºËÐÄ¸öÊý²ð·ÖÈÎÎñ£¬´´½¨FutureTask²¢Ìá½»µ½Executor
+		// ï¿½ï¿½ï¿½CPUï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ñ£¬´ï¿½ï¿½ï¿½FutureTaskï¿½ï¿½ï¿½á½»ï¿½ï¿½Executor
 		for (int i = 0; i < cpuCoreNumber; i++) {
 			int increment = numbers.length / cpuCoreNumber + 1;
 			int start = increment * i;
@@ -60,7 +60,7 @@ public class ConcurrentCalculator {
 	}
 
 	/**
-	 * µü´úÃ¿¸öÖ»ÈÎÎñ£¬»ñµÃ²¿·ÖºÍ£¬Ïà¼Ó·µ»Ø
+	 * ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ñ£¬»ï¿½Ã²ï¿½ï¿½ÖºÍ£ï¿½ï¿½ï¿½Ó·ï¿½ï¿½ï¿½
 	 * 
 	 * @return
 	 */
@@ -68,7 +68,7 @@ public class ConcurrentCalculator {
 		Long result = 0l;
 		for (Future<Long> task : tasks) {
 			try {
-				// Èç¹û¼ÆËãÎ´Íê³ÉÔò×èÈû
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				Long subSum = task.get();
 				result += subSum;
 			} catch (InterruptedException e) {
