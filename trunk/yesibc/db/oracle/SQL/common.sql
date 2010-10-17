@@ -233,3 +233,7 @@ delete from t_company
                 from t_company
                group by company_code
               having count(*) > 1)
+--22.树形结构              
+SELECT LEVEL,RPAD(' ',LEVEL*3) || wb.code,wb.* FROM WEB_ELEMENTS wb 
+CONNECT BY PRIOR id = code_type START WITH code='types';
+  
