@@ -1,4 +1,4 @@
-package blockingqueue;
+package jdk.Threads.blockingqueue;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -14,7 +14,6 @@ public class Producer implements Runnable {
 		this.exec = exec;
 	}
 
-	@Override
 	public void run() {
 		while (!exec.isShutdown()) {
 			Food food = new Food();

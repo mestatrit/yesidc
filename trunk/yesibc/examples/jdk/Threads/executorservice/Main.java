@@ -1,4 +1,4 @@
-package executorservice;
+package jdk.Threads.executorservice;
 
 public class Main {
 	public static void main(String[] args) {

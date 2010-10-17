@@ -1,4 +1,4 @@
-package htmlrender;
+package jdk.Threads.htmlrender;
 
 public class Main {
 

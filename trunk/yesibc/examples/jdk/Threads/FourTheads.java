@@ -1,4 +1,4 @@
-package jdk;
+package jdk.Threads;
 
 class FourThreads {
 

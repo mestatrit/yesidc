@@ -1,4 +1,4 @@
-package jdk;
+package jdk.jmx;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;

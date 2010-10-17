@@ -1,4 +1,4 @@
-package jdk;
+package jdk.Threads;
 
 import java.util.ArrayList;
 import java.util.Iterator;
