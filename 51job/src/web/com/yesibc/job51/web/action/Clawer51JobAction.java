@@ -461,6 +461,24 @@ public class Clawer51JobAction extends BaseAction2Support {
 	}
 
 	private int reConn(int threadNumber, int recTimes, int currentOfAll) throws InterruptedException {
+		
+		//pauseServer();
+
+		// 如果已经访问了线程数*某一倍数，则进行重新连接。
+		if (currentOfAll % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER * threadNumber) == 0) {
+			recTimes++;
+			try {
+				WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchPages!"
+						+ recTimes + "!", true);
+			} catch (Exception e) {
+				log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!recTimes=" + recTimes + ".", e);
+			}
+		}
+		return recTimes;
+	}
+
+	@SuppressWarnings("unused")
+	private void pauseServer() throws InterruptedException {
 		long now = System.currentTimeMillis() - start_holding;
 		if ((now - ClawerConstants.PAUSE_SERVER_INTERVAL) > 0) {
 			start_holding = System.currentTimeMillis();
@@ -477,18 +495,6 @@ public class Clawer51JobAction extends BaseAction2Support {
 				}
 			}
 		}
-
-		// 如果已经访问了线程数*某一倍数，则进行重新连接。
-		if (currentOfAll % (ClawerConstants.REFRESH_MUILTI_THREADS_NUMBER * threadNumber) == 0) {
-			recTimes++;
-			try {
-				WebLinkSupport.refreshContextAndReconnInternet(ClawerConstants.PROC_LOG + "REC By SearchPages!"
-						+ recTimes + "!", true);
-			} catch (Exception e) {
-				log.error(ClawerConstants.PROC_LOG + "REC By SearchPages!ERROR!recTimes=" + recTimes + ".", e);
-			}
-		}
-		return recTimes;
 	}
 
 	private int waitingSearchList(Map<Integer, SearchListEngine> lists, int errorTimes) {
