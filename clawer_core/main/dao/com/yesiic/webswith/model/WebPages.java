@@ -15,9 +15,9 @@ public class WebPages implements java.io.Serializable {
 
 	// 0-default=OK;1-search type list;2-search pages list;3-job list;4-company
 	// list
-	public static String PAGE_TYPE_SEARCH_LIST = "1";
-	public static String PAGE_TYPE_SEARCH_PAGES = "2";
-	public static String PAGE_TYPE_JOB_LIST = "3";
+	public static String PAGE_TYPE_1ST = "1";
+	public static String PAGE_TYPE_2ND = "2";
+	public static String PAGE_TYPE_3RD = "3";
 
 	private String pageType;
 
