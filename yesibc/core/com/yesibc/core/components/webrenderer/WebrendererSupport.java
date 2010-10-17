@@ -31,7 +31,8 @@ public class WebrendererSupport {
 			return "";
 		}
 		str = str.trim();
-		str = str.replace("\n", SPACER).replace("\t", SPACER).replace(" ", SPACER);
+		str = str.replace("\n", SPACER).replace("\t", SPACER).replace(" ",
+				SPACER);
 		return str;
 	}
 
@@ -40,7 +41,8 @@ public class WebrendererSupport {
 		ieLMTs = new ArrayList<IElement>();
 	}
 
-	public static IElement getElement(IElementCollection ies, String[] attributes, String[] attrVals, String[] txts) {
+	public static IElement getElement(IElementCollection ies,
+			String[] attributes, String[] attrVals, String[] txts) {
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);
 			int j = 0;
@@ -72,7 +74,8 @@ public class WebrendererSupport {
 		return null;
 	}
 
-	public static IElement getElement(IElementCollection ies, String attribute, String attrVal) {
+	public static IElement getElement(IElementCollection ies, String attribute,
+			String attrVal) {
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);
 			String name = removeSpace(current.getAttribute(attribute, 0));
@@ -85,8 +88,8 @@ public class WebrendererSupport {
 
 	private static Log log = LogFactory.getLog(WebrendererSupport.class);
 
-	public static List<IElement> getElements(IElementCollection ies, String attribute, String attrVal)
-			throws ApplicationException {
+	public static List<IElement> getElements(IElementCollection ies,
+			String attribute, String attrVal) throws ApplicationException {
 		if (ies == null || ies.length() < 1) {
 			return null;
 		}
@@ -104,7 +107,8 @@ public class WebrendererSupport {
 		return elements;
 	}
 
-	public static List<IElement> getElements(IElementCollection ies, String tag, String attribute, String attrVal) {
+	public static List<IElement> getElements(IElementCollection ies,
+			String tag, String attribute, String attrVal) {
 		if (ies == null || ies.length() < 1) {
 			return null;
 		}
@@ -134,8 +138,8 @@ public class WebrendererSupport {
 		return elements;
 	}
 
-	public static List<IElement> getElements(IElementCollection ies, String tag, String attribute, String attrVal,
-			String innerTxt) {
+	public static List<IElement> getElements(IElementCollection ies,
+			String tag, String attribute, String attrVal, String innerTxt) {
 		if (ies == null || ies.length() < 1) {
 			return null;
 		}
@@ -170,9 +174,32 @@ public class WebrendererSupport {
 		return elements;
 	}
 
-	public static List<IElement> getElements(IElementCollection ies, String attribute, String attrVal,
-			String[] innerTxts) {
-		if (ies == null || ies.length() < 1 || innerTxts == null || innerTxts.length < 1) {
+	public static List<IElement> tags(IElement ie, String tag) {
+		if (ie == null || tag == null) {
+			return null;
+		}
+		IElementCollection all = ie.getChildElements();
+		if (all == null) {
+			return null;
+		}
+		List<IElement> ies = new ArrayList<IElement>();
+		IElement temp = null;
+		for (int i = 0; i < all.length(); i++) {
+			temp = all.item(i);
+			if (temp == null) {
+				continue;
+			}
+			if (tag.equals(temp.getTagName())) {
+				ies.add(temp);
+			}
+		}
+		return ies;
+	}
+
+	public static List<IElement> getElements(IElementCollection ies,
+			String attribute, String attrVal, String[] innerTxts) {
+		if (ies == null || ies.length() < 1 || innerTxts == null
+				|| innerTxts.length < 1) {
 			return null;
 		}
 
@@ -204,7 +231,8 @@ public class WebrendererSupport {
 		return elements;
 	}
 
-	public static List<IElement> getElementsByTxt(IElementCollection ies, String[] innerTxts) {
+	public static List<IElement> getElementsByTxt(IElementCollection ies,
+			String[] innerTxts) {
 		if (ies == null || ies.length() < 1) {
 			return new ArrayList<IElement>();
 		}
@@ -232,7 +260,8 @@ public class WebrendererSupport {
 	private IElement elementByLoop = null;
 	private List<IElement> ieLMTs = null;
 
-	public IElement getElementByLoop(IElementCollection ies, String tag, String attribute, String attrVal) {
+	public IElement getElementByLoop(IElementCollection ies, String tag,
+			String attribute, String attrVal) {
 		if (elementByLoop != null) {
 			return elementByLoop;
 		}
@@ -258,7 +287,8 @@ public class WebrendererSupport {
 		return elementByLoop;
 	}
 
-	public IElement getElementByTxtAndLoop(IElementCollection ies, String tag, String txt) {
+	public IElement getElementByTxtAndLoop(IElementCollection ies, String tag,
+			String txt) {
 		if (elementByLoop != null) {
 			return elementByLoop;
 		}
@@ -299,7 +329,8 @@ public class WebrendererSupport {
 		return ieLMTs;
 	}
 
-	public List<IElement> getElementsByTxtAndLoop(IElementCollection ies, String tag, String txt) {
+	public List<IElement> getElementsByTxtAndLoop(IElementCollection ies,
+			String tag, String txt) {
 		for (int i = 0; i < ies.length(); i++) {
 			IElement current = ies.item(i);
 			// LogHandler.info(current.getOuterHTML());
@@ -318,7 +349,8 @@ public class WebrendererSupport {
 		return ieLMTs;
 	}
 
-	public static void addListener(IBrowserCanvas browser, final String user, final String pswd) {
+	public static void addListener(IBrowserCanvas browser, final String user,
+			final String pswd) {
 		browser.addPromptListener(new PromptListener() {
 			public void onPromptDialog(PromptEvent e) {
 				if (6 == e.getDialogType()) {
