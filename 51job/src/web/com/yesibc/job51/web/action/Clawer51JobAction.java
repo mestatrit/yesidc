@@ -508,7 +508,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			if (spe.getProcessContext().isError()) {
 				++errorTimes;
 				error = true;
-				errorMsg = errorMsg + "[" + errorTimes + "]" + spe.getProcessContext().getErrorMs();
+				errorMsg = errorMsg + "[" + errorTimes + "]" + spe.getProcessContext().getErrorMsg();
 			}
 			if (!spe.isAlive()) {
 				log.info(spe.getTitle() + " thread was removed OK. Left size:" + (--size));
@@ -564,7 +564,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			if (spe.getProcessContext().isError()) {
 				++errorTimes;
 				error = true;
-				errorMsg = errorMsg + "[" + errorTimes + "]" + spe.getProcessContext().getErrorMs();
+				errorMsg = errorMsg + "[" + errorTimes + "]" + spe.getProcessContext().getErrorMsg();
 			}
 			if (!spe.isAlive()) {
 				log.info(spe.getTitle() + " thread was removed OK. Left size:" + (--size));
@@ -612,7 +612,7 @@ public class Clawer51JobAction extends BaseAction2Support {
 			if (spe.getProcessContext().isError()) {
 				++errorTimes;
 				error = true;
-				errorMsg = errorMsg + "[" + errorTimes + "]" + spe.getProcessContext().getErrorMs();
+				errorMsg = errorMsg + "[" + errorTimes + "]" + spe.getProcessContext().getErrorMsg();
 			}
 			if (!spe.isAlive()) {
 				log.info(spe.getTitle() + " thread was removed OK. Left size:" + (--size));

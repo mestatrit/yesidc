@@ -45,7 +45,7 @@ public class ErrorHandler {
 
 		if (msg != null && msg.indexOf(WAIT_ERROR_SYSTEM) > -1) {
 			processContext.setError(true);
-			processContext.setErrorMs(msg + "\n" + str);
+			processContext.setErrorMsg(msg + "\n" + str);
 		}
 
 		ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " Parsing [" + processContext.getBrowser().getURL() + "] is error!"
