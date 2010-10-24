@@ -14,7 +14,7 @@
 
 		<property name="pageType" type="java.lang.String">
 			<column name="PAGE_TYPE" length="2">
-				<comment>0-default=OK;1-search type list;2-search pages list;3-job list;</comment>
+				<comment>11-search types;12-search types 2 level;21-search pages;22-search pages 2 level;31-details;32-details 2 level;</comment>
 			</column>
 		</property>
 
