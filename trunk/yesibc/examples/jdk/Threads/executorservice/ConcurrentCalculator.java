@@ -15,7 +15,6 @@ public class ConcurrentCalculator {
 	private int cpuCoreNumber;
 	private List<Future<Long>> tasks = new ArrayList<Future<Long>>();
 
-	// �ڲ���
 	class SumCalculator implements Callable<Long> {
 		private int[] numbers;
 		private int start;

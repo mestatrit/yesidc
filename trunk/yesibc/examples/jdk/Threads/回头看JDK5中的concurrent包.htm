@@ -1,0 +1,347 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html"; charset="UTF-8" />
+<meta content="360doc" name="classification">
+<meta content="回头看JDK5中的concurrent包、线程池 - 老唐 的专栏 - CSDNBlog" name=keywords>
+<meta content="回头看JDK5中的concurrent包、线程池 - 老唐 的专栏 - CSDNBlog" name=description>
+<meta content="www.360doc.com" name="author">
+
+		
+<title>回头看JDK5中的concurrent包、线程池 - 老唐 的专栏 - CSDNBlog</title>
+<link href="http://www.360doc.com/css/StickySystemIEBlue.css" rel="stylesheet" type="text/css" />
+<script>
+window.onerror = ignoreError;        
+function ignoreError() 
+{
+   return true;
+}  
+</script>
+</head>
+<body  onmouseup="setDragEnd()" onmousemove="DragDiv();" onclick="delAllDiv(event)">
+﻿
+<script>
+Date.prototype.Format = function(formatStr)    
+{    
+ var Week = ['日','一','二','三','四','五','六'];   
+ return formatStr.replace(/yyyy|YYYY/,this.getFullYear()).replace(/yy|YY/,(this.getYear() % 100)>9?(this.getYear() % 100).toString():'0' + (this.getYear() % 100)).replace(/MM/,(this.getMonth()+1)>9?(this.getMonth()+1).toString():'0' + (this.getMonth()+1)).replace(/M/g,(this.getMonth()+1)).replace(/w|W/g,Week[this.getDay()]).replace(/dd|DD/,this.getDate()>9?this.getDate().toString():'0' + this.getDate()).replace(/d|D/g,this.getDate());    
+};    
+</script>
+
+<div id="container">
+    <div class="header">
+            <div class="day">
+
+                 <script type="text/javascript">document.write(new Date().Format("yyyy年MM月dd日"));</script>
+
+                &nbsp;&nbsp;&nbsp;&nbsp;<script>document.write(new Date().Format("星期W"));</script></div>
+            <div class="help111">
+                <a href="javascript:void(0)" onclick="setHomepage('http://www.360doc.com')">设为主页</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+                    href="javascript:void(0)" onclick="AddFavorite('http://www.360doc.com','360doc个人图书馆')">&nbsp;加入收藏</a><b
+                        class="help1"><a href="/help.html" target="_blank">帮助</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a
+                            target="_blank" href="/advice.html">留言交流</a>&nbsp;&nbsp;|&nbsp;&nbsp;<span id="spanLogin">
+
+                                <span id="loginstatus"></span>
+
+                            </span>&nbsp; &nbsp;</b>
+            </div>
+        </div>
+        <div class="nav111">
+            <div class="logo">
+                <img src="/images/new/logo.gif" width="147" height="63" /></div>
+            <div class="topnav">
+                <div class="mainbav">
+                   <div class="nav_wenzi">
+                        <span class="ziyewz1" style="padding-left: 29px; float: left;"><a href="/index.html">
+                            首页</a></span> <span class="ziyewz mainbavzt">&nbsp;|&nbsp;<a href="/topic.html">主题阅读</a></span>
+                        <span class="ziyewz mainbavzt">&nbsp;|&nbsp;<a href="/tags.html">tags</a></span>
+                        <span class="ziyewz mainbavzt">&nbsp;|&nbsp;<a href="/catalog.html">精彩目录</a></span>
+                        <span class="ziyewz mainbavzt">&nbsp;|&nbsp;<a href="/firstarticle.html">精品文苑</a></span>
+                        <span class="ziyewz mainbavzt">&nbsp;|&nbsp;<a href="/topuser.html">会员浏览</a></span>
+                        <span class="ziyewz1" style="padding-left: 29px;"><a href="/myfiles.aspx">我的图书馆</a></span>
+                    </div>
+                </div>
+                <div class="subnav">
+                    <div class="sub_a">
+                        <div>
+                            <h3 class="sub_azt">
+                                <a href="/leisure.html">休闲·怡情</a>&nbsp;&nbsp;<span style="color: #c0c0c0;">|</span>&nbsp;&nbsp;</h3>
+                            <span class="navzt" style="float: left;"><a href="/leisure.html">艺术</a>&nbsp;&nbsp;<a
+                                href="/leisure.html">音画</a>&nbsp;&nbsp;<a href="/leisure.html">美女</a>&nbsp;&nbsp;<a
+                                    href="/leisure.html">笑话</a>&nbsp;&nbsp;<a href="/leisure.html">小游戏</a>&nbsp;&nbsp;<a
+                                        href="/leisure.html">壁纸</a>&nbsp;&nbsp;<a href="/leisure.html">风景</a></span>
+                        </div>
+                        <div style="clear: both;">
+                            <h3 class="sub_azt">
+                                <a href="/health.html">健康·养生</a>&nbsp;&nbsp;<span style="color: #c0c0c0;">|</span>&nbsp;&nbsp;</h3>
+                            <span class="navzt" style="float: left;"><a href="/health.html">健身</a>&nbsp;&nbsp;<a
+                                href="/health.html">食疗</a>&nbsp;&nbsp;<a href="/health.html">治病</a>&nbsp;&nbsp;<a
+                                    href="/health.html">中医</a>&nbsp;&nbsp;<a href="/health.html">减肥</a>&nbsp;&nbsp;<a
+                                        href="/health.html">经穴</a>&nbsp;&nbsp;<a href="/health.html">亚健康</a></span>
+                        </div>
+                    </div>
+                    <div class="sub_a" style="margin-left: 60px;">
+                        <div>
+                            <h3 class="sub_azt">
+                                <a href="/life.html">生活·情感</a>&nbsp;&nbsp;<span style="color: #c0c0c0;">|</span>&nbsp;&nbsp;</h3>
+                            <span class="navzt" style="float: left;"><a href="/life.html">哲理</a>&nbsp;&nbsp;<a
+                                href="/life.html">情感</a>&nbsp;&nbsp;<a href="/life.html">家居</a>&nbsp;&nbsp;<a href="/life.html">母婴</a>&nbsp;&nbsp;<a
+                                    href="/life.html">美食</a>&nbsp;&nbsp;<a href="/life.html">美容</a>&nbsp;&nbsp;<a href="/life.html">百宝箱</a></span>
+                        </div>
+                        <div style="clear: both;">
+                            <h3 class="sub_azt">
+                                <a href="/society.html">文教·社会</a>&nbsp;&nbsp;<span style="color: #c0c0c0;">|</span>&nbsp;&nbsp;</h3>
+                            <span class="navzt" style="float: left;"><a href="/society.html">读书</a>&nbsp;&nbsp;<a
+                                href="/society.html">人文</a>&nbsp;&nbsp;<a href="/society.html">历史</a>&nbsp;&nbsp;<a
+                                    href="/society.html">社会</a>&nbsp;&nbsp;<a href="/society.html">教育</a>&nbsp;&nbsp;<a
+                                        href="/society.html">职场</a>&nbsp;&nbsp;<a href="/society.html">电脑</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<div class="index_main">
+	<div class="wenzhang_tit">回头看JDK5中的concurrent包、线程池 - 老唐 的专栏 - CSDNBlog（转载）</div>
+
+       <div class="wenzhang_ft link_underline"><table><tr><td ><span class="link_green"><A href="http://www.360doc.com/UserHome/111235" target="_blank">-ー意孤行ノ</A></span>  收录于2009-03-19 阅读数：<span id="360doc_Readnum"></span></td>  <td ><div id="360doc_saverNum"></div></td>  <td ><div id="360doc_artpermission">公众公开&nbsp;</div></td>  <td  valign="bottom"><span class="link_underlinecg"><a href='http://blog.csdn.net/sfdev/archive/2008/12/30/3648457.aspx'  target="_blank">原文来源</a>　</span> </td></tr></table></div>
+
+        <div id="360docIsStrangerUp"></div>	
+	<div class="wenzhang_cz">
+		<table width="100%">
+            <tr>
+                <td align="left" valign="top">
+                    <div id="headFirst"><span class="wenzhang_cz_xx01 link_red"><img src="http://www.360doc.com/images/icon06.gif"	/>&nbsp;<a href="http://www.360doc.com/resaveArt.aspx?articleid=2859181"  target="_blank" >我也要收藏</a></span></div>
+                </td>
+                <td align="right" valign="top">
+                    <div id="headSecond" style="float: right"></div>
+                </td>
+            </tr>
+        </table>
+	</div>	
+	
+	<table width="100%" border="0" cellspacing="1" cellpadding="1"  class="index_main">
+<tbody>
+	  <tr>
+		<td align="left" valign="top" width="740px">
+                        <div  style=' z-index:1'  >
+<div id='ADAboveArtContent'></div>
+<table><tr><td width=3></td></tr></table>
+</div>
+                        <span id="articlecontent" class="wenzhang_con" onmouseup="NewHighlight(event)" style="width: 740px"><div>
+<p>最近的Notiy系统终于快告一段落了，已经进入QA测试阶段，真正编码的那几天时间真叫人怀念啊！已经好久没有过这种畅快的感觉了，倒不是说平时完全没机会编码，主要是平时更多的涉及业务逻辑；</p>
+<p>Notify系统中为了让系统<strong>更轻量级，低耦合</strong>，对于并发操作的核心主要是基于JDK自带的concurrent包，由Doug Lea捐赠；下面就回顾下这个包中的几个重要类、以及重要方法、属性等；<br>concurrent并发包里面几个重要的接口有：<strong>Executor、ExecutorService, ScheduledExecutorService</strong>；<br>重要的实现类有：<strong>ScheduledThreadPoolExecutor, ThreadPoolExecutor</strong>；<br>关于这几个接口和实现类的类图可以参见文档最后的UML图，图中对一些比较重要的属性、方法进行红色标识，可以重点关注；</p>
+<p>先来说说<strong>java.util.concurrent.ThreadPoolExecutor</strong>，也就是我们经常说到的线程池，通过该类，应用可以直接拿来使用，只要在初始化时设置不同的参数即可；其主要的参数有以下几个：</p>
+<ul>
+    <li><strong>corePoolSize</strong>： 线程池维护线程的最少数量
+    <li><strong>maximumPoolSize</strong>：线程池维护线程的最大数量
+    <li><strong>keepAliveTime</strong>： 线程池维护线程所允许的空闲时间
+    <li><strong>unit</strong>： 线程池维护线程所允许的空闲时间的单位
+    <li><strong>workQueue</strong>： 线程池所使用的缓冲队列
+    <li><strong>handler</strong>： 线程池对拒绝任务的处理策略</li>
+</ul>
+<p>一个任务通过execute(Runnable)方法被添加到线程池，任务就是一个 Runnable类型的对象，任务的执行方法就是Runnable类型对象的run()方法；注意：<strong>是Runnable，而不是Thread</strong>。</p>
+<p>当一个任务通过execute(Runnable)方法欲添加到线程池时：</p>
+<ul>
+    <li>如果此时线程池中的数量小于corePoolSize，即使线程池中的线程都处于空闲状态，也要创建新的线程来处理被添加的任务。
+    <li>如果此时线程池中的数量等于corePoolSize，但是缓冲队列workQueue未满，那么任务被放入缓冲队列。
+    <li>如果此时线程池中的数量大于corePoolSize，缓冲队列workQueue满，并且线程池中的数量小于maximumPoolSize，建新的线程来处理被添加的任务。
+    <li>如果此时线程池中的数量大于corePoolSize，缓冲队列workQueue满，并且线程池中的数量等于maximumPoolSize，那么通过handler所指定的策略来处理此任务。
+    <li>从上面可以看出线程池中处理任务的优先级为：<br>核心线程corePoolSize、任务队列workQueue、最大线程maximumPoolSize，如果三者都满了，使用handler处理被拒绝的任务。</li>
+</ul>
+<p>当线程池中的线程数量大于 corePoolSize时，如果某线程空闲时间超过keepAliveTime，线程将被终止。这样，线程池可以动态的调整池中的线程数。</p>
+<p>unit可选的参数为java.util.concurrent.TimeUnit中的几个静态属性：<br>NANOSECONDS、MICROSECONDS、MILLISECONDS、SECONDS。</p>
+<p>默认handler有四个选择，当然也可以自行扩展，但是要特别小心：</p>
+<ul>
+    <li>ThreadPoolExecutor.AbortPolicy：直接抛出java.util.concurrent.RejectedExecutionException异常；
+    <li>ThreadPoolExecutor.CallerRunsPolicy：主线程直接尝试执行该任务；当线程池中可加入时，将任务添加到线程池中；该操作会重复执行，可以有效降低主线程将任务加入到线程池的速度；
+    <li>ThreadPoolExecutor.DiscardOldestPolicy：直接抛弃旧的任务，即把线程池内最早加入队列的线程抛弃；
+    <li>ThreadPoolExecutor.DiscardPolicy：直接抛弃当前的任务；</li>
+</ul>
+<p>再来说说<strong>java.util.concurrent.ScheduledThreadPoolExecutor</strong>，此类是ThreadPoolExecutor的子类，所以以上我们描述的特性他都具备；除此之外，他还有一些自己特有的属性和方法：</p>
+<ul>
+    <li>schedule(Runnable command, long delay, TimeUnit unit) <br>该方法创建并执行在给定延迟后启用的一次性任务；
+    <li>scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) <br>该方法创建并执行一个在给定初始延迟后首次启用的定期任务，后续任务具有指定的周期；也就是将在initialDelay后开始执行，然后在initialDelay+period 后执行，接着在initialDelay + 2 * period 后执行，依此类推。
+    <li>scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) <br>该方法创建并执行一个在给定初始延迟后首次启用的定期任务，随后，在每一次执行终止和下一次执行开始之间都存在给定的延迟。</li>
+</ul>
+<p>对于concurrent包在Spring中也进行了很多的封装，对于一些可以采用<strong>FixedRate</strong>或者<strong>FixedDelay</strong>来进行调度的任务，非常的方便，相比较于Quartz的实现，在配置文件方面要减少很多，有兴趣的同学可以参考Spring文档中的《第23章 Spring中的定时调度和线程池》，重点关注两个类：<br>org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean<br>org.springframework.scheduling.concurrent.ScheduledExecutorTask<br>org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor</p>
+<p>附：concurrent包中几个核心接口、类的UML类图：<br><img alt="" src="http://image4.360doc.com/DownloadImg/2009/3/19/111235_2859181_1.jpg"></p>
+</div></span>                                    
+                        ﻿<div id='360Ad07Below' style="text-align: center;">
+</div>
+<br/>
+                        <div id="360docIsStranger"></div>
+                        <div class="wenzhang_bt_list" id="UserPreNextArt"><div>上一篇：<a  href='http://www.360doc.com/content/09/0319/21/111235_2858228.shtml' target='_blank'>Java序列化机制要序列化那些内容 - ilibaba的专栏 - CSDNBlog</a></div><div>下一篇：<a   href='http://www.360doc.com/content/09/0319/22/111235_2859493.shtml' target='_blank'>java clone方法使用详解 - ilibaba的专栏 - CSDNBlog</a></div></div>
+			<div class="wenzhang_cz2">
+                                <span id="saverDiv"></span>				
+				<span id="360docCopyArtUrl"></span> &nbsp;
+				(<span class="link_green"><A href="http://www.360doc.com/UserHome/111235" target="_blank">-ー意孤行ノ</A></span> 的分类目录 <span class="link_underlinecg">[<A href="http://www.360doc.com/userHome.aspx?userid=111235&cid=6" target="_blank">JAVA</A>])</span>
+			</div>
+﻿<div class="ad02" id="ad02New">
+</div>
+
+
+
+ <div id="divadleft" style="position: absolute; width: 120px; word-break: break-all;
+        top: 250px; left: 0px; padding-left: 13px;">
+
+        <script type="text/javascript"><!--
+         function leftshow()
+         {
+            var screenwidth=screen.availWidth;
+            var ad_left= '';
+            try
+            {
+                if(screenwidth>1200) 
+                { 
+                    ad_left+='<'+'script type=\"text/javascript\">';
+                    ad_left+='google_ad_client = "pub-6625678643128649";';
+                    ad_left+='google_ad_slot =\"7792148991\";';
+                    ad_left+='google_ad_width =120;';
+                    ad_left+='google_ad_height = 600;';  
+                    ad_left+='</'+'script>';
+                    ad_left+='<'+'script type=\"text/javascript\"';
+                    ad_left+='src=\"http://pagead2.googlesyndication.com/pagead/show_ads.js\">';
+                    ad_left+='</'+'script>';
+                }
+                document.write(ad_left);
+            }
+            catch(e)
+            {
+            }
+        }
+
+        leftshow();
+        -->
+        </script>
+
+        <div style="float: right; padding-right: 2px; padding-top: 2px;background-color:#fff;" class="link_underline">
+            <a href="#" onclick="document.getElementById('divadleft').style.display='none'">关闭</a></div>
+    </div>
+ <script>
+    var screenwidth=screen.availWidth;
+    try
+    {
+        if(screenwidth<=1200) 
+        { 
+            document.getElementById("divadleft").style.display="none";
+            document.getElementById("divadright").style.display="none";
+        }   
+    }
+    catch(e)
+    {
+    }
+    </script>  <div class="wenzhang_bt">相关文章</div><div class="wenzhang_bt_list"><ul><li><a   href='http://www.360doc.com/content/07/0526/16/11586_522356.shtml' target='_blank'>用J2SE1.5建立多任务的Java应用程序 - 我思故我强 -...</a><span class="time3 link_green">2007-05-26     <a href="http://www.360doc.com/UserHome/11586" target='_blank'>ShangShujie</a></span> </li><li><a   href='http://www.360doc.com/content/07/0110/12/9014_324914.shtml' target='_blank'>Java 理论与实践: 并发在一定程度上使一切变得简单</a><span class="time3 link_green">2007-01-10     <a href="http://www.360doc.com/UserHome/9014" target='_blank'>raydian</a></span> </li><li><a   href='http://www.360doc.com/content/06/0812/16/8473_179457.shtml' target='_blank'>Java 理论与实践: 线程池与工作队列</a><span class="time3 link_green">2006-08-12     <a href="http://www.360doc.com/UserHome/8473" target='_blank'>cherishchen</a></span> </li><li><a   href='http://www.360doc.com/content/08/0113/11/15643_969109.shtml' target='_blank'>JDK1.5新特性--java.util.concurrent ...</a><span class="time3 link_green">2008-01-13     <a href="http://www.360doc.com/UserHome/15643" target='_blank'>goldbomb</a></span> </li><li><a   href='http://www.360doc.com/content/08/0113/11/15643_969101.shtml' target='_blank'>JDK1.5新特性——java.util.concurrent ...</a><span class="time3 link_green">2008-01-13     <a href="http://www.360doc.com/UserHome/15643" target='_blank'>goldbomb</a></span> </li><li><a   href='http://www.360doc.com/content/07/0211/14/11136_363725.shtml' target='_blank'>Java 5.0多线程编程</a><span class="time3 link_green">2007-02-11     <a href="http://www.360doc.com/UserHome/11136" target='_blank'>lwj888</a></span> </li><li><a   href='http://www.360doc.com/content/06/0618/21/2718_137474.shtml' target='_blank'>java线程工具走出锤子敲铁皮时代。</a><span class="time3 link_green">2006-06-18     <a href="http://www.360doc.com/UserHome/2718" target='_blank'>philip</a></span> </li><li><a   href='http://www.360doc.com/content/08/0113/11/15643_969120.shtml' target='_blank'>JDK1.5新特性--java.util.concurrent ...</a><span class="time3 link_green">2008-01-13     <a href="http://www.360doc.com/UserHome/15643" target='_blank'>goldbomb</a></span> </li></ul><div style="float:right; font-size:12px;" class="link_underline"><a href="http://www.360doc.com/relevant/1/8/1/9/2859181_more.shtml"  target="_blank">查看更多文章>></a></div></div>
+                <div id='adbelowRel'><script type="text/javascript"> /*728*15��������2010-8-20������ҳ�·�*/ 
+var cpro_id = 'u160114';</script>
+<script type="text/javascript" src="http://cpro.baidu.com/cpro/ui/c.js"></script>
+</div>	
+                <div><span id="Reflction"><div id="360docRefTN" class="wenzhang_bt" style="display:none;"></div><div id="360docRefCT"></div><div id="360docRefPB"></div></span></div>	
+			<div class="wenzhang_bt">发表评论 <span id="isLogInSpan" class="wenzhang_pl_fb_tit link_red"></span></div>
+			<div class="wenzhang_bt_1" id="loginNickname"></div>
+			
+                              <table width="100%"  cellpadding="0" cellspacing="0">
+                                 <tr>
+                                   <td align="left" valign="top">
+                                      <textarea name="textarea" id="TextBox1"  rows="12"  style="width:95%;"></textarea>  
+                                  </td>
+                                  <td id="360docTdAdID" align="right" valign="top" >
+                                     <div id="360docAdReflection" >
+                                      
+                                     </div>
+                                  </td>
+                                </tr>
+                                <tr><td height="5px"></td><td></td></tr>
+                                <tr>
+                                  <td> 
+                                      <div id="360docRelfection" align="left">
+                                         <input name="" type="checkbox" id="isCopy"  checked="checked" value="" />发送评论时内容自动复制到剪切板 
+                                        <input name="" type="button" id="Button1"  onclick="SubmitReflection();" value="发送" class="botton" />
+                                     </div>
+                                 </td>
+                                 <td>
+                                 </td>            
+                               </tr>
+                            </table>	
+		</td>
+                <td width="10px">
+                </td>
+		<td valign="top" align="center">
+                      <div><script type='text/javascript'>google_ad_client = 'pub-6625678643128649';google_ad_slot = '0378477824';google_ad_width = 180;google_ad_height = 90;</script><script type='text/javascript' src='http://pagead2.googlesyndication.com/pagead/show_ads.js'></script></div><div class="WidthRight"  style='width:178px;'><div class="wenzhang_bt">热点推荐</div><div class="wenzhang_bt_listCG"><ul><li><a href="http://www.360doc.com/content/08/0616/14/55979_1339472.shtml" target="_blank" >[评论随笔]2008年... </a></li><li><a href="http://www.360doc.com/content/07/0508/18/24784_488984.shtml" target="_blank" >心平气和当老师(发言稿... </a></li><li><a href="http://www.360doc.com/content/09/0320/22/111900_2868119.shtml" target="_blank" >短线操作几个技巧 </a></li><li><a href="http://www.360doc.com/content/06/1018/23/13001_233994.shtml" target="_blank" >泥与沙的缠绵 ====... </a></li><li><a href="http://www.360doc.com/content/07/0609/16/9737_548307.shtml" target="_blank" >[哲理图文]多体谅你身... </a></li><li><a href="http://www.360doc.com/content/07/0426/13/23620_467975.shtml" target="_blank" >佰骥：慎防中国叶利钦 </a></li><li><a href="http://www.360doc.com/content/06/0907/16/10393_201590.shtml" target="_blank" >抵御电脑辐射食物大揭秘！ </a></li><li><a href="http://www.360doc.com/content/09/0228/20/94306_2671755.shtml" target="_blank" >英法联军为什么要烧圆明园？ </a></li><li><a href="http://www.360doc.com/content/09/0127/11/90057_2403903.shtml" target="_blank" >治胃癌秘方 </a></li><li><a href="http://www.360doc.com/content/09/0125/05/83855_2396153.shtml" target="_blank" >美景极致令人销魂 </a></li><li><a href="http://www.360doc.com/content/08/1113/11/50944_1915880.shtml" target="_blank" >令人神往的中国绝美风景 </a></li><li><a href="http://www.360doc.com/content/08/1223/15/494_2183515.shtml" target="_blank" >销售经理主要工作职责 </a></li><li><a href="http://www.360doc.com/content/07/0129/20/9807_349201.shtml" target="_blank" >有24种东西必须…… </a></li><li><a href="http://www.360doc.com/content/09/0401/09/76929_2983877.shtml" target="_blank" >足 底 反 射 区 图 解 </a></li><li><a href="http://www.360doc.com/content/09/0413/18/77317_3119965.shtml" target="_blank" >亿万富翁对大学生说的18句话 </a></li><li><a href="http://www.360doc.com/content/09/0426/22/102852_3282380.shtml" target="_blank" >Excel XP小技巧... </a></li><li><a href="http://www.360doc.com/content/08/1121/06/78220_1968851.shtml" target="_blank" >凉拌鸡爪的做法 - 吃地带 </a></li><li><a href="http://www.360doc.com/content/07/0428/23/7986_472617.shtml" target="_blank" >怀旧　东邪西毒　经典对白 </a></li><li><a href="http://www.360doc.com/content/09/0401/19/115200_2990056.shtml" target="_blank" >手相牵 </a></li><li><a href="http://www.360doc.com/content/07/0906/17/6276_723970.shtml" target="_blank" >温家宝：仰望星空 </a></li></ul><br/></div></div><div id="AdArtRight" align="center"></div><div id="360docAdBetween"></div><div class="WidthRight"  style='width:178px;'><div class="wenzhang_bt">主题阅读</div><div class="wenzhang_bt_listCG"><ul><li><a href="http://www.360doc.com/content/09/0130/09/9733_2417274.shtml" target="_blank" >小沈阳最完全相关资料 </a></li><li><a href="http://www.360doc.com/content/09/0201/16/99260_2433295.shtml" target="_blank" >小沈阳经典语录 </a></li><li><a href="http://www.360doc.com/content/09/0205/13/102040_2464337.shtml" target="_blank" >赵本山春晚小品《不差钱... </a></li><li><a href="http://www.360doc.com/content/09/0202/17/99260_2442405.shtml" target="_blank" >小沈阳：你现在的温度有... </a></li><li><a href="http://www.360doc.com/content/09/0202/18/13012_2443042.shtml" target="_blank" >关外民声 - 小沈阳要... </a></li><li><a href="http://www.360doc.com/content/09/0202/11/22953_2439545.shtml" target="_blank" >赵本山小沈阳《不差钱》... </a></li><li><a href="http://www.360doc.com/content/08/0904/04/72442_1608211.shtml" target="_blank" >小沈阳视频网 </a></li><li><a href="http://www.360doc.com/content/09/0130/09/50944_2417489.shtml" target="_blank" >小沈阳央视春晚火爆荧屏... </a></li><li><a href="http://www.360doc.com/content/09/0201/14/99136_2432401.shtml" target="_blank" >赵本山力捧小沈阳的真实... </a></li><li><a href="http://www.360doc.com/content/08/1219/09/71815_2155780.shtml" target="_blank" >小沈阳经典搞笑语录 -... </a></li><li><a href="http://www.360doc.com/content/09/0401/20/51593_2990602.shtml" target="_blank" >八字看小沈阳09年将面临困惑 </a></li><li><a href="http://www.360doc.com/content/08/1215/14/14381_2128895.shtml" target="_blank" >传赵本山身家超7亿 致... </a></li></ul><br/></div></div><div ID="Getbook_list" class="WidthRight" style='display:none;'></div> 
+									
+		 </td>
+	  </tr>
+</tbody>
+	</table>
+
+</div>
+<div style="display:none" id="ImgCache"></div>
+
+
+<script language="javascript" type="text/javascript">
+
+
+       
+
+
+       var ArticleID=2859181;
+        var userid=111235;
+        var SearchByArt="href='http://www.google.cn/search?hl=zh-CN&amp;q=%e7%ba%bf%e7%a8%8b%2bconcurrent%2b%e4%bb%bb%e5%8a%a1&amp;lr=lang_zh-CN' target='_blank'";
+        var xmlHttp=null;
+        var xmlDom =null;
+        var xslDom =null;
+
+
+
+ var appName = navigator.appName.toLowerCase();
+   if (appName.indexOf("microsoft internet explorer")>-1)
+   {
+       document.write("<scr"+"ipt type='text/javascript' src='http://www.360doc.com/js/StickySystemIE090401.js'></sc"+"ript>");       
+   }
+   else
+   {
+      document.write("<scr"+"ipt type='text/javascript' src='http://www.360doc.com/js/StickySystemOther090401.js'></sc"+"ript>");
+   }
+
+ </script>
+
+
+
+
+
+
+
+<script>GerLookingUserInfo(0,1,1);</script>
+<script type="text/javascript" src="http://www.360doc.com/js/albb3.js"></script>
+﻿<div class="footer">
+    <div>
+        北京六智信息技术有限公司&nbsp;&nbsp;Copyright &copy; 2005-2010 360doc.com ,&nbsp;&nbsp;All Rights
+        Reserved
+    </div>
+    <div style="padding-top: 5px;">
+        <a target="_blank" href="/service.html">服务条款</a> <a href="javascript:void(0)" onclick="setHomepage('http://www.360doc.com')">
+            设360doc为首页</a> <a target="_blank" href="/advice.html">留言交流</a> <a target="_blank"
+                href="/contactus.html">联系我们</a> <a target="_blank" href="/friendlink.html">友情链接</a>
+        客服QQ:524562434&nbsp;&nbsp;
+    </div>
+    <div>
+        <table cellpadding="0" cellspacing="0" border="0" align="center">
+            <tr>
+                <td>
+                    <div>
+                        <a target="_blank" href="http://www.miibeian.gov.cn/">京ICP证090625号</a>&nbsp;&nbsp;京ICP备05038915号&nbsp;&nbsp;北京市公安局朝阳分局备案编号:1101051118
+                    </div>
+                </td>
+                <td>
+                    <a target="_blank" href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202009120700006">
+                        <img src="http://pubimage.360doc.com/biaoshi.gif" /></a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</div>
+
+
+</body>
+</html>
