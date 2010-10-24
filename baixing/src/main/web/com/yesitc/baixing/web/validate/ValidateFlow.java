@@ -71,11 +71,13 @@ public class ValidateFlow {
 
 	private static IBrowserCanvas loadMainUrl() throws ApplicationException {
 		ProcessContext processContext = new ProcessContext();
+		processContext.setLogTitle("First page!");
+		processContext.setIndex(index);
 
-		IBrowserCanvas browser = BrowserSupport.initLoading(processContext, "First page!", index);
+		IBrowserCanvas browser = BrowserSupport.prepareLoading(processContext);
 		BrowserSupport.onDocumnetComplete(browser, finish);
 		browser.loadURL("http://" + cities[0] + ".baixing.com/" + AREA + areas[0]);
-		BrowserSupport.waitingLoading(processContext, index, finish);
+		BrowserSupport.waitingLoading(processContext, finish);
 
 		log.info(ClawerConstants.PROC_LOG + "Load " + areas[0] + " complete OK!Time is "
 				+ (System.currentTimeMillis() - l));

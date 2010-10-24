@@ -1,20 +1,28 @@
 package com.yesitc.baixing.web;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.yesibc.core.spring.SpringContext;
 import com.yesibc.core.utils.DateUtils;
 import com.yesibc.core.utils.StringUtils;
+import com.yesibc.core.utils.ThreadPool;
 import com.yesibc.core.web.BaseAction2Support;
 import com.yesiic.common.ClawerConstants;
+import com.yesiic.common.ErrorHandler;
+import com.yesiic.common.WebLinkSupport;
 import com.yesiic.webswith.model.WebElements;
+import com.yesiic.webswith.model.WebPages;
 import com.yesitc.baixing.service.BxUtils;
+import com.yesitc.baixing.service.DBService;
 
 public class MainAction extends BaseAction2Support {
 
@@ -38,6 +46,12 @@ public class MainAction extends BaseAction2Support {
 	private final static int ERROR_TIMES = 16;
 	private final static String FATAL_TAG = "=====================***************================";
 	private static List<String> urls = new ArrayList<String>();
+	private static String reqLog = null;
+	private static int failedOrNotInt = 0;
+	private static String requestId = null;
+	private static int threadNumber = ClawerConstants.THREADS_NUMBER;
+	private static String TYPE_TAG = "#type#";
+	private static ExecutorService es = null;
 
 	// 某一线程总任务/当前任务
 	// private String currentOfToC = "]#CrToC-";
@@ -78,19 +92,16 @@ public class MainAction extends BaseAction2Support {
 		}
 		// 0-default=OK;1-search type list;2-search pages list;3-job list;
 		int[] tags = { 0, 1, 2, 3 };
-		int failedOrNotInt = Integer.parseInt(failedOrNot);
+		failedOrNotInt = Integer.parseInt(failedOrNot);
 		if (ArrayUtils.indexOf(tags, failedOrNotInt) < 0) {
 			setMessage("failedOrNot is not digit!");
 			return SUCCESS;
 		}
 
-		String requestId = DateUtils.dateToString(new Date(), DateUtils.DAY_YMD) + "_"
+		requestId = DateUtils.dateToString(new Date(), DateUtils.DAY_YMD) + "_"
 				+ (System.currentTimeMillis() + "").substring(7, 13);
+		reqLog = "requestId[" + requestId + "]";
 
-		ClawerConstants.REQUEST_ID = requestId;
-		String reqLog = "requestId[" + requestId + "]";
-
-		int threadNumber = ClawerConstants.THREADS_NUMBER;
 		if (ClawerConstants.TEST_WEB) {
 			threadNumber = ClawerConstants.THREADS_NUMBER;
 		} else {
@@ -109,16 +120,18 @@ public class MainAction extends BaseAction2Support {
 			}
 		}
 
+		es = ThreadPool.loadPool(threadNumber);
+
 		log.info("Basic info to start:requestId-" + requestId + ",FromDBorFile-" + fromDBorFile + ",threadNumber-"
 				+ threadNumber + ",failedOrNotInt-" + failedOrNotInt);
 
-		initURLs();
+		initURLs(requestId);
 
-		parse1stLevel(failedOrNotInt, requestId, reqLog, threadNumber);
+		parse1stLevel();
 
-		parse2ndLevel(failedOrNotInt, requestId, reqLog, threadNumber);
+		parse2ndLevel();
 
-		checking(failedOrNotInt, requestId, reqLog, threadNumber);
+		checking();
 
 		log.info(reqLog + " is END!Time is [" + (System.currentTimeMillis() - start) / (1000 * 60) + "]m.");
 		finishTag = "true";
@@ -128,7 +141,7 @@ public class MainAction extends BaseAction2Support {
 	/**
 	 * 初始化基础数据，将各链接放到WEBPAGES
 	 */
-	private void initURLs() {
+	private void initURLs(String requestId) {
 
 		Map<String, WebElements> types = InitBasicData.getTypes();
 		String temp = null;
@@ -154,20 +167,90 @@ public class MainAction extends BaseAction2Support {
 			log.info("init urls:others-" + map.size());
 		}
 
+		DBService dBService = (DBService) SpringContext.getBean("dBService");
+		dBService.saveUrls(urls, WebPages.PAGE_TYPES_11, requestId);
+
 	}
 
 	/**
 	 * 解析WEBPAGES，写详细页的URL到DB里的SearchResult表，解析完成后，将状态置为OK
 	 */
-	private void parse1stLevel(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
-		// TODO Auto-generated method stub
+	private void parse1stLevel() {
+		List<WebPages> types = BxUrlsContext.getTypes();
+		Collections.shuffle(types);
+		try {
+			int size = types.size();
+			if (ClawerConstants.TEST_WEB) {
+				size = ClawerConstants.TEST_WEB_NUM;
+			}
 
+			int totalThreads = threadNumber;
+			if (size < threadNumber) {
+				totalThreads = size;
+			}
+
+			long start = System.currentTimeMillis();
+			log.info(reqLog + "Parse " + TYPE_TAG + " start!page size[" + size + "].");
+
+			int current = 0;
+			int recTimes = 0;
+			int errorTimes = 0;
+			int currentOfAll = 0;
+			int loop = 1;
+			int newRecTimes = 0;
+
+			while (true) {
+				if (current >= size) {
+					break;
+				}
+
+				for (int thread = 0; thread < threadNumber; thread++) {
+					if (current >= size) {
+						break;
+					}
+
+					WebLinkSupport.checkWaitingConn("!SearchList11!");
+
+					SearchListEngine sce = lists.get(thread);
+					if (sce != null && sce.isAlive()) {
+						continue;
+					}
+					sce = new SearchListEngine("SearchList-loop-" + loop + "#" + totalThreadTag + totalThreads + "-"
+							+ thread + "]." + currentOfToI + size + "-" + current + endTag,
+							CompanyJobContext.searchListWP.get(current), thread);
+					sce.start();
+					lists.put(thread, sce);
+					current++;
+					currentOfAll++;
+				}
+
+				errorTimes = waitingSearchList(lists, errorTimes);
+
+				if (WebLinkSupport.checkWaitingConn("!SearchList22!")) {// 如果没有重新连接的操作，则进入是否需要重新的判断。
+					newRecTimes = reConn(threadNumber, recTimes, currentOfAll);
+					if (newRecTimes > recTimes) {
+						errorTimes = 0;
+					}
+					recTimes = newRecTimes;
+				}
+
+			}
+
+			while (!lists.isEmpty()) {
+				errorTimes = waitingSearchList(lists, errorTimes);
+			}
+		} catch (Exception e) {
+			error++;
+			ErrorHandler.errorLogAndMail("Parse search list error in Action:", e);
+		}
+
+		log.info(reqLog + "Parse " + TYPE_TAG + " End!Times:" + (System.currentTimeMillis() - start));
 	}
 
 	/**
 	 * 解析SearchResult，将获得的个人信息写到相应的表里，解析完成后，将状态置为OK
 	 */
-	private void parse2ndLevel(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
+	private void parse2ndLevel() {
 		// TODO Auto-generated method stub
 
 	}
@@ -180,7 +263,7 @@ public class MainAction extends BaseAction2Support {
 	 * @param reqLog
 	 * @param threadNumber
 	 */
-	private void checking(int failedOrNotInt, String requestId, String reqLog, int threadNumber) {
+	private void checking() {
 		// TODO Auto-generated method stub
 
 	}
