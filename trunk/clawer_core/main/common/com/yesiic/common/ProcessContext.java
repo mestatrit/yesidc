@@ -1,6 +1,7 @@
 package com.yesiic.common;
 
 import com.webrenderer.swing.IBrowserCanvas;
+import com.yesiic.webswith.model.WebPages;
 
 public class ProcessContext {
 
@@ -8,7 +9,9 @@ public class ProcessContext {
 	private IBrowserCanvas browser;
 	private String url;
 	private boolean error = false;
-	private String errorMs;
+	private String errorMsg;
+	private int index = 0;
+	private WebPages wp;
 
 	public String getLogTitle() {
 		return logTitle;
@@ -42,12 +45,28 @@ public class ProcessContext {
 		this.error = error;
 	}
 
-	public String getErrorMs() {
-		return errorMs;
+	public String getErrorMsg() {
+		return errorMsg;
 	}
 
-	public void setErrorMs(String errorMs) {
-		this.errorMs = errorMs;
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = this.errorMsg + errorMsg;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public WebPages getWp() {
+		return wp;
+	}
+
+	public void setWp(WebPages wp) {
+		this.wp = wp;
 	}
 
 }

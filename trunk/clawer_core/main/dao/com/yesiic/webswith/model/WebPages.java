@@ -13,11 +13,17 @@ public class WebPages implements java.io.Serializable {
 	public static String STATUS_KO = "1";
 	public static String STATUS_OK = "2";
 
-	// 0-default=OK;1-search type list;2-search pages list;3-job list;4-company
-	// list
-	public static String PAGE_TYPE_1ST = "1";
-	public static String PAGE_TYPE_2ND = "2";
-	public static String PAGE_TYPE_3RD = "3";
+	/**
+	 * 11-search types;12-search types 2 level;21-search pages;22-search pages 2
+	 * level;31-details;32-details 2 level;
+	 **/
+
+	public static String PAGE_TYPES_11 = "11";
+	public static String PAGE_TYPES_12 = "11";
+	public static String PAGE_PAGES_21 = "21";
+	public static String PAGE_PAGES_22 = "22";
+	public static String PAGE_DETAILS_31 = "31";
+	public static String PAGE_DETAILS_32 = "31";
 
 	private String pageType;
 
