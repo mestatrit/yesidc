@@ -449,7 +449,7 @@ public class Clawer51JobAction2Back extends BaseAction2Support {
 			if (spe.getProcessContext().isError()) {
 				++errTimes;
 				error = true;
-				errorMsg = errorMsg + "[" + errTimes + "]" + spe.getProcessContext().getErrorMs();
+				errorMsg = errorMsg + "[" + errTimes + "]" + spe.getProcessContext().getErrorMsg();
 			}
 			while (true) {
 				if (!spe.isAlive()) {
@@ -510,7 +510,7 @@ public class Clawer51JobAction2Back extends BaseAction2Support {
 			if (spe.getProcessContext().isError()) {
 				++errTimes;
 				error = true;
-				errorMsg = errorMsg + "[" + errTimes + "]" + spe.getProcessContext().getErrorMs();
+				errorMsg = errorMsg + "[" + errTimes + "]" + spe.getProcessContext().getErrorMsg();
 			}
 			while (true) {
 				if (!spe.isAlive()) {
@@ -571,7 +571,7 @@ public class Clawer51JobAction2Back extends BaseAction2Support {
 			if (spe.getProcessContext().isError()) {
 				++errTimes;
 				error = true;
-				errorMsg = errorMsg + "[" + errTimes + "]" + spe.getProcessContext().getErrorMs();
+				errorMsg = errorMsg + "[" + errTimes + "]" + spe.getProcessContext().getErrorMsg();
 			}
 			while (true) {
 				if (!spe.isAlive()) {
