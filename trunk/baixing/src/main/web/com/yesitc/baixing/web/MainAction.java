@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
@@ -18,11 +18,15 @@ import com.yesibc.core.utils.ThreadPool;
 import com.yesibc.core.web.BaseAction2Support;
 import com.yesiic.common.ClawerConstants;
 import com.yesiic.common.ErrorHandler;
+import com.yesiic.common.ProcessContext;
 import com.yesiic.common.WebLinkSupport;
+import com.yesiic.common.parse.ExecuteParser;
+import com.yesiic.common.parse.Parser;
 import com.yesiic.webswith.model.WebElements;
 import com.yesiic.webswith.model.WebPages;
 import com.yesitc.baixing.service.BxUtils;
 import com.yesitc.baixing.service.DBService;
+import com.yesitc.baixing.web.parse.ParseType;
 
 public class MainAction extends BaseAction2Support {
 
@@ -51,7 +55,7 @@ public class MainAction extends BaseAction2Support {
 	private static String requestId = null;
 	private static int threadNumber = ClawerConstants.THREADS_NUMBER;
 	private static String TYPE_TAG = "#type#";
-	private static ExecutorService es = null;
+	private static ThreadPoolExecutor threadPool = null;
 
 	// 某一线程总任务/当前任务
 	// private String currentOfToC = "]#CrToC-";
@@ -120,7 +124,9 @@ public class MainAction extends BaseAction2Support {
 			}
 		}
 
-		es = ThreadPool.loadPool(threadNumber);
+		threadPool = ThreadPool.loadThreadPoolExecutor(5,threadNumber);
+		
+		
 
 		log.info("Basic info to start:requestId-" + requestId + ",FromDBorFile-" + fromDBorFile + ",threadNumber-"
 				+ threadNumber + ",failedOrNotInt-" + failedOrNotInt);
@@ -209,17 +215,17 @@ public class MainAction extends BaseAction2Support {
 						break;
 					}
 
-					WebLinkSupport.checkWaitingConn("!SearchList11!");
+					WebLinkSupport.checkWaitingConn("!pars types!");
 
-					SearchListEngine sce = lists.get(thread);
-					if (sce != null && sce.isAlive()) {
-						continue;
-					}
-					sce = new SearchListEngine("SearchList-loop-" + loop + "#" + totalThreadTag + totalThreads + "-"
-							+ thread + "]." + currentOfToI + size + "-" + current + endTag,
-							CompanyJobContext.searchListWP.get(current), thread);
-					sce.start();
-					lists.put(thread, sce);
+					ProcessContext processContext = new ProcessContext();
+					processContext.setIndex(thread);
+					processContext.setLogTitle("!pars types!" + loop + "#" + totalThreadTag + totalThreads + "-"
+							+ thread + "]." + currentOfToI + size + "-" + current + endTag);
+					processContext.setWp(types.get(current));
+
+					Parser parser = new ParseType();
+					ExecuteParser ep = new ExecuteParser(parser, processContext);
+					threadPool.submit(ep);
 					current++;
 					currentOfAll++;
 				}
