@@ -29,7 +29,7 @@ public class ThreadPool {
 	public static ThreadPoolExecutor loadThreadPoolExecutor(int mini, int max) {
 		if (!LOADED_THREADPOOLEXECUTOR) {
 			threadPoolExecutor = new ThreadPoolExecutor(mini, max, 72000, TimeUnit.SECONDS,
-					new LinkedBlockingQueue<Runnable>(), new ThreadPoolExecutor.DiscardOldestPolicy());
+					new LinkedBlockingQueue<Runnable>(), new ThreadPoolExecutor.AbortPolicy());
 			LOADED_THREADPOOLEXECUTOR = true;
 		}
 		return threadPoolExecutor;
