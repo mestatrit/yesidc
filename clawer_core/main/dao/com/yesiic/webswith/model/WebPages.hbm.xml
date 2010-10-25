@@ -25,7 +25,7 @@
 		</property>
 
 		<property name="url" type="java.lang.String">
-			<column name="URL" length="1000">
+			<column name="URL" length="1000" unique-key="unique-WEBPAGES">
 				<comment>链接</comment>
 			</column>
 		</property>

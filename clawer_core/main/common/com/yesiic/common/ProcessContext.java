@@ -7,7 +7,6 @@ public class ProcessContext {
 
 	private String logTitle;
 	private IBrowserCanvas browser;
-	private String url;
 	private boolean error = false;
 	private String errorMsg;
 	private int index = 0;
@@ -28,15 +27,6 @@ public class ProcessContext {
 	public void setBrowser(IBrowserCanvas browser) {
 		this.browser = browser;
 	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
 	public boolean isError() {
 		return error;
 	}

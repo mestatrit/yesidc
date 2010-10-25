@@ -6,6 +6,7 @@ import com.yesiic.common.ProcessContext;
 public class ExecuteParser implements Runnable {
 	Parser parser;
 	ProcessContext processContext;
+	boolean ok = false;
 
 	public ExecuteParser(Parser parser, ProcessContext processContext) {
 		this.parser = parser;
@@ -18,6 +19,10 @@ public class ExecuteParser implements Runnable {
 		} catch (Exception e) {
 			ErrorHandler.errorLogAndMail(processContext.getLogTitle() + "#Exception#", e);
 		}
+	}
+
+	public boolean isOk() {
+		return ok;
 	}
 
 }

@@ -23,7 +23,7 @@ public abstract class AbstractParser {
 	public void prepareParse(ProcessContext processContext) throws ApplicationException {
 		BrowserSupport.prepareLoading(processContext);
 		BrowserSupport.onDocumnetComplete(processContext.getBrowser(), finish);
-		processContext.getBrowser().loadURL(processContext.getUrl());
+		processContext.getBrowser().loadURL(processContext.getWp().getUrl());
 		BrowserSupport.waitingLoading(processContext, finish);
 	}
 
