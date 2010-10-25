@@ -80,12 +80,7 @@ public class TestRolling {
 		}
 		
 		String result =  html.substring(start, end);
-		Parser parser;
-		NodeList nodelist;
-		parser = Parser.createParser(result, "utf8");
-		NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
-		nodelist = parser.parse(linkFilter);
-		Node[] nodes = nodelist.toNodeArray();
+		Node[] nodes = getLinkNodes(result);
 		String line = "";
 
 		for (int i = 0; i < nodes.length; i++) {
@@ -97,6 +92,16 @@ public class TestRolling {
 			log.info("line="+line + ",name=" + link.getLinkText());
 			
 		}
+	}
+
+	private static Node[] getLinkNodes(String result) throws ParserException {
+		Parser parser;
+		NodeList nodelist;
+		parser = Parser.createParser(result, "utf8");
+		NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
+		nodelist = parser.parse(linkFilter);
+		Node[] nodes = nodelist.toNodeArray();
+		return nodes;
 	}
 	
 

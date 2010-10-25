@@ -5,7 +5,7 @@ public class BxUtils {
 	public static String getDestUrl1(String area, String type) {
 		String temp = BxConstants.URL_SAMPLE1;
 		temp = temp.replace("[types]", type);
-		temp = temp.replace("[areas]", area);
+		temp = temp.replace("[cities]", area);
 		return temp;
 	}
 
