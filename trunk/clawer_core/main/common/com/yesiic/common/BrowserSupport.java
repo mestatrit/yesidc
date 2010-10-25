@@ -26,7 +26,7 @@ public class BrowserSupport {
 			log.error(processContext.getLogTitle() + " Load wait error and redo!");
 			finish.clear();
 			BrowserSupport.onDocumnetComplete(processContext.getBrowser(), finish);
-			processContext.getBrowser().loadURL(processContext.getUrl());
+			processContext.getBrowser().loadURL(processContext.getWp().getUrl());
 			if (!waiting(processContext, finish)) {
 				throw new ApplicationException(processContext.getLogTitle() + ErrorHandler.WAIT_ERROR_SYSTEM
 						+ " Waiting overtime.");
@@ -48,7 +48,7 @@ public class BrowserSupport {
 		if (html.indexOf(htmlTag) > -1) {
 			log.error(processContext.getLogTitle() + logMsg);
 			finish.clear();
-			processContext.getBrowser().loadURL(processContext.getUrl());
+			processContext.getBrowser().loadURL(processContext.getWp().getUrl());
 			if (!waiting(processContext, finish)) {
 				log.error(processContext.getLogTitle() + " Redo waiting error!" + logMsg);
 				throw new ApplicationException(ErrorHandler.WAIT_ERROR_SYSTEM + " Redo waiting error!" + logMsg);
@@ -81,7 +81,7 @@ public class BrowserSupport {
 	private static boolean waiting(ProcessContext processContext, Map<String, String> finish) {
 		int i = 0;
 		long l = System.currentTimeMillis();
-		log.info(processContext.getLogTitle() + " waiting loading start!" + processContext.getUrl());
+		log.info(processContext.getLogTitle() + " waiting loading start!" + processContext.getWp().getUrl());
 		while (!finish.containsKey(WAIT_TAG_KEY)) {
 			i++;
 			try {
