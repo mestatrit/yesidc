@@ -190,18 +190,12 @@ public class MainAction extends BaseAction2Support {
 				size = ClawerConstants.TEST_WEB_NUM;
 			}
 
-			int totalThreads = threadNumber;
-			if (size < threadNumber) {
-				totalThreads = size;
-			}
-
 			long start = System.currentTimeMillis();
 			log.info(reqLog + "Parse " + TYPE_TAG + " start!page size[" + size + "].");
 
 			int current = 0;
 			int recTimes = 0;
 			int errorTimes = 0;
-			int currentOfAll = 0;
 			int loop = 1;
 			int newRecTimes = 0;
 
@@ -219,7 +213,7 @@ public class MainAction extends BaseAction2Support {
 
 					ProcessContext processContext = new ProcessContext();
 					processContext.setIndex(thread);
-					processContext.setLogTitle("!pars types!" + loop + "#" + totalThreadTag + totalThreads + "-"
+					processContext.setLogTitle("!pars types!" + loop + "#" + totalThreadTag + threadNumber + "-"
 							+ thread + "]." + currentOfToI + size + "-" + current + endTag);
 					processContext.setWp(types.get(current));
 
@@ -227,7 +221,6 @@ public class MainAction extends BaseAction2Support {
 					ExecuteParser ep = new ExecuteParser(parser, processContext);
 					threadPool.submit(ep);
 					current++;
-					currentOfAll++;
 				}
 
 				errorTimes = waitingSearchList(lists, errorTimes);
