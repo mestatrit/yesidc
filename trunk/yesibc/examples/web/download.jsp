@@ -6,8 +6,8 @@ out 输出字节就被认为是附件内容, 不一定非要从文件读取原�
 库中读取也可以的.
 测试结果: Tomcat 5.0, 5.5, Resin 3.0.18 , Weblogic 8.1, 9.2 测试通过, 无异常产生 
 --%> 
-<% @ page contentType = " text/html; charset=UTF-8 "  pageEncoding = "UTF-8"   %> 
-<% @ page  import = " java.io.*, java.util.*, java.text.* "   %> 
+<%@ page contentType = "text/html;charset=UTF-8"  pageEncoding = "UTF-8" %> 
+<%@ page import = "java.io.*, java.util.*, java.text.*" %> 
 
 <%! 
      /** 
@@ -171,8 +171,8 @@ out 输出字节就被认为是附件内容, 不一定非要从文件读取原�
 
              //  or using this, but this header might not supported by FireFox
              // response.setContentType("application/x-download"); 
-            response.setHeader ( " Content-Disposition " , inlineType  +   " ;filename=\ ""
-             +  downFileName  +   " \ "" ); 
+            response.setHeader ( "Content-Disposition" , inlineType  +   ";filename=\""
+             +  downFileName  +   "\"" ); 
 
             response.setContentLength(( int ) f.length()); //  设置下载内容大小 
 

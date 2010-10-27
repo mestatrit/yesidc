@@ -28,6 +28,7 @@ public class ThreadTest {
 				} else {
 					log.info("running t=" + spe.toString());
 				}
+				Thread.sleep(1000);
 			}
 			if (ls.isEmpty()) {
 				System.out.println(ls == null);
