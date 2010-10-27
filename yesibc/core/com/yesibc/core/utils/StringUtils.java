@@ -7,6 +7,9 @@ package com.yesibc.core.utils;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -1306,34 +1309,9 @@ public final class StringUtils {
 		return new String(c);
 	}
 
-	public static boolean isChinese(char c) {
-		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
-		if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
-				|| ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
-				|| ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
-				|| ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
-				|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
-				|| ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS) {
-			return true;
-		}
-		return false;
-	}
-
 	public static boolean isLetter(String strName) {
 		strName = strName.replaceAll(" ", "");
 		return strName.matches("^[a-zA-Z]+$");
-	}
-
-	public static boolean isChinese(String strName) {
-		char[] ch = strName.toCharArray();
-		for (int i = 0; i < ch.length; i++) {
-			char c = ch[i];
-			if (isChinese(c) != true) {
-				return false;
-			}
-		}
-		return true;
-
 	}
 
 	/**
@@ -1736,6 +1714,109 @@ public final class StringUtils {
 		return new String(out, 0, outLen);
 	}
 
+	public static String ascii2NativeByFile(String path) {
+		File f = new File(path);
+
+		if (f.exists() && f.isFile()) {
+			// convert param-file
+			BufferedReader br = null;
+			String line;
+			String result = "";
+			try {
+				br = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+
+				while ((line = br.readLine()) != null) {
+					result = result + ascii2native(line) + "\n";
+				}
+				return result;
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (br != null)
+						br.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * core routine
+	 */
+	public static String ascii2native(String str) {
+		String hex = "0123456789ABCDEF";
+		StringBuffer buf = new StringBuffer();
+
+		for (int i = 0; i < str.length(); i++) {
+			char c = str.charAt(i);
+			if (c == '\\' && i + 1 <= str.length() && str.charAt(i + 1) == '\\') {
+				buf.append("\\\\");
+				i += 1;
+			} else if (c == '\\' && i + 6 <= str.length() && str.charAt(i + 1) == 'u') {
+				String sub = str.substring(i + 2, i + 6).toUpperCase();
+				int i0 = hex.indexOf(sub.charAt(0));
+				int i1 = hex.indexOf(sub.charAt(1));
+				int i2 = hex.indexOf(sub.charAt(2));
+				int i3 = hex.indexOf(sub.charAt(3));
+
+				if (i0 < 0 || i1 < 0 || i2 < 0 || i3 < 0) {
+					buf.append("\\u");
+					i += 1;
+				} else {
+					byte[] data = new byte[2];
+					data[0] = i2b(i1 + i0 * 16);
+					data[1] = i2b(i3 + i2 * 16);
+					try {
+						buf.append(new String(data, "UTF-16BE").toString());
+					} catch (Exception ex) {
+						buf.append("\\u" + sub);
+					}
+					i += 5;
+				}
+			} else {
+				buf.append(c);
+			}
+		}
+
+		return buf.toString();
+	}
+
+	public static boolean isValidUtf8(byte[] b, int aMaxCount) {
+		int lLen = b.length, lCharCount = 0;
+		for (int i = 0; i < lLen && lCharCount < aMaxCount; ++lCharCount) {
+			byte lByte = b[i++];
+			if (lByte >= 0)
+				continue;// >=0 is normal ascii
+			if (lByte < (byte) 0xc0 || lByte > (byte) 0xfd)
+				return false;
+			int lCount = lByte > (byte) 0xfc ? 5 : lByte > (byte) 0xf8 ? 4 : lByte > (byte) 0xf0 ? 3
+					: lByte > (byte) 0xe0 ? 2 : 1;
+			if (i + lCount > lLen)
+				return false;
+			for (int j = 0; j < lCount; ++j, ++i)
+				if (b[i] > (byte) 0xc0)
+					return false;
+		}
+		return true;
+	}
+
+	/**
+	 * unsigned integer to binary
+	 * <P>
+	 * 
+	 * @param i
+	 *            unsigned integer
+	 * @return binary
+	 */
+	private static byte i2b(int i) {
+		return (byte) ((i > 127) ? i - 256 : i);
+	}
+
 	/**
 	 * @param args
 	 * @throws UnsupportedEncodingException
@@ -1746,6 +1827,7 @@ public final class StringUtils {
 		// String s = m.replaceAll("");
 		// System.out.print(s);
 		// testReg();
+		System.out.println(ascii2NativeByFile("D:/work/CFCCC/06_Source/agence/src/messages_zh.properties"));
 		System.out.println("str2Ascii=" + str2Ascii("新年快乐"));
 		System.out.println("ascii2Str=" + ascii2Str("26032 24180 24555 20048"));
 		System.out.println("toUnicode1=" + toUnicode("【】"));
