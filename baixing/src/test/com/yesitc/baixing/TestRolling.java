@@ -149,7 +149,7 @@ public class TestRolling {
 		while (!loaded) {
 			i++;
 			try {
-				Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				ErrorHandler.error(processContext.getLogTitle() + " URL[" + url + "] :", e);
 			}
