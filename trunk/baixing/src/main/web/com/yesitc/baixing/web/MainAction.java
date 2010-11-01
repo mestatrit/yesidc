@@ -18,9 +18,10 @@ import com.yesibc.core.utils.ThreadPool;
 import com.yesibc.core.web.BaseAction2Support;
 import com.yesiic.common.ClawerConstants;
 import com.yesiic.common.ErrorHandler;
+import com.yesiic.common.InternetConnection;
 import com.yesiic.common.ProcessContext;
-import com.yesiic.common.WebLinkSupport;
 import com.yesiic.common.parse.ExecuteParser;
+import com.yesiic.common.parse.ExecutorSupport;
 import com.yesiic.common.parse.Parser;
 import com.yesiic.webswith.model.WebElements;
 import com.yesiic.webswith.model.WebPages;
@@ -54,8 +55,10 @@ public class MainAction extends BaseAction2Support {
 	private static int failedOrNotInt = 0;
 	private static String requestId = null;
 	private static int threadNumber = ClawerConstants.THREADS_NUMBER;
-	private static String TYPE_TAG = "#type#";
+	private static String TYPE_TAG = "#parse types#";
 	private static ThreadPoolExecutor threadPool = null;
+	private ExecutorSupport executorSupport;
+	private InternetConnection internetConnection;
 
 	// 某一线程总任务/当前任务
 	// private String currentOfToC = "]#CrToC-";
@@ -77,7 +80,7 @@ public class MainAction extends BaseAction2Support {
 	 */
 	public String companySearch() {
 
-		long start = System.currentTimeMillis();
+		start = System.currentTimeMillis();
 
 		String fromDBorFile = null;
 		if (!ClawerConstants.TEST_WEB_REQUEST) {
@@ -124,9 +127,7 @@ public class MainAction extends BaseAction2Support {
 			}
 		}
 
-		threadPool = ThreadPool.loadThreadPoolExecutor(5,threadNumber);
-		
-		
+		threadPool = ThreadPool.loadThreadPoolExecutor(5, threadNumber);
 
 		log.info("Basic info to start:requestId-" + requestId + ",FromDBorFile-" + fromDBorFile + ",threadNumber-"
 				+ threadNumber + ",failedOrNotInt-" + failedOrNotInt);
@@ -149,6 +150,7 @@ public class MainAction extends BaseAction2Support {
 	 */
 	private void initURLs(String requestId) {
 
+		start = System.currentTimeMillis();
 		Map<String, WebElements> types = InitBasicData.getTypes();
 		String temp = null;
 		Map<String, WebElements> map = null;
@@ -175,13 +177,14 @@ public class MainAction extends BaseAction2Support {
 
 		DBService dBService = (DBService) SpringContext.getBean("dBService");
 		dBService.saveUrls(urls, WebPages.PAGE_TYPES_11, requestId);
-
+		log.info("InitURLs END!Time is [" + (System.currentTimeMillis() - start) + "]ms.");
 	}
 
 	/**
 	 * 解析WEBPAGES，写详细页的URL到DB里的SearchResult表，解析完成后，将状态置为OK
 	 */
 	private void parse1stLevel() {
+		start = System.currentTimeMillis();
 		List<WebPages> types = BxUrlsContext.getTypes();
 		Collections.shuffle(types);
 		try {
@@ -190,60 +193,51 @@ public class MainAction extends BaseAction2Support {
 				size = ClawerConstants.TEST_WEB_NUM;
 			}
 
-			long start = System.currentTimeMillis();
-			log.info(reqLog + "Parse " + TYPE_TAG + " start!page size[" + size + "].");
+			log.info(reqLog + TYPE_TAG + " start!page size[" + size + "].");
 
 			int current = 0;
-			int recTimes = 0;
-			int errorTimes = 0;
 			int loop = 1;
-			int newRecTimes = 0;
 
+			List<ExecuteParser> eps = new ArrayList<ExecuteParser>();
 			while (true) {
 				if (current >= size) {
 					break;
 				}
 
 				for (int thread = 0; thread < threadNumber; thread++) {
-					if (current >= size) {
+					if (current >= size || threadPool.getActiveCount() >= threadNumber) {
 						break;
 					}
 
-					WebLinkSupport.checkWaitingConn("!pars types!");
-
 					ProcessContext processContext = new ProcessContext();
 					processContext.setIndex(thread);
-					processContext.setLogTitle("!pars types!" + loop + "#" + totalThreadTag + threadNumber + "-"
-							+ thread + "]." + currentOfToI + size + "-" + current + endTag);
+					processContext.setLogTitle(TYPE_TAG + loop + "#" + totalThreadTag + threadNumber + "-" + thread
+							+ "]." + currentOfToI + size + "-" + current + endTag);
 					processContext.setWp(types.get(current));
 
 					Parser parser = new ParseType();
 					ExecuteParser ep = new ExecuteParser(parser, processContext);
+					eps.add(ep);
 					threadPool.submit(ep);
 					current++;
 				}
 
-				errorTimes = waitingSearchList(lists, errorTimes);
+				executorSupport.waitingThreadRunning(eps, threadPool);
 
-				if (WebLinkSupport.checkWaitingConn("!SearchList22!")) {// 如果没有重新连接的操作，则进入是否需要重新的判断。
-					newRecTimes = reConn(threadNumber, recTimes, currentOfAll);
-					if (newRecTimes > recTimes) {
-						errorTimes = 0;
+				if (internetConnection.checkWaitingConn(TYPE_TAG)) {// 如果没有重新连接的操作，则进入是否需要重新的判断。
+					int reTag = internetConnection.reConn(threadNumber, current, TYPE_TAG);
+					if (reTag > 0) {
+						executorSupport.setErrorTimes(0);
 					}
-					recTimes = newRecTimes;
 				}
 
 			}
 
-			while (!lists.isEmpty()) {
-				errorTimes = waitingSearchList(lists, errorTimes);
-			}
 		} catch (Exception e) {
-			error++;
-			ErrorHandler.errorLogAndMail("Parse search list error in Action:", e);
+			ErrorHandler.errorLogAndMail(TYPE_TAG + " Error in Action:", e);
 		}
 
-		log.info(reqLog + "Parse " + TYPE_TAG + " End!Times:" + (System.currentTimeMillis() - start));
+		log.info(reqLog + TYPE_TAG + " End!Times:" + (System.currentTimeMillis() - start));
 	}
 
 	/**
@@ -267,4 +261,11 @@ public class MainAction extends BaseAction2Support {
 
 	}
 
+	public void setExecutorSupport(ExecutorSupport executorSupport) {
+		this.executorSupport = executorSupport;
+	}
+
+	public void setInternetConnection(InternetConnection internetConnection) {
+		this.internetConnection = internetConnection;
+	}
 }
