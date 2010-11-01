@@ -40,15 +40,8 @@ public class ClawerConstants {
 	public final static String TAG_SPACE_HTML = "&nbsp;";
 	public final static String TAG_SPACE_TRIM = "";
 
-	public static long PAUSE_SERVER_INTERVAL = 1000*60*60*2;
-	public static long PAUSE_SERVER_SLEEP_TIMES = (1000*60*2)/2000;
-
+	public final static long WAITING_BY_INTERVAL = 2000;
 	
-	public static int REFRESH_MUILTI_THREADS_NUMBER = Integer.parseInt(ClawerUtils
-			.getServerConfByKey("refresh.muilti.threads.number"));
-
-	public static int REFRESH_INTERVAL_TIMES = THREADS_NUMBER * REFRESH_MUILTI_THREADS_NUMBER;
-
 	public final static String PROC_LOG = "*-* ";
 
 	public final static String FROM_WHERE_51JOB = "51job";
@@ -60,8 +53,6 @@ public class ClawerConstants {
 	public final static String UPDATE_USER = "YTB";
 
 	public final static int JOBS_PER_PAGE = 50;
-
-	public final static long WAITING_TIME_LOADING = 2000;
 
 	public final static long WAITING_TIME_SECONDS = 2;
 
@@ -88,7 +79,6 @@ public class ClawerConstants {
 	public final static String RECONNECT_CUT_TAG = "Connect(this.form,'Disconnect_pppoe')";
 	public final static String RECONNECT_RECONN_TAG = "Connect(this.form,'Connect_pppoe')";
 	public final static String RECONNECT_RECONN_NAME = ClawerUtils.getValByKey("reconnect.reconn");
-	public final static long RECONNECT_INTERVAL = Long.valueOf(ClawerUtils.getServerConfByKey("reReconnect.interval")) * 1000 * 60;
 	public final static String VAL = "_val";
 	public final static String RECONNECT_IP_TAG = ClawerUtils.getValByKey("reconnect.ip.tag");
 

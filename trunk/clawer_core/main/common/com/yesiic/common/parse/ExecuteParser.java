@@ -45,4 +45,8 @@ public class ExecuteParser implements Runnable {
 		return error;
 	}
 
+	public ProcessContext getProcessContext() {
+		return processContext;
+	}
+
 }

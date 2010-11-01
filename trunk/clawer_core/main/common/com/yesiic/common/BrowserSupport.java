@@ -68,7 +68,7 @@ public class BrowserSupport {
 			try {
 				k++;
 				log.warn(processContext.getLogTitle() + ErrorHandler.WAIT_ERROR_BODY + "Times:" + k);
-				Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
+				Thread.sleep(ClawerConstants.WAITING_BY_INTERVAL);
 				if (k > ClawerConstants.WAITING_TIMES / 2) {
 					throw new ApplicationException(ErrorHandler.WAIT_ERROR_SYSTEM + ErrorHandler.WAIT_ERROR_BODY);
 				}
@@ -85,7 +85,7 @@ public class BrowserSupport {
 		while (!finish.containsKey(WAIT_TAG_KEY)) {
 			i++;
 			try {
-				Thread.sleep(ClawerConstants.WAITING_TIME_LOADING);
+				Thread.sleep(ClawerConstants.WAITING_BY_INTERVAL);
 			} catch (InterruptedException e) {
 				log.error(processContext.getLogTitle() + ":", e);
 			}
@@ -98,7 +98,7 @@ public class BrowserSupport {
 			} else {
 				if (log.isDebugEnabled()) {
 					log.debug(processContext.getLogTitle() + " waiting loading……[" + i
-							* ClawerConstants.WAITING_TIME_LOADING + "]s");
+							* ClawerConstants.WAITING_BY_INTERVAL + "]s");
 				}
 			}
 		}
