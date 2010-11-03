@@ -38,7 +38,6 @@ public class MainAction extends BaseAction2Support {
 	private static Log log = LogFactory.getLog(MainAction.class);
 	private static String finishTag = "false";
 	private static long start = System.currentTimeMillis();
-	private static long start_holding = System.currentTimeMillis();
 	long i = 0;
 	int pauseTimes = 0;
 	// 总线程
@@ -48,8 +47,6 @@ public class MainAction extends BaseAction2Support {
 	private final static String currentOfToI = "]#All-Cur[";
 
 	private final static String endTag = "].";
-	private final static int ERROR_TIMES = 16;
-	private final static String FATAL_TAG = "=====================***************================";
 	private static List<String> urls = new ArrayList<String>();
 	private static String reqLog = null;
 	private static int failedOrNotInt = 0;
@@ -57,8 +54,6 @@ public class MainAction extends BaseAction2Support {
 	private static int threadNumber = ClawerConstants.THREADS_NUMBER;
 	private static String TYPE_TAG = "#parse types#";
 	private static ThreadPoolExecutor threadPool = null;
-	private ExecutorSupport executorSupport;
-	private InternetConnection internetConnection;
 
 	// 某一线程总任务/当前任务
 	// private String currentOfToC = "]#CrToC-";
@@ -222,12 +217,12 @@ public class MainAction extends BaseAction2Support {
 					current++;
 				}
 
-				executorSupport.waitingThreadRunning(eps, threadPool);
+				ExecutorSupport.waitingThreadRunning(eps, threadPool);
 
-				if (internetConnection.checkWaitingConn(TYPE_TAG)) {// 如果没有重新连接的操作，则进入是否需要重新的判断。
-					int reTag = internetConnection.reConn(threadNumber, current, TYPE_TAG);
+				if (InternetConnection.checkWaitingConn(TYPE_TAG)) {// 如果没有重新连接的操作，则进入是否需要重新的判断。
+					int reTag = InternetConnection.reConn(threadNumber, current, TYPE_TAG, eps, threadPool);
 					if (reTag > 0) {
-						executorSupport.setErrorTimes(0);
+						ExecutorSupport.setErrorTimes(0);
 					}
 				}
 
@@ -261,11 +256,4 @@ public class MainAction extends BaseAction2Support {
 
 	}
 
-	public void setExecutorSupport(ExecutorSupport executorSupport) {
-		this.executorSupport = executorSupport;
-	}
-
-	public void setInternetConnection(InternetConnection internetConnection) {
-		this.internetConnection = internetConnection;
-	}
 }
