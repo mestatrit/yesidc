@@ -30,8 +30,6 @@ public class LogJdkvm {
 	private int i = 0;
 	private double limit = 850;
 
-	private InternetConnection internetConnection;
-
 	public void logJdkvm() {
 		try {
 			if (!check) {
@@ -56,14 +54,9 @@ public class LogJdkvm {
 
 			if ((heapUsage + noHeapUsage) > limit) {
 
-				// 检查是否在进行重新连接的操作。如果有，则等待。
-				internetConnection.checkWaitingConn("!logVM!");
 
 				try {
 					check = false;
-					internetConnection.setConnTag(false);
-
-					internetConnection.checkRunningWeb("Check web running when GC!", -1);
 
 					long start = System.currentTimeMillis();
 					logMemory.info("Memory is greater than " + limit + " Mb. GC start!");
@@ -79,7 +72,6 @@ public class LogJdkvm {
 							+ "Mb.Times:" + (System.currentTimeMillis() - start));
 
 				} finally {
-					internetConnection.setConnTag(true);
 					check = true;
 				}
 
@@ -122,8 +114,5 @@ public class LogJdkvm {
 		lj.logJdkvm();
 	}
 
-	public void setInternetConnection(InternetConnection internetConnection) {
-		this.internetConnection = internetConnection;
-	}
 
 }

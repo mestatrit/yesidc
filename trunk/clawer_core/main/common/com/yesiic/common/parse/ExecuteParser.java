@@ -29,7 +29,7 @@ public class ExecuteParser implements Runnable {
 			ErrorHandler.errorLogAndMail(processContext.getLogTitle() + "#Exception#", e);
 		} finally {
 			ok = true;
-			log.info(processContext.getLogTitle() + "===End===");
+			log.info(processContext.getLogTitle() + "===End===Time=" + (System.currentTimeMillis() - start));
 		}
 	}
 

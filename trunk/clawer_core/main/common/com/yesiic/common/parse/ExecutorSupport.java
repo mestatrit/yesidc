@@ -15,14 +15,14 @@ import com.yesiic.common.ErrorHandler;
 public class ExecutorSupport {
 
 	private static Log log = LogFactory.getLog(ExecutorSupport.class);
-	private static List<ExecuteParser> eps = new ArrayList<ExecuteParser>();
+	private static List<ExecuteParser> epsTemp = new ArrayList<ExecuteParser>();
 
-	private long timeOut = 40000;
-	private long waitingByInterval = ClawerConstants.WAITING_BY_INTERVAL;
+	private static long timeOut = 40000;
+	private static long waitingByInterval = ClawerConstants.WAITING_BY_INTERVAL;
 	private int exitErrorTimes = 10;
 	private static int errorTimes = 0;
 
-	public void waitingThreadRunning(List<ExecuteParser> eps, ThreadPoolExecutor threadPool)
+	public static void waitingThreadRunning(List<ExecuteParser> eps, ThreadPoolExecutor threadPool)
 			throws InterruptedException {
 		long status = System.currentTimeMillis();
 
@@ -35,7 +35,7 @@ public class ExecutorSupport {
 					log.warn(ep.getProcessContext().getLogTitle() + " TimeOut!");
 					threadPool.remove(ep);
 					it.remove();
-					eps.add(ep);
+					epsTemp.add(ep);
 					remove++;
 				} else if (ep.isOk()) {
 					if (ep.isError()) {
@@ -51,6 +51,37 @@ public class ExecutorSupport {
 		}
 	}
 
+	public static void waitingThreadEnding(String title, List<ExecuteParser> eps, ThreadPoolExecutor threadPool)
+			throws InterruptedException {
+		if (eps == null) {
+			log.info(title + "Waiting Thread Ending=No ExecuteParser!");
+			return;
+		}
+		long status = System.currentTimeMillis();
+		log.info(title + "Waiting Thread Ending Start!");
+		while (true) {
+			Thread.sleep(waitingByInterval);
+			for (Iterator<ExecuteParser> it = eps.iterator(); it.hasNext();) {
+				ExecuteParser ep = it.next();
+				if (!ep.isOk() && (status - ep.getStart()) > timeOut) {
+					log.warn(ep.getProcessContext().getLogTitle() + " TimeOut!");
+					threadPool.remove(ep);
+					it.remove();
+					epsTemp.add(ep);
+				} else if (ep.isOk()) {
+					if (ep.isError()) {
+						errorTimes++;
+					}
+					it.remove();
+				}
+			}
+			if (eps == null || eps.isEmpty()) {
+				break;
+			}
+		}
+		log.info(title + "Waiting Thread Ending Ended!");
+	}
+
 	public void waitingThreadRunning(ThreadPoolExecutor threadPool) throws InterruptedException {
 		long status = System.currentTimeMillis();
 		Thread.sleep(waitingByInterval);
@@ -64,7 +95,7 @@ public class ExecutorSupport {
 			if (!ep.isOk() && (status - ep.getStart()) > timeOut) {
 				log.warn(ep.getProcessContext().getLogTitle() + " TimeOut!");
 				threadPool.remove(r);
-				eps.add(ep);
+				epsTemp.add(ep);
 			} else if (ep.isOk()) {
 				if (ep.isError()) {
 					errorTimes++;
@@ -74,13 +105,9 @@ public class ExecutorSupport {
 	}
 
 	public void checkTimeOutThreads() {
-		if (errorTimes > exitErrorTimes) {
-			ErrorHandler.errorLogAndMail("#Exception 2 Dead#");
-			System.exit(0);
-		}
-		if (eps != null && !eps.isEmpty()) {
+		if (epsTemp != null && !epsTemp.isEmpty()) {
 			String str = null;
-			for (Iterator<ExecuteParser> it = eps.iterator(); it.hasNext();) {
+			for (Iterator<ExecuteParser> it = epsTemp.iterator(); it.hasNext();) {
 				ExecuteParser ep = it.next();
 				if (!ep.isOk()) {
 					str = str + ep.getProcessContext().getLogTitle();
@@ -95,12 +122,18 @@ public class ExecutorSupport {
 		} else {
 			log.info("Thread pool is running OK!");
 		}
+		if (errorTimes > exitErrorTimes) {
+			ErrorHandler.errorLogAndMail("#Exception 2 Dead#");
+			System.exit(0);
+		}
 	}
 
+	@SuppressWarnings("static-access")
 	public void setTimeOut(long timeOut) {
 		this.timeOut = timeOut;
 	}
 
+	@SuppressWarnings("static-access")
 	public void setWaitingByInterval(long waitingByInterval) {
 		this.waitingByInterval = waitingByInterval;
 	}
@@ -113,8 +146,7 @@ public class ExecutorSupport {
 		return errorTimes;
 	}
 
-	@SuppressWarnings("static-access")
-	public void setErrorTimes(int errorTimes) {
-		this.errorTimes = errorTimes;
+	public static void setErrorTimes(int errorTime) {
+		errorTimes = errorTime;
 	}
 }
