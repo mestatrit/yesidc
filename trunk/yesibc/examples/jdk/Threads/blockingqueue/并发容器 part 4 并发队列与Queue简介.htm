@@ -1,0 +1,1113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head id="Head"><title>
+	深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介 - xylz - BlogJava
+</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta id="metaKeywords" name="keywords" content="深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介" /><link type="text/css" rel="stylesheet" href="/css/common.css" /><link id="MainCss" type="text/css" rel="stylesheet" href="http://www.blogjava.net/Skins/AnotherEon001/style.css" /><link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://www.blogjava.net/xylz/rss.aspx" /></head>
+<body>
+    <form name="Form1" method="post" action="326723.html" onsubmit="javascript:return WebForm_OnSubmit();" id="Form1">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="
+__VIEWSTATE" value="" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['Form1'];
+if (!theForm) {
+    theForm = document.Form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=hCqqcDq62xC48aLO1-oizzph91mftTcpBQYAMmX9y1_MEKckib0uai68YudFFqahbIRj8ZaZB19FpMr30&amp;t=634210652612724343" type="text/javascript"></script>
+
+<script language=JavaScript>
+									function ctlent(evt,id)
+											{
+												if(evt.ctrlKey && evt.keyCode == 13)
+												{	
+													try
+													{
+														TempSave(id);
+													}
+													catch(ex)
+													{
+													}
+													finally
+													{
+													    __doPostBack('AjaxHolder$PostComment$btnSubmit','')
+													}
+												}
+		
+												}</script>
+												<script language=JavaScript>function SetReplyAuhor(author){document.getElementById('AjaxHolder_PostComment_tbComment').value+="@"+author+"\n";document.getElementById('AjaxHolder_PostComment_tbComment').focus();return false}</script>
+<script src="/ScriptResource.axd?d=TB76SHHPXs0c-M9_tGhAxuTARlsiSpe5Dn70CMDyMu0Be8A_MPH2Z7oqJoDwyxmBxB28VcgK9C-XqFdMNI_DuigegyGH79krj7asDjvAKLqzs7DlCIm2xb4oSA4lM05RrYsRw4Ulp-jfriIG0&amp;t=634210652612724343" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=-BecoVNwDVCZ4TW3gB_ZzPWfgjCQ_C64O4hNc3pweA4UGq0B-lWFnUMMAtqURN0AZF_f7fxk9s5U1gsq0foUhwHdXezBbn_OgCN5EL300MOu7Jb-c7WU_a2OCK01&amp;t=633065726440000000" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=4npu1eCN6HUVuTPPO5YDuuBNC2hrBvTsGEVYQhhAo9CX_hfoT2Mz1UGnoo5C32pPXZvBizBLMnY0_szRgrGRkyv7-BsG0CvEejE8Vl3Xt8nd-D_58kXSDmaBFOFFj7w3EMKivQ2&amp;t=633065726440000000" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+function WebForm_OnSubmit() {
+if (typeof(ValidatorOnSubmit) == "function" && ValidatorOnSubmit() == false) return false;
+return true;
+}
+//]]>
+</script>
+
+        
+<table width="100%" class="Framework" cellspacing="0" cellpadding="0">
+	<tr>
+		<td>
+			
+<div id="top">
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.blogjava.net/xylz/">xylz</a></h1>
+<div id="subtitle"></div>
+</div>
+<div id="sub">
+<div class="BlogStats">随笔 - 53, 文章 - 10, 评论 - 90, 引用 - 0</div>
+</div>
+
+
+</td>
+	</tr>
+</table>
+<table width="100%" class="Framework" cellspacing="0" cellpadding="0">
+	<tr>
+		<td rowspan="2" class="LeftCell" >
+			<div id="leftmenu">
+				数据加载中……
+			</div>
+		</td>
+		<td class="MainCell">
+			<div id="main">
+				
+					
+	<div class="post">
+		<h2>
+			<a id="viewpost1_TitleUrl" href="http://www.blogjava.net/xylz/archive/2010/07/21/326723.html">深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介</a>
+		</h2>
+		<div class="postbody">
+		<p>Queue是JDK 5以后引入的新的集合类，它属于Java Collections Framework的成员，在Collection集合中和List/Set是同一级别的接口。通常来讲Queue描述的是一种FIFO的队列，当然不全都是，比如PriorityQueue是按照优先级的顺序（或者说是自然顺序，借助于Comparator接口）。</p> <p>下图描述了Java Collections Framework中Queue的整个家族体系。</p> <p>对于Queue而言是在Collection的基础上增加了offer/remove/poll/element/peek方法，另外重新定义了add方法。对于这六个方法，有不同的定义。</p> <table border="1" cellspacing="0" cellpadding="0"> <tbody> <tr> <td valign="top" width="54"> <p><b></b></p></td> <td valign="top" width="85"> <p><b>抛出异常</b></p></td> <td valign="top" width="94"> <p><b>返回特殊值</b></p></td> <td valign="top" width="334"> <p><b>操作描述</b></p></td></tr> <tr> <td valign="top" width="54"> <p>插入</p></td> <td valign="top" width="85"> <p>add(e)</p></td> <td valign="top" width="94"> <p>offer(e)</p></td> <td valign="top" width="334"> <p>将元素加入到队列尾部</p></td></tr> <tr> <td valign="top" width="54"> <p>移除</p></td> <td valign="top" width="85"> <p>remove()</p></td> <td valign="top" width="94"> <p>poll()</p></td> <td valign="top" width="334"> <p>移除队列头部的元素</p></td></tr> <tr> <td valign="top" width="54"> <p>检查</p></td> <td valign="top" width="85"> <p>element()</p></td> <td valign="top" width="94"> <p>peek()</p></td> <td valign="top" width="334"> <p>返回队列头部的元素而不移除此元素</p></td></tr></tbody></table> <p>特别说明的是对于Queue而言，规范并没有规定是线程安全的，为了解决这个问题，引入了可阻塞的队列BlockingQueue。对于BlockingQueue而言所有操作的是线程安全的，并且队列的操作可以被阻塞，直到满足某种条件。Queue的另一个子接口Deque描述的是一个双向的队列。与Queue不同的是，Deque允许在队列的头部增加元素和在队列的尾部删除元素。也就是说Deque是一个双向队列。二者功能都有的队列就是BlockingDeque，这种阻塞队列允许在队列的头和尾部分别操作元素，应该说是Queue中功能最强大的实现。</p> <p>&nbsp;</p> <p><a href="http://www.blogjava.net/images/blogjava_net/xylz/WindowsLiveWriter/ead4e8800e0c_FD45/image_4.png"><img style="border-right-width: 0px; display: block; float: none; border-top-width: 0px; border-bottom-width: 0px; margin-left: auto; border-left-width: 0px; margin-right: auto" title="image" border="0" alt="image" src="http://www.blogjava.net/images/blogjava_net/xylz/WindowsLiveWriter/ead4e8800e0c_FD45/image_thumb_1.png" width="775" height="744"></a> </p> <p>在JDK 5之前LinkedList就已经存在，而且本身实现都是一种双向队列。所以到了JDK 5以后就将LinkedList同时实现Deque接口，这样LinkedList就又属于Queue的一部分了。</p> <p>通常情况下Queue都是靠链表结构实现的，但是链表意味着有一些而外的引用开销，如果是双向链表开销就更大了。所以为了节省内存，一种方式就是使用固定大小的数组来实现队列。在这种情况下队列的大小是固定，元素的遍历通过数组的索引进行，很显然这是一种双向链表的模型。ArrayDeque就是这样一种实现。</p> <p>另外ArrayBlockingQueue也是一种数组实现的队列，但是却没有改造成双向，仅仅实现了BlockingQueue的模型。理论上和ArrayDeque一样也应该容易改造成双向的实现。</p> <p>PriorityQueue和PriorityBlockingQueue实现了一种排序的队列模型。这很类似与SortedSet，通过队列的Comparator接口或者Comparable元素来排序元素。这种情况下元素在队列中的出入就不是按照FIFO的形式，而是根据比较后的自然顺序来进行。</p> <p>CocurrentLinkedQueue是一种线程安全却非阻塞的FIFO队列，这种队列通常实现起来比较简单，但是却很有效。在接下来的章节会详细的描述它。</p> <p>SynchronousQueue是一种特别的BlockingQueue，它只是把一个add/offer操作的元素直接移交给remove/take操作。也就是说它本身不会缓存任何元素，所以严格意义上说来讲并不是一种真正的队列。此队列维护一个线程列表，这些线程等待从队列中加入元素或者移除元素。简单的说，至少有一个remove/take操作时add/offer操作才能成功，同样至少有一个add/offer操作时remove/take操作才能成功。这是一种双向等待的队列模型，出队列等待加入等列，而入队列又等待出队列。这种队列的好处在于能够最大线程的保持吞吐量却又是线程安全的。所以对于一个需要快速处理的任务队列，SynchronousQueue是一个不错的选择。</p> <p>&nbsp;</p> <p>BlockingQueue还有一种实现DelayQueue，这种实现允许每一个元素(Delayed)带有一个延时时间，当调用take/poll的时候会检测队列头元素这个时间是否&lt;=0，如果满足就是说已经超时了，那么此元素就可以被移除了，否则就会等待。特别说明的是这个头元素应该是最先被超时的元素（这个时间是绝对时间）。这个类设计很巧妙，被用于ScheduledFutureTask来进行定时操作。希望后面会开辟一个章节讲讲这里面的想法。实在不行在讲线程池部分肯定会提到这个。</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p></p> <p align="center"><font size="4"><a href="http://www.blogjava.net/xylz/archive/2010/07/20/326661.html" target="_blank"><strong>上一篇</strong></a></font><font size="4"><strong> </strong></font><a href="http://www.blogjava.net/xylz/archive/2010/07/08/325587.html"><font size="4"><strong>目录</strong></font></a><font size="4"><strong> </strong><a href="http://www.blogjava.net/xylz/archive/2010/07/23/326934.html"><strong>下一篇</strong></a></font></p><br><br><center><strong>&#169;2010 xylz <em><a href="http://www.imxylz.info" target="_blank">http://www.imxylz.info</a></em></strong></center>
+
+		</div>
+		<p class="postfoot">
+			posted on 2010-07-21 12:21 <a href='http://www.blogjava.net/xylz/'>xylz</a> 阅读(9968) <a href='#Post'>评论(4)</a> &nbsp;<a href="http://www.blogjava.net/xylz/admin/EditPosts.aspx?postid=326723">编辑</a> &nbsp;<a href="http://www.blogjava.net/xylz/AddToFavorite.aspx?id=326723">收藏</a>  所属分类: <a href='http://www.blogjava.net/xylz/category/45607.html'>Java Concurrency</a> 
+		</p>
+	</div>
+	<img src ="http://www.blogjava.net/xylz/aggbug/326723.html?webview=1" width = "1" height = "1" />
+	
+<!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+<rdf:Description
+rdf:about="http://www.blogjava.net/xylz/archive/2010/07/21/326723.html"
+dc:identifier="http://www.blogjava.net/xylz/archive/2010/07/21/326723.html"
+dc:title="深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介"
+trackback:ping="http://www.blogjava.net/xylz/services/trackbacks/326723.aspx" />
+</rdf:RDF>
+-->
+
+	<script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('AjaxHolder$scriptmanager1', document.getElementById('Form1'));
+Sys.WebForms.PageRequestManager.getInstance()._updateControls(['tAjaxHolder$UpdatePanel1'], [], [], 90);
+//]]>
+</script>
+
+<div id="AjaxHolder_UpdatePanel1">
+	    
+    <a name="pagedcomment"></a>
+<a name = "评论" />
+<div id="comments">
+<h3>评论</h3>
+	
+	
+			<div class="post">
+				<h2>
+					<a title="permalink: re: 深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介" href="/xylz/archive/2010/07/21/326723.html#326724">#</a>&nbsp;<a name="326724"></a>re: 深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介&nbsp;&nbsp;<a onclick="return SetReplyAuhor(&quot;zhxia&quot;)" href="/xylz/archive/2010/07/21/326723.html#post">回复</a>&nbsp;&nbsp;<a title="查看该作者发表过的评论" href="http://www.blogjava.net/comment?author=zhxia" target="_blank">更多评论</a>
+					<a id="AjaxHolder_Comments_CommentList_ctl00_DeleteLink" href="javascript:__doPostBack('AjaxHolder$Comments$CommentList$ctl00$DeleteLink','')"></a>&nbsp;&nbsp;<a id="AjaxHolder_Comments_CommentList_ctl00_EditLink"></a>
+				</h2>
+				e vais r&#233;sumer mes recherches et ce que j'ai fait:<br>Pour commencer j'ai windows XP et mon but et de pouvoir cr&#233;er un custom widget, le prendre dans le designer, le d&#233;poser sur une QDialog et que le tout se lance.<br>Je pars sur un custom widget simple et un qdialog simple c'est a dire je cr&#233;e des nouveaux projets dans QtCreator sans modifier les fichiers g&#233;n&#233;r&#233;s. (un Qt Custom Designer Widget et un Qt Gui Application avec une class base QDialog)<a href="http://www.jeansclothingstore.com/" target="_new" rel="nofollow">http://www.jeansclothingstore.com/</a>
+				<div class="postfoot">
+					2010-07-21 12:46 | <a id="AjaxHolder_Comments_CommentList_ctl00_NameLink" href="http://www.jeansclothingstore.com/" target="_blank">zhxia</a>
+				</div>
+			</div>
+		
+			<div class="post">
+				<h2>
+					<a title="permalink: re: 深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介" href="/xylz/archive/2010/07/21/326723.html#326725">#</a>&nbsp;<a name="326725"></a>re: 深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介&nbsp;&nbsp;<a onclick="return SetReplyAuhor(&quot;schmuck&quot;)" href="/xylz/archive/2010/07/21/326723.html#post">回复</a>&nbsp;&nbsp;<a title="查看该作者发表过的评论" href="http://www.blogjava.net/comment?author=schmuck" target="_blank">更多评论</a>
+					<a id="AjaxHolder_Comments_CommentList_ctl01_DeleteLink" href="javascript:__doPostBack('AjaxHolder$Comments$CommentList$ctl01$DeleteLink','')"></a>&nbsp;&nbsp;<a id="AjaxHolder_Comments_CommentList_ctl01_EditLink"></a>
+				</h2>
+				e vais r&#233;sumer mes recherches et ce que j'ai fait:<br>Pour commencer j'ai windows XP et mon but et de pouvoir cr&#233;er un custom widget, le prendre dans le designer, le d&#233;poser sur une QDialog et que le tout se lance.<br><br>
+				<div class="postfoot">
+					2010-07-21 12:47 | <a id="AjaxHolder_Comments_CommentList_ctl01_NameLink" href="http://www.jeansclothingstore.com/" target="_blank">schmuck</a>
+				</div>
+			</div>
+		
+			<div class="post">
+				<h2>
+					<a title="permalink: re: 深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介" href="/xylz/archive/2010/07/21/326723.html#326726">#</a>&nbsp;<a name="326726"></a>re: 深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介&nbsp;&nbsp;<a onclick="return SetReplyAuhor(&quot;links of london charms&quot;)" href="/xylz/archive/2010/07/21/326723.html#post">回复</a>&nbsp;&nbsp;<a title="查看该作者发表过的评论" href="http://www.blogjava.net/comment?author=links+of+london+charms" target="_blank">更多评论</a>
+					<a id="AjaxHolder_Comments_CommentList_ctl02_DeleteLink" href="javascript:__doPostBack('AjaxHolder$Comments$CommentList$ctl02$DeleteLink','')"></a>&nbsp;&nbsp;<a id="AjaxHolder_Comments_CommentList_ctl02_EditLink"></a>
+				</h2>
+				A ce moment l&#224; je dois dire que je pense que c'est gagn&#233;, je place mon widget dans ma fen&#234;tre, je lance la compilation erreur trouve pas les .h du widget, j'ajoute dans le pro INCLUDEPATH += chemin des headers du custom je relance et la j'ai 
+				<div class="postfoot">
+					2010-07-21 12:48 | <a id="AjaxHolder_Comments_CommentList_ctl02_NameLink" href="http://www.jeansclothingstore.com/" target="_blank">links of london charms</a>
+				</div>
+			</div>
+		
+			<div class="post">
+				<h2>
+					<a title="permalink: re: 深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介" href="/xylz/archive/2010/07/21/326723.html#326727">#</a>&nbsp;<a name="326727"></a>re: 深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介<a name="Post"></a>&nbsp;&nbsp;<a onclick="return SetReplyAuhor(&quot;links of london bracelets&quot;)" href="/xylz/archive/2010/07/21/326723.html#post">回复</a>&nbsp;&nbsp;<a title="查看该作者发表过的评论" href="http://www.blogjava.net/comment?author=links+of+london+bracelets" target="_blank">更多评论</a>
+					<a id="AjaxHolder_Comments_CommentList_ctl03_DeleteLink" href="javascript:__doPostBack('AjaxHolder$Comments$CommentList$ctl03$DeleteLink','')"></a>&nbsp;&nbsp;<a id="AjaxHolder_Comments_CommentList_ctl03_EditLink"></a>
+				</h2>
+				aut il ajouter d'autres options dans les pro du widget ou du qdialog ?<br>Existe t'il un tutorial qui explique comment faire &#231;a avec QtCreator 2 ?<br>
+				<div class="postfoot">
+					2010-07-21 12:49 | <a id="AjaxHolder_Comments_CommentList_ctl03_NameLink" href="http://www.jeansclothingstore.com/" target="_blank">links of london bracelets</a>
+				</div>
+			</div>
+		
+</div>
+
+<style>
+td { font-size: 12px }
+.commentTextBox 
+{ 
+    font-family : Verdana; 
+    font-size: 13px;
+ }
+</style>
+<!--Beging Temp Save-->
+<STYLE>.userData { BEHAVIOR: url(#default#userdata) }
+	</STYLE>
+<DIV class="userData" id="CommentsPersistDiv"></DIV>
+
+<script type="text/javascript">
+function pageLoad()
+{
+    Sys.WebForms.PageRequestManager.getInstance().add_initializeRequest(handleInitializeRequest);
+    //Sys.WebForms.PageRequestManager.getInstance().add_endRequest(handleEndRequest);
+}
+
+function handleInitializeRequest(sender, args)
+{
+    var prm = Sys.WebForms.PageRequestManager.getInstance();
+    var eid = args.get_postBackElement().id;
+    if (eid.indexOf("DeleteLink")>0) 
+    {
+       args.get_postBackElement().innerHTML = "<font color='red'>正在删除...</font>";         
+    }    
+    else if (eid.indexOf("btnSubmit")>0) 
+    {
+       document.getElementById("AjaxHolder_PostComment_ltSubmitMsg").innerHTML="正在提交...";
+       document.getElementById("AjaxHolder_PostComment_btnSubmit").disabled = true;       
+    }   
+    else if(eid.indexOf("refreshList")>0)
+    {
+        document.getElementById("AjaxHolder_PostComment_refreshList").innerHTML="<font color='red'>正在刷新...</font>";
+    }
+   
+}	
+
+function TempSave(ElementID)
+{
+	try
+	{
+	CommentsPersistDiv.setAttribute("CommentContent",document.getElementById(ElementID).value);
+	CommentsPersistDiv.save("CommentXMLStore");
+	}
+	catch(ex)
+	{
+	}
+	
+}
+function Restore(ElementID)
+{
+	CommentsPersistDiv.load("CommentXMLStore");
+	document.getElementById(ElementID).value=CommentsPersistDiv.getAttribute("CommentContent");
+}	
+			
+			
+</script>
+<!--Ene TempSave-->
+<div id="divRefreshComments" style="text-align:right;margin-right:10px;margin-bottom:5px;font-size:12px"><a href="/RequireRegister.aspx">新用户注册</a>&nbsp;&nbsp;<a id="AjaxHolder_PostComment_refreshList" href="javascript:__doPostBack('AjaxHolder$PostComment$refreshList','')">刷新评论列表</a>&nbsp;&nbsp;</div>
+<div class="commentform">
+<script type="text/javascript" src="http://partner.googleadservices.com/gampad/google_service.js">
+</script>
+<script type="text/javascript">
+var c_enable_dfp = true;
+if (navigator.userAgent.indexOf("Chrome/6.0.401.1") > 0) {
+c_enable_dfp = false;
+}
+if (c_enable_dfp) {
+try{
+  GS_googleAddAdSenseService("ca-pub-4210569241504288");
+  GS_googleEnableAllServices();
+  } catch (e) { }
+}
+</script>
+<script type="text/javascript">
+if (c_enable_dfp) {
+try{
+  GA_googleAddSlot("ca-pub-4210569241504288", "blogjava_commentbox_up");
+  GA_googleAddSlot("ca-pub-4210569241504288", "blogjava_blogpost_bottom");
+  GA_googleAddSlot("ca-pub-4210569241504288", "blogjava_blogpost_bottom1");
+  } catch (e) { }
+}
+</script>
+<script type="text/javascript">
+if (c_enable_dfp) {
+try{
+  GA_googleFetchAds();
+  } catch (e) { }
+}
+</script>
+<span id="AjaxHolder_PostComment_ltSubmitMsg" style="color:Red;"></span>
+<br />
+<a name="Feedback"></a>
+	<TABLE cellSpacing="1" cellPadding="1" border="0">	
+		<tr>
+		<td colspan="3">
+		<div style="line-height:150%;">	
+		<a href="http://news.cnblogs.com/n/79114/" target="_blank" class="site_hot">【重磅新闻】微软Silverlight战略发生转移 回归HTML5</a><br/>
+		<a href="http://job.cnblogs.com/" target="_blank">找优秀程序员, 就在博客园</a><br/>
+		<!--<a href="http://a4.yeshj.com/rd/36749/" target="_blank">学技能，享培训补贴；获证书，落上海户口</a>-->
+		</div>
+		<div id="itnews_block" style="line-height:150%;" class="other_info_list">IT新闻：<br/>· <a href="http://news.cnblogs.com/n/79128/" target="_blank">“天河一号”运算性能跃上世界之巅</a><br/>· <a href="http://news.cnblogs.com/n/79127/" target="_blank">银河核心发现最有说服力的暗物质粒子证据</a><br/>· <a href="http://news.cnblogs.com/n/79124/" target="_blank">腾讯大战360谁在强力入侵</a><br/>· <a href="http://news.cnblogs.com/n/79123/" target="_blank">默多克对战谷歌 对抗仍将继续</a><br/>· <a href="http://news.cnblogs.com/n/79122/" target="_blank">国内首部微博小说走红</a><br/></div>
+		<!--<div>
+		技术专题：<br/>
+		<a href="http://kb.cnblogs.com/zt/jquery/" title="jQuery" target="_blank">jQuery</a>&nbsp; &nbsp;<a href="http://kb.cnblogs.com/zt/android/" title="Android" target="_blank">Android</a>&nbsp; &nbsp;<a href="http://kb.cnblogs.com/zt/ipad/" title="iPad" target="_blank">iPad</a>
+		</div>-->
+		</td>
+		</tr>
+		<div id="AjaxHolder_PostComment_divCommnentArea">
+		<TR>
+			<TD colSpan="3">
+<script type="text/javascript">
+try{
+  GA_googleFillSlot("blogjava_commentbox_up");
+  } catch (e) { }
+</script>
+<br/></TD>
+		</TR>
+		<TR>
+			<TD width="75"></TD>
+			<TD></TD>
+			<TD></TD>
+		</TR>
+		<TR>
+			<TD></TD>
+			<TD colSpan="2">
+			<a href="http://www.cnblogs.com" target="_blank">博客园</a>&nbsp;  <a href="http://space.cnblogs.com/q/" target="_blank">博问</a>&nbsp; <a href="http://news.cnblogs.com" target="_blank">IT新闻</a>&nbsp; <!--<a href="http://home.cnblogs.com/ing/" target="_blank">闪存</a>&nbsp;  <a href="http://a4.yeshj.com/rd/36007/" target="_blank">学英语</a>&nbsp;  --><a href="http://job.cnblogs.com/cate-java_programmer/" target="_blank">Java程序员招聘</a>
+			</TD>
+		</TR>
+		<TR>
+			<TD width="55">标题</TD>
+			<TD><input name="AjaxHolder$PostComment$tbTitle" type="text" value="re: 深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介" id="AjaxHolder_PostComment_tbTitle" class="commenttb" style="width:320" /></TD>
+			<TD><span id="AjaxHolder_PostComment_RequiredFieldValidator1" style="color:Red;visibility:hidden;">请输入标题</span></TD>
+		</TR>
+		<TR>
+			<TD>姓名</TD>
+			<TD><input name="AjaxHolder$PostComment$tbName" type="text" id="AjaxHolder_PostComment_tbName" class="commenttb" style="width:320" /></TD>
+			<TD><span id="AjaxHolder_PostComment_RequiredFieldValidator2" style="color:Red;visibility:hidden;">请输入你的姓名</span></TD>
+		</TR>
+		<TR>
+			<TD>主页</TD>
+			<TD><input name="AjaxHolder$PostComment$tbUrl" type="text" id="AjaxHolder_PostComment_tbUrl" class="commenttb" style="width:320" /></TD>
+			<TD><FONT face="宋体"></FONT></TD>
+		</TR>
+		<tr>
+			<td align="left" colSpan="3">
+				<table id="AjaxHolder_PostComment_tbCaptchaImage" class="CommentForm" cellspacing="0" cellpadding="0" border="0">
+		<tr>
+			<td colspan="3">
+							<span id="AjaxHolder_PostComment_Requiredfieldvalidator4" style="color:Red;display:none;">请输入验证码</span>
+							<span id="AjaxHolder_PostComment_lblImage" style="color:Red;font-weight:bold;"></span>
+						</td>
+		</tr>
+		<tr>
+			<td width="78">验证码</td>
+			<td><input name="AjaxHolder$PostComment$CodeNumberTextBox" type="text" id="AjaxHolder_PostComment_CodeNumberTextBox" />*&nbsp;&nbsp;<img src="http://www.blogjava.net/Modules/CaptchaImage/JpegImage.aspx?cacheid=20101030211002"/></td>
+			<td align="left"></td>
+		</tr>
+	</table>
+	
+			</td>
+		</tr>
+		<TR>
+			<TD colSpan="3">内容(请不要发表任何与政治相关的内容)
+				<span id="AjaxHolder_PostComment_RequiredFieldValidator3" style="color:Red;visibility:hidden;">请输入评论内容</span><BR>
+				<textarea name="AjaxHolder$PostComment$tbComment" rows="10" cols="50" id="AjaxHolder_PostComment_tbComment" class="commentTextBox" onkeydown="ctlent(event,'AjaxHolder_PostComment_tbComment')" style="Width:480;Height:220"></textarea></TD>
+		</TR>
+		<TR>
+			<TD colSpan="3">
+		<span id="AjaxHolder_PostComment_Message" style="color:Red;"></span>
+		</td>
+		<TR>
+			<TD colSpan="3"><input id="AjaxHolder_PostComment_chkRemember" type="checkbox" name="AjaxHolder$PostComment$chkRemember" checked="checked" tabindex="-1" /><label for="AjaxHolder_PostComment_chkRemember">Remember Me?</label></TD>
+		</TR>
+		<TR>
+			<TD height="23"><input type="submit" name="AjaxHolder$PostComment$btnSubmit" value="提交" onclick="TempSave('AjaxHolder_PostComment_tbComment');WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;AjaxHolder$PostComment$btnSubmit&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="AjaxHolder_PostComment_btnSubmit" class="commentButton" />
+				</TD>
+			<td colSpan="2" height="23">&nbsp;
+				<a id="AjaxHolder_PostComment_lnkLogin" href="http://www.blogjava.net/login.aspx?ReturnURL=http://www.blogjava.net/xylz/archive/2010/07/21/326723.html&amp;SourceURL=/xylz/archive/2010/07/21/326723.html">登录</a>&nbsp;&nbsp;<!--<a id="AjaxHolder_PostComment_linkLoginComment" OnClick="if(document.getElementById('AjaxHolder_PostComment_tbComment').value != '') return confirm('未提交的评论内容将会丢失, 你真的要进入高级评论吗?');" href="http://www.blogjava.net/xylz/archive/2010/07/21/326723.html?login=1#Post">使用高级评论</a>&nbsp;&nbsp;<a href="http://www.blogjava.net/RequireRegister.aspx">新用户注册</a>&nbsp;&nbsp;<A href="#Top">返回页首</A>&nbsp;&nbsp;<a id="AjaxHolder_PostComment_lbRestore" OnClick="Restore('AjaxHolder_PostComment_tbComment'); return false;" href="/xylz/archive/2010/07/21/326723.html#Post">恢复上次提交</a>&nbsp;&nbsp;-->&nbsp;&nbsp;&nbsp;&nbsp;
+				</td>
+		</TR>
+		<TR>
+			<TD colSpan="3"><label class="CtrlEnter">[使用Ctrl+Enter键可以直接提交]</label></TD>
+		</TR>
+		</div>
+		
+		<TR>
+			<TD colSpan="3"><!--该文被作者在 2010-07-23 14:12 编辑过--></TD>
+		</TR>
+		<!--
+		<TR>
+			<TD colSpan="3" height="5"></TD>
+		</TR>	
+		-->
+		<tr>
+		<td colspan="3">
+		<a href="http://a4.yeshj.com/rd/34138/" target="_blank">每天10分钟，轻松学英语</a>
+		</td>
+		</tr>
+		<TR>
+		<TD colSpan="3">
+		<script type="text/javascript">
+		if (c_enable_dfp) {
+		try{
+		  GA_googleFillSlot("blogjava_blogpost_bottom");
+		  } catch (e) { }
+		}
+		</script>
+		</TD>
+		</TR>
+		<tr>			
+		<td colspan="3">
+		<div id="job_block" style="line-height:180%;">推荐职位：<br/>· <a href="http://job.cnblogs.com/offer/9827/" target="_blank">高级网站开发工程师 (9588旅行网)</a><br/>· <a href="http://job.cnblogs.com/offer/9477/" target="_blank">.NET&Silverlight开发工程师(北京盛安德)</a><br/>· <a href="http://job.cnblogs.com/offer/9729/" target="_blank">.NET网站工程师 (北京世纪英博)</a><br/>· <a href="http://job.cnblogs.com/offer/8874/" target="_blank">[急聘].NET/Web开发工程师(武汉百纳信息技术)</a><br/>· <a href="http://job.cnblogs.com/offer/5914/" target="_blank">.NET 开发工程师(北京捷报)</a><br/>· <a href="http://job.cnblogs.com/offer/8252/" target="_blank">C++开发工程师(沪江网)</a><br/>· <a href="http://job.cnblogs.com/offer/9314/" target="_blank">ASP.NET程序员(博客园)</a><br/>· <a href="http://job.cnblogs.com/offer/7696/" target="_blank">PHP研发工程师(百度)</a><br/></div><div id="cnblogs_posts" style="line-height:180%;">博客园首页随笔：<br/>· <a href="http://www.cnblogs.com/Blood/archive/2010/10/30/webclock.html" target="_blank">来个给力的东西，web时钟，支持iphone和android</a><br/>· <a href="http://www.cnblogs.com/shapherd/archive/2010/10/30/workflowEngine.html" target="_blank">几种开源工作流引擎的简单比较</a><br/>· <a href="http://www.cnblogs.com/skynet/archive/2010/10/30/1865267.html" target="_blank">Linux多线程编程（不限Linux）</a><br/>· <a href="http://www.cnblogs.com/Booble/archive/2010/10/30/1865211.html" target="_blank">[大海战] Freepascal之Crt单元</a><br/>· <a href="http://www.cnblogs.com/cyq1162/archive/2010/10/30/1865124.html" target="_blank">重构-使代码更简洁优美II：实际经验之谈(项目分层是怎么扯上代码节省的)</a><br/></div><div id="job_block" style="line-height:180%;">知识库：<br/>· <a href="http://kb.cnblogs.com/page/79115/" target="_blank">每位开发人员都应铭记的10句编程谚语</a><br/>· <a href="http://kb.cnblogs.com/page/79053/" target="_blank">数据并发与事务隔离</a><br/>· <a href="http://kb.cnblogs.com/page/79052/" target="_blank">数据库大型应用解决方案总结</a><br/>· <a href="http://kb.cnblogs.com/page/79051/" target="_blank">asp.net 缓存</a><br/>· <a href="http://kb.cnblogs.com/page/78949/" target="_blank">ANT十五大最佳实践</a><br/></div>
+		</td>
+		</tr>
+		<TR>
+		<TD colSpan="3">
+<br/>
+<script type="text/javascript">
+try{
+  GA_googleFillSlot("blogjava_blogpost_bottom");
+  } catch (e) { }
+</script>
+<br/>
+最简洁阅读版式：<br/><a href="http://archive.cnblogs.com/b/326723/">深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介</a></TD>
+		</TR>
+		<TR>
+			<TD colSpan="3" height="1">网站导航:<div id="blogsite">
+			<a href="http://www.cnblogs.com" title="程序员的网上家园">博客园</a>&nbsp;&nbsp;
+			<a href="http://news.cnblogs.com">IT新闻</a>&nbsp;&nbsp;
+			<a href="http://kb.cnblogs.com">知识库</a>&nbsp;&nbsp;
+			<a href="http://www.cnweblog.com">博客生活</a>&nbsp;&nbsp;
+			<a href="http://www.cnitblog.com">IT博客网</a>&nbsp;&nbsp;
+			<a href="http://www.cppblog.com">C++博客</a>&nbsp;&nbsp;
+			<a href="http://space.cnblogs.com/q/" title="IT问答">博问</a>&nbsp;&nbsp;
+			<a href="/xylz/archive/2010/07/21/326723.html?opt=admin">管理</a>
+			</div>
+		</TD>
+		</TR>
+		<TR>
+			<TD colSpan="3" height="5">
+<div id="divRelativePosts">
+相关文章:
+	
+			<ul style="margin-top:0px;padding-left:0px;">
+		
+			<li style='list-style:none;'>
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl01_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/18/329227.html">深入浅出 Java Concurrency (25): 并发容器 part 10 双向并发阻塞队列 BlockingDeque</a>
+			</li>
+		
+			<li style='list-style:none;'>
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl02_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/12/328587.html">深入浅出 Java Concurrency (24): 并发容器 part 9 双向队列集合 Deque</a>
+			</li>
+		
+			<li style='list-style:none;'>
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl03_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/30/327582.html">深入浅出 Java Concurrency (23): 并发容器 part 8 可阻塞的BlockingQueue (3)</a>
+			</li>
+		
+			<li style='list-style:none;'>
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl04_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/27/327265.html">深入浅出 Java Concurrency (22): 并发容器 part 7 可阻塞的BlockingQueue (2)</a>
+			</li>
+		
+			<li style='list-style:none;'>
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl05_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/24/326988.html">深入浅出 Java Concurrency (21): 并发容器 part 6 可阻塞的BlockingQueue (1)</a>
+			</li>
+		
+			<li style='list-style:none;'>
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl06_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/23/326934.html">深入浅出 Java Concurrency (20): 并发容器 part 5 ConcurrentLinkedQueue</a>
+			</li>
+		
+			<li style='list-style:none;display:none'>
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl07_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/21/326723.html">深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介</a>
+			</li>
+		
+			<li style='list-style:none;'>
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl08_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/20/326661.html">深入浅出 Java Concurrency (18): 并发容器 part 3 ConcurrentMap (3)</a>
+			</li>
+		
+			<li style='list-style:none;'>
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl09_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/20/326584.html">深入浅出 Java Concurrency (17): 并发容器 part 2 ConcurrentMap (2)</a>
+			</li>
+		
+			<li style='list-style:none;'>
+				<a id="AjaxHolder_PostComment_ctl08_RelativePostsList_ctl10_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/19/326527.html">深入浅出 Java Concurrency (16): 并发容器 part 1 ConcurrentMap (1)</a>
+			</li>
+		
+			</ul>
+		
+</div>
+</TD>
+		</TR>	
+		<TR>
+			<TD colSpan="3">&nbsp;</TD>
+		</TR>
+		<TR>
+			<TD colSpan="3" height="5"></TD>
+		</TR>
+		<TR>
+			<TD colSpan="3">
+				</TD>
+		</TR>		
+	</TABLE>	
+</div>
+<div id="AjaxHolder_PostComment_ValidationSummary1" style="color:Red;display:none;">
+
+	</div>
+
+</div>
+
+				
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="FooterCell">
+			
+<p id="footer">
+	Powered by: 
+	<br />
+	
+	<a id="Footer1_Hyperlink3" NAME="Hyperlink1" href="http://www.blogjava.net/" style="font-family:Verdana;font-size:12px;">BlogJava</a>
+	<br />
+	Copyright &copy; xylz
+</p>
+		</td>
+	</tr>
+</table>
+<div id="lefttemp" style="display:none">
+
+					
+<h3>导航</h3>
+<ul>
+	<li>
+		
+	<li>
+		<a id="MyLinks1_MyHomeLink" href="http://www.blogjava.net/xylz/">首页</a>
+	<li>
+		<a id="MyLinks1_NewPostLink" href="http://www.blogjava.net/xylz/admin/EditPosts.aspx?opt=1">新随笔</a>
+	<li>
+		<a id="MyLinks1_ContactLink" accesskey="9" href="http://www.blogjava.net/xylz/contact.aspx?id=1">联系</a>
+	<li>
+		<a id="MyLinks1_XMLLink" href="http://www.blogjava.net/xylz/rss"><img src="http://www.blogjava.net/images/xml.gif" alt="RSS 2.0 Feed" style="border-width:0px;" /></a><a id="MyLinks1_Syndication" href="http://www.blogjava.net/xylz/rss">聚合</a>
+	<li>
+		<a id="MyLinks1_Admin" href="http://www.blogjava.net/xylz/admin/EditPosts.aspx">管理</a></li>
+
+</ul>
+
+					<table id="Calendar1_entryCal" class="Cal" cellspacing="0" cellpadding="0" title="Calendar" border="0" style="border-width:1px;border-style:solid;border-collapse:collapse;">
+	<tr><td colspan="7" style="background-color:Silver;"><table class="CalTitle" cellspacing="0" border="0" style="width:100%;border-collapse:collapse;">
+		<tr><td class="CalNextPrev" style="width:15%;"><a href="javascript:__doPostBack('Calendar1$entryCal','V3804')" style="color:Black" title="Go to the previous month">&lt;</a></td><td align="center" style="width:70%;">2010年7月</td><td class="CalNextPrev" align="right" style="width:15%;"><a href="javascript:__doPostBack('Calendar1$entryCal','V3865')" style="color:Black" title="Go to the next month">&gt;</a></td></tr>
+	</table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center" style="width:14%;">27</td><td class="CalOtherMonthDay" align="center" style="width:14%;">28</td><td class="CalOtherMonthDay" align="center" style="width:14%;">29</td><td class="CalOtherMonthDay" align="center" style="width:14%;">30</td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/01.html"><u>1</u></a></td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/02.html"><u>2</u></a></td><td class="CalWeekendDay" align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/03.html"><u>3</u></a></td></tr><tr><td class="CalWeekendDay" align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/04.html"><u>4</u></a></td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/05.html"><u>5</u></a></td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/06.html"><u>6</u></a></td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/07.html"><u>7</u></a></td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/08.html"><u>8</u></a></td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/09.html"><u>9</u></a></td><td class="CalWeekendDay" align="center" style="width:14%;">10</td></tr><tr><td class="CalWeekendDay" align="center" style="width:14%;">11</td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/12.html"><u>12</u></a></td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/13.html"><u>13</u></a></td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/14.html"><u>14</u></a></td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/15.html"><u>15</u></a></td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/16.html"><u>16</u></a></td><td class="CalWeekendDay" align="center" style="width:14%;">17</td></tr><tr><td class="CalWeekendDay" align="center" style="width:14%;">18</td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/19.html"><u>19</u></a></td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/20.html"><u>20</u></a></td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/21.html"><u>21</u></a></td><td align="center" style="width:14%;">22</td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/23.html"><u>23</u></a></td><td class="CalWeekendDay" align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/24.html"><u>24</u></a></td></tr><tr><td class="CalWeekendDay" align="center" style="width:14%;">25</td><td align="center" style="width:14%;">26</td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/27.html"><u>27</u></a></td><td align="center" style="width:14%;">28</td><td align="center" style="width:14%;">29</td><td align="center" style="width:14%;"><a href="http://www.blogjava.net/xylz/archive/2010/07/30.html"><u>30</u></a></td><td class="CalWeekendDay" align="center" style="width:14%;">31</td></tr><tr><td class="CalOtherMonthDay" align="center" style="width:14%;">1</td><td class="CalOtherMonthDay" align="center" style="width:14%;">2</td><td class="CalOtherMonthDay" align="center" style="width:14%;">3</td><td class="CalOtherMonthDay" align="center" style="width:14%;">4</td><td class="CalOtherMonthDay" align="center" style="width:14%;">5</td><td class="CalOtherMonthDay" align="center" style="width:14%;">6</td><td class="CalOtherMonthDay" align="center" style="width:14%;">7</td></tr>
+</table>
+
+					
+					
+<H3>留言簿<span style="font-size:11px;font-weight:normal;">(4)</span></H3>
+<ul>
+	<li>
+		<a id="SingleColumn1_ctl00_lnkMessages" href="http://www.blogjava.net/xylz/Contact.aspx?id=1">给我留言</a>
+	<li>
+		<a id="SingleColumn1_ctl00_lnkPublicMsgView" href="http://www.blogjava.net/xylz/default.aspx?opt=msg">查看公开留言</a>
+	<li>
+		<a id="SingleColumn1_ctl00_lnkPrivateMsgView" href="http://www.blogjava.net/xylz/admin/MyMessages.aspx">查看私人留言</a>
+	</li>
+</ul>
+
+		<h3>随笔分类<span style="font-size:11px;font-weight:normal">(59)</span></h3>
+		
+				<ul>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl01_Link" href="http://www.blogjava.net/xylz/category/43238.html">Google Guice(10)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl01_RssLink" title="Subscribe to Google Guice(10)" href="http://www.blogjava.net/xylz/category/43238.html/rss">(rss)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl02_Link" href="http://www.blogjava.net/xylz/category/41095.html">Java(29)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl02_RssLink" title="Subscribe to Java(29)" href="http://www.blogjava.net/xylz/category/41095.html/rss">(rss)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl03_Link" href="http://www.blogjava.net/xylz/category/45607.html">Java Concurrency(13)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl03_RssLink" title="Subscribe to Java Concurrency(13)" href="http://www.blogjava.net/xylz/category/45607.html/rss">(rss)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl04_Link" href="http://www.blogjava.net/xylz/category/43786.html">nginx(2)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl04_RssLink" title="Subscribe to nginx(2)" href="http://www.blogjava.net/xylz/category/43786.html/rss">(rss)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl05_Link" href="http://www.blogjava.net/xylz/category/44736.html">Python</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl05_RssLink" title="Subscribe to Python" href="http://www.blogjava.net/xylz/category/44736.html/rss">(rss)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl06_Link" href="http://www.blogjava.net/xylz/category/42742.html">技术(5)</a><a id="SingleColumn1_Categories_CatList_ctl00_LinkList_ctl06_RssLink" title="Subscribe to 技术(5)" href="http://www.blogjava.net/xylz/category/42742.html/rss">(rss)</a></li>
+			
+				</ul>
+			
+	
+		<h3>随笔档案<span style="font-size:11px;font-weight:normal">(50)</span></h3>
+		
+				<ul>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl01_Link" href="http://www.blogjava.net/xylz/archive/2010/08.html">2010年8月 (3)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl02_Link" href="http://www.blogjava.net/xylz/archive/2010/07.html">2010年7月 (24)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl03_Link" href="http://www.blogjava.net/xylz/archive/2010/06.html">2010年6月 (2)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl04_Link" href="http://www.blogjava.net/xylz/archive/2010/01.html">2010年1月 (5)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl05_Link" href="http://www.blogjava.net/xylz/archive/2009/12.html">2009年12月 (12)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl06_Link" href="http://www.blogjava.net/xylz/archive/2009/11.html">2009年11月 (2)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl07_Link" href="http://www.blogjava.net/xylz/archive/2009/09.html">2009年9月 (1)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl01_LinkList_ctl08_Link" href="http://www.blogjava.net/xylz/archive/2009/07.html">2009年7月 (1)</a></li>
+			
+				</ul>
+			
+	
+		<h3>文章分类<span style="font-size:11px;font-weight:normal">(12)</span></h3>
+		
+				<ul>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl02_LinkList_ctl01_Link" href="http://www.blogjava.net/xylz/category/41091.html">Eclipse</a><a id="SingleColumn1_Categories_CatList_ctl02_LinkList_ctl01_RssLink" title="Subscribe to Eclipse" href="http://www.blogjava.net/xylz/category/41091.html/rss">(rss)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl02_LinkList_ctl02_Link" href="http://www.blogjava.net/xylz/category/41090.html">Java</a><a id="SingleColumn1_Categories_CatList_ctl02_LinkList_ctl02_RssLink" title="Subscribe to Java" href="http://www.blogjava.net/xylz/category/41090.html/rss">(rss)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl02_LinkList_ctl03_Link" href="http://www.blogjava.net/xylz/category/44738.html">Python(12)</a><a id="SingleColumn1_Categories_CatList_ctl02_LinkList_ctl03_RssLink" title="Subscribe to Python(12)" href="http://www.blogjava.net/xylz/category/44738.html/rss">(rss)</a></li>
+			
+				</ul>
+			
+	
+		<h3>文章档案<span style="font-size:11px;font-weight:normal">(12)</span></h3>
+		
+				<ul>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl03_LinkList_ctl01_Link" href="http://www.blogjava.net/xylz/archives/2010/06.html">2010年6月 (6)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl03_LinkList_ctl02_Link" href="http://www.blogjava.net/xylz/archives/2010/05.html">2010年5月 (3)</a></li>
+			
+				<li><a id="SingleColumn1_Categories_CatList_ctl03_LinkList_ctl03_Link" href="http://www.blogjava.net/xylz/archives/2010/04.html">2010年4月 (3)</a></li>
+			
+				</ul>
+			
+	
+
+<script language="JavaScript">
+function SearchGoogle(key,evt,site)
+		{
+			if(evt.keyCode==13 || evt.keyCode==0 || evt.type =='click')
+			{
+				key.focus();
+				var keystr = encodeURIComponent(key.value);
+				url = "http://www.google.com/search?q=";
+				url = url+keystr;
+				url += "&ie=UTF-8&oe=GB2312&hl=zh-CN&domains="+site+"&sitesearch="+site;
+				window.location=url;
+				return false;
+			}
+		}
+</script>
+<H3>搜索</H3>
+<ul>
+	<li>
+		<li><input style="WIDTH: 130px" type="text" name="q" id="q" onkeydown="return SearchGoogle(document.getElementById('q'),event,'www.blogjava.net/xylz')">&nbsp;<input onclick="SearchGoogle(document.getElementById('q'),event,'www.blogjava.net/xylz')" type="button" value="搜索" name="sa">
+	</li>
+</ul>
+
+<H3>积分与排名</H3>
+<ul>
+	<li>
+		积分 -
+		757711
+	<li>
+		排名 -
+		6
+	</li>
+</ul>
+
+<h3>最新评论
+	<a id="SingleColumn1__354edaa_RSSHyperlink1" href="http://www.blogjava.net/xylz/CommentsRSS.aspx"><img src="/images/xml.gif" style="border-width:0px;" /></a></h3>
+<div class="RecentComment">
+	
+			<ul>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl01_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/09/15/325587.html#332103">1. re: 《深入浅出 Java Concurrency》目录</a>
+			</li>
+			<li style="word-break:break-all">
+				牛。。<br>正要学习这方面的知识，来看看。
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--leeing</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl02_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/09/03/326661.html#330846">2. re: 深入浅出 Java Concurrency (18): 并发容器 part 3 ConcurrentMap (3)</a>
+			</li>
+			<li style="word-break:break-all">
+				不错，订阅了
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--冰河快狼</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl03_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/09/02/328589.html#330674">3. re: 这是JVM的Bug么？谁遇到下面的情况？</a>
+			</li>
+			<li style="word-break:break-all">
+				加一个 volatile 就好了吧<br><br>java内存模型的一个“bug“或者什么，指令重排，返回了对象，但是对象尚未初始化。<br><br>多线程出现的
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--bonamana</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl04_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/26/325587.html#329994">4. re: 《深入浅出 Java Concurrency》目录[未登录]</a>
+			</li>
+			<li style="word-break:break-all">
+				不得不顶下，楼主的精神
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--fd</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl05_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/19/329227.html#329376">5. re: 深入浅出 Java Concurrency (25): 并发容器 part 10 双向并发阻塞队列 BlockingDeque[未登录]</a>
+			</li>
+			<li style="word-break:break-all">
+				楼主走神了，这么久来更新一次。哈哈
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--行云流水</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl06_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/18/328589.html#329271">6. re: 这是JVM的Bug么？谁遇到下面的情况？</a>
+			</li>
+			<li style="word-break:break-all">
+				@xylz<br>是的，多线程情况下也不应该出现这样的问题。
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--ouyang</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl07_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/16/328587.html#328999">7. re: 深入浅出 Java Concurrency (24): 并发容器 part 9 双向队列集合 Deque</a>
+			</li>
+			<li style="word-break:break-all">
+				@旺才<br>哎，最近工作忙，更新没有规律了
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--xylz</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl08_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/16/328587.html#328997">8. re: 深入浅出 Java Concurrency (24): 并发容器 part 9 双向队列集合 Deque</a>
+			</li>
+			<li style="word-break:break-all">
+				什么时候更新完呀
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--旺才</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl09_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/15/328589.html#328919">9. re: 这是JVM的Bug么？谁遇到下面的情况？</a>
+			</li>
+			<li style="word-break:break-all">
+				@ouyang<br>JAVA规范保证一个类的static字段和static块运行结束后才能被调用。
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--xylz</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl10_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/15/328589.html#328913">10. re: 这是JVM的Bug么？谁遇到下面的情况？</a>
+			</li>
+			<li style="word-break:break-all">
+				评论内容较长,点击标题查看
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--ouyang</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl11_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/12/325168.html#328680">11. re: 深入浅出 Java Concurrency (4): 原子操作 part 3 指令重排序与happens-before法则</a>
+			</li>
+			<li style="word-break:break-all">
+				@thebye85<br>i++是非原子操作，你只能通过其他手段来保证咯
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--Johnny Jian</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl12_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/12/325168.html#328678">12. re: 深入浅出 Java Concurrency (4): 原子操作 part 3 指令重排序与happens-before法则</a>
+			</li>
+			<li style="word-break:break-all">
+				@Johnny Jian<br>我是说假如变量i声明为volatile，多线程操作i都是在共享内存（堆）上吧？<br>保存各自线程栈的话，怎么保证i的可见性？
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--thebye85</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl13_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/12/328589.html#328674">13. re: 这是JVM的Bug么？谁遇到下面的情况？</a>
+			</li>
+			<li style="word-break:break-all">
+				评论内容较长,点击标题查看
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--shaiehv</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl14_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/12/328589.html#328669">14. re: 这是JVM的Bug么？谁遇到下面的情况？</a>
+			</li>
+			<li style="word-break:break-all">
+				评论内容较长,点击标题查看
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--蒲田</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl15_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/12/328589.html#328666">15. re: 这是JVM的Bug么？谁遇到下面的情况？</a>
+			</li>
+			<li style="word-break:break-all">
+				抱歉是我沒看清楚 這問題
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--蒲田</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl16_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/12/325587.html#328664">16. re: 《深入浅出 Java Concurrency》目录</a>
+			</li>
+			<li style="word-break:break-all">
+				非常棒！楼主加油！
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--bingo</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl17_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/12/328587.html#328653">17. re: 深入浅出 Java Concurrency (24): 并发容器 part 9 双向队列集合 Deque[未登录]</a>
+			</li>
+			<li style="word-break:break-all">
+				等的好辛苦，加油。哈哈
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--行云流水</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl18_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/12/328589.html#328617">18. re: 这是JVM的Bug么？谁遇到下面的情况？</a>
+			</li>
+			<li style="word-break:break-all">
+				@liping<br>确实很好，用到时候在加载。除非你要求更快访问且内存够大
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--bingo</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl19_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/12/328589.html#328616">19. re: 这是JVM的Bug么？谁遇到下面的情况？</a>
+			</li>
+			<li style="word-break:break-all">
+				同意。static 字段会在构造器之前执行。 
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--bingo</li>
+		
+			<li style="word-break:break-all">
+				<a id="SingleColumn1__354edaa_CommentList_ctl20_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/12/328589.html#328608">20. re: 这是JVM的Bug么？谁遇到下面的情况？</a>
+			</li>
+			<li style="word-break:break-all">
+				评论内容较长,点击标题查看
+			</li>
+			<li style="text-align:right;margin-right:4px">
+				--xylz</li>
+		
+			</ul>
+		
+</div>
+
+<h3>阅读排行榜</h3>
+<div class="RecentComment">
+	
+			<ul style="word-break:break-all">
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl01_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/01/04/308218.html">1. Google Guice 高级教程01 - 源码目录(24278)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl02_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/01/08/308684.html">2. Google Guice 高级教程02 - Guice的IOC容器(1)(24099)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl03_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2009/12/29/307574.html">3. Google Guice 入门教程07 - 整合第三方组件(1)(22849)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl04_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/01/29/311233.html">4. Nginx中的地址location(19755)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl05_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/01/29/311234.html">5. 使用Nginx的proxyCache缓存功能(19754)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl06_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/01/31/311357.html">6. Apache发布Ant 1.8.0RC1(19376)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl07_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/01/324988.html">7. 深入浅出 Java Concurrency (2): 原子操作 part 1(18869)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl08_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/06/30/324915.html">8. 深入浅出 Java Concurrency (1) : J.U.C的整体认识(18820)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl09_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/08/325587.html">9. 《深入浅出 Java Concurrency》目录(18553)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl10_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/02/325079.html">10. 深入浅出 Java Concurrency (3): 原子操作 part 2(17738)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl11_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/03/325168.html">11. 深入浅出 Java Concurrency (4): 原子操作 part 3 指令重排序与happens-before法则(16630)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl12_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/06/23/324242.html">12. Mysql replace into 与 insert into on duplicate key update 的区别(16523)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl13_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2009/12/31/307917.html">13. Google Guice 入门教程08 - 整合第三方组件(2)(16452)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl14_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/04/325206.html">14. 深入浅出 Java Concurrency (5): 原子操作 part 4(16317)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl15_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/05/325274.html">15. 深入浅出 Java Concurrency (6): 锁机制 part 1(15651)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl16_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/07/325410.html">16. 深入浅出 Java Concurrency (8): 锁机制 part 3(14580)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl17_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/06/325390.html">17. 深入浅出 Java Concurrency (7): 锁机制 part 2 AQS(14546)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl18_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/08/325540.html">18. 深入浅出 Java Concurrency (9): 锁机制 part 4(13581)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl19_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/09/325612.html">19. 深入浅出 Java Concurrency (10): 锁机制 part 5 闭锁 (CountDownLatch)(12981)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__d55e56_TopList_ctl20_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2009/12/22/306955.html">20. Google Guice 入门教程01 - 依赖注入(1)(11026)</a>
+			</li>
+		
+			</ul>
+		
+</div>
+
+<h3>评论排行榜</h3>
+<div class="RecentComment">
+	
+			<ul style="word-break:break-all">
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl01_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/12/328589.html">1. 这是JVM的Bug么？谁遇到下面的情况？(14)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl02_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/08/325587.html">2. 《深入浅出 Java Concurrency》目录(11)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl03_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/03/325168.html">3. 深入浅出 Java Concurrency (4): 原子操作 part 3 指令重排序与happens-before法则(8)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl04_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2009/12/31/307933.html">4. 一个查找jar包中类的小工具(7)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl05_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/06/30/324915.html">5. 深入浅出 Java Concurrency (1) : J.U.C的整体认识(5)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl06_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/21/326723.html">6. 深入浅出 Java Concurrency (19): 并发容器 part 4 并发队列与Queue简介(4)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl07_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2009/07/29/288967.html">7. Java编译器中的彩蛋？(4)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl08_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/20/326661.html">8. 深入浅出 Java Concurrency (18): 并发容器 part 3 ConcurrentMap (3)(3)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl09_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/08/12/328587.html">9. 深入浅出 Java Concurrency (24): 并发容器 part 9 双向队列集合 Deque(3)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl10_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/19/326527.html">10. 深入浅出 Java Concurrency (16): 并发容器 part 1 ConcurrentMap (1)(3)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl11_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/16/326286.html">11. 《深入浅出 Java Concurrency》暂停两天更新(3)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl12_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/16/326246.html">12. 深入浅出 Java Concurrency (15): 锁机制 part 10 锁的一些其它问题(2)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl13_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/09/325612.html">13. 深入浅出 Java Concurrency (10): 锁机制 part 5 闭锁 (CountDownLatch)(2)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl14_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/07/02/325079.html">14. 深入浅出 Java Concurrency (3): 原子操作 part 2(2)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl15_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2009/12/31/307917.html">15. Google Guice 入门教程08 - 整合第三方组件(2)(2)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl16_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2010/01/08/308684.html">16. Google Guice 高级教程02 - Guice的IOC容器(1)(2)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl17_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2009/12/22/306955.html">17. Google Guice 入门教程01 - 依赖注入(1)(2)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl18_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2009/12/18/306602.html">18. HashMap的读写并发(2)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl19_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2009/12/23/307092.html">19. Google Guice 入门教程02 - 依赖注入(2)(1)</a>
+			</li>
+		
+			<li>
+				<a id="SingleColumn1__2d1e885_TopList_ctl20_Hyperlink1" href="http://www.blogjava.net/xylz/archive/2009/12/27/307464.html">20. Google Guice 入门教程06 – Web 和 Servlet(1)</a>
+			</li>
+		
+			</ul>
+		
+</div>
+
+
+</div>
+<hr />
+<center>&copy;2010 <a href="http://www.imxylz.info" >XYLZ</a></center>
+    
+<script type="text/javascript">
+//<![CDATA[
+var Page_ValidationSummaries =  new Array(document.getElementById("AjaxHolder_PostComment_ValidationSummary1"));
+var Page_Validators =  new Array(document.getElementById("AjaxHolder_PostComment_RequiredFieldValidator1"), document.getElementById("AjaxHolder_PostComment_RequiredFieldValidator2"), document.getElementById("AjaxHolder_PostComment_Requiredfieldvalidator4"), document.getElementById("AjaxHolder_PostComment_RequiredFieldValidator3"));
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+var AjaxHolder_PostComment_RequiredFieldValidator1 = document.all ? document.all["AjaxHolder_PostComment_RequiredFieldValidator1"] : document.getElementById("AjaxHolder_PostComment_RequiredFieldValidator1");
+AjaxHolder_PostComment_RequiredFieldValidator1.controltovalidate = "AjaxHolder_PostComment_tbTitle";
+AjaxHolder_PostComment_RequiredFieldValidator1.errormessage = "请输入标题";
+AjaxHolder_PostComment_RequiredFieldValidator1.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
+AjaxHolder_PostComment_RequiredFieldValidator1.initialvalue = "";
+var AjaxHolder_PostComment_RequiredFieldValidator2 = document.all ? document.all["AjaxHolder_PostComment_RequiredFieldValidator2"] : document.getElementById("AjaxHolder_PostComment_RequiredFieldValidator2");
+AjaxHolder_PostComment_RequiredFieldValidator2.controltovalidate = "AjaxHolder_PostComment_tbName";
+AjaxHolder_PostComment_RequiredFieldValidator2.errormessage = "请输入你的姓名";
+AjaxHolder_PostComment_RequiredFieldValidator2.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
+AjaxHolder_PostComment_RequiredFieldValidator2.initialvalue = "";
+var AjaxHolder_PostComment_Requiredfieldvalidator4 = document.all ? document.all["AjaxHolder_PostComment_Requiredfieldvalidator4"] : document.getElementById("AjaxHolder_PostComment_Requiredfieldvalidator4");
+AjaxHolder_PostComment_Requiredfieldvalidator4.controltovalidate = "AjaxHolder_PostComment_CodeNumberTextBox";
+AjaxHolder_PostComment_Requiredfieldvalidator4.errormessage = "请输入验证码";
+AjaxHolder_PostComment_Requiredfieldvalidator4.display = "Dynamic";
+AjaxHolder_PostComment_Requiredfieldvalidator4.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
+AjaxHolder_PostComment_Requiredfieldvalidator4.initialvalue = "";
+var AjaxHolder_PostComment_RequiredFieldValidator3 = document.all ? document.all["AjaxHolder_PostComment_RequiredFieldValidator3"] : document.getElementById("AjaxHolder_PostComment_RequiredFieldValidator3");
+AjaxHolder_PostComment_RequiredFieldValidator3.controltovalidate = "AjaxHolder_PostComment_tbComment";
+AjaxHolder_PostComment_RequiredFieldValidator3.errormessage = "请输入评论内容";
+AjaxHolder_PostComment_RequiredFieldValidator3.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
+AjaxHolder_PostComment_RequiredFieldValidator3.initialvalue = "";
+var AjaxHolder_PostComment_ValidationSummary1 = document.all ? document.all["AjaxHolder_PostComment_ValidationSummary1"] : document.getElementById("AjaxHolder_PostComment_ValidationSummary1");
+AjaxHolder_PostComment_ValidationSummary1.showmessagebox = "True";
+AjaxHolder_PostComment_ValidationSummary1.showsummary = "False";
+//]]>
+</script>
+
+
+<script type="text/javascript">
+//<![CDATA[
+
+var Page_ValidationActive = false;
+if (typeof(ValidatorOnLoad) == "function") {
+    ValidatorOnLoad();
+}
+
+function ValidatorOnSubmit() {
+    if (Page_ValidationActive) {
+        return ValidatorCommonOnSubmit();
+    }
+    else {
+        return true;
+    }
+}
+        
+document.getElementById('AjaxHolder_PostComment_ValidationSummary1').dispose = function() {
+    Array.remove(Page_ValidationSummaries, document.getElementById('AjaxHolder_PostComment_ValidationSummary1'));
+}
+Sys.Application.initialize();
+
+document.getElementById('AjaxHolder_PostComment_RequiredFieldValidator1').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('AjaxHolder_PostComment_RequiredFieldValidator1'));
+}
+
+document.getElementById('AjaxHolder_PostComment_RequiredFieldValidator2').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('AjaxHolder_PostComment_RequiredFieldValidator2'));
+}
+
+document.getElementById('AjaxHolder_PostComment_Requiredfieldvalidator4').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('AjaxHolder_PostComment_Requiredfieldvalidator4'));
+}
+
+document.getElementById('AjaxHolder_PostComment_RequiredFieldValidator3').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('AjaxHolder_PostComment_RequiredFieldValidator3'));
+}
+//]]>
+</script>
+</form>
+    <script type="text/javascript" src="/script/ShowHidden.js"></script>
+	<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+	try {
+	var pageTracker = _gat._getTracker("UA-476124-3");
+	pageTracker._trackPageview();
+	} catch(err) {}</script>
+</body>
+</html>

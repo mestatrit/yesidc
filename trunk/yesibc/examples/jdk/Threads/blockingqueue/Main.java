@@ -12,12 +12,36 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		BlockingQueue<Food> queue = new ArrayBlockingQueue<Food>(5);
+		try {
+			Food food1 = new Food();
+			Food food2 = new Food();
+			queue.put(food1);
+			queue.put(food2);
+			System.out.println(food1 + "######" + food2);
+			while (true) {
+				if(queue.isEmpty()){
+					System.out.println("isEmpty");
+					break;
+				}
+				Food food = queue.take();
+				if(food==null){
+					break;
+				}
+				System.out.println(food);
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		testMain(queue);
+	}
+
+	private static void testMain(BlockingQueue<Food> queue) {
 		ExecutorService exec = Executors.newFixedThreadPool(3);
 		Producer p1 = new Producer(queue, exec);
 		Producer p2 = new Producer(queue, exec);
 
 		Consumer c1 = new Consumer(queue, exec);
-	
+
 		exec.execute(p1);
 		exec.execute(p2);
 		exec.execute(c1);
