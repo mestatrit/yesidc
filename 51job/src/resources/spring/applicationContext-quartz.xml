@@ -6,6 +6,7 @@
 		<property name="triggers">
 			<list>
 				<ref bean="logVmCronTrigger" />
+				<ref bean="checkRunningThreadTrigger" />
 			</list>
 		</property>
 		<property name="configLocation" value="classpath:spring/quartz.properties" />
@@ -23,6 +24,17 @@
 		<property name="targetMethod" value="logJdkvm" />
 	</bean>
 
+
+	<bean id="checkRunningThreadTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="checkRunningThread" />
+		<property name="cronExpression" value="0 0/10 * * * ?" />
+	</bean>
+
+	<bean id="checkRunningThread"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="executorSupport" />
+		<property name="targetMethod" value="checkTimeOutThreads" />
+	</bean>
 
 	<bean id="logJdkvm" class="com.yesiic.common.LogJdkvm"
 		autowire="byName" lazy-init="true">

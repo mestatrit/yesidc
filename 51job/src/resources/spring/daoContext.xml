@@ -12,4 +12,5 @@
 	<bean id="companyDao" class="com.yesiic.dao.impl.CompanyDaoImpl" />
 	<bean id="codeMappingDao" class="com.yesiic.dao.impl.CodeMappingDaoImpl" />
 	<bean id="searchResultDao" class="com.yesiic.dao.impl.SearchResultDaoImpl" />
+
 </beans>
