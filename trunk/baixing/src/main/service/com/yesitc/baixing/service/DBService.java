@@ -15,6 +15,7 @@ public class DBService {
 
 	EntityDao<WebElements> dao;
 	WebPagesDao webPagesDao;
+	
 	public void saveUrls(List<String> urls,String type,String requestId) {
 		List<WebPages> wps = new ArrayList<WebPages>();
 		Date now = new Date();
@@ -70,6 +71,10 @@ public class DBService {
 
 	public void setDao(EntityDao<WebElements> dao) {
 		this.dao = dao;
+	}
+
+	public void setWebPagesDao(WebPagesDao webPagesDao) {
+		this.webPagesDao = webPagesDao;
 	}
 
 }

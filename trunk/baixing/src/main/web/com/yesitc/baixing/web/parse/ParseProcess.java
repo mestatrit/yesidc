@@ -2,7 +2,6 @@ package com.yesitc.baixing.web.parse;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,8 +49,8 @@ public class ParseProcess extends AbstractParserProcess {
 	}
 
 	@Override
-	protected ThreadPoolExecutor getThreadPool() {
-		return ThreadPool.loadThreadPoolExecutor(5, threadNumber);
+	protected void getThreadPool() {
+		threadPool = ThreadPool.loadThreadPoolExecutor(threadNumber, threadNumber);
 	}
 
 	@Override
@@ -86,7 +85,7 @@ public class ParseProcess extends AbstractParserProcess {
 			log.info("init urls:others-" + map.size());
 		}
 
-		if (TO_DB) {
+		if (TO_DB_INIT) {
 			DBService dBService = (DBService) SpringContext.getBean("dBService");
 			dBService.saveUrls(urls, WebPages.PAGE_TYPES_11, requestId);
 		}
