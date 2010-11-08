@@ -19,11 +19,11 @@ public class WebPages implements java.io.Serializable {
 	 **/
 
 	public static String PAGE_TYPES_11 = "11";
-	public static String PAGE_TYPES_12 = "11";
+	public static String PAGE_TYPES_12 = "12";
 	public static String PAGE_PAGES_21 = "21";
 	public static String PAGE_PAGES_22 = "22";
 	public static String PAGE_DETAILS_31 = "31";
-	public static String PAGE_DETAILS_32 = "31";
+	public static String PAGE_DETAILS_32 = "32";
 
 	private String pageType;
 

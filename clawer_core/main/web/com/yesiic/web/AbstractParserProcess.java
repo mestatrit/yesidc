@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.yesibc.core.exception.ApplicationException;
 import com.yesiic.common.ClawerConstants;
-import com.yesiic.common.ErrorHandler;
 import com.yesiic.common.InternetConnection;
 import com.yesiic.common.ProcessContext;
 import com.yesiic.common.parse.ExecuteParser;
@@ -36,14 +36,16 @@ public abstract class AbstractParserProcess {
 	protected static String requestId = null;
 	protected static int threadNumber = ClawerConstants.THREADS_NUMBER;
 	protected static ThreadPoolExecutor threadPool = null;
-	public static boolean TO_DB = false;
+	public static boolean TO_DB_INIT = false;
+	public static boolean TO_DB_1ST = false;
+	public static boolean TO_DB_2ND = false;
 
 	/**
 	 * 初始化基础数据，将各链接放到WEBPAGES
 	 */
 	protected abstract void initURLs();
 
-	protected abstract ThreadPoolExecutor getThreadPool();
+	protected abstract void getThreadPool();
 
 	protected abstract List<WebPages> getTypes();
 
@@ -131,10 +133,11 @@ public abstract class AbstractParserProcess {
 
 					ExecuteParser ep = new ExecuteParser(parser, processContext);
 					eps.add(ep);
-					threadPool.submit(ep);
+					threadPool.execute(ep);
 					current++;
 				}
 
+				threadPool.awaitTermination(2000, TimeUnit.SECONDS);
 				ExecutorSupport.waitingThreadRunning(eps, threadPool);
 
 				if (InternetConnection.checkWaitingConn(title)) {// 如果没有重新连接的操作，则进入是否需要重新的判断。
@@ -147,7 +150,8 @@ public abstract class AbstractParserProcess {
 			}
 
 		} catch (Exception e) {
-			ErrorHandler.errorLogAndMail(title + " Error in Action:", e);
+			e.printStackTrace();
+			//ErrorHandler.errorLogAndMail(title + " Error in Action:", e);
 		}
 
 		log.info(reqLog + title + " End!Times:" + (System.currentTimeMillis() - start));

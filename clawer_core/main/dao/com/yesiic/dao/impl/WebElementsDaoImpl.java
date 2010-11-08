@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 
 import com.yesibc.core.dao.HibernateEntityDao;
 import com.yesibc.core.exception.ApplicationException;
@@ -17,6 +20,29 @@ import com.yesiic.webswith.model.WebElements;
 public class WebElementsDaoImpl extends HibernateEntityDao<WebElements> implements WebElementsDao {
 
 	private static Log log = LogFactory.getLog(WebElementsDaoImpl.class);
+
+	@SuppressWarnings("unchecked")
+	public WebElements getWebElementsByCode(String type, String code, int codeLevel) throws ApplicationException {
+		Criteria criteria = getSession().createCriteria(WebElements.class);
+		if (!StringUtils.trimToEmpty(type).equals("")) {
+			if (codeLevel == 1) {
+				criteria.createAlias("parent", "parent");
+			} else if (codeLevel == 2) {
+				criteria.createAlias("parent", "parent1");
+				criteria.createAlias("parent1.parent", "parent");
+			}
+			criteria.add(Restrictions.eq("parent.code", type));
+		}
+		if (!StringUtils.trimToEmpty(code).equals("")) {
+			criteria.add(Restrictions.eq("code", code));
+		}
+
+		List<WebElements> wes = criteria.list();
+		if (wes != null && !wes.isEmpty()) {
+			return wes.get(0);
+		}
+		return null;
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<WebElements> getWebElementsByType(String type) throws ApplicationException {
