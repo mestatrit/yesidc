@@ -8,7 +8,7 @@ import com.yesiic.webswith.model.WebElements;
 
 public interface WebElementsDao extends EntityDao<WebElements> {
 
-	public List<WebElements> getWebElementsByType(String type)
-			throws ApplicationException;
+	public List<WebElements> getWebElementsByType(String type) throws ApplicationException;
 
+	public WebElements getWebElementsByCode(String type, String code, int codeLevel) throws ApplicationException;
 }

@@ -27,7 +27,7 @@ public class UrlsContext {
 	public static void initTypes(String type) throws ApplicationException {
 		INIT_TYPES++;
 		types.clear();
-		List<WebPages> types = getWPsByTpye(type);
+		types = getWPsByTpye(type);
 		log.info("init " + type + "[" + INIT_TYPES + "] in 1 level - size:" + types.size());
 		if (WebPages.PAGE_TYPES_12.equals(type)) {
 			types.addAll(getWPsByTpye(WebPages.PAGE_TYPES_11));
@@ -39,7 +39,7 @@ public class UrlsContext {
 	public static void initPages(String type) throws ApplicationException {
 		INIT_PAGES++;
 		pages.clear();
-		List<WebPages> pages = getWPsByTpye(type);
+		pages = getWPsByTpye(type);
 		log.info("init " + type + "[" + INIT_PAGES + "] in 1 level - size:" + pages.size());
 		if (WebPages.PAGE_PAGES_22.equals(type)) {
 			pages.addAll(getWPsByTpye(WebPages.PAGE_PAGES_21));
@@ -51,7 +51,7 @@ public class UrlsContext {
 	public static void initDetails(String type) throws ApplicationException {
 		INIT_DETAILS++;
 		details.clear();
-		List<WebPages> details = getWPsByTpye(type);
+		details = getWPsByTpye(type);
 		log.info("init " + type + "[" + INIT_DETAILS + "] in 1 level - size:" + details.size());
 		if (WebPages.PAGE_DETAILS_32.equals(type)) {
 			details.addAll(getWPsByTpye(WebPages.PAGE_DETAILS_31));

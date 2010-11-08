@@ -15,6 +15,7 @@ import com.yesiic.webswith.model.WebPages;
 
 public class WebPagesDaoImpl extends HibernateEntityDao<WebPages> implements WebPagesDao {
 
+
 	@SuppressWarnings("unchecked")
 	public List<WebPages> getWebPagesByType(String type, String status, int fetchSize) throws ApplicationException {
 		Criteria criteria = getSession().createCriteria(WebPages.class).addOrder(Order.asc("id"));
