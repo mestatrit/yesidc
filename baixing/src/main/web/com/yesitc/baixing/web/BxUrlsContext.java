@@ -22,7 +22,7 @@ public class BxUrlsContext extends UrlsContext {
 	public static List<WebPages> getPages() {
 		if (INIT_PAGES == 0) {
 			try {
-				initDetails(WebPages.PAGE_PAGES_21);
+				initPages(WebPages.PAGE_PAGES_21);
 			} catch (ApplicationException e) {
 				e.printStackTrace();
 			}
@@ -33,7 +33,7 @@ public class BxUrlsContext extends UrlsContext {
 	public static List<WebPages> getTypes() {
 		if (INIT_TYPES == 0) {
 			try {
-				initDetails(WebPages.PAGE_TYPES_11);
+				initTypes(WebPages.PAGE_TYPES_11);
 			} catch (ApplicationException e) {
 				e.printStackTrace();
 			}

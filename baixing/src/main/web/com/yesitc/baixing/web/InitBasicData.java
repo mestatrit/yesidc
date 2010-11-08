@@ -107,27 +107,27 @@ public class InitBasicData {
 		return getAll().get(KEY_TYPES);
 	}
 
-	public WebElements getAreaByCode(String key) {
+	public static WebElements getAreaByCode(String key) {
 		return getAll().get(KEY_AREAS).get(key);
 	}
 
-	public WebElements getTypeByCode(String key) {
+	public static WebElements getTypeByCode(String key) {
 		return getAll().get(KEY_TYPES).get(key);
 	}
 
-	public String getAreaNameByCode(String key) {
+	public static String getAreaNameByCode(String key) {
 		return getAll().get(KEY_AREAS).get(key).getName();
 	}
 
-	public String getTypeNameByCode(String key) {
+	public static String getTypeNameByCode(String key) {
 		return getAll().get(KEY_TYPES).get(key).getName();
 	}
 
-	public String getAreaMemoByCode(String key) {
+	public static String getAreaMemoByCode(String key) {
 		return getAll().get(KEY_AREAS).get(key).getMemo();
 	}
 
-	public String getTypeMemoByCode(String key) {
+	public static String getTypeMemoByCode(String key) {
 		return getAll().get(KEY_TYPES).get(key).getMemo();
 	}
 
