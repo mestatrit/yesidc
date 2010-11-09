@@ -34,6 +34,7 @@ public abstract class AbstractParser {
 			WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
 			webPagesDao.update(processContext.getWp());
 		}
+		finish.clear();
 		log.info(processContext.getLogTitle() + "After parsing and update 2 DB OK!");
 	}
 }

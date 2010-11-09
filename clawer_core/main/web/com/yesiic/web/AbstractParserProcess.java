@@ -67,8 +67,6 @@ public abstract class AbstractParserProcess {
 	 */
 	public void main() throws ApplicationException {
 
-		getBaseInfo(threadNumber, requestId, failedOrNotInt, reqLog);
-
 		getThreadPool();
 
 		initURLs();
