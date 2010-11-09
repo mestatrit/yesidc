@@ -19,13 +19,13 @@
 		</property>
 
 		<property name="requestId" type="java.lang.String">
-			<column name="REQUEST_ID" length="25">
+			<column name="REQUEST_ID" length="25" unique-key="UK_WEBPAGES">
 				<comment>操作ID</comment>
 			</column>
 		</property>
 
 		<property name="url" type="java.lang.String">
-			<column name="URL" length="1000" unique-key="unique-WEBPAGES">
+			<column name="URL" length="1000"  unique-key="UK_WEBPAGES">
 				<comment>链接</comment>
 			</column>
 		</property>

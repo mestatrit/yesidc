@@ -128,6 +128,7 @@ create table T_WEBPAGES(ID NUMBER(19) not null,PAGE_TYPE VARCHAR2(2) not null,RE
 comment on column T_WEBPAGES.PAGE_TYPE  is '0-default=OK;1-search type list;2-search pages list;3-job list;';
 comment on column T_WEBPAGES.REQUEST_ID  is '操作ID';
 comment on column T_WEBPAGES.STATUS  is '1-KO;2-OK';
+alter table T_WEBPAGES add constraint UK_WEBPAGES unique (URL, REQUEST_ID);
 create table TP_ADDR (id number(19,0) not null, PERSON_ID number(19,0), FROM_WHERE number(19,0), FROM_WHERE_NAME varchar2(100 char), COUNTRY_ID number(19,0), PROVINCE_ID number(19,0), CITY_ID number(19,0), COUNTRY_NAME varchar2(100 char), PROVINCE_NAME varchar2(100 char), CITY_NAME varchar2(100 char), ADDRESS varchar2(200 char), POSTCODE varchar2(10 char), MEMO varchar2(1000 char), CREATE_DATE timestamp, UPDATE_DATE timestamp, CREATE_USER varchar2(20 char), UPDATE_USER varchar2(20 char), primary key (id));
 comment on column TP_ADDR.PERSON_ID is '所有者';
 comment on column TP_ADDR.FROM_WHERE is '数据来源代码';
