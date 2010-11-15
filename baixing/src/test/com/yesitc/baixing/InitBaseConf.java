@@ -174,7 +174,7 @@ public class InitBaseConf {
 		browser = en.getBrowser();
 		onDocumnetComplete();
 
-		processContext.setBrowser(browser);
+		processContext.setHtml(browser.getDocument().getBody().getOuterHTML());
 		processContext.setLogTitle("Test");
 
 		browser.loadURL(url);

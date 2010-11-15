@@ -20,6 +20,9 @@ import com.yesitc.baixing.web.InitBasicData;
 public class ParseProcess extends AbstractParserProcess {
 	private static Log log = LogFactory.getLog(ParseProcess.class);
 
+	private Parser parseType;
+	private Parser parseDetail;
+
 	@SuppressWarnings("static-access")
 	@Override
 	public void getBaseInfo(int threadNumber, String requestId, int failedOrNotInt, String reqLog) {
@@ -39,13 +42,12 @@ public class ParseProcess extends AbstractParserProcess {
 
 	@Override
 	protected Parser getParseDetails() {
-		// TODO Auto-generated method stub
-		return null;
+		return parseDetail;
 	}
 
 	@Override
 	protected Parser getParseTypes() {
-		return new ParseType();
+		return parseType;
 	}
 
 	@Override
@@ -90,6 +92,14 @@ public class ParseProcess extends AbstractParserProcess {
 			dBService.saveUrls(urls, WebPages.PAGE_TYPES_11, requestId);
 		}
 		log.info("InitURLs END!Time is [" + (System.currentTimeMillis() - start) + "]ms.");
+	}
+
+	public void setParseType(Parser parseType) {
+		this.parseType = parseType;
+	}
+
+	public void setParseDetail(Parser parseDetail) {
+		this.parseDetail = parseDetail;
 	}
 
 }
