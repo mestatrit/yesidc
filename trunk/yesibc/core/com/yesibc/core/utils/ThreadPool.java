@@ -74,7 +74,21 @@ public class ThreadPool {
 		System.out.println("getLargestPoolSize=" + tpe.getLargestPoolSize());
 		System.out.println("getMaximumPoolSize=" + tpe.getMaximumPoolSize());
 		System.out.println("getPoolSize=" + tpe.getPoolSize());
-		tpe = loadThreadPoolExecutor(10,20);
+		tpe = loadThreadPoolExecutor(1, 1);
+		Runnable task = new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				System.out.println("task over");
+			}
+		};
+
+		for (int i = 0; i < 5; i++) {
+			tpe.execute(task);
+		}
 		System.out.println("getActiveCount=" + tpe.getActiveCount());
 		System.out.println("getCorePoolSize=" + tpe.getCorePoolSize());
 		System.out.println("getLargestPoolSize=" + tpe.getLargestPoolSize());

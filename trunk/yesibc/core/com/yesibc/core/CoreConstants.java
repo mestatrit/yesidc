@@ -11,6 +11,9 @@ package com.yesibc.core;
  */
 public class CoreConstants {
 
+	public static final String CHARSET_UTF8 = "utf-8";
+	public static final String CHARSET_GBK = "GBK";
+
 	/**
 	 * spring configuration file.
 	 */
