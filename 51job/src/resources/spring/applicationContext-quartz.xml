@@ -36,8 +36,11 @@
 		<property name="targetMethod" value="checkTimeOutThreads" />
 	</bean>
 
-	<bean id="logJdkvm" class="com.yesiic.common.LogJdkvm"
-		autowire="byName" lazy-init="true">
+	<bean id="logJdkvm" class="com.yesiic.common.LogJdkvm" autowire="byName"
+		lazy-init="true">
 	</bean>
 
+	<bean id="executorSupport" class="com.yesiic.common.parse.ExecutorSupport"
+		autowire="byName" lazy-init="true">
+	</bean>
 </beans>

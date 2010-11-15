@@ -19,6 +19,12 @@
 		</property>
 	</bean>
 
+	<bean id="whatever" class="com.yesibc.core.spring.SpringContextSpy" />
+	<bean id="httpConnectionManager" class="com.yesibc.core.components.http.HttpConnectionManager">
+			<!--property name="charset" value="GBK" /-->
+	</bean>
+
+
 	<!-- support @Transactional  -->
 	<tx:annotation-driven />
 
