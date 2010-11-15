@@ -48,6 +48,7 @@ public class ImportTypesMemos {
 				String header = getSubHeader();
 				if (header.length() > 4) {
 					header = header.substring(4);
+					log.info("header=" + header);
 				} else {
 					log.info("11==getCode=" + we.getCode() + "==getName=" + we.getName());
 				}
@@ -74,7 +75,10 @@ public class ImportTypesMemos {
 
 	private static String getSubHeader() throws ParserException {
 		IElement ie = browser.getDocument().getElementById("subheader");
+		log.info(ie.getOuterHTML());
 		IElement header = ie.getChildElements().item(1);
+		log.info(header.getOuterHTML());
+		log.info(header.getInnerHTML());
 		return header.getInnerHTML();
 	}
 
@@ -86,7 +90,7 @@ public class ImportTypesMemos {
 		browser = en.getBrowser();
 		onDocumnetComplete();
 
-		processContext.setBrowser(browser);
+		processContext.setHtml(browser.getDocument().getBody().getOuterHTML());
 		processContext.setLogTitle("Test");
 
 		browser.loadURL(url);

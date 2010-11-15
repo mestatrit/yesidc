@@ -38,8 +38,7 @@ public class ImportAreas {
 	static String START = "长宁网页/平面设计/印刷";
 	static String HAVE_EXISTED = "长宁周边的"; //
 	private static Log log = LogFactory.getLog(ImportAreas.class);
-	static EntityDao<WebElements> dao = (EntityDao<WebElements>) SpringContext
-			.getBean("dao");
+	static EntityDao<WebElements> dao = (EntityDao<WebElements>) SpringContext.getBean("dao");
 
 	/**
 	 * @param args
@@ -51,15 +50,15 @@ public class ImportAreas {
 			loadUrl(url);
 			List<WebElements> cityList = parse2CityList();
 			parseCities2DB(cityList);
-			List<WebElements> districtsList = new ArrayList<WebElements>(); 
-			
+			List<WebElements> districtsList = new ArrayList<WebElements>();
+
 			url = "http://beijing.baixing.com/";
 			loadUrl(url);
-			parse2DistrictList(districtsList,"beijing");
+			parse2DistrictList(districtsList, "beijing");
 			url = "http://shanghai.baixing.com/";
 			loadUrl(url);
-			parse2DistrictList(districtsList,"shanghai");
-			
+			parse2DistrictList(districtsList, "shanghai");
+
 			parseDistricts2DB(districtsList);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -67,7 +66,8 @@ public class ImportAreas {
 
 	}
 
-	private static List<WebElements> parse2DistrictList(List<WebElements> districtList,String city) throws ParserException {
+	private static List<WebElements> parse2DistrictList(List<WebElements> districtList, String city)
+			throws ParserException {
 		String districts = browser.getDocument().getElementById("areas").getOuterHTML();
 		Parser parser = Parser.createParser(districts, "utf8");
 		NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
@@ -77,7 +77,7 @@ public class ImportAreas {
 
 		List<WebElements> cityWEs = dao.findByNameValue(WebElements.class, "code", city);
 		WebElements cityWe = cityWEs.get(0);
-		
+
 		Date now = Calendar.getInstance().getTime();
 		for (int i = 0; i < nodes.length; i++) {
 			LinkTag link = (LinkTag) nodes[i];
@@ -94,15 +94,13 @@ public class ImportAreas {
 			we.setParent(cityWe);
 
 			districtList.add(we);
-			log.info("==line=" + line + ",Code=" + we.getCode() + ",name="
-					+ link.getLinkText());
+			log.info("==line=" + line + ",Code=" + we.getCode() + ",name=" + link.getLinkText());
 
-		}		
+		}
 		return districtList;
 	}
 
-	private static List<WebElements> parse2CityList()
-			throws ParserException {
+	private static List<WebElements> parse2CityList() throws ParserException {
 		String cities = browser.getDocument().getElementById("cityTable").getOuterHTML();
 		Parser parser = Parser.createParser(cities, "utf8");
 		NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
@@ -127,22 +125,21 @@ public class ImportAreas {
 			we.setSortList(new Long(i));
 
 			cityList.add(we);
-			log.info("line=" + line + ",Code=" + we.getCode() + ",name="
-					+ link.getLinkText());
+			log.info("line=" + line + ",Code=" + we.getCode() + ",name=" + link.getLinkText());
 
 		}
 		return cityList;
 	}
 
 	private static void parseDistricts2DB(List<WebElements> districtsList) {
-		for(WebElements we: districtsList){
+		for (WebElements we : districtsList) {
 			dao.save(we);
 		}
 	}
 
 	private static void parseCities2DB(List<WebElements> citiesList) {
 		WebElements top = getTopCity();
-		for(WebElements we: citiesList){
+		for (WebElements we : citiesList) {
 			we.setParent(top);
 			dao.save(we);
 		}
@@ -174,7 +171,7 @@ public class ImportAreas {
 		browser = en.getBrowser();
 		onDocumnetComplete();
 
-		processContext.setBrowser(browser);
+		processContext.setHtml(browser.getDocument().getBody().getOuterHTML());
 		processContext.setLogTitle("Test");
 
 		browser.loadURL(url);
@@ -193,30 +190,22 @@ public class ImportAreas {
 
 	public static void waitingLoading(String url) {
 		int i = 0;
-		LogHandler.info(processContext.getLogTitle()
-				+ " waiting loading start!");
+		LogHandler.info(processContext.getLogTitle() + " waiting loading start!");
 		while (!loaded) {
 			i++;
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				ErrorHandler.error(processContext.getLogTitle() + " URL[" + url
-						+ "] :", e);
+				ErrorHandler.error(processContext.getLogTitle() + " URL[" + url + "] :", e);
 			}
 			if (i > 12) {
-				ErrorHandler
-						.errorLogAndMail(processContext.getLogTitle()
-								+ " URL["
-								+ url
-								+ "] waiting loading to long and exit to waiting now. Time is["
-								+ i * 10 + "]s");
+				ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " URL[" + url
+						+ "] waiting loading to long and exit to waiting now. Time is[" + i * 10 + "]s");
 				break;
 			} else {
-				LogHandler.info(processContext.getLogTitle() + " URL[" + url
-						+ "] waiting loading……[" + i * 10 + "]s");
+				LogHandler.info(processContext.getLogTitle() + " URL[" + url + "] waiting loading……[" + i * 10 + "]s");
 			}
 		}
-		LogHandler.info(processContext.getLogTitle()
-				+ "  waiting loading end![" + i * 2 + "]s");
+		LogHandler.info(processContext.getLogTitle() + "  waiting loading end![" + i * 2 + "]s");
 	}
 }
