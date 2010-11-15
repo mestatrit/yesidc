@@ -19,14 +19,18 @@ public class BrowserSupport {
 	public static final String WAIT_TAG_KEY = "key";
 	public static final String WAIT_TAG_VAL = "vale";
 
+	public static IBrowserCanvas getBrowser(ProcessContext processContext) {
+		return WebrendererContext.WEBRENDER_ENTITIES.get(processContext.getIndex()).getBrowser();
+	}
+
 	public static void waitingLoading(ProcessContext processContext, Map<String, String> finish)
 			throws ApplicationException {
 
 		if (!waiting(processContext, finish)) {
 			log.error(processContext.getLogTitle() + " Load wait error and redo!");
 			finish.clear();
-			BrowserSupport.onDocumnetComplete(processContext.getBrowser(), finish);
-			processContext.getBrowser().loadURL(processContext.getWp().getUrl());
+			BrowserSupport.onDocumnetComplete(BrowserSupport.getBrowser(processContext), finish);
+			BrowserSupport.getBrowser(processContext).loadURL(processContext.getWp().getUrl());
 			if (!waiting(processContext, finish)) {
 				throw new ApplicationException(processContext.getLogTitle() + ErrorHandler.WAIT_ERROR_SYSTEM
 						+ " Waiting overtime.");
@@ -37,9 +41,10 @@ public class BrowserSupport {
 
 		checkBody(processContext);
 
-		String html = processContext.getBrowser().getDocument().getBody().getOuterHTML();
+		String html = BrowserSupport.getBrowser(processContext).getDocument().getBody().getOuterHTML();
 		errorRedo(processContext, html, finish, ErrorHandler.WAIT_ERROR_CONNECT);
 		errorRedo(processContext, html, finish, ErrorHandler.WAIT_ERROR_PROHIBIT);
+		processContext.setHtml(html);
 	}
 
 	private static void errorRedo(ProcessContext processContext, String html, Map<String, String> finish, String htmlTag)
@@ -48,7 +53,7 @@ public class BrowserSupport {
 		if (html.indexOf(htmlTag) > -1) {
 			log.error(processContext.getLogTitle() + logMsg);
 			finish.clear();
-			processContext.getBrowser().loadURL(processContext.getWp().getUrl());
+			BrowserSupport.getBrowser(processContext).loadURL(processContext.getWp().getUrl());
 			if (!waiting(processContext, finish)) {
 				log.error(processContext.getLogTitle() + " Redo waiting error!" + logMsg);
 				throw new ApplicationException(ErrorHandler.WAIT_ERROR_SYSTEM + " Redo waiting error!" + logMsg);
@@ -64,7 +69,7 @@ public class BrowserSupport {
 
 	private static void checkBody(ProcessContext processContext) throws ApplicationException {
 		int k = 0;
-		while (processContext.getBrowser().getDocument().getBody() == null) {
+		while (BrowserSupport.getBrowser(processContext).getDocument().getBody() == null) {
 			try {
 				k++;
 				log.warn(processContext.getLogTitle() + ErrorHandler.WAIT_ERROR_BODY + "Times:" + k);
@@ -118,7 +123,6 @@ public class BrowserSupport {
 
 	public static IBrowserCanvas prepareLoading(ProcessContext processContext) {
 		IBrowserCanvas browser = WebrendererContext.WEBRENDER_ENTITIES.get(processContext.getIndex()).getBrowser();
-		processContext.setBrowser(browser);
 		processContext.setLogTitle(processContext.getLogTitle() + " ");
 		if (ClawerConstants.SHOW_FRAME) {
 			WebrendererContext.WEBRENDER_ENTITIES.get(processContext.getIndex()).getFrame().setTitle(
@@ -134,7 +138,6 @@ public class BrowserSupport {
 		WebrendererContext.reFreshContext(index, title + "-" + index);
 
 		IBrowserCanvas browser = WebrendererContext.WEBRENDER_ENTITIES.get(index).getBrowser();
-		processContext.setBrowser(browser);
 		processContext.setLogTitle(title + " ");
 		if (ClawerConstants.SHOW_FRAME) {
 			WebrendererContext.WEBRENDER_ENTITIES.get(index).getFrame().setTitle(processContext.getLogTitle());

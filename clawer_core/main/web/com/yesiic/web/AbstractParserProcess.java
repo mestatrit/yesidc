@@ -37,8 +37,6 @@ public abstract class AbstractParserProcess {
 	protected static int threadNumber = ClawerConstants.THREADS_NUMBER;
 	protected static ThreadPoolExecutor threadPool = null;
 	public static boolean TO_DB_INIT = false;
-	public static boolean TO_DB_1ST = false;
-	public static boolean TO_DB_2ND = false;
 
 	/**
 	 * 初始化基础数据，将各链接放到WEBPAGES
