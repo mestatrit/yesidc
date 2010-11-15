@@ -70,50 +70,20 @@ public class Httpclient4Util {
 	public static final String PROXY_PWD_KEY = "proxyPwdYTB";
 	public static final String PROXY_ADDR_KEY = "proxyAddrYTB";
 	public static final String PROXY_PORT_KEY = "proxyPortYTB";
-	private static final String CHARSET_UTF8 = "UTF-8";
+	private static final String CHARSET_UTF8 = "utf-8";
 	private static final String CHARSET_GBK = "GBK";
 	private static final String SSL_DEFAULT_SCHEME = "https";
 	private static final int SSL_DEFAULT_PORT = 443;
-	private static final int EXECUTION_COUNT = 3;
-
-	// 异常自动恢复处理, 使用HttpRequestRetryHandler接口实现请求的异常恢复
-	private static HttpRequestRetryHandler requestRetryHandler = new HttpRequestRetryHandler() {
-		// 自定义的恢复策略
-		public boolean retryRequest(IOException exception, int executionCount,
-				HttpContext context) {
-			// 设置恢复策略，在发生异常时候将自动重试3次
-			if (executionCount >= EXECUTION_COUNT) {
-				// Do not retry if over max retry count
-				return false;
-			}
-			if (exception instanceof NoHttpResponseException) {
-				// Retry if the server dropped connection on us
-				return true;
-			}
-			if (exception instanceof SSLHandshakeException) {
-				// Do not retry on SSL handshake exception
-				return false;
-			}
-			HttpRequest request = (HttpRequest) context
-					.getAttribute(ExecutionContext.HTTP_REQUEST);
-			boolean idempotent = (request instanceof HttpEntityEnclosingRequest);
-			if (!idempotent) {
-				// Retry if the request is considered idempotent
-				return true;
-			}
-			return false;
-		}
-	};
+	private static DefaultHttpClient httpClientProxy;
 
 	// 使用ResponseHandler接口处理响应，HttpClient使用ResponseHandler会自动管理连接的释放，解决了对连接的释放管理
 	private static ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
 		// 自定义响应处理
-		public String handleResponse(HttpResponse response)
-				throws ClientProtocolException, IOException {
+		public String handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
-				String charset = EntityUtils.getContentCharSet(entity) == null ? CHARSET_GBK
-						: EntityUtils.getContentCharSet(entity);
+				String charset = EntityUtils.getContentCharSet(entity) == null ? CHARSET_UTF8 : EntityUtils
+						.getContentCharSet(entity);
 				return new String(EntityUtils.toByteArray(entity), charset);
 			} else {
 				return null;
@@ -143,8 +113,7 @@ public class Httpclient4Util {
 	 * @return 响应消息
 	 * @throws ApplicationException
 	 */
-	public static String get(String url, Map<String, String> params)
-			throws ApplicationException {
+	public static String get(String url, Map<String, String> params) throws ApplicationException {
 		return get(url, params, null);
 	}
 
@@ -160,8 +129,7 @@ public class Httpclient4Util {
 	 * @return 响应消息
 	 * @throws ApplicationException
 	 */
-	public static String get(String url, Map<String, String> params,
-			String charset) throws ApplicationException {
+	public static String get(String url, Map<String, String> params, String charset) throws ApplicationException {
 		if (url == null || StringUtils.isEmpty(url)) {
 			return null;
 		}
@@ -169,11 +137,16 @@ public class Httpclient4Util {
 		if (qparams != null && qparams.size() > 0) {
 			charset = (charset == null ? CHARSET_GBK : charset);
 			String formatParams = URLEncodedUtils.format(qparams, charset);
-			url = (url.indexOf("?")) < 0 ? (url + "?" + formatParams) : (url
-					+ "&" + formatParams);
+			url = (url.indexOf("?")) < 0 ? (url + "?" + formatParams) : (url + "&" + formatParams);
 		}
-		DefaultHttpClient httpclient = getDefaultHttpClient(charset, params);
+		HttpClient httpclient = getDefaultHttpClient(charset, params);
 		HttpGet hg = new HttpGet(url);
+		
+		/**
+		 * 不加这一句时，百姓网会乱来
+		 */
+		hg.setHeader("User-Agent", "msie");
+		
 		// 发送请求，得到响应
 		String responseStr = null;
 		try {
@@ -198,8 +171,7 @@ public class Httpclient4Util {
 	 * @return 响应消息
 	 * @throws ApplicationException
 	 */
-	public static String post(String url, Map<String, String> params)
-			throws ApplicationException {
+	public static String post(String url, Map<String, String> params) throws ApplicationException {
 		return post(url, params, null);
 	}
 
@@ -215,8 +187,7 @@ public class Httpclient4Util {
 	 * @return 响应消息
 	 * @throws ApplicationException
 	 */
-	public static String post(String url, Map<String, String> params,
-			String charset) throws ApplicationException {
+	public static String post(String url, Map<String, String> params, String charset) throws ApplicationException {
 		if (url == null || StringUtils.isEmpty(url)) {
 			return null;
 		}
@@ -227,8 +198,7 @@ public class Httpclient4Util {
 			if (StringUtils.isEmpty(charset)) {
 				formEntity = new UrlEncodedFormEntity(getParamsList(params));
 			} else {
-				formEntity = new UrlEncodedFormEntity(getParamsList(params),
-						charset);
+				formEntity = new UrlEncodedFormEntity(getParamsList(params), charset);
 			}
 		} catch (UnsupportedEncodingException e) {
 			throw new ApplicationException("不支持的编码集", e);
@@ -270,10 +240,9 @@ public class Httpclient4Util {
 	 * @throws ApplicationException
 	 * @throws ApplicationException
 	 */
-	public static String post(String url, Map<String, String> params,
-			String charset, final URL keystoreUrl,
-			final String keystorePassword, final URL truststoreUrl,
-			final String truststorePassword) throws ApplicationException {
+	public static String post(String url, Map<String, String> params, String charset, final URL keystoreUrl,
+			final String keystorePassword, final URL truststoreUrl, final String truststorePassword)
+			throws ApplicationException {
 		if (url == null || StringUtils.isEmpty(url)) {
 			return null;
 		}
@@ -283,8 +252,7 @@ public class Httpclient4Util {
 			if (StringUtils.isEmpty(charset)) {
 				formEntity = new UrlEncodedFormEntity(getParamsList(params));
 			} else {
-				formEntity = new UrlEncodedFormEntity(getParamsList(params),
-						charset);
+				formEntity = new UrlEncodedFormEntity(getParamsList(params), charset);
 			}
 		} catch (UnsupportedEncodingException e) {
 			throw new ApplicationException("不支持的编码集", e);
@@ -293,14 +261,10 @@ public class Httpclient4Util {
 		String responseStr = null;
 		try {
 			KeyStore keyStore = createKeyStore(keystoreUrl, keystorePassword);
-			KeyStore trustStore = createKeyStore(truststoreUrl,
-					keystorePassword);
-			SSLSocketFactory socketFactory = new SSLSocketFactory(keyStore,
-					keystorePassword, trustStore);
-			Scheme scheme = new Scheme(SSL_DEFAULT_SCHEME, socketFactory,
-					SSL_DEFAULT_PORT);
-			httpclient.getConnectionManager().getSchemeRegistry().register(
-					scheme);
+			KeyStore trustStore = createKeyStore(truststoreUrl, keystorePassword);
+			SSLSocketFactory socketFactory = new SSLSocketFactory(keyStore, keystorePassword, trustStore);
+			Scheme scheme = new Scheme(SSL_DEFAULT_SCHEME, socketFactory, SSL_DEFAULT_PORT);
+			httpclient.getConnectionManager().getSchemeRegistry().register(scheme);
 			hp = new HttpPost(url);
 			hp.setEntity(formEntity);
 			responseStr = httpclient.execute(hp, responseHandler);
@@ -325,26 +289,74 @@ public class Httpclient4Util {
 	}
 
 	/**
+	 * 获取HttpClient实例
+	 * 
+	 * @param charset
+	 *            参数编码集, 可空
+	 * @return DefaultHttpClient 对象
+	 */
+	private static HttpClient getHttpClient() {
+		return HttpClientHolder.getInstance().getHttpClient();
+	}
+
+	/**
 	 * 获取DefaultHttpClient实例
 	 * 
 	 * @param charset
 	 *            参数编码集, 可空
 	 * @return DefaultHttpClient 对象
 	 */
-	private static DefaultHttpClient getDefaultHttpClient(final String charset,
-			Map<String, String> params) {
+	private static DefaultHttpClient getDefaultHttpClient(final String charset, Map<String, String> params) {
+		boolean proxyHave = false;
+		HttpHost proxy = null;
+		CredentialsProvider credsProvider = null;
+		// 设置代理对象 ip/代理名称,端口
+		if (params != null && !StringUtils.isEmpty(params.get(PROXY_ADDR_KEY))) {
+			proxyHave = true;
+			if (StringUtils.isEmpty(params.get(PROXY_PORT_KEY))) {
+				proxy = new HttpHost(params.get(PROXY_ADDR_KEY), 80);
+			} else {
+				proxy = new HttpHost(params.get(PROXY_ADDR_KEY), Integer.parseInt(params.get(PROXY_PORT_KEY)));
+			}
+		}
+
+		if (params != null && !StringUtils.isEmpty(params.get(PROXY_USER_KEY))) {
+			// 实例化验证
+			credsProvider = new BasicCredentialsProvider();
+			// 设定验证内容
+			UsernamePasswordCredentials creds = new UsernamePasswordCredentials(params.get(PROXY_USER_KEY), params
+					.get(PROXY_PWD_KEY));
+			// 创建验证
+			credsProvider.setCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT), creds);
+		}
+		if (proxyHave) {
+			if (httpClientProxy == null) {
+				httpClientProxy = HttpClientHolder.getInstance().getNewHttpClient();
+			}
+			httpClientProxy.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+			httpClientProxy.setCredentialsProvider(credsProvider);
+			return httpClientProxy;
+		} else {
+			return HttpClientHolder.getInstance().getHttpClient();
+		}
+	}
+
+	/**
+	 * 获取DefaultHttpClient实例
+	 * 
+	 * @param charset
+	 *            参数编码集, 可空
+	 * @return DefaultHttpClient 对象
+	 */
+	private static DefaultHttpClient getOrignHttpClient(final String charset, Map<String, String> params) {
 		DefaultHttpClient httpclient = new DefaultHttpClient();
-		httpclient.getParams().setParameter(
-				CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+		httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 		// 模拟浏览器，解决一些服务器程序只允许浏览器访问的问题
 		httpclient.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
 				"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)");
-		httpclient.getParams().setParameter(
-				CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-		httpclient.getParams().setParameter(
-				CoreProtocolPNames.HTTP_CONTENT_CHARSET,
+		httpclient.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
+		httpclient.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET,
 				charset == null ? CHARSET_GBK : charset);
-		httpclient.setHttpRequestRetryHandler(requestRetryHandler);
 
 		// 设置代理对象 ip/代理名称,端口
 		if (params != null && !StringUtils.isEmpty(params.get(PROXY_ADDR_KEY))) {
@@ -352,24 +364,20 @@ public class Httpclient4Util {
 			if (StringUtils.isEmpty(params.get(PROXY_ADDR_KEY))) {
 				proxy = new HttpHost(params.get(PROXY_ADDR_KEY), 80);
 			} else {
-				proxy = new HttpHost(params.get(PROXY_ADDR_KEY), Integer
-						.parseInt(params.get(PROXY_PORT_KEY)));
+				proxy = new HttpHost(params.get(PROXY_ADDR_KEY), Integer.parseInt(params.get(PROXY_PORT_KEY)));
 			}
-			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
-					proxy);
+			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 		}
 
 		if (params != null && !StringUtils.isEmpty(params.get(PROXY_USER_KEY))) {
 			// 实例化验证
 			CredentialsProvider credsProvider = new BasicCredentialsProvider();
 			// 设定验证内容
-			UsernamePasswordCredentials creds = new UsernamePasswordCredentials(
-					params.get(PROXY_USER_KEY), params.get(PROXY_PWD_KEY));
+			UsernamePasswordCredentials creds = new UsernamePasswordCredentials(params.get(PROXY_USER_KEY), params
+					.get(PROXY_PWD_KEY));
 			// 创建验证
-			credsProvider.setCredentials(new AuthScope(AuthScope.ANY_HOST,
-					AuthScope.ANY_PORT), creds);
-			((DefaultHttpClient) httpclient)
-					.setCredentialsProvider(credsProvider);
+			credsProvider.setCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT), creds);
+			((DefaultHttpClient) httpclient).setCredentialsProvider(credsProvider);
 		}
 
 		return httpclient;
@@ -383,13 +391,12 @@ public class Httpclient4Util {
 	 * @param httpclient
 	 *            client对象
 	 */
-	private static void abortConnection(final HttpRequestBase hrb,
-			final HttpClient httpclient) {
+	private static void abortConnection(final HttpRequestBase hrb, final HttpClient httpclient) {
 		if (hrb != null) {
 			hrb.abort();
 		}
 		if (httpclient != null) {
-			httpclient.getConnectionManager().shutdown();
+			//httpclient.getConnectionManager().shutdown();
 		}
 	}
 
@@ -402,9 +409,8 @@ public class Httpclient4Util {
 	 *            keystore访问密钥
 	 * @return keystore 对象
 	 */
-	private static KeyStore createKeyStore(final URL url, final String password)
-			throws KeyStoreException, NoSuchAlgorithmException,
-			CertificateException, IOException {
+	private static KeyStore createKeyStore(final URL url, final String password) throws KeyStoreException,
+			NoSuchAlgorithmException, CertificateException, IOException {
 		if (url == null) {
 			throw new IllegalArgumentException("Keystore url may not be null");
 		}
@@ -429,8 +435,7 @@ public class Httpclient4Util {
 	 *            参数集, 键/值对
 	 * @return NameValuePair参数集
 	 */
-	private static List<NameValuePair> getParamsList(
-			Map<String, String> paramsMap) {
+	private static List<NameValuePair> getParamsList(Map<String, String> paramsMap) {
 		if (paramsMap == null || paramsMap.size() == 0) {
 			return null;
 		}
