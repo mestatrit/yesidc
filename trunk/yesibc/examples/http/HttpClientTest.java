@@ -61,6 +61,10 @@ import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
 import org.apache.http.util.EntityUtils;
 
+import com.yesibc.core.components.http.HttpClientHolder;
+import com.yesibc.core.components.http.Httpclient4Util;
+import com.yesibc.core.exception.ApplicationException;
+
 public class HttpClientTest {
 
 	/**
@@ -70,13 +74,11 @@ public class HttpClientTest {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static void httpClientPost() throws ClientProtocolException,
-			IOException {
+	public static void httpClientPost() throws ClientProtocolException, IOException {
 		DefaultHttpClient httpclient = new DefaultHttpClient();
 		// 代理的设置
 		HttpHost proxy = new HttpHost("10.60.8.20", 8080);
-		httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
-				proxy);
+		httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 		// 目标地址
 		HttpPost httppost = new HttpPost("http://www.java2000.net/login.jsp");
 		System.out.println("请求: " + httppost.getRequestLine());
@@ -92,12 +94,10 @@ public class HttpClientTest {
 		System.out.println("----------------------------------------");
 		System.out.println(response.getStatusLine());
 		if (entity != null) {
-			System.out.println("Response content length: "
-					+ entity.getContentLength());
+			System.out.println("Response content length: " + entity.getContentLength());
 		}
 		// 显示结果
-		BufferedReader reader = new BufferedReader(new InputStreamReader(entity
-				.getContent(), "UTF-8"));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent(), "UTF-8"));
 		String line = null;
 		while ((line = reader.readLine()) != null) {
 			System.out.println(line);
@@ -121,8 +121,7 @@ public class HttpClientTest {
 		// 设置代理对象 ip/代理名称,端口
 		HttpHost proxy = new HttpHost("192.168.1.28", 5608);
 		// 对HttpClient对象设置代理
-		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
-				proxy);
+		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 		HttpGet httpGet = new HttpGet("/");
 		// 这里也可以直接使用httpGet的绝对地址，当然如果不是具体地址不要忘记/结尾
 		// HttpGet httpGet = new HttpGet("http://www.shanhe114.com/");
@@ -136,11 +135,9 @@ public class HttpClientTest {
 			// 显示内容
 			if (entity != null) {
 				// 显示结果
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(entity.getContent(), "UTF-8"));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent(), "UTF-8"));
 				String line = null;
-				StringBuffer strBuf = new StringBuffer((int) entity
-						.getContentLength());
+				StringBuffer strBuf = new StringBuffer((int) entity.getContentLength());
 				while ((line = reader.readLine()) != null) {
 					strBuf.append(line);
 				}
@@ -160,8 +157,7 @@ public class HttpClientTest {
 	 * @throws IOException
 	 * @throws HttpException
 	 */
-	public static void httpGet2() throws ClientProtocolException, IOException,
-			HttpException {
+	public static void httpGet2() throws ClientProtocolException, IOException, HttpException {
 		HttpParams params = new BasicHttpParams();
 		// HTTP 协议的版本,1.1/1.0/0.9
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
@@ -204,20 +200,16 @@ public class HttpClientTest {
 
 			for (int i = 0; i < targets.length; i++) {
 				if (!conn.isOpen()) {
-					Socket socket = new Socket(host.getHostName(), host
-							.getPort());
+					Socket socket = new Socket(host.getHostName(), host.getPort());
 					conn.bind(socket, params);
 				}
-				BasicHttpRequest request = new BasicHttpRequest("GET",
-						targets[i]);
-				System.out.println(">> Request URI: "
-						+ request.getRequestLine().getUri());
+				BasicHttpRequest request = new BasicHttpRequest("GET", targets[i]);
+				System.out.println(">> Request URI: " + request.getRequestLine().getUri());
 
 				context.setAttribute(ExecutionContext.HTTP_REQUEST, request);
 				request.setParams(params);
 				httpexecutor.preProcess(request, httpproc, context);
-				HttpResponse response = httpexecutor.execute(request, conn,
-						context);
+				HttpResponse response = httpexecutor.execute(request, conn, context);
 				response.setParams(params);
 				httpexecutor.postProcess(response, httpproc, context);
 
@@ -242,8 +234,7 @@ public class HttpClientTest {
 		}
 	}
 
-	public static void httpGet3() throws ClientProtocolException, IOException,
-			HttpException {
+	public static void httpGet3() throws ClientProtocolException, IOException, HttpException {
 		// 初始化，此处构造函数就与3.1中不同
 		HttpClient httpclient = new DefaultHttpClient();
 
@@ -252,17 +243,14 @@ public class HttpClientTest {
 		HttpGet httpget = new HttpGet("/");
 
 		// 查看默认request头部信息
-		System.out.println("Accept-Charset:"
-				+ httpget.getFirstHeader("Accept-Charset"));
+		System.out.println("Accept-Charset:" + httpget.getFirstHeader("Accept-Charset"));
 		// 以下这条如果不加会发现无论你设置Accept-Charset为gbk还是utf-8，他都会默认返回gb2312（本例针对google.cn来说）
-		httpget.setHeader("User-Agent",
-				"Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.2)");
+		httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.2)");
 		// 用逗号分隔显示可以同时接受多种编码
 		httpget.setHeader("Accept-Language", "zh-cn,zh;q=0.5");
 		httpget.setHeader("Accept-Charset", "GB2312,utf-8;q=0.7,*;q=0.7");
 		// 验证头部信息设置生效
-		System.out.println("Accept-Charset:"
-				+ httpget.getFirstHeader("Accept-Charset").getValue());
+		System.out.println("Accept-Charset:" + httpget.getFirstHeader("Accept-Charset").getValue());
 
 		// Execute HTTP request
 		System.out.println("executing request " + httpget.getURI());
@@ -279,10 +267,8 @@ public class HttpClientTest {
 
 		// 判断页面返回状态判断是否进行转向抓取新链接
 		int statusCode = response.getStatusLine().getStatusCode();
-		if ((statusCode == HttpStatus.SC_MOVED_PERMANENTLY)
-				|| (statusCode == HttpStatus.SC_MOVED_TEMPORARILY)
-				|| (statusCode == HttpStatus.SC_SEE_OTHER)
-				|| (statusCode == HttpStatus.SC_TEMPORARY_REDIRECT)) {
+		if ((statusCode == HttpStatus.SC_MOVED_PERMANENTLY) || (statusCode == HttpStatus.SC_MOVED_TEMPORARILY)
+				|| (statusCode == HttpStatus.SC_SEE_OTHER) || (statusCode == HttpStatus.SC_TEMPORARY_REDIRECT)) {
 			// 此处重定向处理 此处还未验证
 			String newUri = response.getLastHeader("Location").getValue();
 			httpclient = new DefaultHttpClient();
@@ -297,8 +283,7 @@ public class HttpClientTest {
 		Header headers[] = response.getAllHeaders();
 		int ii = 0;
 		while (ii < headers.length) {
-			System.out.println(headers[ii].getName() + ": "
-					+ headers[ii].getValue());
+			System.out.println(headers[ii].getName() + ": " + headers[ii].getValue());
 			++ii;
 		}
 
@@ -329,8 +314,7 @@ public class HttpClientTest {
 			}
 			System.out.println("Last get: " + charSet);
 			// 至此，我们可以将原byte数组按照正常编码专成字符串输出（如果找到了编码的话）
-			System.out.println("Encoding string is: "
-					+ new String(bytes, charSet));
+			System.out.println("Encoding string is: " + new String(bytes, charSet));
 		}
 
 		httpclient.getConnectionManager().shutdown();
@@ -341,8 +325,7 @@ public class HttpClientTest {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static void getHttpByProxyCredentials()
-			throws ClientProtocolException, IOException {
+	public static void getHttpByProxyCredentials() throws ClientProtocolException, IOException {
 		// 实例化一个HttpClient
 		HttpClient httpClient = new DefaultHttpClient();
 		// 设定目标站点
@@ -352,13 +335,10 @@ public class HttpClientTest {
 		// 实例化验证
 		CredentialsProvider credsProvider = new BasicCredentialsProvider();
 		// 设定验证内容
-		UsernamePasswordCredentials creds = new UsernamePasswordCredentials(
-				"fttj", "ft07");
+		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("fttj", "ft07");
 		// 创建验证
-		credsProvider.setCredentials(new AuthScope(AuthScope.ANY_HOST,
-				AuthScope.ANY_PORT), creds);
-		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
-				proxy);
+		credsProvider.setCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT), creds);
+		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 		((DefaultHttpClient) httpClient).setCredentialsProvider(credsProvider);
 
 		// 目标地址
@@ -388,8 +368,7 @@ public class HttpClientTest {
 	 * 
 	 * @author JAVA世纪网(java2000.net, laozizhu.com)
 	 */
-	public static void httpClientMultipartFormPost()
-			throws ClientProtocolException, IOException, HttpException {
+	public static void httpClientMultipartFormPost() throws ClientProtocolException, IOException, HttpException {
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost = new HttpPost("http://localhost");
 		// 一个本地的文件
@@ -418,8 +397,36 @@ public class HttpClientTest {
 
 	protected final static Log log = LogFactory.getLog(HttpClientTest.class);
 
-	public static void clientMultiThreadedExecution()
-			throws ClientProtocolException, IOException, HttpException {
+	public static void clientMultiThreadedExecution() throws ClientProtocolException, IOException, HttpException {
+
+		//HttpClient httpClient = HttpClientHolder.getInstance().getHttpClient();
+		// HttpClient httpClient = getHttpClientOrign();
+
+		Map<String, String> map = new HashMap<String, String>();
+
+		String[] urisToGet1 = {
+				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=1000,4800,4900&industrytype=01&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
+				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=5000,5100,1800&industrytype=01&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
+				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=5200,1500,2000&industrytype=01&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
+				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=1600,1700,5300&industrytype=01&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14" };
+		GetThread[] threads = new GetThread[urisToGet1.length];
+		try {
+			for (int i = 0; i < threads.length; i++) {
+				Httpclient4Util.get(urisToGet1[i]);
+				// HttpGet httpget = new HttpGet(urisToGet1[i]);
+				// threads[i] = new GetThread(httpClient, httpget, i + 3, map);
+			}
+		} catch (ApplicationException e) {
+			e.printStackTrace();
+		}
+
+		// start the threads
+		for (int j = 0; j < threads.length; j++) {
+			threads[j].start();
+		}
+	}
+
+	private static HttpClient getHttpClientOrign() {
 		// Create and initialize HTTP parameters
 		HttpParams params = new BasicHttpParams();
 
@@ -433,79 +440,21 @@ public class HttpClientTest {
 		ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute);
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		// Proxy
-		//HttpHost proxy = new HttpHost("10.164.144.41", 3128);
-		//params.setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+		// HttpHost proxy = new HttpHost("10.164.144.41", 3128);
+		// params.setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 
 		// Create and initialize scheme registry
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
-		schemeRegistry.register(new Scheme("http", PlainSocketFactory
-				.getSocketFactory(), 80));
-		schemeRegistry.register(new Scheme("https", SSLSocketFactory
-				.getSocketFactory(), 443));
+		schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+		schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
 
 		// Create an HttpClient with the ThreadSafeClientConnManager.
 		// This connection manager must be used if more than one thread will
 		// be using the HttpClient.
-		ClientConnectionManager cm = new ThreadSafeClientConnManager(params,
-				schemeRegistry);
+		ClientConnectionManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
 
 		HttpClient httpClient = new DefaultHttpClient(cm, params);
-
-		Map<String, String> map = new HashMap<String, String>();
-
-		String[] urisToGet1 = {
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=1000,4800,4900&industrytype=01&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=5000,5100,1800&industrytype=01&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=5200,1500,2000&industrytype=01&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=1600,1700,5300&industrytype=01&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=1900,5600,5700&industrytype=01&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=5800&industrytype=01&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=2400,0100,2500&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=2600,2700,2800&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=2900,0200,3000&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=3100,3200,0400&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=3300,2200,3400&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=3500,3600,0500&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=5400,3700,3800&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=3900,4000,0800&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=4100,5500,1300&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=4200,4300,0300&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=4400,4500,0900&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=2100,4600,4700&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=0600,0700,2300&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=1400,1100,1200&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=1000,4800,4900&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=5000,5100,1800&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=5200,1500,2000&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=1600,1700,5300&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=1900,5600,5700&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=5800&industrytype=37&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=2400,0100,2500&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=2600,2700,2800&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=2900,0200,3000&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=3100,3200,0400&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=3300,2200,3400&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=3500,3600,0500&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=5400,3700,3800&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=3900,4000,0800&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=4100,5500,1300&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=4200,4300,0300&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=4400,4500,0900&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=2100,4600,4700&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=0600,0700,2300&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14",
-				"http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=0000&district=0000&funtype=1400,1100,1200&industrytype=38&issuedate=9&providesalary=99&keywordtype=2&curr_page=1&lang=c&stype=2&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=01&lonlat=0,0&radius=-1&ord_field=0&list_type=1&fromType=14"
-
-		};
-		GetThread[] threads = new GetThread[urisToGet1.length];
-		for (int i = 0; i < threads.length; i++) {
-			HttpGet httpget = new HttpGet(urisToGet1[i]);
-			threads[i] = new GetThread(httpClient, httpget, i + 3, map);
-		}
-
-		// start the threads
-		for (int j = 0; j < threads.length; j++) {
-			threads[j].start();
-		}
+		return httpClient;
 	}
 
 	/**
@@ -519,8 +468,7 @@ public class HttpClientTest {
 		private final int id;
 		private Map<String, String> map;
 
-		public GetThread(HttpClient httpClient, HttpGet httpget, int id,
-				Map<String, String> map) {
+		public GetThread(HttpClient httpClient, HttpGet httpget, int id, Map<String, String> map) {
 			this.httpClient = httpClient;
 			this.context = new BasicHttpContext();
 			this.httpget = httpget;
@@ -541,8 +489,7 @@ public class HttpClientTest {
 				// execute the method
 				HttpResponse response = httpClient.execute(httpget, context);
 
-				log.info(id + " - times:"
-						+ (System.currentTimeMillis() - start));
+				log.info(id + " - times:" + (System.currentTimeMillis() - start));
 				map.put(String.valueOf(id), String.valueOf(id));
 				// get the response body as an array of bytes
 				HttpEntity entity = response.getEntity();
@@ -550,8 +497,7 @@ public class HttpClientTest {
 					byte[] bytes = EntityUtils.toByteArray(entity);
 					// log.info(id + " - " + bytes.length + " bytes read");
 				}
-				log.info(id + " - times1:"
-						+ (System.currentTimeMillis() - start));
+				log.info(id + " - times1:" + (System.currentTimeMillis() - start));
 
 			} catch (Exception e) {
 				httpget.abort();
