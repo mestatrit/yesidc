@@ -25,6 +25,7 @@ public class ExecuteParser implements Runnable {
 		try {
 			parser.parse(processContext);
 		} catch (Exception e) {
+			e.printStackTrace();
 			error = true;
 			ErrorHandler.errorLogAndMail(processContext.getLogTitle() + "#Exception#", e);
 		} finally {

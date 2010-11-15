@@ -34,8 +34,9 @@ public class ErrorHandler {
 			msg = e.getMessage();
 		}
 		String html = null;
-		if (processContext.getBrowser().getDocument() != null && processContext.getBrowser().getDocument().getBody() != null) {
-			html = processContext.getBrowser().getDocument().getBody().getOuterHTML();
+		if (BrowserSupport.getBrowser(processContext).getDocument() != null
+				&& BrowserSupport.getBrowser(processContext).getDocument().getBody() != null) {
+			html = BrowserSupport.getBrowser(processContext).getDocument().getBody().getOuterHTML();
 		} else {
 			html = "Can't get HTML contents.";
 		}
@@ -45,9 +46,10 @@ public class ErrorHandler {
 			processContext.setErrorMsg(msg + "\n" + str);
 		}
 
-		ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " Parsing [" + processContext.getBrowser().getURL() + "] is error!"
-				+ msg + "\n HTML contents Start===========\n:" + html
-				+ "\n HTML contents End===========\n ExceptionTrace:" + str);
+		ErrorHandler.errorLogAndMail(processContext.getLogTitle() + " Parsing ["
+				+ BrowserSupport.getBrowser(processContext).getURL() + "] is error!" + msg
+				+ "\n HTML contents Start===========\n:" + html + "\n HTML contents End===========\n ExceptionTrace:"
+				+ str);
 	}
 
 	public static void error(String errMsg) {

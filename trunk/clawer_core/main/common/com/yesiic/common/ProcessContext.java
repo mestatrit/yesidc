@@ -1,12 +1,11 @@
 package com.yesiic.common;
 
-import com.webrenderer.swing.IBrowserCanvas;
 import com.yesiic.webswith.model.WebPages;
 
 public class ProcessContext {
 
 	private String logTitle;
-	private IBrowserCanvas browser;
+	private String html;
 	private boolean error = false;
 	private String errorMsg;
 	private int index = 0;
@@ -20,13 +19,6 @@ public class ProcessContext {
 		this.logTitle = logTitle;
 	}
 
-	public IBrowserCanvas getBrowser() {
-		return browser;
-	}
-
-	public void setBrowser(IBrowserCanvas browser) {
-		this.browser = browser;
-	}
 	public boolean isError() {
 		return error;
 	}
@@ -57,6 +49,14 @@ public class ProcessContext {
 
 	public void setWp(WebPages wp) {
 		this.wp = wp;
+	}
+
+	public String getHtml() {
+		return html;
+	}
+
+	public void setHtml(String html) {
+		this.html = html;
 	}
 
 }

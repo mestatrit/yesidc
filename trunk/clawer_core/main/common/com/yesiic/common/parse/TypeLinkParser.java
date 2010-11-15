@@ -10,7 +10,7 @@ public abstract class TypeLinkParser extends AbstractParser implements Parser {
 
 	protected ProcessContext processContext;
 
-	protected final static String PAGE_TAG = "&page=";
+	protected final static String PAGE_TAG = "page=";
 	private static Log log = LogFactory.getLog(TypeLinkParser.class);
 
 	public void parse(ProcessContext processContext) throws ApplicationException {
@@ -36,7 +36,7 @@ public abstract class TypeLinkParser extends AbstractParser implements Parser {
 		if (url.indexOf(PAGE_TAG) > -1) {
 			url = url.substring(0, url.indexOf(PAGE_TAG) + PAGE_TAG.length()) + page;
 		} else {
-			url = url + PAGE_TAG + page;
+			url = url + "&" + PAGE_TAG + page;
 		}
 		processContext.getWp().setUrl(url);
 	}

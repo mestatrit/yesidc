@@ -28,7 +28,6 @@ public class WebrendererContext {
 
 	public synchronized static void reFreshContext4Waiting(int index, ProcessContext processContext) {
 		reFreshContext(index, processContext.getLogTitle());
-		processContext.setBrowser(WEBRENDER_ENTITIES.get(index).getBrowser());
 	}
 
 	public synchronized static void reFreshContext(int index, String title) {

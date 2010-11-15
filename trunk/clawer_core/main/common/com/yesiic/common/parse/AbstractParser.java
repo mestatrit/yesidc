@@ -9,7 +9,6 @@ import org.apache.commons.logging.LogFactory;
 
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.spring.SpringContext;
-import com.yesiic.common.BrowserSupport;
 import com.yesiic.common.ClawerConstants;
 import com.yesiic.common.ProcessContext;
 import com.yesiic.dao.WebPagesDao;
@@ -20,11 +19,10 @@ public abstract class AbstractParser {
 	protected Map<String, String> finish = new HashMap<String, String>();
 	private static Log log = LogFactory.getLog(AbstractParser.class);
 
+	protected ParseTool parseTool;
+
 	public void prepareParse(ProcessContext processContext) throws ApplicationException {
-		BrowserSupport.prepareLoading(processContext);
-		BrowserSupport.onDocumnetComplete(processContext.getBrowser(), finish);
-		processContext.getBrowser().loadURL(processContext.getWp().getUrl());
-		BrowserSupport.waitingLoading(processContext, finish);
+		parseTool.prepareParse(processContext, finish);
 	}
 
 	public void afterParse(ProcessContext processContext) throws ApplicationException {
@@ -36,5 +34,9 @@ public abstract class AbstractParser {
 		}
 		finish.clear();
 		log.info(processContext.getLogTitle() + "After parsing and update 2 DB OK!");
+	}
+
+	public void setParseTool(ParseTool parseTool) {
+		this.parseTool = parseTool;
 	}
 }
