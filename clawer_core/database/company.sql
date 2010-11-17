@@ -11,9 +11,9 @@ tc_contact_email t4,tc_email t5
 where t.id=t1.company_id
 and t4.contact_header_id = t1.id
 and t4.com_email_id = t5.id
---and t.company_name like '%³É¶¼ÊĞÅ·ÎÄÖÆÆá»¯¹¤ÓĞÏŞ¹«Ë¾%'
+--and t.company_name like '%æˆéƒ½å¸‚æ¬§æ–‡åˆ¶æ¼†åŒ–å·¥æœ‰é™å…¬å¸%'
 --and t5.email = 'flyflower007@sina.com.cn'
-and t1.address1='ÉîÛÚÊĞÄÏÉ½ÇøÉîÄÏ´óµÀ9028ºÅ-3ÒæÌï¼ÙÈÕ¹ã³¡3²ã'
+and t1.address1='æ·±åœ³å¸‚å—å±±åŒºæ·±å—å¤§é“9028å·-3ç›Šç”°å‡æ—¥å¹¿åœº3å±‚'
 order by t.update_date desc
 
 select * from t_company t where 1=1
@@ -23,7 +23,7 @@ order by t.id
 
 select * from tc_contact_header tch where tch.company_id = 3438
 
-select * from t_code tc where tc.cname like '%Ê¯Ê¨%' or tc.id = 11156
+select * from t_code tc where tc.cname like '%çŸ³ç‹®%' or tc.id = 11156
 
 select * from user_tables
 select * from user_sequences 
