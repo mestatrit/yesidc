@@ -9,7 +9,7 @@ import com.yesiic.base.model.Code;
 public class ClawerConstants {
 
 	// public final static boolean TEST = true;
-	public static boolean TEST_DAO = true;
+	public static boolean TEST_DAO = false;
 
 	public static boolean TEST_WEB = true;
 
