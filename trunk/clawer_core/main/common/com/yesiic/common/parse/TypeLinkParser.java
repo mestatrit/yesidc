@@ -10,7 +10,6 @@ public abstract class TypeLinkParser extends AbstractParser implements Parser {
 
 	protected ProcessContext processContext;
 
-	protected final static String PAGE_TAG = "page=";
 	private static Log log = LogFactory.getLog(TypeLinkParser.class);
 
 	public void parse(ProcessContext processContext) throws ApplicationException {
@@ -25,20 +24,46 @@ public abstract class TypeLinkParser extends AbstractParser implements Parser {
 
 		if (page > 1) {
 			log.info(processContext.getLogTitle() + " paging start - " + page);
-			getNewContext(processContext, page);
+			getNewContext(processContext, page, getPageTag());
 			parse(processContext);
 			log.info(processContext.getLogTitle() + " paging end - " + page);
 		}
 	}
 
-	private void getNewContext(ProcessContext processContext, int page) {
+	protected abstract String getPageTag();
+
+	private void getNewContext(ProcessContext processContext, int page, String tag) {
 		String url = processContext.getWp().getUrl();
-		if (url.indexOf(PAGE_TAG) > -1) {
-			url = url.substring(0, url.indexOf(PAGE_TAG) + PAGE_TAG.length()) + page;
+		if (url.indexOf(tag) > -1) {
+			int temp = getPageFromUrl(url, tag);
+			url = url.replace(String.valueOf(temp), String.valueOf(page));
 		} else {
-			url = url + "&" + PAGE_TAG + page;
+			if (url.indexOf("?") > -1) {
+				url = url + "&" + tag + page;
+			} else {
+				url = url + "?" + tag + page;
+			}
 		}
 		processContext.getWp().setUrl(url);
+	}
+
+	public static int getPageFromUrl(String line, String tag) {
+		int page = 0;
+		String pageStr = "";
+		if (line.indexOf(tag) > -1) {
+			int temp = line.indexOf(tag) + tag.length();
+			String post = line.substring(temp);
+			for (char c : post.toCharArray()) {
+				if ('0' < c && c < '9') {
+					pageStr = pageStr + c;
+				} else {
+					break;
+				}
+			}
+			page = Integer.parseInt(pageStr);
+
+		}
+		return page;
 	}
 
 	protected abstract int parsing(ProcessContext processContext) throws ApplicationException;
