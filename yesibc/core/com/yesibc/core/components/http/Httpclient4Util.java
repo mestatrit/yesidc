@@ -145,7 +145,7 @@ public class Httpclient4Util {
 		/**
 		 * 不加这一句时，百姓网会乱来
 		 */
-		hg.setHeader("User-Agent", "msie");
+		hg.setHeader("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)");
 		
 		// 发送请求，得到响应
 		String responseStr = null;
