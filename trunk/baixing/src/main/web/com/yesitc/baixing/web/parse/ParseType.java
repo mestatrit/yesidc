@@ -13,7 +13,6 @@ import com.yesibc.core.CoreConstants;
 import com.yesibc.core.components.http.HtmlParserUtils;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.spring.SpringContext;
-import com.yesibc.core.utils.StringUtils;
 import com.yesiic.common.ClawerConstants;
 import com.yesiic.common.ProcessContext;
 import com.yesiic.common.parse.HtmlParserSupport;
@@ -30,6 +29,7 @@ public class ParseType extends TypeLinkParser {
 	private final static String PAGER_ID = "pager";
 	private final static String PAGER_ID_NAME = "下一页";
 	private final static String AREA_NAME = "areaName";
+	protected final static String PAGE_TAG = "page=";
 	private static Log log = LogFactory.getLog(ParseType.class);
 
 	public int parsing(ProcessContext processContext) throws ApplicationException {
@@ -72,7 +72,7 @@ public class ParseType extends TypeLinkParser {
 				System.out.println(link.toPlainTextString());
 			}
 			// start = BxUtils.perf("Get ok htmls", start);
-			if (!ClawerConstants.TEST_DAO) {
+			if (!ClawerConstants.TEST_DAO && !wps.isEmpty()) {
 				DBService dBService = (DBService) SpringContext.getBean("dBService");
 				dBService.saveUrls(wps, WebPages.PAGE_PAGES_21, processContext.getWp().getRequestId());
 			}
@@ -92,21 +92,23 @@ public class ParseType extends TypeLinkParser {
 		Node[] nodes = HtmlParserSupport.getLinkNodes(html, CoreConstants.CHARSET_UTF8);
 		LinkTag link = null;
 		for (Node node : nodes) {
-			link = (LinkTag) node;
-			if (link.toHtml().indexOf(PAGER_ID_NAME) > 0) {
+			if (((LinkTag) node).toHtml().indexOf(PAGER_ID_NAME) > 0) {
+				link = (LinkTag) node;
 				break;
 			}
 		}
-		String line = link.getLink();
-		int page = 0;
-		if (line.indexOf(PAGE_TAG) > -1) {
-			line = line.substring(line.indexOf(PAGE_TAG) + PAGE_TAG.length());
-			if (StringUtils.isNumberString(line)) {
-				page = Integer.parseInt(line);
-			}
-		}
 
-		return page;
+		if (link != null) {
+			int page = getPageFromUrl(link.getLink(), PAGE_TAG);
+			return page;
+		} else {
+			return 0;
+		}
+	}
+
+	@Override
+	protected String getPageTag() {
+		return PAGE_TAG;
 	}
 
 	private int getEndIndex(String html, ProcessContext processContext) throws ApplicationException {
@@ -122,21 +124,26 @@ public class ParseType extends TypeLinkParser {
 		if (url.indexOf(AREA_NAME) > -1) {
 			url = url.substring(url.indexOf(temp) + temp.length(), url.indexOf(AREA_NAME) - 2);
 		} else {
-			url = url.substring(url.indexOf(temp) + temp.length(), url.length() - 1);
+			String post = url.substring(url.indexOf(temp) + temp.length());
+			int index = post.indexOf("/");
+			url = url.substring(url.indexOf(temp) + temp.length(), url.indexOf(temp) + temp.length() + index);
 		}
 		WebElements we = InitBasicData.getTypeByCode(url);
 		if (we == null) {
 			throw new ApplicationException(processContext.getLogTitle() + " getTypeNameFromUrl error! url:" + url);
 		}
-		return we.getName();
+		return we.getMemo();
 	}
 
 	private String getAreaNameFromUrl(String url) throws ApplicationException {
 		if (url.indexOf(AREA_NAME) > -1) {
-			if (url.indexOf("&page") > -1) {
-				url = url.substring(url.indexOf(AREA_NAME) + AREA_NAME.length() + 1, url.indexOf("&page"));
+			int temp = url.indexOf(AREA_NAME) + AREA_NAME.length() + 1;
+			String post = url.substring(temp);
+			int index = post.indexOf("&");
+			if (index < 0) {
+				url = url.substring(temp);
 			} else {
-				url = url.substring(url.indexOf(AREA_NAME) + AREA_NAME.length() + 1);
+				url = url.substring(temp, temp + index);
 			}
 		} else {
 			url = url.substring("http://".length(), url.indexOf("."));
@@ -149,6 +156,8 @@ public class ParseType extends TypeLinkParser {
 	}
 
 	public static void main(String[] args) {
+		System.out.println(getPageFromUrl("http://shanghai.baixing.com/baoan/?areaName=xuhui&page=55", PAGE_TAG));
+		System.out.println(getPageFromUrl("http://shanghai.baixing.com/baoan/?areaName=xuhui&page=55&dasdl", PAGE_TAG));
 		ParseType pt = (ParseType) SpringContext.getBean("parseType");
 		String url = "http://shanghai.baixing.com/baoan/?areaName=xuhui";
 		try {
