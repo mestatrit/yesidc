@@ -23,8 +23,9 @@ public class TestParseProcess {
 		wp.setRequestId("22");
 		wp.setStatus(WebPages.STATUS_KO);
 		wp.setUpdateDate(now);
-		wp.setUrl("http://shanghai.baixing.com/diannao/?areaName=changning&page=2");
-
+		wp.setUrl("http://shanghai.baixing.com/diannao/?areaName=changning&发布人=个人&page=2");
+		wp.setUrl("http://baishan.baixing.com/baoan/?page=2");
+		
 		int thread = 1;
 		ProcessContext processContext = new ProcessContext();
 		processContext.setIndex(thread);
