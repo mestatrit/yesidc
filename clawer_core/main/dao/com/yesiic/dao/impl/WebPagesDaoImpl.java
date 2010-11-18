@@ -1,5 +1,7 @@
 package com.yesiic.dao.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,7 +16,6 @@ import com.yesiic.dao.WebPagesDao;
 import com.yesiic.webswith.model.WebPages;
 
 public class WebPagesDaoImpl extends HibernateEntityDao<WebPages> implements WebPagesDao {
-
 
 	@SuppressWarnings("unchecked")
 	public List<WebPages> getWebPagesByType(String type, String status, int fetchSize) throws ApplicationException {
@@ -47,6 +48,22 @@ public class WebPagesDaoImpl extends HibernateEntityDao<WebPages> implements Web
 			}
 		}
 
+	}
+
+	public void saveUrls(List<String> urls, String type, String requestId) {
+		List<WebPages> wps = new ArrayList<WebPages>();
+		Date now = new Date();
+		for (String url : urls) {
+			WebPages wp = new WebPages();
+			wp.setCreateDate(now);
+			wp.setPageType(type);
+			wp.setRequestId(requestId);
+			wp.setStatus(WebPages.STATUS_KO);
+			wp.setUpdateDate(now);
+			wp.setUrl(url);
+			wps.add(wp);
+		}
+		saveByBatch(wps);
 	}
 
 }

@@ -1,15 +1,21 @@
 package com.yesiic.common;
 
+import java.util.List;
+
 import com.yesiic.webswith.model.WebPages;
 
 public class ProcessContext {
 
 	private String logTitle;
 	private String html;
-	private boolean error = false;
 	private String errorMsg;
-	private int index = 0;
+	private String requestId;
 	private WebPages wp;
+	private List<String> urls;
+	private String pageType;
+	private int total = 0;
+	private int index = 0;
+	private boolean error = false;
 
 	public String getLogTitle() {
 		return logTitle;
@@ -57,6 +63,38 @@ public class ProcessContext {
 
 	public void setHtml(String html) {
 		this.html = html;
+	}
+
+	public String getPageType() {
+		return pageType;
+	}
+
+	public void setPageType(String pageType) {
+		this.pageType = pageType;
+	}
+
+	public List<String> getUrls() {
+		return urls;
+	}
+
+	public void setUrls(List<String> urls) {
+		this.urls = urls;
+	}
+
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
+
+	public String getRequestId() {
+		return requestId;
+	}
+
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
 	}
 
 }
