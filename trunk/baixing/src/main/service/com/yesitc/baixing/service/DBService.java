@@ -1,7 +1,5 @@
 package com.yesitc.baixing.service;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,29 +7,12 @@ import java.util.Map;
 import com.yesibc.core.dao.EntityDao;
 import com.yesiic.dao.WebPagesDao;
 import com.yesiic.webswith.model.WebElements;
-import com.yesiic.webswith.model.WebPages;
 
 public class DBService {
 
 	EntityDao<WebElements> dao;
 	WebPagesDao webPagesDao;
 	
-	public void saveUrls(List<String> urls,String type,String requestId) {
-		List<WebPages> wps = new ArrayList<WebPages>();
-		Date now = new Date();
-		for(String url:urls){
-			WebPages wp = new WebPages();
-			wp.setCreateDate(now);
-			wp.setPageType(type);
-			wp.setRequestId(requestId);
-			wp.setStatus(WebPages.STATUS_KO);
-			wp.setUpdateDate(now);
-			wp.setUrl(url);
-			wps.add(wp);
-		}
-		webPagesDao.saveByBatch(wps);
-	}
-
 	public Map<String, Map<String, WebElements>> initAllBase() {
 		List<WebElements> wes = dao.findByNameValue(WebElements.class, "codeLevel", new Long(1));
 		if (wes == null || wes.isEmpty()) {
@@ -61,11 +42,12 @@ public class DBService {
 	private void iterateSubs(Map<String, WebElements> subs, WebElements sub) {
 		if (sub.getChildren() == null || sub.getChildren().isEmpty()) {
 			subs.put(sub.getCode(), sub);
-			System.out.println("sub.code=" + sub.getCode());
+			//System.out.println("sub.code=" + sub.getCode());
 		} else {
 			for (WebElements sub1 : sub.getChildren()) {
 				iterateSubs(subs, sub1);
 			}
+			subs.put(sub.getCode(), sub);
 		}
 	}
 

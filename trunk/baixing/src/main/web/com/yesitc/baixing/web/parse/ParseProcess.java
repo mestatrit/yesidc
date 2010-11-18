@@ -1,19 +1,18 @@
 package com.yesitc.baixing.web.parse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.yesibc.core.spring.SpringContext;
 import com.yesibc.core.utils.ThreadPool;
 import com.yesiic.common.parse.Parser;
 import com.yesiic.web.AbstractParserProcess;
 import com.yesiic.webswith.model.WebElements;
 import com.yesiic.webswith.model.WebPages;
 import com.yesitc.baixing.service.BxUtils;
-import com.yesitc.baixing.service.DBService;
 import com.yesitc.baixing.web.BxUrlsContext;
 import com.yesitc.baixing.web.InitBasicData;
 
@@ -61,11 +60,12 @@ public class ParseProcess extends AbstractParserProcess {
 	}
 
 	@Override
-	protected void initURLs() {
+	protected List<String> initURLs() {
 		start = System.currentTimeMillis();
 		Map<String, WebElements> types = InitBasicData.getTypes();
 		String temp = null;
 		Map<String, WebElements> map = null;
+		List<String> urls = new ArrayList<String>();
 		for (Map.Entry<String, WebElements> type : types.entrySet()) {
 			temp = type.getValue().getCode();
 			map = InitBasicData.getAreaBj();
@@ -87,11 +87,8 @@ public class ParseProcess extends AbstractParserProcess {
 			log.info("init urls:others-" + map.size());
 		}
 
-		if (TO_DB_INIT) {
-			DBService dBService = (DBService) SpringContext.getBean("dBService");
-			dBService.saveUrls(urls, WebPages.PAGE_TYPES_11, requestId);
-		}
 		log.info("InitURLs END!Time is [" + (System.currentTimeMillis() - start) + "]ms.");
+		return urls;
 	}
 
 	public void setParseType(Parser parseType) {

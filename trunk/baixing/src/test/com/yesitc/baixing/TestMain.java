@@ -3,6 +3,7 @@ package com.yesitc.baixing;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.yesibc.core.spring.SpringContext;
 import com.yesitc.baixing.web.parse.ParseProcess;
 
 public class TestMain {
@@ -13,7 +14,7 @@ public class TestMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		ParseProcess parseProcess = new ParseProcess();
+		ParseProcess parseProcess = (ParseProcess)SpringContext.getBean("parseProcess");
 		try {
 			parseProcess.getBaseInfo(2, "981050", 0, "981050");
 			parseProcess.main();

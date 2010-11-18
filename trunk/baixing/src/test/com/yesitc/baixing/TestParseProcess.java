@@ -18,13 +18,14 @@ public class TestParseProcess {
 	public static void main(String[] args) {
 		Date now = new Date();
 		WebPages wp = new WebPages();
+		wp.setId(new Long(50328));
 		wp.setCreateDate(now);
 		wp.setPageType("11");
 		wp.setRequestId("22");
 		wp.setStatus(WebPages.STATUS_KO);
 		wp.setUpdateDate(now);
-		wp.setUrl("http://shanghai.baixing.com/diannao/?areaName=changning&发布人=个人&page=2");
-		wp.setUrl("http://baishan.baixing.com/baoan/?page=2");
+		wp.setUrl("http://shanghai.baixing.com/diannao/?areaName=changning");
+		//wp.setUrl("http://baishan.baixing.com/baoan/?page=2");
 		
 		int thread = 1;
 		ProcessContext processContext = new ProcessContext();
