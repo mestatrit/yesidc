@@ -16,6 +16,7 @@ import com.yesiic.common.ProcessContext;
 import com.yesiic.common.parse.ExecuteParser;
 import com.yesiic.common.parse.ExecutorSupport;
 import com.yesiic.common.parse.Parser;
+import com.yesiic.dao.WebPagesDao;
 import com.yesiic.webswith.model.WebPages;
 
 public abstract class AbstractParserProcess {
@@ -30,7 +31,6 @@ public abstract class AbstractParserProcess {
 	private final static String currentOfToI = "]#All-Cur[";// 总任务/当前任务
 	private final static String endTag = "].";
 
-	protected static List<String> urls = new ArrayList<String>();
 	protected static int failedOrNotInt = 0;
 	protected static String reqLog = null;
 	protected static String requestId = null;
@@ -38,10 +38,12 @@ public abstract class AbstractParserProcess {
 	protected static ThreadPoolExecutor threadPool = null;
 	public static boolean TO_DB_INIT = false;
 
+	private WebPagesDao webPagesDao;
+
 	/**
 	 * 初始化基础数据，将各链接放到WEBPAGES
 	 */
-	protected abstract void initURLs();
+	protected abstract List<String> initURLs();
 
 	protected abstract void getThreadPool();
 
@@ -67,7 +69,11 @@ public abstract class AbstractParserProcess {
 
 		getThreadPool();
 
-		initURLs();
+		List<String> urls = initURLs();
+
+		if (TO_DB_INIT) {
+			webPagesDao.saveUrls(urls, WebPages.PAGE_TYPES_11, requestId);
+		}
 
 		if (failedOrNotInt < 2) {
 			parseTypeLevel();
@@ -147,7 +153,7 @@ public abstract class AbstractParserProcess {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			//ErrorHandler.errorLogAndMail(title + " Error in Action:", e);
+			// ErrorHandler.errorLogAndMail(title + " Error in Action:", e);
 		}
 
 		log.info(reqLog + title + " End!Times:" + (System.currentTimeMillis() - start));

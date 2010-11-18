@@ -12,4 +12,5 @@ public interface WebPagesDao extends EntityDao<WebPages> {
 
 	public void saveByBatch(List<WebPages> wps);
 
+	public void saveUrls(List<String> urls, String type, String requestId);
 }

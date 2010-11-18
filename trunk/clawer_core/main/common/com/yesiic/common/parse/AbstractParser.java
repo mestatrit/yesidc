@@ -8,7 +8,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.yesibc.core.exception.ApplicationException;
-import com.yesibc.core.spring.SpringContext;
 import com.yesiic.common.ClawerConstants;
 import com.yesiic.common.ProcessContext;
 import com.yesiic.dao.WebPagesDao;
@@ -20,6 +19,7 @@ public abstract class AbstractParser {
 	private static Log log = LogFactory.getLog(AbstractParser.class);
 
 	protected ParseTool parseTool;
+	protected WebPagesDao webPagesDao;
 
 	public void prepareParse(ProcessContext processContext) throws ApplicationException {
 		parseTool.prepareParse(processContext, finish);
@@ -29,14 +29,16 @@ public abstract class AbstractParser {
 		processContext.getWp().setStatus(WebPages.STATUS_OK);
 		processContext.getWp().setUpdateDate(new Date());
 		if (!ClawerConstants.TEST_DAO) {
-			WebPagesDao webPagesDao = (WebPagesDao) SpringContext.getBean("webPagesDao");
 			webPagesDao.update(processContext.getWp());
 		}
-		finish.clear();
 		log.info(processContext.getLogTitle() + "After parsing and update 2 DB OK!");
 	}
 
 	public void setParseTool(ParseTool parseTool) {
 		this.parseTool = parseTool;
+	}
+
+	public void setWebPagesDao(WebPagesDao webPagesDao) {
+		this.webPagesDao = webPagesDao;
 	}
 }
