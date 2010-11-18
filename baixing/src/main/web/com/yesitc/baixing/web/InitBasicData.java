@@ -45,19 +45,20 @@ public class InitBasicData {
 		for (Map.Entry<String, WebElements> entry : getAreas().entrySet()) {
 			if (isOK(entry.getValue(), KEY_AREAS_BJ)) {
 				AREA_BJ.put(entry.getKey(), entry.getValue());
+				AREA_COMMON.put(entry.getKey(), entry.getValue());
 			} else if (isOK(entry.getValue(), KEY_AREAS_SH)) {
 				AREA_SH.put(entry.getKey(), entry.getValue());
+				AREA_COMMON.put(entry.getKey(), entry.getValue());
 			} else {
-				if (filter(entry.getValue())) {
-					continue;
-				}
+				// if (filter(entry.getValue())) {
+				// continue;
+				// }
 				AREA_COMMON.put(entry.getKey(), entry.getValue());
 			}
 		}
-
 	}
 
-	private static boolean filter(WebElements value) {
+	public static boolean filter(WebElements value) {
 		if (KEY_AREAS_BJ.equals(value.getCode())) {
 			return true;
 		} else if (KEY_AREAS_SH.equals(value.getCode())) {
@@ -108,7 +109,8 @@ public class InitBasicData {
 	}
 
 	public static WebElements getAreaByCode(String key) {
-		return getAll().get(KEY_AREAS).get(key);
+		// getAll().get(KEY_AREAS).get(key);
+		return getAreaOthers().get(key);
 	}
 
 	public static WebElements getTypeByCode(String key) {
@@ -116,7 +118,8 @@ public class InitBasicData {
 	}
 
 	public static String getAreaNameByCode(String key) {
-		return getAll().get(KEY_AREAS).get(key).getName();
+		// getAll().get(KEY_AREAS).get(key).getName();
+		return getAreaOthers().get(key).getName();
 	}
 
 	public static String getTypeNameByCode(String key) {
@@ -124,7 +127,8 @@ public class InitBasicData {
 	}
 
 	public static String getAreaMemoByCode(String key) {
-		return getAll().get(KEY_AREAS).get(key).getMemo();
+		// return getAll().get(KEY_AREAS).get(key).getMemo();
+		return getAreaOthers().get(key).getMemo();
 	}
 
 	public static String getTypeMemoByCode(String key) {
