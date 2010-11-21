@@ -13,6 +13,8 @@
 	<bean id="codeMappingDao" class="com.yesiic.dao.impl.CodeMappingDaoImpl" />
 	<bean id="searchResultDao" class="com.yesiic.dao.impl.SearchResultDaoImpl" />
 	<bean id="parseType" class="com.yesitc.baixing.web.parse.ParseType" />
+	<bean id="parseDetail" class="com.yesitc.baixing.web.parse.ParseType" />
 	<bean id="parseTool" class="com.yesiic.common.parse.HttpClientParseTool" />
+	<bean id="parseProcess" class="com.yesitc.baixing.web.parse.ParseProcess" />
 
 </beans>
