@@ -10,9 +10,9 @@ import com.yesiic.common.ClawerConstants;
 import com.yesiic.common.ProcessContext;
 import com.yesiic.webswith.model.WebPages;
 
-public abstract class TypeLinkParser extends AbstractParser implements Parser {
+public abstract class AbstractTypeParser extends AbstractParser implements Parser {
 
-	private static Log log = LogFactory.getLog(TypeLinkParser.class);
+	private static Log log = LogFactory.getLog(AbstractTypeParser.class);
 
 	public void parse(ProcessContext processContext) throws ApplicationException {
 
