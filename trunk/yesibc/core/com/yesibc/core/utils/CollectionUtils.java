@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -20,6 +21,16 @@ import java.util.Set;
 public class CollectionUtils {
 
 	private CollectionUtils() {
+	}
+
+	/**
+	 * Judge Map empty.
+	 * 
+	 * @param collection
+	 * @return boolean
+	 */
+	public static boolean isEmpty(Map collection) {
+		return collection == null || collection.isEmpty();
 	}
 
 	/**

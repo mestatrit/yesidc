@@ -49,4 +49,33 @@ public class HtmlParserUtils {
 		return list.elementAt(0);
 	}
 
+	public static Node getHtmlByTag0Txt(String html, String tagName, String[] txts, String charSet)
+			throws ParserException {
+		if (html == null || tagName == null) {
+			return null;
+		}
+		Parser parser = Parser.createParser(html, charSet);
+		NodeList list = parser.parse(new TagNameFilter(tagName));
+		if (list == null || list.size() < 1) {
+			return null;
+		}
+
+		String temp = null;
+		for (int i = 0; i < list.size(); i++) {
+			Node n = list.elementAt(i);
+			boolean have = true;
+			if (n != null) {
+				temp = n.toHtml();
+				for (String txt : txts)
+					if (temp.indexOf(txt) < 0) {
+						have = false;
+					}
+			}
+			if (have) {
+				return n;
+			}
+		}
+		return null;
+	}
+
 }

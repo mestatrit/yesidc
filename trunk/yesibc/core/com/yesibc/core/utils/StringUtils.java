@@ -434,6 +434,35 @@ public final class StringUtils {
 	}
 
 	/**
+	 * <pre>
+	 * Get number from string.
+	 * 
+	 * @param str
+	 * @return string
+	 * 	public static String getNum(String str) {
+	 * 		try {
+	 * 			if (str == null || (str.trim()).length() < 1) {
+	 * 				return "";
+	 * 			}
+	 * 			String temp = "0123456789";
+	 * 			String tempString = "";
+	 * 			String string = "";
+	 * 			for (int i = 0; i < str.length(); i++) {
+	 * 				tempString = str.substring(i, i + 1);
+	 * 				if (temp.indexOf(tempString) > -1) {
+	 * 					string += tempString;
+	 * 				}
+	 * 			}
+	 * 			return string;
+	 * 		} catch (Exception ex) {
+	 * 			ex.printStackTrace();
+	 * 			return "";
+	 * 		}
+	 * 	}
+	 * </pre>
+	 */
+
+	/**
 	 * Get number from string.
 	 * 
 	 * @param str
@@ -444,16 +473,13 @@ public final class StringUtils {
 			if (str == null || (str.trim()).length() < 1) {
 				return "";
 			}
-			String temp = "0123456789";
-			String tempString = "";
-			String string = "";
-			for (int i = 0; i < str.length(); i++) {
-				tempString = str.substring(i, i + 1);
-				if (temp.indexOf(tempString) > -1) {
-					string += tempString;
-				}
+			Pattern p = Pattern.compile("[\\d]+");
+			Matcher m = p.matcher(str);
+			String temp = "";
+			while (m.find()) {
+				temp = temp + m.group();
 			}
-			return string;
+			return temp;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return "";
@@ -1101,7 +1127,7 @@ public final class StringUtils {
 	 */
 	public static boolean isEmail(String checkString) {
 		String regString = "([a-zA-Z_0-9]+)@([a-zA-Z0-9]+)\\.([a-zA-Z]+)";
-		return regexCheck(checkString, regString);
+		return RegexUtils.regexCheck(checkString, regString);
 	}
 
 	/**
@@ -1112,7 +1138,7 @@ public final class StringUtils {
 	 */
 	public static boolean isInt(String numberString) {
 		String regexStr = "-*" + "\\d*";
-		return regexCheck(numberString, regexStr);
+		return RegexUtils.regexCheck(numberString, regexStr);
 	}
 
 	/**
@@ -1141,7 +1167,7 @@ public final class StringUtils {
 	 */
 	public static boolean isNums(String numberString) {
 		String regexStr = "-*" + "\\d*" + "." + "\\d*";
-		return regexCheck(numberString, regexStr);
+		return RegexUtils.regexCheck(numberString, regexStr);
 	}
 
 	/**
@@ -1153,12 +1179,7 @@ public final class StringUtils {
 	public static boolean isNumberString(String numberString) {
 		if (numberString == null)
 			return false;
-		char[] chars = numberString.toCharArray();
-		for (char c : chars) {
-			if (c < '0' || c > '9')
-				return false;
-		}
-		return true;
+		return RegexUtils.regexCheck(numberString, "^[0-9]\\d*$");
 	}
 
 	/**
@@ -1169,20 +1190,7 @@ public final class StringUtils {
 	 */
 	public static boolean isURL(String url) {
 		String regString = "http://([\\w-]+\\.)+[\\w-]+(/[\\w-   ./?%&=]*)?";
-		return regexCheck(url, regString);
-	}
-
-	/**
-	 * Check whether string matches regex.
-	 * 
-	 * @param checkString
-	 * @param regexStr
-	 * @return boolean
-	 */
-	public static boolean regexCheck(String checkString, String regexStr) {
-		Pattern pattern = Pattern.compile(regexStr);
-		Matcher matcher = pattern.matcher(checkString);
-		return matcher.find();
+		return RegexUtils.regexCheck(url, regString);
 	}
 
 	public static void testReg() {
@@ -1871,5 +1879,15 @@ public final class StringUtils {
 
 		System.out.println(getRealPath(StringUtils.class, "bin", ""));
 		System.out.println(getRealPath(StringUtils.class, "", null));
+
+		System.out.println(getNum("ab23423c../////$%^32423"));
+
+		String str = "32423";
+		Pattern MOBILE_PATTERN = Pattern.compile("^[0-9]\\d*$");
+		Matcher m = MOBILE_PATTERN.matcher(str);
+		System.out.println(m.find());
+		System.out.println(isNumberString("32423"));
+
+		// testReg();
 	}
 }
