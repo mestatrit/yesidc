@@ -65,7 +65,9 @@ values (107, 1, 'nanjizhou', '', 'Antarctica', 'Antarctica', '南极洲', '南�
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (1000, 2, '51job', 'http://www.51job.com', '前程无忧', null, 0, 1, sysdate, sysdate, 'YTB', 'YTB');
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (1001, 2, 'alibaba', 'http://www.alibaba.com', '阿里巴巴', null, 0, 2, sysdate, sysdate, 'YTB', 'YTB');
+values (1001, 2, 'alibaba', 'http://www.alibaba.com', '阿里巴巴', null, 1, 2, sysdate, sysdate, 'YTB', 'YTB');
+insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (1002, 2, 'baixing', 'http://www.baixing.com', '百姓网', null, 1, 3, sysdate, sysdate, 'YTB', 'YTB');
 
 --company scale
 insert into T_CODE (ID, CODE_TYPE, CODE, ENAME, CNAME, CNAME1, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
