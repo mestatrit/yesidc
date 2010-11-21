@@ -21,6 +21,7 @@ drop table T_COMPANY cascade constraints;
 drop table T_PERSON cascade constraints;
 drop table T_WEBPAGES cascade constraints;
 drop table TC_SEARCH_RESULT cascade constraints;
+drop table T_SIM_PERSON cascade constraints;
 drop table WEB_ELEMENTS cascade constraints;
 
 drop sequence SEQ_COMPANY;
@@ -38,6 +39,32 @@ drop sequence SEQ_P_SKILL;
 drop sequence SEQ_WEBPAGES;
 drop sequence SEQ_SEARCH_RESULT;
 drop sequence SEQ_P_CONTACT_INFO;
+drop sequence SEQ_SIM_PERSON;
+
+-- Create table
+create table T_SIM_PERSON
+(
+  ID                        NUMBER(19) not null,
+  NAME_NICK                 VARCHAR2(50 CHAR),
+  SEX                       VARCHAR2(1 CHAR),
+  MOBILE                    VARCHAR2(20 CHAR),
+  TEL_NO                    VARCHAR2(20 CHAR),
+  QQ                        VARCHAR2(20 CHAR),
+  FROM_WHERE                NUMBER(19),
+  CREATE_DATE               TIMESTAMP(6),
+  UPDATE_DATE               TIMESTAMP(6)
+);
+
+alter table T_SIM_PERSON
+  add primary key (ID);
+
+-- Create sequence 
+create sequence SEQ_SIM_PERSON
+minvalue 1
+maxvalue 999999999999999999999999999
+start with 1
+increment by 1
+cache 20;
 
 create table WEB_ELEMENTS
 (

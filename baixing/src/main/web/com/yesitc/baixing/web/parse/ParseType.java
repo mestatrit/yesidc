@@ -15,14 +15,14 @@ import com.yesibc.core.components.http.HtmlParserUtils;
 import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.spring.SpringContext;
 import com.yesiic.common.ProcessContext;
+import com.yesiic.common.parse.AbstractTypeParser;
 import com.yesiic.common.parse.HtmlParserSupport;
-import com.yesiic.common.parse.TypeLinkParser;
 import com.yesiic.webswith.model.WebElements;
 import com.yesiic.webswith.model.WebPages;
 import com.yesitc.baixing.service.BxUtils;
 import com.yesitc.baixing.web.InitBasicData;
 
-public class ParseType extends TypeLinkParser {
+public class ParseType extends AbstractTypeParser {
 
 	private final static String DATA_ID = "datagrid";
 	private final static String PAGER_ID = "pager";
