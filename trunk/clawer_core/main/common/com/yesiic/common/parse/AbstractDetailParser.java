@@ -1,14 +1,13 @@
 package com.yesiic.common.parse;
 
-import java.util.Date;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.yesibc.core.exception.ApplicationException;
+import com.yesibc.core.utils.BeanPrinter;
 import com.yesiic.common.ClawerConstants;
 import com.yesiic.common.ProcessContext;
-import com.yesiic.webswith.model.WebPages;
+import com.yesiic.person.model.SimPerson;
 
 public abstract class AbstractDetailParser extends AbstractParser implements Parser {
 
@@ -20,7 +19,7 @@ public abstract class AbstractDetailParser extends AbstractParser implements Par
 
 		parsing(processContext);
 
-		if (!ClawerConstants.TEST_DAO && processContext.getUrls() != null && !processContext.getUrls().isEmpty()) {
+		if (!ClawerConstants.TEST_DAO && processContext.getSimPersons() != null && !processContext.getSimPersons().isEmpty()) {
 			save2DB(processContext);
 		}
 
@@ -31,23 +30,18 @@ public abstract class AbstractDetailParser extends AbstractParser implements Par
 	}
 
 	protected void save2DB(ProcessContext processContext) {
-		Date now = new Date();
-		for (String url : processContext.getUrls()) {
-			WebPages wp = new WebPages();
-			wp.setCreateDate(now);
-			wp.setPageType(WebPages.PAGE_PAGES_21);
-			wp.setRequestId(processContext.getRequestId());
-			wp.setStatus(WebPages.STATUS_KO);
-			wp.setUpdateDate(now);
-			wp.setUrl(url);
+		for (SimPerson simPerson : processContext.getSimPersons()) {
 			try {
-				webPagesDao.save(wp);
+				webPagesDao.save(simPerson);
 			} catch (Exception e) {
+				log.error(processContext.getLogTitle() + "====BeanPrinter S====");
+				BeanPrinter.printAttributes(simPerson, "|");
+				log.error(processContext.getLogTitle() + "====BeanPrinter E====");
 				log.error(e.getMessage());
 			}
 		}
 	}
 
-	protected abstract int parsing(ProcessContext processContext) throws ApplicationException;
+	protected abstract void parsing(ProcessContext processContext) throws ApplicationException;
 
 }

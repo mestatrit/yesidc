@@ -114,15 +114,4 @@ public class WebElements implements java.io.Serializable {
 	public void setChildren(List<WebElements> children) {
 		this.children = children;
 	}
-
-	@Override
-	public String toString() {
-		return "WebElements [children=" + children + ", code=" + code
-				+ ", codeLevel=" + codeLevel + ", createDate=" + createDate
-				+ ", createUser=" + createUser + ", id=" + id + ", memo="
-				+ memo + ", name=" + name + ", parent=" + parent
-				+ ", sortList=" + sortList + ", updateDate=" + updateDate
-				+ ", updateUser=" + updateUser + "]";
-	}
-
 }

@@ -90,11 +90,6 @@ public class WebPages implements java.io.Serializable {
 		this.updateDate = updateDate;
 	}
 
-	@Override
-	public String toString() {
-		return "Pages [id=" + id + ", pageType=" + pageType + ", requestId=" + requestId + ", status=" + status
-				+ ", updateDate=" + updateDate + ", url=" + url + "]";
-	}
 
 	public String getMemo() {
 		return memo;

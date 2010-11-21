@@ -2,6 +2,7 @@ package com.yesiic.common;
 
 import java.util.List;
 
+import com.yesiic.person.model.SimPerson;
 import com.yesiic.webswith.model.WebPages;
 
 public class ProcessContext {
@@ -12,6 +13,7 @@ public class ProcessContext {
 	private String requestId;
 	private WebPages wp;
 	private List<String> urls;
+	private List<SimPerson> simPersons;
 	private String pageType;
 	private int total = 0;
 	private int index = 0;
@@ -95,6 +97,14 @@ public class ProcessContext {
 
 	public void setRequestId(String requestId) {
 		this.requestId = requestId;
+	}
+
+	public List<SimPerson> getSimPersons() {
+		return simPersons;
+	}
+
+	public void setSimPersons(List<SimPerson> simPersons) {
+		this.simPersons = simPersons;
 	}
 
 }
