@@ -49,7 +49,7 @@
 		</property>
 		
 		<property name="memo" type="java.lang.String">
-			<column name="MEMO" length="50">
+			<column name="MEMO" length="4000">
 				<comment>备注</comment>
 			</column>
 		</property>

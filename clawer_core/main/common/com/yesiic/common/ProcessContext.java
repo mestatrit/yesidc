@@ -1,7 +1,9 @@
 package com.yesiic.common;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.yesibc.core.utils.CollectionUtils;
 import com.yesiic.person.model.SimPerson;
 import com.yesiic.webswith.model.WebPages;
 
@@ -105,6 +107,13 @@ public class ProcessContext {
 
 	public void setSimPersons(List<SimPerson> simPersons) {
 		this.simPersons = simPersons;
+	}
+	
+	public void setSimPerson(SimPerson simPerson) {
+		if(CollectionUtils.isEmpty(simPersons)){
+			simPersons = new ArrayList<SimPerson>();
+		}
+		simPersons.add(simPerson);
 	}
 
 }
