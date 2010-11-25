@@ -1,6 +1,7 @@
 package com.yesiic.person.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class SimPerson implements java.io.Serializable {
 
@@ -12,11 +13,11 @@ public class SimPerson implements java.io.Serializable {
 	private String nameNick;
 	private String sex;
 	private String mobile;
-	private String telNo;
-	private String qq;
 	private Long fromWhere;
 	private Date createDate;
 	private Date updateDate;
+	private Long webId;
+	private List<SimPersonContactInfo> simPersonContactInfo;
 
 	public Long getId() {
 		return id;
@@ -50,22 +51,6 @@ public class SimPerson implements java.io.Serializable {
 		this.mobile = mobile;
 	}
 
-	public String getTelNo() {
-		return telNo;
-	}
-
-	public void setTelNo(String telNo) {
-		this.telNo = telNo;
-	}
-
-	public String getQq() {
-		return qq;
-	}
-
-	public void setQq(String qq) {
-		this.qq = qq;
-	}
-
 	public Long getFromWhere() {
 		return fromWhere;
 	}
@@ -88,6 +73,22 @@ public class SimPerson implements java.io.Serializable {
 
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public Long getWebId() {
+		return webId;
+	}
+
+	public void setWebId(Long webId) {
+		this.webId = webId;
+	}
+
+	public List<SimPersonContactInfo> getSimPersonContactInfo() {
+		return simPersonContactInfo;
+	}
+
+	public void setSimPersonContactInfo(List<SimPersonContactInfo> simPersonContactInfo) {
+		this.simPersonContactInfo = simPersonContactInfo;
 	}
 
 }

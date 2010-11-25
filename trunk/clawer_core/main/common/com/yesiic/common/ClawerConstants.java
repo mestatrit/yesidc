@@ -8,6 +8,10 @@ import com.yesiic.base.model.Code;
 
 public class ClawerConstants {
 
+	public final static String SEX_MALE = "1";
+	public final static String SEX_FEMALE = "2";
+	public final static String SEX_UNKNOWN = "0";
+
 	// public final static boolean TEST = true;
 	public static boolean TEST_DAO = true;
 
@@ -41,7 +45,7 @@ public class ClawerConstants {
 	public final static String TAG_SPACE_TRIM = "";
 
 	public final static long WAITING_BY_INTERVAL = 2000;
-	
+
 	public final static String PROC_LOG = "*-* ";
 
 	public final static String FROM_WHERE_51JOB = "51job";
@@ -60,8 +64,8 @@ public class ClawerConstants {
 
 	public final static long WAITING_TIMES_EXT = 5;
 
-	public final static String[] EMAIL_SPLITS = { ";", ","," " };
-	public final static String[] TEL_SPLITS = { ";", ","," " };
+	public final static String[] EMAIL_SPLITS = { ";", ",", " " };
+	public final static String[] TEL_SPLITS = { ";", ",", " " };
 
 	public final static String EMAIL_ERROR_SUBJECT = "Error from Project 51job!";
 
@@ -82,8 +86,6 @@ public class ClawerConstants {
 	public final static String VAL = "_val";
 	public final static String RECONNECT_IP_TAG = ClawerUtils.getValByKey("reconnect.ip.tag");
 
-
-
 	public final static String FILTER_SALARY1 = ClawerUtils.getValByKey("filter.salary1");
 	public final static String FILTER_SALARY2 = ClawerUtils.getValByKey("filter.salary2");
 	public final static String FILTER_SALARY3 = ClawerUtils.getValByKey("filter.salary3");
@@ -101,7 +103,6 @@ public class ClawerConstants {
 
 	public final static String SKILL_NAME = ClawerUtils.getValByKey("skill.name");
 
-
 	public final static String WEBRENDERER_ID = ClawerUtils.getServerConfByKey("webrenderer.id");
 	public final static String WEBRENDERER_SN = ClawerUtils.getServerConfByKey("webrenderer.sn");
 
@@ -111,7 +112,6 @@ public class ClawerConstants {
 
 	public static final String MANUAL_LOG = "manual";
 	public static final String LOG_URLS = "logurls";
-
 
 	public final static String[] PROVINCE_FILTERS = ClawerUtils.getValByKey("province.filter.list").split(",");
 	public final static String[] CITY_FILTERS = ClawerUtils.getValByKey("city.filter.list").split(",");
