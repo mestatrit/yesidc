@@ -1,8 +1,13 @@
 package com.yesibc.core.chinese;
 
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Pattern;
+
+import com.yesibc.core.utils.RegexUtils;
 
 public class ChineseMain {
+
+	static Pattern CHINESE_PATTERN = Pattern.compile("^[\\u4e00-\\u9fa5]+$");
 
 	public static boolean isChinese(char c) {
 		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
@@ -28,6 +33,10 @@ public class ChineseMain {
 		}
 		return true;
 
+	}
+
+	public static boolean isChineseByReg(String str) {
+		return RegexUtils.regexCheck(CHINESE_PATTERN, str);
 	}
 
 	/**
@@ -90,8 +99,8 @@ public class ChineseMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String str = "埔蛐庞每攴延馄冢忠呀崆濉看荒昊箍罴锹颊渑际只雍耸荡钌昵搿硖峁";
-		str = "现单怀邪荒辏薹ㄑ橹な杖搿?/>												</td>											</tr>";
+		String str1 = "埔蛐庞每攴延馄冢忠呀崆濉看荒昊箍罴锹颊渑际只雍耸荡钌昵搿硖峁";
+		String str = "现单怀邪荒辏薹ㄑ橹な杖搿?";
 		System.out.println(isChinese(str));
 		System.out.println(isChinese("┑"));
 		System.out.println(isChinese("ノ?"));
@@ -106,6 +115,11 @@ public class ChineseMain {
 		System.out.println("4=" + Character.UnicodeBlock.GENERAL_PUNCTUATION.toString());
 		System.out.println("5=" + Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION.toString());
 		System.out.println("6=" + Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS.toString());
+
+		System.out.println(RegexUtils.regexCheck(str, "^[\\u4e00-\\u9fa5]+$"));
+		str = "现单怀邪荒辏薹橹杖搿";
+		System.out.println("isChinese=" + isChinese(str1));
+		System.out.println(RegexUtils.regexCheck(str1, "^[\\u4e00-\\u9fa5]+$"));
 
 	}
 
