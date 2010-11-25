@@ -124,7 +124,7 @@ comment on column TC_EMAIL.CREATE_DATE is '创建时间';
 comment on column TC_EMAIL.UPDATE_DATE is '更新时间';
 comment on column TC_EMAIL.CREATE_USER is '创建者';
 comment on column TC_EMAIL.UPDATE_USER is '更新者';
-create table T_WEBPAGES(ID NUMBER(19) not null,PAGE_TYPE VARCHAR2(2) not null,REQUEST_ID  VARCHAR2(25), URL VARCHAR2(1000),STATUS VARCHAR2(1),UPDATE_DATE TIMESTAMP,CREATE_DATE TIMESTAMP(6),MEMO VARCHAR2(50), primary key (id));
+create table T_WEBPAGES(ID NUMBER(19) not null,PAGE_TYPE VARCHAR2(2) not null,REQUEST_ID  VARCHAR2(25), URL VARCHAR2(1000),STATUS VARCHAR2(1),UPDATE_DATE TIMESTAMP,CREATE_DATE TIMESTAMP(6),MEMO VARCHAR2(4000), primary key (id));
 comment on column T_WEBPAGES.PAGE_TYPE  is '0-default=OK;1-search type list;2-search pages list;3-job list;';
 comment on column T_WEBPAGES.REQUEST_ID  is '操作ID';
 comment on column T_WEBPAGES.STATUS  is '1-KO;2-OK';
