@@ -1,7 +1,9 @@
 package com.yesitc.baixing.web.parse;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,10 +14,13 @@ import org.apache.commons.logging.LogFactory;
 import com.yesibc.core.CoreConstants;
 import com.yesibc.core.components.http.HtmlParserUtils;
 import com.yesibc.core.exception.ApplicationException;
+import com.yesibc.core.utils.CollectionUtils;
+import com.yesibc.core.utils.StringUtils;
 import com.yesiic.common.ClawerUtils;
 import com.yesiic.common.ProcessContext;
 import com.yesiic.common.parse.AbstractDetailParser;
 import com.yesiic.person.model.SimPerson;
+import com.yesiic.person.model.SimPersonContactInfo;
 
 public class ParseDetail extends AbstractDetailParser {
 
@@ -38,33 +43,7 @@ public class ParseDetail extends AbstractDetailParser {
 				throw new ApplicationException(processContext.getLogTitle() + "getHtmlByTag-" + DATA_ID + " is null!");
 			}
 
-			String tartTag = "联系方式：";
-			int index = content.indexOf(tartTag);
-			if (index > -1) {
-				content = content.substring(index + tartTag.length());
-			}
-
-			Map<String, String> qqs = ClawerUtils.getQQ(content);
-			Map<String, String> telNo = ClawerUtils.getTelNo(content,qqs);
-			Map<String, String> mobile = ClawerUtils.getMobile(content,qqs);
-			Map<String,String> all = new HashMap<String,String>();
-			all.putAll(qqs);
-			all.putAll(telNo);
-			all.putAll(mobile);
-			
-			String name = ClawerUtils.getName(content);
-			Date now = new Date();
-			String sex = getSex();
-
-			SimPerson simPerson = new SimPerson();
-			simPerson.setCreateDate(now);
-			simPerson.setUpdateDate(now);
-			simPerson.setNameNick(name);
-			simPerson.setMobile(mobile);
-			simPerson.setTelNo(telNo);
-			simPerson.setQq(qq);
-			simPerson.setSex(sex);
-			simPerson.setFromWhere(BAIXING);
+			processContext.setSimPerson(set2Person(content));
 
 			log.info(processContext.getLogTitle() + "[" + processContext.getTotal() + "]records is got!");
 
@@ -73,35 +52,68 @@ public class ParseDetail extends AbstractDetailParser {
 		}
 	}
 
-	private String getSex() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	private SimPerson set2Person(String content) {
+		Date now = new Date();
+		SimPerson simPerson = new SimPerson();
+		simPerson.setCreateDate(now);
+		simPerson.setUpdateDate(now);
 
-	private String getQQ(String content) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		List<SimPersonContactInfo> simPersonContactInfos = new ArrayList<SimPersonContactInfo>();
 
-	private String getMobile(String content) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private String getTelNo(String content) {
-
-		int index = content.indexOf("");
-		if (index > -1) {
-			String temp = content.substring(index);
-		} else {
-
+		Map<String, String> all = new HashMap<String, String>();
+		Map<String, String> qqs = ClawerUtils.getQQ(content);
+		if (!CollectionUtils.isEmpty(qqs)) {
+			all.putAll(qqs);
+			for (Map.Entry<String, String> entry : qqs.entrySet()) {
+				simPersonContactInfos.add(getContactInfo(now, simPerson, entry.getKey(),
+						SimPersonContactInfo.CONTRACT_TAG_QQ));
+			}
 		}
-		return null;
+		Map<String, String> telNos = ClawerUtils.getTelNo(content, qqs);
+		if (!CollectionUtils.isEmpty(telNos)) {
+			all.putAll(telNos);
+			for (Map.Entry<String, String> entry : telNos.entrySet()) {
+				simPersonContactInfos.add(getContactInfo(now, simPerson, entry.getKey(),
+						SimPersonContactInfo.CONTRACT_TAG_TEL));
+			}
+		}
+		Map<String, String> mobiles = ClawerUtils.getMobile(content, qqs);
+		if (!CollectionUtils.isEmpty(mobiles)) {
+			all.putAll(mobiles);
+			for (Map.Entry<String, String> entry : mobiles.entrySet()) {
+				simPersonContactInfos.add(getContactInfo(now, simPerson, entry.getKey(),
+						SimPersonContactInfo.CONTRACT_TAG_MOBILE));
+			}
+		}
+
+		Map<String, String> names = ClawerUtils.getName(content, all);
+		String name = "";
+		if (!CollectionUtils.isEmpty(names)) {
+			all.putAll(mobiles);
+			for (Map.Entry<String, String> entry : names.entrySet()) {
+				if ("".equals(name)) {
+					name = entry.getKey();
+				} else {
+					name = name + "," + entry.getKey();
+				}
+			}
+			if (StringUtils.absoluteLength(name) > 50) {
+				name = StringUtils.subStringByByte(name, 0, 49);
+			}
+		}
+		simPerson.setNameNick(name);
+		simPerson.setSex(ClawerUtils.getSex(names));
+		simPerson.setFromWhere(BAIXING);
+		return simPerson;
 	}
 
-	private String getName(String content) {
-		// TODO Auto-generated method stub
-		return null;
+	private SimPersonContactInfo getContactInfo(Date now, SimPerson simPerson, String no, String type) {
+		SimPersonContactInfo simPersonContactInfo = new SimPersonContactInfo();
+		simPersonContactInfo.setContractNo(no);
+		simPersonContactInfo.setSimPerson(simPerson);
+		simPersonContactInfo.setType(type);
+		simPersonContactInfo.setUpdateDate(now);
+		return simPersonContactInfo;
 	}
 
 	public static Integer test(String str) {
@@ -116,7 +128,7 @@ public class ParseDetail extends AbstractDetailParser {
 	}
 
 	public static void main(String[] args) {
-		String url = "发票，上海025-5239291牌照02-82392913 025-52392913 0256-52392913在QQ6666666239291齐QQ:6239291全QQ在xxxxx6239291，联系方式：13162869509联系我时，请一定说2342明在百姓网看到的，谢谢！";
+		String url = "发票，上海025-5239291牌照02-82392913 025-52392913 0256-52392913在QQ6666666239291齐QQ:6239291全小QQ在xxxxx6239291，联系方式：13162869509联系我时，请一定说2342明在百姓网看到的，谢谢！";
 		// url = "-1234.3MhZ";
 		try {
 			Pattern p = Pattern.compile("[\\d]{11,12}|([\\d]{3,4}[-])?[\\d]{7,8}");
@@ -130,7 +142,7 @@ public class ParseDetail extends AbstractDetailParser {
 			while (m.find()) {
 				System.out.println(m.group());
 			}
-			System.out.println("========");		
+			System.out.println("========");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
