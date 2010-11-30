@@ -1,8 +1,12 @@
 create synonym T_Code for core.T_Code;
 create synonym T_CODE_CODE_MAPPING for core.T_CODE_CODE_MAPPING;
 create synonym T_CODE_MAPPING for core.T_CODE_MAPPING;
+create synonym T_EXTEND_CODE for core.T_EXTEND_CODE;
+create synonym T_MAIL_SENDERS for core.T_MAIL_SENDERS;
+create synonym T_MAIL_SERVER for core.T_MAIL_SERVER;
 create synonym SEQ_MAIL_SENDERS for core.SEQ_MAIL_SENDERS;
 create synonym SEQ_MAIL_SERVER for core.SEQ_MAIL_SERVER;
+create synonym SEQ_EXTEND_CODE for core.SEQ_EXTEND_CODE;
 
 drop table TC_APPEND cascade constraints;
 drop table TC_CONTACT_COMMON cascade constraints;
