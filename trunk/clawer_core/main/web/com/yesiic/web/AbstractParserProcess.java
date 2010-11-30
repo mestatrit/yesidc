@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.yesibc.core.exception.ApplicationException;
+import com.yesibc.core.utils.CollectionUtils;
 import com.yesiic.common.ClawerConstants;
 import com.yesiic.common.InternetConnection;
 import com.yesiic.common.ProcessContext;
@@ -53,7 +54,7 @@ public abstract class AbstractParserProcess {
 
 	protected abstract Parser getParseDetails();
 
-	protected abstract List<WebPages> getDetails();
+	protected abstract List<WebPages> getDetails() throws ApplicationException;
 
 	protected abstract void getBaseInfo(int threadNumber, String requestId, int failedOrNotInt, String reqLog);
 
@@ -165,14 +166,19 @@ public abstract class AbstractParserProcess {
 	 * @throws ApplicationException
 	 */
 	private void parseDetailLevel() throws ApplicationException {
-		String title = "#parse details#";
+		String temp = "#parse details#";
 		List<WebPages> details = getDetails();
 		if (details == null || details.isEmpty()) {
-			throw new ApplicationException(title + " is null!");
+			throw new ApplicationException(temp + " is null!");
 		}
-
 		Parser parser = getParseDetails();
-		parseCommon(title, details, parser);
+		int i = 0;
+		String title = null;
+		while (!CollectionUtils.isEmpty(details)) {
+			i++;
+			title = temp + i + "#";
+			parseCommon(title, details, parser);
+		}
 	}
 
 	/**
@@ -182,9 +188,15 @@ public abstract class AbstractParserProcess {
 	 * @param requestId
 	 * @param reqLog
 	 * @param threadNumber
+	 * @throws ApplicationException
 	 */
-	private void checking() {
-		// TODO Auto-generated method stub
+	private void checking() throws ApplicationException {
+		if (failedOrNotInt < 2) {
+			parseTypeLevel();
+		}
 
+		if (failedOrNotInt < 3) {
+			parseDetailLevel();
+		}
 	}
 }

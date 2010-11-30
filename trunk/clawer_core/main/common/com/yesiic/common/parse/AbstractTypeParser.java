@@ -15,6 +15,7 @@ public abstract class AbstractTypeParser extends AbstractParser implements Parse
 	private static Log log = LogFactory.getLog(AbstractTypeParser.class);
 
 	public void parse(ProcessContext processContext) throws ApplicationException {
+		prepareContext(processContext);
 
 		prepareParse(processContext);
 
@@ -35,6 +36,8 @@ public abstract class AbstractTypeParser extends AbstractParser implements Parse
 			afterParse(processContext);
 		}
 	}
+
+	protected abstract void prepareContext(ProcessContext processContext);
 
 	protected void save2DB(ProcessContext processContext) {
 		// webPagesDao.saveUrls(processContext.getUrls(),

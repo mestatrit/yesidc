@@ -13,7 +13,7 @@ public class ClawerConstants {
 	public final static String SEX_UNKNOWN = "0";
 
 	// public final static boolean TEST = true;
-	public static boolean TEST_DAO = true;
+	public static boolean TEST_DAO = false;
 
 	public static boolean TEST_WEB = true;
 

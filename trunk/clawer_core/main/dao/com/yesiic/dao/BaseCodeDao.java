@@ -1,15 +1,20 @@
 package com.yesiic.dao;
 
+import java.util.List;
+
 import org.hibernate.stat.Statistics;
 
 import com.yesibc.core.dao.EntityDao;
+import com.yesibc.core.exception.ApplicationException;
 import com.yesiic.base.model.Code;
 
-public interface BaseCodeDao  extends EntityDao<Code>{
-	
-	public Code queryByCode(String code, String type);
+public interface BaseCodeDao extends EntityDao<Code> {
 
-	public Code queryByName(String name, String type, int level);
+	public Code queryByName(String name, String type, int i);
+
+	public Code queryByCode(String code, String type) throws ApplicationException;
+
+	public List<Code> queryByName(String name, String code, String type) throws ApplicationException;
 
 	public Code queryProviceByName(String name);
 
