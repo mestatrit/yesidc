@@ -54,6 +54,8 @@ public final class StringUtils {
 	public static double MIN_VALUE = Long.MIN_VALUE / 100.0;
 
 	public static final String BLANK = "";
+	
+	public static final String SPACER = " ";
 
 	/**
 	 * Change chinese numbers to Arabic numerals
@@ -1813,6 +1815,14 @@ public final class StringUtils {
 		return true;
 	}
 
+	public static String cutAllSpacer(String str) {
+		if(str==null){
+			return null;
+		}
+		str = str.replace(SPACER, BLANK);
+		return str;
+	}
+	
 	/**
 	 * unsigned integer to binary
 	 * <P>
