@@ -16,5 +16,6 @@
 	<bean id="parseDetail" class="com.yesitc.baixing.web.parse.ParseType" />
 	<bean id="parseTool" class="com.yesiic.common.parse.HttpClientParseTool" />
 	<bean id="parseProcess" class="com.yesitc.baixing.web.parse.ParseProcess" />
+	<bean id="importZip" class="com.yesitc.baixing.ImportZip" />
 
 </beans>
