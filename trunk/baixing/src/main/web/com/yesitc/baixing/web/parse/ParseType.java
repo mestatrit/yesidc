@@ -28,6 +28,7 @@ public class ParseType extends AbstractTypeParser {
 	private final static String PAGER_ID = "pager";
 	private final static String URL_END_TAG = "com/";
 	private final static String PAGER_ID_NAME = "下一页";
+	private final static String URL_PUBLISH_TYPE = "&%E5%8F%91%E5%B8%83%E4%BA%BA=%E4%B8%AA%E4%BA%BA";
 	private final static String AREA_NAME = "areaName";
 	protected final static String PAGE_TAG = "page=";
 	private static Log log = LogFactory.getLog(ParseType.class);
@@ -56,6 +57,9 @@ public class ParseType extends AbstractTypeParser {
 				}
 				if (line.indexOf("http:") > -1 || !line.endsWith(".html")) {
 					continue;
+				}
+				if(line.lastIndexOf("/") > -1){
+					line = line.substring(line.lastIndexOf("/") + 1);
 				}
 				line = pre + line;
 				wps.add(line);
@@ -145,7 +149,7 @@ public class ParseType extends AbstractTypeParser {
 			i = html.indexOf("周边城市"); // 周边城市
 		}
 		if (i < 0) {
-			i = html.indexOf(getCityNameFromUrl(processContext) + "其他地区"); // 上海其他地区
+			i = html.indexOf(BxUtils.getCityNameFromUrl(processContext) + "其他地区"); // 上海其他地区
 		}
 
 		return i;
@@ -189,16 +193,6 @@ public class ParseType extends AbstractTypeParser {
 		return we.getName();
 	}
 
-	private String getCityNameFromUrl(ProcessContext processContext) throws ApplicationException {
-		String url = processContext.getWp().getUrl();
-		url = url.substring("http://".length(), url.indexOf("."));
-		WebElements we = InitBasicData.getAreaByCode(url);
-		if (we == null) {
-			throw new ApplicationException(processContext.getLogTitle() + " getCityNameFromUrl error! url:" + url);
-		}
-		return we.getName();
-	}
-
 	public static void main(String[] args) {
 		System.out.println(getPageFromUrl("http://shanghai.baixing.com/baoan/?areaName=xuhui&page=55", PAGE_TAG));
 		System.out.println(getPageFromUrl("http://shanghai.baixing.com/baoan/?areaName=xuhui&page=55&dasdl", PAGE_TAG));
@@ -228,4 +222,13 @@ public class ParseType extends AbstractTypeParser {
 		}
 	}
 
+	@Override
+	protected void prepareContext(ProcessContext processContext) {
+		String url = processContext.getWp().getUrl();
+		if (url.indexOf(URL_PUBLISH_TYPE) < 0) {
+			//不加这个，不翻页
+			processContext.getWp().setUrl(url + URL_PUBLISH_TYPE);
+		}
+
+	}
 }
