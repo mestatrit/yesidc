@@ -21,6 +21,7 @@ import com.yesiic.common.ProcessContext;
 import com.yesiic.common.parse.AbstractDetailParser;
 import com.yesiic.person.model.SimPerson;
 import com.yesiic.person.model.SimPersonContactInfo;
+import com.yesitc.baixing.service.BxUtils;
 
 public class ParseDetail extends AbstractDetailParser {
 
@@ -40,10 +41,11 @@ public class ParseDetail extends AbstractDetailParser {
 			content = HtmlParserUtils.getHtmlByTag0Txt(processContext.getHtml(), "P", DATA_CONTENT_TAG,
 					CoreConstants.CHARSET_UTF8).toHtml();
 			if (content == null) {
-				throw new ApplicationException(processContext.getLogTitle() + "getHtmlByTag-" + DATA_ID + " is null!");
+				throw new ApplicationException(processContext.getLogTitle() + "getHtmlByTag0Txt-" + DATA_CONTENT_TAG[0]
+						+ " is null!");
 			}
 
-			processContext.setSimPerson(set2Person(content));
+			processContext.setSimPerson(set2Person(content, processContext));
 
 			log.info(processContext.getLogTitle() + "[" + processContext.getTotal() + "]records is got!");
 
@@ -52,7 +54,7 @@ public class ParseDetail extends AbstractDetailParser {
 		}
 	}
 
-	private SimPerson set2Person(String content) {
+	private SimPerson set2Person(String content, ProcessContext processContext) throws ApplicationException {
 		Date now = new Date();
 		SimPerson simPerson = new SimPerson();
 		simPerson.setCreateDate(now);
@@ -73,8 +75,10 @@ public class ParseDetail extends AbstractDetailParser {
 		if (!CollectionUtils.isEmpty(telNos)) {
 			all.putAll(telNos);
 			for (Map.Entry<String, String> entry : telNos.entrySet()) {
-				simPersonContactInfos.add(getContactInfo(now, simPerson, entry.getKey(),
-						SimPersonContactInfo.CONTRACT_TAG_TEL));
+				SimPersonContactInfo sci = getContactInfo(now, simPerson, entry.getKey(),
+						SimPersonContactInfo.CONTRACT_TAG_TEL);
+				updateAreaCode(sci, processContext);
+				simPersonContactInfos.add(sci);
 			}
 		}
 		Map<String, String> mobiles = ClawerUtils.getMobile(content, qqs);
@@ -105,6 +109,13 @@ public class ParseDetail extends AbstractDetailParser {
 		simPerson.setSex(ClawerUtils.getSex(names));
 		simPerson.setFromWhere(BAIXING);
 		return simPerson;
+	}
+
+	private void updateAreaCode(SimPersonContactInfo sci, ProcessContext processContext) throws ApplicationException {
+		if (StringUtils.isEmpty(sci.getContractNo())) {
+			return;
+		}
+		String cityName = BxUtils.getCityNameFromUrl(processContext);
 	}
 
 	private SimPersonContactInfo getContactInfo(Date now, SimPerson simPerson, String no, String type) {

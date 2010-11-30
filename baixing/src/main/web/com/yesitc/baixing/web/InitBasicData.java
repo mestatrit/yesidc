@@ -1,9 +1,13 @@
 package com.yesitc.baixing.web;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.yesibc.core.spring.SpringContext;
+import com.yesibc.core.utils.CollectionUtils;
+import com.yesiic.base.model.ExtendCode;
+import com.yesiic.dao.ExtendCodeDao;
 import com.yesiic.webswith.model.WebElements;
 import com.yesitc.baixing.service.DBService;
 
@@ -24,6 +28,46 @@ public class InitBasicData {
 	private static Map<String, WebElements> AREA_SH = null;
 	private static Map<String, WebElements> AREA_BJ = null;
 	private static Map<String, WebElements> AREA_COMMON = null;
+	private static Map<String, Map<String, String>> AREA_CODE_ZIPS = null;
+
+	private static Map<String, String> getAreaZip(String key) {
+		if (AREA_CODE_ZIPS == null) {
+			initAreaZip();
+		}
+		return AREA_CODE_ZIPS.get(key);
+	}
+
+	private static void initAreaZip() {
+		ExtendCodeDao extendCodeDao = (ExtendCodeDao) SpringContext.getBean("extendCodeDao");
+		ExtendCode ec = new ExtendCode();
+		List<ExtendCode> ecs = null;
+		for (Map.Entry<String, WebElements> entry : getAreas().entrySet()) {
+			ec.setName(entry.getValue().getName());
+			ecs = extendCodeDao.queryByFilter(ec);
+			if(CollectionUtils.isEmpty(ecs)){
+				continue;
+			}
+			Map<String, String> areaZips = new HashMap<String, String>();
+			for(ExtendCode temp : ecs){
+				areaZips.put(temp.getCodeType(), temp.getCode());
+			}
+			AREA_CODE_ZIPS.put(ec.getName(), areaZips);
+		}
+	}
+
+	public static String getAreaCode(String key) {
+		if (getAreaZip(key) != null) {
+			return getAreaZip(key).get(ExtendCode.CODE_TYPE_AREA_CODE);
+		}
+		return null;
+	}
+
+	public static String getZip(String key) {
+		if (getAreaZip(key) != null) {
+			return getAreaZip(key).get(ExtendCode.CODE_TYPE_ZIP);
+		}
+		return null;
+	}
 
 	private static Map<String, Map<String, WebElements>> getAll() {
 		if (ALL == null) {

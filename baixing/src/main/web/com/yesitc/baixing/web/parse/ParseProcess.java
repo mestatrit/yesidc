@@ -7,8 +7,10 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.yesibc.core.exception.ApplicationException;
 import com.yesibc.core.utils.ThreadPool;
 import com.yesiic.common.parse.Parser;
+import com.yesiic.dao.WebPagesDao;
 import com.yesiic.web.AbstractParserProcess;
 import com.yesiic.webswith.model.WebElements;
 import com.yesiic.webswith.model.WebPages;
@@ -21,6 +23,7 @@ public class ParseProcess extends AbstractParserProcess {
 
 	private Parser parseType;
 	private Parser parseDetail;
+	private WebPagesDao webPagesDao;
 
 	@SuppressWarnings("static-access")
 	@Override
@@ -34,9 +37,9 @@ public class ParseProcess extends AbstractParserProcess {
 	}
 
 	@Override
-	protected List<WebPages> getDetails() {
-		// TODO Auto-generated method stub
-		return null;
+	protected List<WebPages> getDetails() throws ApplicationException {
+		List<WebPages> wps = webPagesDao.getWebPagesByType(WebPages.PAGE_PAGES_21, WebPages.STATUS_KO, 1000);
+		return wps;
 	}
 
 	@Override
