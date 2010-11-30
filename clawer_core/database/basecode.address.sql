@@ -122,6 +122,9 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (11412, 11037, '120115', '', '', 'Bao坻Qu', '宝坻区', '', '', 5, 15,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (14524, 11037, '120116', '', '', 'BinHaiXinQu', '滨海新区', '', '', 5, 16, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11038, 11002, '120200', '', '', 'TianJinXian', '天津县', '', '', 4, 2,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -1190,7 +1193,7 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (11740, 11062, '150202', '', '', 'DongHeQu', '东河区', '', '', 5, 2,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (11741, 11062, '150203', '', '', 'KunDuLunQu', '昆都仑区', '', '', 5, 3,sysdate,sysdate, 'YTB', 'YTB');
+values (11741, 11062, '150203', '', '', 'KunDuLunQu', '昆都伦区', '', '', 5, 3,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11742, 11062, '150204', '', '', 'QingShanQu', '青山区', '', '', 5, 4,sysdate,sysdate, 'YTB', 'YTB');
@@ -1517,6 +1520,9 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (11073, 11006, '210100', '', '', 'ShenYangShi', '沈阳市', '', '', 4, 1,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (14526, 11073, '210125', '', '', 'ShenBeiXinQu', '沈北新区', '', '', 5, 15, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11838, 11073, '210101', '', '', 'ShiXiaQu', '市辖区', '', '', 5, 1,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -1721,7 +1727,7 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (11899, 11079, '210781', '', '', 'LingHaiShi', '凌海市', '', '', 5, 7,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (11900, 11079, '210782', '', '', 'BeiNingShi', '北宁市', '', '', 5, 8,sysdate,sysdate, 'YTB', 'YTB');
+values (11900, 11079, '210782', '', '', 'BeiNingShi', '北镇市', '', '', 5, 8,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11080, 11006, '210800', '', '', 'YingKouShi', '营口市', '', '', 4, 8,sysdate,sysdate, 'YTB', 'YTB');
@@ -2057,7 +2063,7 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (11997, 11092, '220623', '', '', 'ChangBaiChaoXianZuZiZhiXian', '长白朝鲜族自治县', '', '', 5, 5,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (11998, 11092, '220625', '', '', 'JiangYuanXian', '江源县', '', '', 5, 6,sysdate,sysdate, 'YTB', 'YTB');
+values (11998, 11092, '220625', '', '', 'JiangYuanXian', '江源区', '', '', 5, 6,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11999, 11092, '220681', '', '', 'LinJiangShi', '临江市', '', '', 5, 7,sysdate,sysdate, 'YTB', 'YTB');
@@ -2186,7 +2192,7 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (12035, 11096, '230129', '', '', 'YanShouXian', '延寿县', '', '', 5, 16,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (12036, 11096, '230181', '', '', 'AChengShi', '阿城市', '', '', 5, 17,sysdate,sysdate, 'YTB', 'YTB');
+values (12036, 11096, '230181', '', '', 'AChengShi', '阿城区', '', '', 5, 17,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (12037, 11096, '230182', '', '', 'ShuangChengShi', '双城市', '', '', 5, 18,sysdate,sysdate, 'YTB', 'YTB');
@@ -2598,6 +2604,9 @@ values (12160, 11108, '232722', '', '', 'TaHeXian', '塔河县', '', '', 5, 2,sy
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (12161, 11108, '232723', '', '', 'MoHeXian', '漠河县', '', '', 5, 3,sysdate,sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (14525, 11108, '232724', '', '', 'JiaGeDaQiQu', '加格达奇区', '', '', 5, 4, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11009, 10048, '310000', '', '', 'ShangHaiShi', '上海', '', '', 3, 9,sysdate,sysdate, 'YTB', 'YTB');
@@ -3446,10 +3455,7 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (12411, 11136, '340203', '', '', 'MaTangQu', '马塘区', '', '', 5, 3,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (12412, 11136, '340204', '', '', 'XinWuQu', '新芜区', '', '', 5, 4,sysdate,sysdate, 'YTB', 'YTB');
-
-insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (12413, 11136, '340207', '', '', '鸠JiangQu', '鸠江区', '', '', 5, 5,sysdate,sysdate, 'YTB', 'YTB');
+values (12413, 11136, '340207', '', '', 'SanShanQu', '三山区', '', '', 5, 5,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (12414, 11136, '340221', '', '', 'WuHuXian', '芜湖县', '', '', 5, 6,sysdate,sysdate, 'YTB', 'YTB');
@@ -3459,6 +3465,12 @@ values (12415, 11136, '340222', '', '', 'FanChangXian', '繁昌县', '', '', 5, 
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (12416, 11136, '340223', '', '', 'NanLingXian', '南陵县', '', '', 5, 8,sysdate,sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15726, 11136, '340224', '', '', 'YiJianQu', '弋江区', '', '', 5, 9, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15745, 11136, '340204', '', '', 'JiuJiangQu', '鸠江区', '', '', 5, 10,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11137, 11012, '340300', '', '', 'BangBuShi', '蚌埠市', '', '', 4, 3,sysdate,sysdate, 'YTB', 'YTB');
@@ -4994,7 +5006,7 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (12873, 11187, '371626', '', '', 'ZouPingXian', '邹平县', '', '', 5, 8,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (11188, 11015, '371700', '', '', 'HeZeShi', '荷泽市', '', '', 4, 17,sysdate,sysdate, 'YTB', 'YTB');
+values (11188, 11015, '371700', '', '', 'HeZeShi', '菏泽市', '', '', 4, 17,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (12874, 11188, '371701', '', '', 'ShiXiaQu', '市辖区', '', '', 5, 1,sysdate,sysdate, 'YTB', 'YTB');
@@ -5072,6 +5084,9 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (12896, 11189, '410185', '', '', 'DengFengShi', '登封市', '', '', 5, 13,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15731, 11189, '410123', '', '', 'HuiJiQu', '惠济区', '', '', 5, 14, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11190, 11016, '410200', '', '', 'KaiFengShi', '开封市', '', '', 4, 2,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -5106,6 +5121,12 @@ values (12906, 11190, '410224', '', '', 'KaiFengXian', '开封县', '', '', 5, 1
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (12907, 11190, '410225', '', '', 'LanKaoXian', '兰考县', '', '', 5, 11,sysdate,sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15732, 11190, '410206', '', '', 'YuWangTaiQu', '禹王台区', '', '', 5, 12, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15733, 11190, '410207', '', '', 'JinMingQu', '金明区', '', '', 5, 13, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11191, 11016, '410300', '', '', 'LuoYangShi', '洛阳市', '', '', 4, 3,sysdate,sysdate, 'YTB', 'YTB');
@@ -5954,6 +5975,9 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (13161, 11217, '421381', '', '', 'GuangShuiShi', '广水市', '', '', 5, 3,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15727, 11217, '421303', '', '', 'SuiXian', '随县', '', '', 5, 4, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11218, 11017, '422800', '', '', 'EnShiTuJiaZuMiaoZuZiZhiZhou', '恩施土家族苗族自治州', '', '', 4, 13,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -6356,6 +6380,9 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (13281, 11230, '431129', '', '', 'JiangHuaYaoZuZiZhiXian', '江华瑶族自治县', '', '', 5, 12,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15728, 11230, '431130', '', '', 'LingLingQu', '零陵区', '', '', 5, 13, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11231, 11018, '431200', '', '', 'HuaiHuaShi', '怀化市', '', '', 4, 12,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -6489,6 +6516,12 @@ values (13320, 11234, '440183', '', '', 'ZengChengShi', '增城市', '', '', 5, 
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (13321, 11234, '440184', '', '', 'CongHuaShi', '从化市', '', '', 5, 13,sysdate,sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15729, 11234, '440115', '', '', 'NanShaQu', '南沙区', '', '', 5, 14, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15730, 11234, '440116', '', '', 'LuoGangQu', '萝岗区', '', '', 5, 15, sysdate, sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11235, 11019, '440200', '', '', 'ShaoGuanShi', '韶关市', '', '', 4, 2,sysdate,sysdate, 'YTB', 'YTB');
@@ -7787,6 +7820,9 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (13702, 11281, '510824', '', '', 'CangXiXian', '苍溪县', '', '', 5, 8,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15734, 11281, '510803', '', '', 'LiZhouQu', '利州区', '', '', 5, 9, sysdate, sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11282, 11023, '510900', '', '', 'SuiNingShi', '遂宁市', '', '', 4, 8,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -8729,10 +8765,10 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (13985, 11310, '530724', '', '', 'Ning蒗YiZuZiZhiXian', '宁蒗彝族自治县', '', '', 5, 6,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (11311, 11025, '530800', '', '', 'SiMaoShi', '思茅市', '', '', 4, 7,sysdate,sysdate, 'YTB', 'YTB');
+values (11311, 11025, '530800', '', '', 'PuErShi', '普洱市', '', '', 4, 7,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
-values (13986, 11311, '530801', '', '', 'ShiXiaQu', '市辖区', '', '', 5, 1,sysdate,sysdate, 'YTB', 'YTB');
+values (13986, 11311, '530801', '', '', 'ShiMaoQu', '思茅区', '', '', 5, 1,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (13987, 11311, '530802', '', '', 'CuiYunQu', '翠云区', '', '', 5, 2,sysdate,sysdate, 'YTB', 'YTB');
@@ -9287,6 +9323,9 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (14151, 11328, '610126', '', '', 'GaoLingXian', '高陵县', '', '', 5, 14,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15735, 11328, '610105', '', '', 'YangLingQu', '杨陵区', '', '', 5, 15,sysdate,sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11329, 11027, '610200', '', '', 'TongChuanShi', '铜川市', '', '', 4, 2,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -9477,6 +9516,9 @@ values (14209, 11333, '610631', '', '', 'HuangLongXian', '黄龙县', '', '', 5,
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (14210, 11333, '610632', '', '', 'HuangLingXian', '黄陵县', '', '', 5, 14,sysdate,sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15736, 11333, '610633', '', '', 'WuQiXian', '吴起县', '', '', 5, 15,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11334, 11027, '610700', '', '', 'HanZhongShi', '汉中市', '', '', 4, 7,sysdate,sysdate, 'YTB', 'YTB');
@@ -9722,6 +9764,12 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (14281, 11342, '620525', '', '', 'ZhangJiaChuanHuiZuZiZhiXian', '张家川回族自治县', '', '', 5, 8,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15737, 11342, '620504', '', '', 'MaiJiQu', '麦积区', '', '', 5, 9, '30-NOV-10 09.28.00.000000 PM', '30-NOV-10 09.28.00.000000 PM', 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15738, 11342, '620505', '', '', 'QunZhouQu', '秦州区', '', '', 5, 10, '30-NOV-10 09.28.31.000000 PM', '30-NOV-10 09.28.31.000000 PM', 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11343, 11028, '620600', '', '', 'WuWeiShi', '武威市', '', '', 4, 6,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -9816,6 +9864,10 @@ values (14308, 11346, '620981', '', '', 'YuMenShi', '玉门市', '', '', 5, 7,sy
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (14309, 11346, '620982', '', '', 'DunHuangShi', '敦煌市', '', '', 5, 8,sysdate,sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15739, 11346, '620925', '', '', 'GuaZhouXian', '瓜州县', '', '', 5, 9, '30-NOV-10 09.32.32.000000 PM', '30-NOV-10 09.32.32.000000 PM', 'YTB', 'YTB');
+
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11347, 11028, '621000', '', '', 'QingYangShi', '庆阳市', '', '', 4, 10,sysdate,sysdate, 'YTB', 'YTB');
@@ -10121,6 +10173,15 @@ insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, ME
 values (14396, 11359, '632823', '', '', 'TianJunXian', '天峻县', '', '', 5, 5,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15740, 11359, '632803', '', '', 'DaCaiDanXingWei', '大柴旦行委', '', '', 5, 6,sysdate,sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15741, 11359, '632804', '', '', 'MangYaXingWei', '茫崖行委', '', '', 5, 7,sysdate,sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15742, 11359, '632805', '', '', 'LengHuXingWei', '冷湖行委', '', '', 5, 8,sysdate,sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11030, 10048, '640000', '', '', 'NingXiaHuiZu', '宁夏回族', '', '', 3, 30,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
@@ -10179,6 +10240,9 @@ values (14411, 11362, '640324', '', '', 'TongXinXian', '同心县', '', '', 5, 4
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (14412, 11362, '640381', '', '', 'QingTongXiaShi', '青铜峡市', '', '', 5, 5,sysdate,sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15744, 11362, '640303', '', '', 'HongShiBaoQu', '红寺堡区', '', '', 5, 6,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11363, 11030, '640400', '', '', 'GuYuanShi', '固原市', '', '', 4, 4,sysdate,sysdate, 'YTB', 'YTB');
@@ -10248,6 +10312,9 @@ values (14430, 11365, '650108', '', '', 'DongShanQu', '东山区', '', '', 5, 8,
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (14431, 11365, '650121', '', '', 'WuLuMuQiXian', '乌鲁木齐县', '', '', 5, 9,sysdate,sysdate, 'YTB', 'YTB');
+
+insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
+values (15743, 11365, '650109', '', '', 'MiDongQu', '米东区', '', '', 5, 10,sysdate,sysdate, 'YTB', 'YTB');
 
 insert into t_code (ID, CODE_TYPE, CODE, CODE1, ENAME1, ENAME, CNAME, CNAME1, MEMO, CODE_LEVEL, SORT_LIST, CREATE_DATE, UPDATE_DATE, CREATE_USER, UPDATE_USER)
 values (11366, 11031, '650200', '', '', 'KeLaMaYiShi', '克拉玛依市', '', '', 4, 2,sysdate,sysdate, 'YTB', 'YTB');
