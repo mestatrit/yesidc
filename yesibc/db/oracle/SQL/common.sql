@@ -250,4 +250,57 @@ delete from t_company
 --22.树形结构              
 SELECT LEVEL,RPAD(' ',LEVEL*3) || wb.code,wb.* FROM WEB_ELEMENTS wb 
 CONNECT BY PRIOR id = code_type START WITH code='types';
-  
+ 
+--23.DBLINK相关
+--在sys用户下，把CREATE PUBLIC DATABASE LINK，DROP PUBLIC DATABASE LINK权限授予给你的用户
+grant CREATE PUBLIC DATABASE LINK，DROP PUBLIC DATABASE LINK to scott;
+--则创建了一个以scott用户和北京数据库的链接beijing，我们查询北京的scott数据: 
+SQL>create public database link beijing connect to scott identified by tiger  
+            using 'tobeijing';  
+--这样就可以把深圳和北京scott用户的数据做成一个整体来处理。  
+SQL>select * from emp@beijing;  
+--建立同义词，为了使有关分布式操作更透明，ORACLE数据库里有同义词的对象synonym 
+SQL>create synonym bjscottemp for emp@beijing; 
+--查看所有的数据库链接，进入系统管理员SQL>操作符下，运行命令：   
+SQL>select owner,object_name from dba_objects where object_type='DATABASE LINK'; 
+--查看数据库连接
+sql> select owner, db_link from dba_db_links; 
+ower    db_link
+public   TEST.US.ORACLE.COM
+--删除数据库连接
+先从第三步中查看数据库连接，取得其db_link的名称
+sql>drop public database link TEST.US.ORACLE.COM
+--还可以建立一个本地的远程视图，方便使用：       
+CREATE   VIEW   worker   AS   SELECT   *   FROM   worker@sbzw_link   where…
+
+--24.Oracle BUG?
+--第一种写法时间显示为空。
+select daa.* from des_alpha_audit daa where 
+daa.log_id in
+(
+  select  da.log_id  from des_decisions_audit da
+ inner join des_basic_audit db
+    on da.log_id = db.log_id
+ where da.es_typ_es = 'FIN'
+   and da.es_final_man_decision = 'OK'
+   and db.logo = '900'
+   and da.es_date_time_last_call >
+       to_date('2010-7-1 0:49:16', 'yyyy-MM-dd hh24:mi:ss')
+   and da.es_date_time_last_call <
+       to_date('2010-9-30 23:49:16', 'yyyy-MM-dd hh24:mi:ss')
+)
+
+--第二种写法时间显示为0000/0/0，此时无法导出。
+select daa.*
+  from des_decisions_audit da
+ inner join des_basic_audit db
+    on da.log_id = db.log_id
+ inner join des_alpha_audit daa
+    on daa.log_id = db.log_id
+ where da.es_typ_es = 'FIN'
+   and da.es_final_man_decision = 'OK'
+   and db.logo = '900'
+   and da.es_date_time_last_call >
+       to_date('2010-7-1 0:49:16', 'yyyy-MM-dd hh24:mi:ss')
+   and da.es_date_time_last_call <
+       to_date('2010-9-30 23:49:16', 'yyyy-MM-dd hh24:mi:ss')
