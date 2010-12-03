@@ -163,6 +163,20 @@ select lpad(999,6,'0') from dual
 select to_char('999','FM0000000000') from dual
 
 --15.日志写到文件
+/**
+创建目录的写法一：
+首先一个Directories的变量,如下语句:
+CREATE OR REPLACE DIRECTORY UTL_FILES_DIR AS '/usr/www/wjhd';
+再把权限授给相应用户,如下是授给公众用户:
+GRANT READ ON DIRECTORY UTL_FILES_DIR TO PUBLIC; 
+在utl_file包里就可以使用Directories的变量了(UTL_FILES_DIR),如
+f:=UTL_FILE.FOPEN('UTL_FILES_DIR','FCG.2006050110.BIL','R');
+创建目录的写法二：
+select * from dba_directories
+创建目录的写法三：
+在init.ora中加入UTL_FILE_DIR = C:\TEMP
+重起后就行了 
+**/
   --需要用到utl_file包  
   --看例子：   
   --先修改或添加init.ora的UTL_FILE_DIR参数   
