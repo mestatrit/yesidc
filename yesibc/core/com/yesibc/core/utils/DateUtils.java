@@ -415,6 +415,43 @@ public class DateUtils {
 	}
 
 	/**
+	 * 
+	 * @return
+	 */
+	public static Date getCurrentDate() {
+		GregorianCalendar c = new GregorianCalendar();
+		return c.getTime();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public static Date getDate(int year, int month, int day) {
+		GregorianCalendar c = new GregorianCalendar();
+		c.set(Calendar.YEAR, year);
+		c.set(Calendar.MONTH, (month - 1));
+		c.set(Calendar.DAY_OF_MONTH, day);
+		return c.getTime();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public static Date getDateDetail(int year, int month, int day, int hour, int minute, int second, int mills) {
+		GregorianCalendar c = new GregorianCalendar();
+		c.set(Calendar.YEAR, year);
+		c.set(Calendar.MONTH, (month - 1));
+		c.set(Calendar.DAY_OF_MONTH, day);
+		c.set(Calendar.HOUR_OF_DAY, hour);
+		c.set(Calendar.MINUTE, minute);
+		c.set(Calendar.SECOND, second);
+		c.set(Calendar.MILLISECOND, mills);
+		return c.getTime();
+	}
+
+	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
