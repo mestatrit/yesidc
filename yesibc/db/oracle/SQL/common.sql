@@ -320,3 +320,29 @@ AND S.ADDR = G.K2GTDSES AND W.SID = S.INDX
 AND S.KSUSEPRO = P.ADDR -- AND SUBSTR(G.K2GTITID_ORA, 1, 35) = 'XREP.1e55ca62.77.4.729'
 -- AND W.EVENT='SQL*NET MESSAGE FROM DBLINK'
 ORDER BY WAITING, STATUS       
+
+25.导出所有的包
+set serveroutput on;
+set heading off;
+set pagesize 0;
+set feedback off;
+set line 1000;
+set trimspool on;
+set trimout on;
+set verify off;
+set termout off; 
+
+spool srcipt.sql
+declare
+   cursor cur is select distinct owner, name from all_source where type like 'PACKAGE%' and owner='CHN_DES_UAT4';
+begin
+   for rec in cur loop
+       dbms_output.put_line('spool '||rec.name||'.sql');
+       dbms_output.put_line('select text from all_source where owner='||''''||rec.owner||''''||' and name='||''''||rec.name||''''||' and type like '||''''||'PACKAGE%'||''''||'and owner=''CHN_DES_UAT4'''||' order by type,line;');
+       dbms_output.put_line('spool off;');
+   end loop;
+end;
+/
+spool off;
+@srcipt.sql
+exit;
