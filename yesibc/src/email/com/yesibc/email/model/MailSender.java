@@ -181,18 +181,18 @@ public class MailSender implements java.io.Serializable {
 		return simpleBody;
 	}
 
-	public void sendBySimple(String msg) {
+	public void sendBySimple(String subject) {
 		if (senderServer == null || mailMessage == null) {
 			AlertUtils.sendAlert("[" + mailName + "] senderServer or mailMessage can not be null!\n" + simpleBody);
 			return;
 		}
-		log.error(simpleBody);
+		log.error("[" + mailName + "]title=" + subject + "|" + simpleBody);
 		mailMessage.setText(simpleBody);
-		if (msg != null) {
-			if (msg.length() > 120) {
-				mailMessage.setSubject(StringUtils.subStringByByte(msg, 0, 120));
+		if (subject != null) {
+			if (subject.length() > 120) {
+				mailMessage.setSubject(StringUtils.subStringByByte(subject, 0, 120));
 			} else {
-				mailMessage.setSubject(msg);
+				mailMessage.setSubject(subject);
 			}
 		} else {
 			if (simpleBody != null && simpleBody.length() > 120) {
@@ -209,7 +209,7 @@ public class MailSender implements java.io.Serializable {
 			AlertUtils.sendAlert("[" + mailName + "] senderServer or multiMessage can not be null!\n" + multiBody);
 			return;
 		}
-		log.error(multiBody);
+		log.error("[" + mailName + "]" + multiBody);
 		senderServer.send(multiMessage);
 	}
 
