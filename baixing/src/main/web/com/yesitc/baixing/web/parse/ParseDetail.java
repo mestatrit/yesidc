@@ -1,7 +1,6 @@
 package com.yesitc.baixing.web.parse;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +9,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.htmlparser.util.ParserException;
 
 import com.yesibc.core.CoreConstants;
 import com.yesibc.core.components.http.HtmlParserUtils;
@@ -21,24 +21,20 @@ import com.yesiic.common.ProcessContext;
 import com.yesiic.common.parse.AbstractDetailParser;
 import com.yesiic.person.model.SimPerson;
 import com.yesiic.person.model.SimPersonContactInfo;
+import com.yesiic.webswith.model.WebElements;
 import com.yesitc.baixing.service.BxUtils;
 
 public class ParseDetail extends AbstractDetailParser {
 
-	private final static String DATA_ID = "content";
+	private final static String DATA_ID = "container";
 	private final static Long BAIXING = new Long(1002);
 	private final static String[] DATA_CONTENT_TAG = { "发布时间：", "所在地：" };
 	private static Log log = LogFactory.getLog(ParseDetail.class);
+	private final static String[] CONTENT_FILTERS = { "该信息无法显示", "你要访问的页面不存在！","该信息已被发布人自己删除" };
 
 	public void parsing(ProcessContext processContext) throws ApplicationException {
 		try {
-			String content = HtmlParserUtils.getHtmlById(processContext.getHtml(), DATA_ID, CoreConstants.CHARSET_UTF8)
-					.toHtml();
-			if (content == null) {
-				throw new ApplicationException(processContext.getLogTitle() + "getHtmlById-" + DATA_ID + " is null!");
-			}
-
-			content = HtmlParserUtils.getHtmlByTag0Txt(processContext.getHtml(), "P", DATA_CONTENT_TAG,
+			String content = HtmlParserUtils.getHtmlByTag0Txt(processContext.getHtml(), "P", DATA_CONTENT_TAG,
 					CoreConstants.CHARSET_UTF8).toHtml();
 			if (content == null) {
 				throw new ApplicationException(processContext.getLogTitle() + "getHtmlByTag0Txt-" + DATA_CONTENT_TAG[0]
@@ -55,19 +51,17 @@ public class ParseDetail extends AbstractDetailParser {
 	}
 
 	private SimPerson set2Person(String content, ProcessContext processContext) throws ApplicationException {
-		Date now = new Date();
 		SimPerson simPerson = new SimPerson();
-		simPerson.setCreateDate(now);
-		simPerson.setUpdateDate(now);
 
 		List<SimPersonContactInfo> simPersonContactInfos = new ArrayList<SimPersonContactInfo>();
+		simPerson.setSimPersonContactInfos(simPersonContactInfos);
 
 		Map<String, String> all = new HashMap<String, String>();
 		Map<String, String> qqs = ClawerUtils.getQQ(content);
 		if (!CollectionUtils.isEmpty(qqs)) {
 			all.putAll(qqs);
 			for (Map.Entry<String, String> entry : qqs.entrySet()) {
-				simPersonContactInfos.add(getContactInfo(now, simPerson, entry.getKey(),
+				simPersonContactInfos.add(getContactInfo(simPerson, entry.getKey(),
 						SimPersonContactInfo.CONTRACT_TAG_QQ));
 			}
 		}
@@ -75,7 +69,7 @@ public class ParseDetail extends AbstractDetailParser {
 		if (!CollectionUtils.isEmpty(telNos)) {
 			all.putAll(telNos);
 			for (Map.Entry<String, String> entry : telNos.entrySet()) {
-				SimPersonContactInfo sci = getContactInfo(now, simPerson, entry.getKey(),
+				SimPersonContactInfo sci = getContactInfo(simPerson, entry.getKey(),
 						SimPersonContactInfo.CONTRACT_TAG_TEL);
 				updateAreaCode(sci, processContext);
 				simPersonContactInfos.add(sci);
@@ -85,12 +79,12 @@ public class ParseDetail extends AbstractDetailParser {
 		if (!CollectionUtils.isEmpty(mobiles)) {
 			all.putAll(mobiles);
 			for (Map.Entry<String, String> entry : mobiles.entrySet()) {
-				simPersonContactInfos.add(getContactInfo(now, simPerson, entry.getKey(),
+				simPersonContactInfos.add(getContactInfo(simPerson, entry.getKey(),
 						SimPersonContactInfo.CONTRACT_TAG_MOBILE));
 			}
 		}
 
-		Map<String, String> names = ClawerUtils.getName(content, all);
+		Map<String, String> names = ClawerUtils.getName(content);
 		String name = "";
 		if (!CollectionUtils.isEmpty(names)) {
 			all.putAll(mobiles);
@@ -115,15 +109,21 @@ public class ParseDetail extends AbstractDetailParser {
 		if (StringUtils.isEmpty(sci.getContractNo())) {
 			return;
 		}
-		String cityName = BxUtils.getCityNameFromUrl(processContext);
+		if (sci.getContractNo().length() > 10) {
+			return;
+		}
+		WebElements wb = BxUtils.getCityNameFromUrl(processContext);
+		String cityName = ClawerUtils.getTelAreaCode(wb.getName(), wb.getMemo());
+		if(!StringUtils.isEmpty(cityName)){
+			sci.setContractNo(cityName + "-" + sci.getContractNo());
+		}
 	}
 
-	private SimPersonContactInfo getContactInfo(Date now, SimPerson simPerson, String no, String type) {
+	private SimPersonContactInfo getContactInfo(SimPerson simPerson, String no, String type) {
 		SimPersonContactInfo simPersonContactInfo = new SimPersonContactInfo();
 		simPersonContactInfo.setContractNo(no);
 		simPersonContactInfo.setSimPerson(simPerson);
 		simPersonContactInfo.setType(type);
-		simPersonContactInfo.setUpdateDate(now);
 		return simPersonContactInfo;
 	}
 
@@ -139,24 +139,78 @@ public class ParseDetail extends AbstractDetailParser {
 	}
 
 	public static void main(String[] args) {
-		String url = "发票，上海025-5239291牌照02-82392913 025-52392913 0256-52392913在QQ6666666239291齐QQ:6239291全小QQ在xxxxx6239291，联系方式：13162869509联系我时，请一定说2342明在百姓网看到的，谢谢！";
+		String url = "发221-66250763票，99250761联系021-66250761上134#1700#97#08 海13916525752牌131.1700.9.408小照133@1700@97@08 QQ50392913111在QQ6239齐qq:6239291，138-1700-97-09 QQ503929wdddd";
 		// url = "-1234.3MhZ";
 		try {
-			Pattern p = Pattern.compile("[\\d]{11,12}|([\\d]{3,4}[-])?[\\d]{7,8}");
-			Matcher m = p.matcher(url);
-			while (m.find()) {
-				System.out.println(m.group());
+			Map<String, String> temp = ClawerUtils.getQQ(url);
+			for (Map.Entry<String, String> entry : temp.entrySet()) {
+				System.out.println("getQQ=" + entry.getKey());
 			}
-			System.out.println("========");
-			p = Pattern.compile("([Q]{2}[^0-9]{0,10})[\\d]{7,8}");
-			m = p.matcher(url);
-			while (m.find()) {
-				System.out.println(m.group());
+			System.out.println("======");
+			Map<String, String> temp1 = ClawerUtils.getMobile(url, temp);
+			for (Map.Entry<String, String> entry : temp1.entrySet()) {
+				System.out.println("getMobile=" + entry.getKey());
 			}
-			System.out.println("========");
+			System.out.println("======");
+			Map<String, String> temp2 = ClawerUtils.getTelNo(url, temp);
+			for (Map.Entry<String, String> entry : temp2.entrySet()) {
+				System.out.println("getTelNo=" + entry.getKey() + "=" + entry.getValue());
+			}
+			System.out.println("======");
+			Map<String, String> temp3 = ClawerUtils.getName(url);
+			if (temp3 == null) {
+				return;
+			}
+			for (Map.Entry<String, String> entry : temp3.entrySet()) {
+				System.out.println("getName=" + entry.getKey());
+			}
+
+			url = "d大先生";
+			temp3 = ClawerUtils.getName(url);
+			if (temp3 == null) {
+				return;
+			}
+			for (Map.Entry<String, String> entry : temp3.entrySet()) {
+				System.out.println("getName1=" + entry.getKey());
+			}
+
+			url = "Mr生";
+			temp3 = ClawerUtils.getName(url);
+			if (temp3 == null) {
+				return;
+			}
+			for (Map.Entry<String, String> entry : temp3.entrySet()) {
+				System.out.println("getName2=" + entry.getKey());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	protected String getContentIncludeFilter(ProcessContext processContext) throws ApplicationException {
+		String content = null;
+		try {
+			content = HtmlParserUtils.getHtmlById(processContext.getHtml(), DATA_ID, CoreConstants.CHARSET_UTF8)
+					.toHtml();
+		} catch (ParserException e) {
+			throw new ApplicationException(e);
+		}
+		if (content == null) {
+			throw new ApplicationException(processContext.getLogTitle() + "getHtmlById-" + DATA_ID + " is null!");
+		}
+		return content;
+	}
+
+	@Override
+	protected boolean getFilter(ProcessContext processContext) {
+		for (String str : CONTENT_FILTERS) {
+			if (processContext.getFetchedContent().indexOf(str) > -1) {
+				processContext.setFilterMsg(str);
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

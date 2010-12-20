@@ -16,7 +16,7 @@ public class TestMain {
 	public static void main(String[] args) {
 		ParseProcess parseProcess = (ParseProcess)SpringContext.getBean("parseProcess");
 		try {
-			parseProcess.getBaseInfo(2, "981050", 0, "981050");
+			parseProcess.getBaseInfo(2, "981050", 2, "981050~");
 			parseProcess.main();
 		} catch (Exception e) {
 			log.info(" Exception:", e);
