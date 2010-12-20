@@ -1,6 +1,7 @@
 package com.yesiic.common;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +11,14 @@ import org.apache.commons.logging.LogFactory;
 
 import com.yesibc.core.exception.NestedRuntimeException;
 import com.yesibc.core.spring.SpringContext;
+import com.yesibc.core.utils.CollectionUtils;
+import com.yesibc.core.utils.ComparatorImpl;
 import com.yesiic.base.model.Code;
 import com.yesiic.common.support.Address;
+import com.yesiic.common.support.AddressFilters;
+import com.yesiic.common.support.Appellation;
 import com.yesiic.common.support.FromWhere;
 import com.yesiic.dao.BaseCodeDao;
-
 
 public abstract class BaseCode {
 
@@ -34,6 +38,8 @@ public abstract class BaseCode {
 	public static final String APPENDIX = "appendix";
 	public static final String FROM_WHERE = "from.where";
 	public static final String COMPANY_SCALE = "company.scale";
+	public static final String APPELLATION = "appellation";
+	public static final String ADDRESS_FILTER = "address.filter";
 
 	public static final Long CODE_LEVEL_TOP = new Long(0);
 	public static final Long CODE_LEVEL_FIRST = new Long(1);
@@ -43,12 +49,6 @@ public abstract class BaseCode {
 	public static final Long CODE_LEVEL_FIFTH = new Long(5);
 
 	public static Map<String, Code> TOPS = new HashMap<String, Code>();
-	public static Map<String, Code> CONTINENTS = new HashMap<String, Code>();
-	public static Map<String, Code> CONTRIES = new HashMap<String, Code>();
-	public static Map<String, Code> PROVINCES = new HashMap<String, Code>();
-	public static Map<String, Code> CITIES = new HashMap<String, Code>();
-	public static Map<String, Code> DISTRICTS = new HashMap<String, Code>();
-	public static Map<String, Code> FROM_WHERES = new HashMap<String, Code>();
 
 	public static List<Code> TOP_CODES = null;
 
@@ -70,7 +70,7 @@ public abstract class BaseCode {
 
 		LogHandler.info("Refresh i:" + (++i) + "times.");
 
-		if (ClawerConstants.TEST_DAO) {
+		if (!ClawerConstants.BASE_CODE_FROM_DB) {
 			TOP_CODES = new ArrayList<Code>();
 			TOP_CODES.add(new Code());
 			loaded = true;
@@ -95,6 +95,10 @@ public abstract class BaseCode {
 				Address.put2Continents(code.getChildren());
 			} else if (FROM_WHERE.equals(code.getCode())) {
 				FromWhere.put2Map(code.getChildren());
+			} else if (APPELLATION.equals(code.getCode())) {
+				Appellation.put2Map(code.getChildren());
+			} else if (ADDRESS_FILTER.equals(code.getCode())) {
+				AddressFilters.put2Map(code.getChildren());
 			}
 		}
 	}
@@ -121,4 +125,24 @@ public abstract class BaseCode {
 
 	public abstract Code getCode(String code, Long level);
 
+	public abstract Map<String, Code> getCodes();
+
+	public abstract List<Code> getSubCodeList();
+
+	public List<Code> getCodeList() {
+		if (!CollectionUtils.isEmpty(getSubCodeList())) {
+			return getSubCodeList();
+		}
+		if (CollectionUtils.isEmpty(getCodes())) {
+			return null;
+		}
+
+		for (Map.Entry<String, Code> entry : getCodes().entrySet()) {
+			getSubCodeList().add(entry.getValue());
+		}
+
+		ComparatorImpl<Code> myCmp = new ComparatorImpl<Code>("getSortList", true);
+		Collections.sort(getSubCodeList(), myCmp);
+		return getSubCodeList();
+	}
 }

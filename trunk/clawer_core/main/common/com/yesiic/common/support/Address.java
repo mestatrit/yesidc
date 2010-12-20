@@ -1,5 +1,6 @@
 package com.yesiic.common.support;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,13 @@ import com.yesiic.common.ClawerConstants;
 import com.yesiic.common.LogHandler;
 
 public class Address extends BaseCode {
+
+	private static Map<String, Code> CONTINENTS = new HashMap<String, Code>();
+	private static Map<String, Code> CONTRIES = new HashMap<String, Code>();
+	private static Map<String, Code> PROVINCES = new HashMap<String, Code>();
+	private static Map<String, Code> CITIES = new HashMap<String, Code>();
+	private static Map<String, Code> DISTRICTS = new HashMap<String, Code>();
+	private static List<Code> CITY_LIST = new ArrayList<Code>();
 
 	/**
 	 * @param str
@@ -37,7 +45,7 @@ public class Address extends BaseCode {
 			c = (Code) entry.getValue();
 			if (str.indexOf(c.getCname()) > -1) {
 				for (String filter : ClawerConstants.FILTERS_ADDRESS) {
-					if (str.indexOf(c.getCname() + filter) > -1) {
+					if (str.indexOf(c.getCname() + filter) > -1) { //云南北路，不在云南省
 						have = true;
 						break;
 					}
@@ -84,8 +92,8 @@ public class Address extends BaseCode {
 				}
 			}
 		}
-		
-		if(!map.containsKey(CODE_LEVEL_FOURTH)){
+
+		if (!map.containsKey(CODE_LEVEL_FOURTH)) {
 			have = false;
 			for (Map.Entry<String, Code> entry : DISTRICTS.entrySet()) {
 				have = false;
@@ -114,7 +122,7 @@ public class Address extends BaseCode {
 				continue;
 			}
 
-			BaseCode.CONTRIES.put(code.getCode(), code);
+			CONTRIES.put(code.getCode(), code);
 			put2Provinces(code.getChildren());
 		}
 	}
@@ -145,7 +153,7 @@ public class Address extends BaseCode {
 				}
 			}
 
-			BaseCode.PROVINCES.put(code.getCode(), code);
+			PROVINCES.put(code.getCode(), code);
 
 			// LogHandler.info("Start put cities to Province:" +
 			// code.getCname());
@@ -188,7 +196,7 @@ public class Address extends BaseCode {
 					code.setCname(temp);
 				}
 			}
-			BaseCode.CITIES.put(code.getCode(), code);
+			CITIES.put(code.getCode(), code);
 			put2districts(code.getChildren());
 		}
 	}
@@ -219,8 +227,8 @@ public class Address extends BaseCode {
 					code.setCname(temp);
 				}
 			}
-			BaseCode.DISTRICTS.put(code.getCode(), code);
-		}	
+			DISTRICTS.put(code.getCode(), code);
+		}
 	}
 
 	public static void main(String[] args) {
@@ -245,8 +253,22 @@ public class Address extends BaseCode {
 				continue;
 			}
 
-			BaseCode.CONTINENTS.put(code.getCode(), code);
+			CONTINENTS.put(code.getCode(), code);
 			put2Contries(code.getChildren());
 		}
 	}
+
+	@Override
+	public Map<String, Code> getCodes() {
+		if (TOP_CODES == null) {
+			refreshAll();
+		}
+		return CITIES;
+	}
+
+	@Override
+	public List<Code> getSubCodeList() {
+		return CITY_LIST;
+	}
+
 }

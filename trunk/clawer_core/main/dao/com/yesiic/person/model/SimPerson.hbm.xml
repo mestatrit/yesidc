@@ -44,5 +44,9 @@
 				<comment>修改时间</comment>
 			</column>
 		</property>
+		<bag lazy="true" name="simPersonContactInfos" table="TP_SIM_CONTACT_INFO" cascade="all">
+			<key column="SIM_PERSON_ID" />
+			<one-to-many class="SimPersonContactInfo" />
+		</bag>
 	</class>
 </hibernate-mapping>

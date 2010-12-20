@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,7 +36,7 @@ public abstract class AbstractParserProcess {
 	protected static String requestId = null;
 	protected static int threadNumber = ClawerConstants.THREADS_NUMBER;
 	protected static ThreadPoolExecutor threadPool = null;
-	public static boolean TO_DB_INIT = false;
+	public static boolean TO_DB_INIT = ClawerConstants.TO_DB_INIT;
 
 	private WebPagesDao webPagesDao;
 
@@ -88,14 +87,19 @@ public abstract class AbstractParserProcess {
 	}
 
 	private void parseTypeLevel() throws ApplicationException {
-		String title = "#parse types#";
+		String temp = "#parse types#";
 		List<WebPages> types = getTypes();
 		if (types == null || types.isEmpty()) {
-			throw new ApplicationException(title + " is null!");
+			throw new ApplicationException(temp + " is null!");
 		}
 
-		Parser parser = getParseTypes();
-		parseCommon(title, types, parser);
+		int i = 0;
+		String title = null;
+		while (!CollectionUtils.isEmpty(types)) {
+			i++;
+			title = temp + i + "#";
+			parseCommon(title, types, WebPages.PAGE_TYPES_11);
+		}
 	}
 
 	/**
@@ -103,7 +107,7 @@ public abstract class AbstractParserProcess {
 	 * 
 	 * @throws ApplicationException
 	 */
-	private void parseCommon(String title, List<WebPages> types, Parser parser) throws ApplicationException {
+	private void parseCommon(String title, List<WebPages> types, String parserType) throws ApplicationException {
 		start = System.currentTimeMillis();
 		Collections.shuffle(types);
 		try {
@@ -134,13 +138,18 @@ public abstract class AbstractParserProcess {
 							+ currentOfToI + size + "-" + current + endTag);
 					processContext.setWp(types.get(current));
 
+					Parser parser = null;
+					if(WebPages.PAGE_TYPES_11.equals(parserType)){
+						parser = getParseTypes();
+					}else if(WebPages.PAGE_PAGES_21.equals(parserType)){
+						parser = getParseDetails();
+					}
 					ExecuteParser ep = new ExecuteParser(parser, processContext);
 					eps.add(ep);
 					threadPool.execute(ep);
 					current++;
 				}
 
-				threadPool.awaitTermination(2000, TimeUnit.SECONDS);
 				ExecutorSupport.waitingThreadRunning(eps, threadPool);
 
 				if (InternetConnection.checkWaitingConn(title)) {// 如果没有重新连接的操作，则进入是否需要重新的判断。
@@ -171,13 +180,12 @@ public abstract class AbstractParserProcess {
 		if (details == null || details.isEmpty()) {
 			throw new ApplicationException(temp + " is null!");
 		}
-		Parser parser = getParseDetails();
 		int i = 0;
 		String title = null;
 		while (!CollectionUtils.isEmpty(details)) {
 			i++;
 			title = temp + i + "#";
-			parseCommon(title, details, parser);
+			parseCommon(title, details, WebPages.PAGE_PAGES_21);
 		}
 	}
 

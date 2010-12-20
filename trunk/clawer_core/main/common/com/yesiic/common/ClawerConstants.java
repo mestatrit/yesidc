@@ -15,6 +15,8 @@ public class ClawerConstants {
 	// public final static boolean TEST = true;
 	public static boolean TEST_DAO = false;
 
+	public static boolean BASE_CODE_FROM_DB = true;
+
 	public static boolean TEST_WEB = true;
 
 	public static boolean TEST_WEB_REQUEST = true;
@@ -25,15 +27,17 @@ public class ClawerConstants {
 
 	public static int THREADS_NUMBER = TEST_WEB_NUM;
 
+	public static boolean TO_DB_INIT = false;
+
 	public static Date LICENSE_DATE = null;
 
 	static {
 		if (!TEST_WEB) {
-			THREADS_NUMBER = Integer.parseInt(ClawerUtils.getServerConfByKey("threads.number"));
+			THREADS_NUMBER = Integer.parseInt(ReadPropertiesUtils.getServerConfByKey("threads.number"));
 		}
 
 		try {
-			LICENSE_DATE = DateUtils.stringToDate(ClawerUtils.getServerConfByKey("license.date"),
+			LICENSE_DATE = DateUtils.stringToDate(ReadPropertiesUtils.getServerConfByKey("license.date"),
 					DateUtils.DAY_YMD_LINE);
 		} catch (ParseException e) {
 			LICENSE_DATE = new Date();
@@ -75,49 +79,49 @@ public class ClawerConstants {
 	 * punctuation.bracket.left=\u3010 punctuation.bracket.right=\u3011;
 	 * punctuation.comma=\uFF0C
 	 **/
-	public final static String PUNCTUATION_BRACKET_LEFT = ClawerUtils.getValByKey("punctuation.bracket.left");;
-	public final static String PUNCTUATION_BRACKET_RIGHT = ClawerUtils.getValByKey("punctuation.bracket.right");;
-	public final static String PUNCTUATION_COMMA = ClawerUtils.getValByKey("punctuation.comma");;
+	public final static String PUNCTUATION_BRACKET_LEFT = ReadPropertiesUtils.getValByKey("punctuation.bracket.left");;
+	public final static String PUNCTUATION_BRACKET_RIGHT = ReadPropertiesUtils.getValByKey("punctuation.bracket.right");;
+	public final static String PUNCTUATION_COMMA = ReadPropertiesUtils.getValByKey("punctuation.comma");;
 
-	public final static String RECONNECT_CUT_NAME = ClawerUtils.getValByKey("reconnect.cut");
+	public final static String RECONNECT_CUT_NAME = ReadPropertiesUtils.getValByKey("reconnect.cut");
 	public final static String RECONNECT_CUT_TAG = "Connect(this.form,'Disconnect_pppoe')";
 	public final static String RECONNECT_RECONN_TAG = "Connect(this.form,'Connect_pppoe')";
-	public final static String RECONNECT_RECONN_NAME = ClawerUtils.getValByKey("reconnect.reconn");
+	public final static String RECONNECT_RECONN_NAME = ReadPropertiesUtils.getValByKey("reconnect.reconn");
 	public final static String VAL = "_val";
-	public final static String RECONNECT_IP_TAG = ClawerUtils.getValByKey("reconnect.ip.tag");
+	public final static String RECONNECT_IP_TAG = ReadPropertiesUtils.getValByKey("reconnect.ip.tag");
 
-	public final static String FILTER_SALARY1 = ClawerUtils.getValByKey("filter.salary1");
-	public final static String FILTER_SALARY2 = ClawerUtils.getValByKey("filter.salary2");
-	public final static String FILTER_SALARY3 = ClawerUtils.getValByKey("filter.salary3");
-	public final static String FILTER_SPACE = ClawerUtils.getValByKey("filter.space1");
-	public final static String[] FILTER_SPECIAL = ClawerUtils.getValByKey("special.filters").split(",");
+	public final static String FILTER_SALARY1 = ReadPropertiesUtils.getValByKey("filter.salary1");
+	public final static String FILTER_SALARY2 = ReadPropertiesUtils.getValByKey("filter.salary2");
+	public final static String FILTER_SALARY3 = ReadPropertiesUtils.getValByKey("filter.salary3");
+	public final static String FILTER_SPACE = ReadPropertiesUtils.getValByKey("filter.space1");
+	public final static String[] FILTER_SPECIAL = ReadPropertiesUtils.getValByKey("special.filters").split(",");
 
-	public final static String SPLIT_CHAR = ClawerUtils.getValByKey("split.char.comma");
+	public final static String SPLIT_CHAR = ReadPropertiesUtils.getValByKey("split.char.comma");
 	public final static String DEFAULT_USER = "bibiye";
 	// "--"
-	public final static String TIME_TAG_LINE = ClawerUtils.getValByKey("time.tag.two.horizontal.line");
+	public final static String TIME_TAG_LINE = ReadPropertiesUtils.getValByKey("time.tag.two.horizontal.line");
 	// "/"
-	public final static String TIME_TAG_DIAGONAL = ClawerUtils.getValByKey("time.tag.diagonal");
+	public final static String TIME_TAG_DIAGONAL = ReadPropertiesUtils.getValByKey("time.tag.diagonal");
 
-	public final static String CHAR_COLON = ClawerUtils.getValByKey("common.char.colon");
+	public final static String CHAR_COLON = ReadPropertiesUtils.getValByKey("common.char.colon");
 
-	public final static String SKILL_NAME = ClawerUtils.getValByKey("skill.name");
+	public final static String SKILL_NAME = ReadPropertiesUtils.getValByKey("skill.name");
 
-	public final static String WEBRENDERER_ID = ClawerUtils.getServerConfByKey("webrenderer.id");
-	public final static String WEBRENDERER_SN = ClawerUtils.getServerConfByKey("webrenderer.sn");
+	public final static String WEBRENDERER_ID = ReadPropertiesUtils.getServerConfByKey("webrenderer.id");
+	public final static String WEBRENDERER_SN = ReadPropertiesUtils.getServerConfByKey("webrenderer.sn");
 
-	public final static long COUNT_LOADED = Long.parseLong(ClawerUtils.getServerConfByKey("count.loaded.reconnect"));
-	public final static String DIALOG_USERNAME = ClawerUtils.getServerConfByKey("dialog.username");
-	public final static String DIALOG_PASSWORD = ClawerUtils.getServerConfByKey("dialog.password");
+	public final static long COUNT_LOADED = Long.parseLong(ReadPropertiesUtils.getServerConfByKey("count.loaded.reconnect"));
+	public final static String DIALOG_USERNAME = ReadPropertiesUtils.getServerConfByKey("dialog.username");
+	public final static String DIALOG_PASSWORD = ReadPropertiesUtils.getServerConfByKey("dialog.password");
 
 	public static final String MANUAL_LOG = "manual";
 	public static final String LOG_URLS = "logurls";
 
-	public final static String[] PROVINCE_FILTERS = ClawerUtils.getValByKey("province.filter.list").split(",");
-	public final static String[] CITY_FILTERS = ClawerUtils.getValByKey("city.filter.list").split(",");
-	public final static String[] FILTERS_ADDRESS = ClawerUtils.getValByKey("filters.address").split(",");
+	public final static String[] PROVINCE_FILTERS = ReadPropertiesUtils.getValByKey("province.filter.list").split(",");
+	public final static String[] CITY_FILTERS = ReadPropertiesUtils.getValByKey("city.filter.list").split(",");
+	public final static String[] FILTERS_ADDRESS = ReadPropertiesUtils.getValByKey("filters.address").split(",");
 
-	public final static String JOB_NO_FOUND = ClawerUtils.getValByKey("job.no.found");
+	public final static String JOB_NO_FOUND = ReadPropertiesUtils.getValByKey("job.no.found");
 
 	public static final String ALERT_ERROR = "0001";
 
@@ -126,8 +130,7 @@ public class ClawerConstants {
 
 	public static Code getChina() {
 		if (!TEST_DAO) {
-			return BaseCodeDispatch.getBaseCode(BaseCode.ADDRESS).getCode(ClawerConstants.ADDRESS_CHINA_CODE,
-					BaseCode.CODE_LEVEL_SECOND);
+			return BaseCodeHolder.getAddress(ClawerConstants.ADDRESS_CHINA_CODE, BaseCode.CODE_LEVEL_SECOND);
 		} else {
 			return new Code();
 		}
@@ -135,8 +138,7 @@ public class ClawerConstants {
 
 	public static Code getFromWhere() {
 		if (!TEST_DAO) {
-			return BaseCodeDispatch.getBaseCode(BaseCode.FROM_WHERE).getCode(ClawerConstants.FROM_WHERE_51JOB,
-					BaseCode.CODE_LEVEL_SECOND);
+			return BaseCodeHolder.getFromWhere(ClawerConstants.FROM_WHERE_51JOB, BaseCode.CODE_LEVEL_SECOND);
 		} else {
 			Code code = new Code();
 			code.setCode(FROM_WHERE_51JOB);
@@ -147,8 +149,7 @@ public class ClawerConstants {
 
 	public static void main(String[] args) {
 		System.out.println("bbb=[" + DateUtils.dateToString(LICENSE_DATE, DateUtils.DAY_YMD_LINE) + "]");
-		BaseCodeDispatch.getBaseCode(BaseCode.FROM_WHERE).getCode(ClawerConstants.FROM_WHERE_51JOB,
-				BaseCode.CODE_LEVEL_SECOND);
+		BaseCodeHolder.getFromWhere(ClawerConstants.FROM_WHERE_51JOB, BaseCode.CODE_LEVEL_SECOND);
 		for (String name : PROVINCE_FILTERS)
 			System.out.print("aaa=" + name);
 	}
