@@ -71,23 +71,27 @@ public class ParseProcess extends AbstractParserProcess {
 		List<String> urls = new ArrayList<String>();
 		for (Map.Entry<String, WebElements> type : types.entrySet()) {
 			temp = type.getValue().getCode();
-			map = InitBasicData.getAreaBj();
-			for (Map.Entry<String, WebElements> area : map.entrySet()) {
-				urls.add(BxUtils.getDestUrl2(InitBasicData.KEY_AREAS_BJ, area.getValue().getCode(), temp));
-			}
-			log.info("init urls:bj-" + map.size());
-
 			map = InitBasicData.getAreaSh();
 			for (Map.Entry<String, WebElements> area : map.entrySet()) {
 				urls.add(BxUtils.getDestUrl2(InitBasicData.KEY_AREAS_SH, area.getValue().getCode(), temp));
 			}
 			log.info("init urls:sh-" + map.size());
 
-			map = InitBasicData.getAreaOthers();
-			for (Map.Entry<String, WebElements> area : map.entrySet()) {
-				urls.add(BxUtils.getDestUrl1(area.getValue().getCode(), temp));
-			}
-			log.info("init urls:others-" + map.size());
+			/**
+			 * <pre>
+			 * map = InitBasicData.getAreaBj();
+			 * for (Map.Entry&lt;String, WebElements&gt; area : map.entrySet()) {
+			 * 	urls.add(BxUtils.getDestUrl2(InitBasicData.KEY_AREAS_BJ, area.getValue().getCode(), temp));
+			 * }
+			 * log.info(&quot;init urls:bj-&quot; + map.size());
+			 * 
+			 * map = InitBasicData.getAreaOthers();
+			 * for (Map.Entry&lt;String, WebElements&gt; area : map.entrySet()) {
+			 * 	urls.add(BxUtils.getDestUrl1(area.getValue().getCode(), temp));
+			 * }
+			 * log.info(&quot;init urls:others-&quot; + map.size());
+			 * </pre>
+			 */
 		}
 
 		log.info("InitURLs END!Time is [" + (System.currentTimeMillis() - start) + "]ms.");
@@ -100,6 +104,10 @@ public class ParseProcess extends AbstractParserProcess {
 
 	public void setParseDetail(Parser parseDetail) {
 		this.parseDetail = parseDetail;
+	}
+
+	public void setWebPagesDao(WebPagesDao webPagesDao) {
+		this.webPagesDao = webPagesDao;
 	}
 
 }
