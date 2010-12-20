@@ -78,5 +78,13 @@ public class ComparatorImpl<T> implements Comparator<T>, Serializable {
 		}
 
 	}
+	
+	public static void main(String[] args) {
+		System.out.println("1".compareTo("2"));
+		System.out.println("2".compareTo("1"));
+		System.out.println("11".compareTo("2"));
+	}
+		
+		
 
 }
