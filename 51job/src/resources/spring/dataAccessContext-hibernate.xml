@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: dataAccessContext-hibernate.xml,v 1.5 2008/01/16 05:18:56 abel Exp $ -->
+	<!--
+		$Id: dataAccessContext-hibernate.xml,v 1.5 2008/01/16 05:18:56 abel
+		Exp $
+	-->
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 <beans default-autowire="byName" default-lazy-init="false">
 
-	<bean id="dataSource"
-		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
 		<property name="driverClass" value="${jdbc.driverClassName}" />
 		<property name="jdbcUrl" value="${jdbc.url}" />
 		<property name="user" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
-		<property name="minPoolSize" value="${jdbc.minPoolSize}"/>
-		<property name="maxPoolSize" value="${jdbc.maxPoolSize}"/>
-		<property name="initialPoolSize" value="${jdbc.initialPoolSize}"/>
-		<property name="acquireIncrement" value="${jdbc.acquireIncrement}"/>
-		<property name="maxIdleTime" value="${jdbc.maxIdleTime}"/>
-		<property name="maxStatements" value="${jdbc.maxStatements}"/>
-		<property name="idleConnectionTestPeriod" value="${jdbc.idleConnectionTestPeriod}"/>
-		<property name="acquireRetryAttempts" value="${jdbc.acquireRetryAttempts}"/>
-		<property name="breakAfterAcquireFailure" value="${jdbc.breakAfterAcquireFailure}"/>
-		<property name="testConnectionOnCheckout" value="${jdbc.testConnectionOnCheckout}"/>
+		<property name="minPoolSize" value="${jdbc.minPoolSize}" />
+		<property name="maxPoolSize" value="${jdbc.maxPoolSize}" />
+		<property name="initialPoolSize" value="${jdbc.initialPoolSize}" />
+		<property name="acquireIncrement" value="${jdbc.acquireIncrement}" />
+		<property name="maxIdleTime" value="${jdbc.maxIdleTime}" />
+		<property name="maxStatements" value="${jdbc.maxStatements}" />
+		<property name="idleConnectionTestPeriod" value="${jdbc.idleConnectionTestPeriod}" />
+		<property name="acquireRetryAttempts" value="${jdbc.acquireRetryAttempts}" />
+		<property name="breakAfterAcquireFailure" value="${jdbc.breakAfterAcquireFailure}" />
+		<property name="testConnectionOnCheckout" value="${jdbc.testConnectionOnCheckout}" />
 	</bean>
 
 	<bean id="sessionFactory"
@@ -42,11 +44,17 @@
 				<value>
 					classpath:/com/yesiic/base/model/
 				</value>
+				<value>
+					classpath:/com/yesibc/email/model/
+				</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
 			<props>
-				<!-- prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop//-->
+				<!--
+					prop
+					key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop//
+				-->
 				<prop key="hibernate.dialect">
 					${jdbc.hibernate.dialet}
 				</prop>
@@ -59,9 +67,10 @@
 				<prop key="hibernate.cache.use_second_level_cache">
 					false
 				</prop>
-				<!--prop key="hibernate.cache.provider_class">
-					org.hibernate.cache.EhCacheProvider
-				</prop-->
+				<!--
+					prop key="hibernate.cache.provider_class">
+					org.hibernate.cache.EhCacheProvider </prop
+				-->
 			</props>
 		</property>
 	</bean>
