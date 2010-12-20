@@ -66,8 +66,8 @@ alter table TP_SIM_PERSON
 create table TP_SIM_CONTACT_INFO
 (
   ID                        NUMBER(19) not null,
-  type                 	    VARCHAR2(2 CHAR),
-  contractNo                VARCHAR2(50 CHAR),
+  type                 	    VARCHAR2(10 CHAR),
+  CONTRACT_NO               VARCHAR2(50 CHAR),
   UPDATE_DATE               TIMESTAMP(6),
   SIM_PERSON_ID             NUMBER(19)
 );
