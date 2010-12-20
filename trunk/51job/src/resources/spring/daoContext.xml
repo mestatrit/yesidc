@@ -6,6 +6,7 @@
 	<bean id="dBService" class="com.yesitc.baixing.service.DBService" />
 	<bean id="dao" class="com.yesibc.core.dao.HibernateEntityDao" />
 	<bean id="baseCodeDao" class="com.yesiic.dao.impl.BaseCodeDaoImpl" />
+	<bean id="extendCodeDao" class="com.yesiic.dao.impl.ExtendCodeDaoImpl" />
 	<bean id="webElementsDao" class="com.yesiic.dao.impl.WebElementsDaoImpl" />
 	<bean id="personDao" class="com.yesiic.dao.impl.PersonDaoImpl" />
 	<bean id="webPagesDao" class="com.yesiic.dao.impl.WebPagesDaoImpl" />
@@ -13,9 +14,11 @@
 	<bean id="codeMappingDao" class="com.yesiic.dao.impl.CodeMappingDaoImpl" />
 	<bean id="searchResultDao" class="com.yesiic.dao.impl.SearchResultDaoImpl" />
 	<bean id="parseType" class="com.yesitc.baixing.web.parse.ParseType" />
-	<bean id="parseDetail" class="com.yesitc.baixing.web.parse.ParseType" />
+	<bean id="parseDetail" class="com.yesitc.baixing.web.parse.ParseDetail" />
 	<bean id="parseTool" class="com.yesiic.common.parse.HttpClientParseTool" />
 	<bean id="parseProcess" class="com.yesitc.baixing.web.parse.ParseProcess" />
 	<bean id="importZip" class="com.yesitc.baixing.ImportZip" />
+	
+	<bean id="emailInfoDao" class="com.yesibc.email.dao.EmailInfoDaoImpl" />
 
 </beans>
