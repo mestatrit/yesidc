@@ -11,6 +11,8 @@ public class ProcessContext {
 
 	private String logTitle;
 	private String html;
+	private String fetchedContent;
+	private String filterMsg;
 	private String errorMsg;
 	private String requestId;
 	private WebPages wp;
@@ -108,12 +110,28 @@ public class ProcessContext {
 	public void setSimPersons(List<SimPerson> simPersons) {
 		this.simPersons = simPersons;
 	}
-	
+
 	public void setSimPerson(SimPerson simPerson) {
-		if(CollectionUtils.isEmpty(simPersons)){
+		if (CollectionUtils.isEmpty(simPersons)) {
 			simPersons = new ArrayList<SimPerson>();
 		}
 		simPersons.add(simPerson);
+	}
+
+	public String getFetchedContent() {
+		return fetchedContent;
+	}
+
+	public void setFetchedContent(String fetchedContent) {
+		this.fetchedContent = fetchedContent;
+	}
+
+	public String getFilterMsg() {
+		return filterMsg;
+	}
+
+	public void setFilterMsg(String filterMsg) {
+		this.filterMsg = filterMsg;
 	}
 
 }

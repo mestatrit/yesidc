@@ -8,22 +8,25 @@ import java.util.Map;
 import com.yesiic.base.model.Code;
 import com.yesiic.common.BaseCode;
 
-public class FromWhere extends BaseCode {
+public class Appellation extends BaseCode {
 
-	private static Map<String, Code> FROM_WHERES = new HashMap<String, Code>();
-	private static List<Code> FROM_WHERE_LIST = new ArrayList<Code>();
+	private static Map<String, Code> APPELLATIONS = new HashMap<String, Code>();
+	private static List<Code> APPELLATION_LIST = new ArrayList<Code>();
+
+	public final static String POSITION_FR = "Frontal";
+	public final static String POSITION_BK = "backend";
 
 	@Override
 	public Code getCode(String code, Long level) {
 		if (TOP_CODES == null) {
 			refreshAll();
 		}
-		return FROM_WHERES.get(code);
+		return APPELLATIONS.get(code);
 	}
 
 	public static void put2Map(List<Code> children) {
 		for (Code code : children) {
-			FROM_WHERES.put(code.getCode(), code);
+			APPELLATIONS.put(code.getCname(), code);
 		}
 	}
 
@@ -32,11 +35,11 @@ public class FromWhere extends BaseCode {
 		if (TOP_CODES == null) {
 			refreshAll();
 		}
-		return FROM_WHERES;
+		return APPELLATIONS;
 	}
 
 	@Override
 	public List<Code> getSubCodeList() {
-		return FROM_WHERE_LIST;
+		return APPELLATION_LIST;
 	}
 }

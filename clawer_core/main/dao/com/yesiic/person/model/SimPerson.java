@@ -17,7 +17,7 @@ public class SimPerson implements java.io.Serializable {
 	private Date createDate;
 	private Date updateDate;
 	private Long webId;
-	private List<SimPersonContactInfo> simPersonContactInfo;
+	private List<SimPersonContactInfo> simPersonContactInfos;
 
 	public Long getId() {
 		return id;
@@ -83,12 +83,12 @@ public class SimPerson implements java.io.Serializable {
 		this.webId = webId;
 	}
 
-	public List<SimPersonContactInfo> getSimPersonContactInfo() {
-		return simPersonContactInfo;
+	public List<SimPersonContactInfo> getSimPersonContactInfos() {
+		return simPersonContactInfos;
 	}
 
-	public void setSimPersonContactInfo(List<SimPersonContactInfo> simPersonContactInfo) {
-		this.simPersonContactInfo = simPersonContactInfo;
+	public void setSimPersonContactInfos(List<SimPersonContactInfo> simPersonContactInfos) {
+		this.simPersonContactInfos = simPersonContactInfos;
 	}
 
 }

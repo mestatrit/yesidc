@@ -19,7 +19,7 @@ public class ExtendCodeDaoImpl extends HibernateEntityDao<ExtendCode> implements
 			return criteria.list();
 		}
 		if (!StringUtils.isEmpty(ec.getName())) {
-			criteria.add(Restrictions.ilike("name", ec.getName()));
+			criteria.add(Restrictions.like("name", "%" + ec.getName() + "%"));
 		}
 		if (!StringUtils.isEmpty(ec.getCode())) {
 			criteria.add(Restrictions.eq("code", ec.getCode()));
