@@ -1,0 +1,605 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>利用JMS Topic发布/订阅消息  - dolphin_ygj - JavaEye技术网站</title>
+    <meta name="description" content="2003年3月11日那一期（使用JMS Queue） 解释了如何使用Java消息服务（Java Messaging Service，JMS）Queue进行点到点的消息发送。下面这一技巧将解释如何使用JMS Topic实现发布/订阅式的消息发送。 发布/订阅式的消息发送 在发布/订阅式的消息发送中，一个发布者利用一个方法调用将每条消息发送给多个预订者。介于发布者和预订者之间的是一台消息服务器。在JMS ..." />
+    <meta name="keywords" content="  利用JMS Topic发布/订阅消息 " />
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="search" type="application/opensearchdescription+xml" href="/open_search.xml" title="JavaEye" />
+    <link href="/rss" rel="alternate" title="dolphin_ygj" type="application/rss+xml" />
+    <link href="http://www.javaeye.com/stylesheets/blog.css?1286934641" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://www.javaeye.com/stylesheets/themes/blog/green.css?1260254891" media="screen" rel="stylesheet" type="text/css" />
+    <script src="http://www.javaeye.com/javascripts/application.js?1285465576" type="text/javascript"></script>
+      
+  <link href="http://www.javaeye.com/javascripts/syntaxhighlighter/SyntaxHighlighter.css?1268040798" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/syntaxhighlighter/shCoreCommon.js?1238329845" type="text/javascript"></script>
+<script src="http://www.javaeye.com/javascripts/hotkey.js?1238403289" type="text/javascript"></script>
+  <style>
+    div#main {background-color: transparent; border: 0; padding: 0px; width: 740px;}
+  </style>
+  <link href="http://www.javaeye.com/javascripts/editor/css/ui.css?1222156967" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/editor/compress.js?1265622452" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="blog_site_nav">
+  <a href="http://www.javaeye.com/" class="homepage">首页</a>
+  <a href="http://www.javaeye.com/news">新闻</a>
+  <a href="http://www.javaeye.com/forums">论坛</a>
+  <a href="http://www.javaeye.com/ask">问答</a>
+  <a href="http://www.javaeye.com/blogs">博客</a>
+  <a href="http://www.javaeye.com/job">招聘</a>
+  <a href="#" onclick="return false;" id="msna"><u>更多</u> <small>▼</small></a>
+  <div class="quick_menu" style="display:none;">
+    <a href="http://www.javaeye.com/wiki">专栏</a>
+    <!--<a href="http://www.javaeye.com/articles">文摘</a>//-->
+    <a href="http://www.javaeye.com/groups">圈子</a>
+    <a href="http://www.javaeye.com/search">搜索</a>
+  </div>
+</div>
+      <div id="user_nav">
+      <a href="http://bibye-domain.javaeye.com" title="查看我的博客首页" class="welcome">欢迎bibiye</a>
+    
+      <a href="http://app.javaeye.com/messages" title="你有新的站内短信"><img alt="Newpm" src="http://www.javaeye.com/images/newpm.gif?1193643365" />收件箱(1)</a>
+    
+    
+      <a href="http://app.javaeye.com" title="我的应用首页">我的应用</a>
+    
+    <div class="quick_menu" style="display:none;">
+      <a href="http://app.javaeye.com/feed" title="我关注的好友动态消息">我的关注</a>
+      <a href="http://app.javaeye.com/feed/my" title="我参与的话题更新的消息">我的参与</a>
+      <a href="http://app.javaeye.com/chat" title="用闲聊发表简短的话题">我的闲聊</a>
+      <a href="http://app.javaeye.com/mygroup" title="我加入的圈子最新话题">我的圈子</a>
+      <a href="http://app.javaeye.com/links" title="我收藏的网络资源链接">我的收藏</a>
+      <a href="http://app.javaeye.com/myresume" title="我的个人简历">我的简历</a>
+    </div>
+        <a href="http://bibye-domain.javaeye.com/admin" title="管理我的博客">我的博客</a>
+    <a href="http://app.javaeye.com/profile" title="修改我的个人设置">设置</a>
+    <a href="/logout" class="nobg" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'put'); f.appendChild(m);f.submit();return false;">退出</a>
+  </div>
+    </div>
+
+    <div id="page">
+      <div id="branding" class="clearfix">
+        <div id="blog_name"><h1><a href="/">dolphin_ygj</a></h1></div>
+        <div id="blog_preview">
+          
+        </div>
+        <div id="blog_domain">永久域名 <a href="/">http://dolphin-ygj.javaeye.com</a></div>
+      </div>
+      
+      
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+          
+
+
+<div class="blog_main"> 
+  <div class="blog_nav">
+    
+    <div class="pre_next">
+      <a href="/blog/341083" class="next" title="Jmerter">Jmerter</a>
+      |
+      <a href="/blog/340964" class="pre" title="基于JMS的数据汇集系统的研究与实现">基于JMS的数据汇集系统的研究与实现</a>
+    </div>
+  </div>
+  <div class="blog_title">
+    <div class="date"><span class='year'>2009</span><span class='sep_year'>-</span><span class='month'>03</span><span class='sep_month'>-</span><span class='day'>01</span></div>
+    <h3><a href="/blog/341053">利用JMS Topic发布/订阅消息 </a></h3>
+                    
+  </div>
+
+  <div class="blog_content">
+    <p>2003年3月11日那一期（<a href="http://gceclub.sun.com.cn/tips/enterprise-java/tech9_10/9_10.1.htm">使用JMS Queue</a>） 解释了如何使用Java消息服务（Java Messaging Service，JMS）Queue进行点到点的消息发送。下面这一技巧将解释如何使用JMS Topic实现发布/订阅式的消息发送。</p>
+<p><strong>发布</strong><strong>/</strong><strong>订阅式的消息发送</strong></p>
+<p>在<strong>发布</strong><strong>/</strong><strong>订阅式的消息发送</strong>中，一个发布者利用一个方法调用将每条消息发送给多个预订者。介于发布者和预订者之间的是一台消息服务器。在JMS中，消息服务器被叫做“JMS提供者”。发布者发送消息到JMS提供者，预订者从JMS提供者接收消息。</p>
+<p>下图演示了这一方案。</p>
+<p align="center" style="text-align: center;"><img src="/upload/attachment/80003/baa94587-2cb2-38ca-8516-c7bbc5893857.gif" alt="" /></p>
+<p>在JMS中，发布/订阅式的消息发送使用JMS管理的一个叫做Topic的对象来管理发布者到预订者的消息流。JMS发布者又叫做消息生产者，而JMS预订者又叫做消息消费者。消息生产者获得服务器上一个JMS Topic的引用，并向该Topic发送消息。当消息到达时，JMS提供者负责通知所有预订了该Topic的消息消费者。JMS提供者每次发送消息后（可选地）将接收到消息收据的确认。</p>
+<p>这一过程描述如下：</p>
+<p align="center" style="text-align: center;"><img src="/upload/attachment/80005/9ab919eb-17b8-3690-86df-a24c90300643.gif" alt="" /></p>
+<p>使用JMS Topic的发布/订阅式消息发送在几方面类似于点到点的消息发送。以下是两种消息发送方式共同的特点：</p>
+<ul>
+<li>消息发送可以是面向对象的，允许将整个的对象作为消息发送。 </li>
+<li>消息发送可以是事务性的。 </li>
+<li>消息发送可以是同步或异步的。 </li>
+<li>消息发送可以与基础的第三方产品集成。 </li>
+<li>消息可以发送给在消息发送时不在运行的消息消费者（即QueueReceiver或TopicSubscriber）。 </li>
+<li>消息一旦被递送到队列或主题，发送消息的函数调用就会立即返回。 </li>
+<li>可以显式地或自动地确认收到消息。 </li>
+</ul>
+<p>发布/订阅式消息发送与点到点消息发送之间也有几点不同：</p>
+<ul>
+<li>发布/订阅式消息发送是一对多的，而点到点消息发送是一对一的。 </li>
+<li>发布的消息只递送给Topic当前的预订者。客户只能接收到他向一个Topic预订了的那些消息。而在点到点消息发送中，永久的消息将一直在Queue中，直到它超时或者某个接收者来取走该消息。 </li>
+<li>发布/订阅式消息发送中的永久消息是由“耐久的预订”提供的。JMS提供者存储由于预订者出于某种原因不可用而无法递送给预订者的消息。在下次预订者连接上的时候，这些存储的消息将会被递送给他。这确保了客户预订一个Topic之后，所有发布的消息都会递送给他，哪怕该预订者不是总在运行。如果预订不是耐久的，在预订者掉线时发布的任何消息都不会递送到预订者。 </li>
+</ul>
+<p>发布/订阅消息和点到点消息发送没有优劣之分，它们是相互补充的工具，各自用于不同的目的。点到点消息发送通常用于消息接收者在一个系统内有惟一的标识的情况下。发布/订阅式消息发送更多地用于一个系统中的几个代理需要知道某个事件或条件何时出现这种情况下。</p>
+<p>JMS消息发送模型非常类似于常规的Java 2编程中的事件侦听器。点到点消息发送就像一个单播事件侦听器模型，而发布/订阅消息就像一个组播侦听器模型。传统的Java事件侦听器与JMS（不同于编程语法）之间的差别是，事件源和侦听器分别叫做消息生产者和消费者。JMS消息生产者和消费者可以运行在不同的地址空间，甚至是在不同的机器上。JMS消息发送还提供比传统的事件侦听器模型所实现的更高级别的服务。不过基本的消息发送模型是相同的。</p>
+<p>该技巧的<a href="http://java.sun.com/jdc/EJTechTips/download/ttapr2003.ear">示例代码</a>由三个程序组成：</p>
+<ol>
+<li>  <ol>
+<li>一个servlet，名字叫做PublishWeatherServlet，它向JMS Topic发布一个XML格式的天气报告。 </li>
+<li>一个命令行Java应用程序，名字叫做WeatherReceiver，它向Topic发出预订并打印接收到的XML消息。 </li>
+<li>一个GUI应用客户端，名字叫做WeatherClient，它解析并以图形方式显示XML消息中的数据。 </li>
+</ol></li>
+</ol>
+<p>下面是用于发布天气报告的HTML页面和Web表单、运行命令行预订者的终端会话和GUI应用的屏幕快照：</p>
+<div>
+<table cellspacing="0" border="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="Normal">
+<p align="center" style="text-align: center;"><a href="http://developer.java.sun.com/developer/EJTechTips/images/tt0415_screenshot.jpg" target="_blank"><img src="/upload/attachment/80009/4d66c2fb-f1c5-3d11-9334-7c367f31ed27.jpg" border="0" alt="screenshot" style="border: 0;" /></a></p>
+</td>
+</tr>
+<tr>
+<td class="Normal">
+<p align="center" style="text-align: center;"><a href="http://developer.java.sun.com/developer/EJTechTips/images/tt0415_screenshot.gif">点击这里看大图</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4><strong>发布消息到</strong><strong>Topic</strong></h4>
+<p>名叫PublishWeatherServlet的servlet从HTML表单接收POST参数，并转化为XML格式，然后使用JMS Topic将产生的XML文档发布到所有的侦听器。该servlet中的大多数代码用于接收POST参数并将它们转化为XML文档。代码的有趣部分在于发布方法。该方法接收一个String参数，其中包含有将发布的XML文本。下面我们来仔细研究发布方法，看它是如何发布到JMS Topic的：</p>
+<ol type="1">
+<p><span style="font-family: Courier New, Courier, mono;">1.Get a TopicConnectionFactory and a Topic.</span></p>
+<p><span style="font-family: Courier New, Courier, mono;">              protected void publish(String text) {              </span> </p>
+<p><span style="font-family: Courier New, Courier, mono;">                 TopicConnectionFactory tcf = null;</span><span style="font-family: Courier New, Courier, mono;"><br />                  Topic topic = null;</span><span style="font-family: Courier New, Courier, mono;">      </span></p>
+<p><span style="font-family: Courier New, Courier, mono;">  </span><span style="font-family: Courier New, Courier, mono;">                  try {                  </span><span style="font-family: Courier New, Courier, mono;"><br />                     Context jndiContext = new InitialContext();<br /></span><span style="font-family: Courier New, Courier, mono;">                     tcf = (TopicConnectionFactory)</span><span style="font-family: Courier New, Courier, mono;">10.<br />                     jndiContext.lookup(</span><span style="font-family: Courier New, Courier, mono;">11.<br />                     "java:comp/env/jms/TopicConnectionFactory");</span><span style="font-family: Courier New, Courier, mono;">12.<br />                  topic = (Topic) jndiContext.lookup(</span><span style="font-family: Courier New, Courier, mono;">13.<br />                     "java:comp/env/jms/Topic");</span><span style="font-family: Courier New, Courier, mono;">14.<br />               } catch (NamingException nameEx) {</span><span style="font-family: Courier New, Courier, mono;"><br />                  System.err.println(nameEx.toString());</span><span style="font-family: Courier New, Courier, mono;">16.<br />               }</span></p>
+</ol>
+<p>该代码使用Java命名和目录接口（Naming and Directory Interface，JNDI）API在JMS提供者上查找两个对象：Topic和TopicConnectionFactory。该servlet将发送消息到Topic。TopicConnectionFactory用于创建一个到JMS提供者的连接。请注意该servlet用于查找这些对象的名称。记住，J2EE应用中所有对象的JNDI API名称都应该以java:comp/env/打头</p>
+<ol type="1">
+<p><span style="font-family: Courier New, Courier, mono;">Create a Connection, Session, and Publisher. </span></p>
+<p><span style="font-family: Courier New, Courier, mono;">            TopicConnection tc = null;                        </span></p>
+</ol>
+<p><span style="font-family: Courier New, Courier, mono;">            try {  </span><span style="font-family: Courier New, Courier, mono;">21.<br />               tc = tcf.createTopicConnection();<br /></span><span style="font-family: Courier New, Courier, mono;">              TopicSession ts =<br /></span><span style="font-family: Courier New, Courier, mono;">                 tc.createTopicSession(<br /></span><span style="font-family: Courier New, Courier, mono;">                    false, Session.AUTO_ACKNOWLEDGE);<br /></span><span style="font-family: Courier New, Courier, mono;">              TopicPublisher tp =<br /></span><span style="font-family: Courier New, Courier, mono;">                 ts.createPublisher(topic);</span></p>
+<p>该代码使用从JNDI API得到的TopicConnectionFactory来创建TopicConnection。TopicConnection可用于创建TopicSession。用于创建TopicSession的参数告诉连接创建一个不是事务性的TopicSession，并且自动地确认消息收到。（如果消息递送是事务性的，那么在同一TopicSession中发送的所有消息将形成一个工作单元，该单元可以被提交或回滚）。然后，使用Session创建TopicPublisher，TopicPublisher充当消息发布的通道的角色。</p>
+<p>注意，J2EE 2.0规范指出，JMS消息的事务和确认是由J2EE容器管理的。这意味着如果代码运行在容器中，那么这些参数就可以被忽略。遗憾的是，并不是所有的提供商都会按照这一要求去做。如果事务、确认或者这二者对您的应用很重要，请务必检查您的产品文档，或者自己测试这些参数的行为。这些参数应该像在容器外工作一样。</p>
+<ol type="1">
+<p><span style="font-family: Courier New, Courier, mono;">Create and publish the message. </span></p>
+<p><span style="font-family: Courier New, Courier, mono;">               TextMessage textMessage =</span> <span style="font-family: Courier New, Courier, mono;"><br />                  ts.createTextMessage();</span><span style="font-family: Courier New, Courier, mono;"><br />               textMessage.setText(text);</span><span style="font-family: Courier New, Courier, mono;"><br />               tp.publish(textMessage);</span><span style="font-family: Courier New, Courier, mono;"><br />               ...</span><span style="font-family: Courier New, Courier, mono;"><br />        } // End of method publish</span></p>
+</ol>
+<p>发布消息很简单。TopicSession充当创建新的TextMessage的工厂。该代码将TextMessage的文本设置为包含将发送的XML的字符串，然后使用TopicPublisher将消息发布到Topic。</p>
+<p>发布方法到此就介绍完了。JMS提供者负责将消息递送给所有的预订者。</p>
+<h4><strong>向</strong><strong>Topic</strong><strong>预订消息</strong><strong>和接收消息</strong></h4>
+<p>命令行程序WeatherReceiver向Topic预订消息并打印出从该Topic接收到的任何消息。为了简化，预订Topic的过程被封装在辅助类SubscriptionHelper中。WeatherReceiver类充当一个异步消息接收者，并实际执行输出操作。</p>
+<ol type="1">
+<li>向一个Topic预订消息 <br /><br />以下的代码来自类SubscriptionHelper，创建对一个Topic的预订： </li>
+</ol>
+<ul>
+  
+<p>protected T<span style="font-family: Courier New, Courier, mono;">opicConnection _tc;</span> <br /><span style="font-family: Courier New, Courier, mono;">    ...</span> <br /><span style="font-family: Courier New, Courier, mono;">    </span><br /><span style="font-family: Courier New, Courier, mono;">    public SubscriptionHelper(String tcfName,</span> <br /><span style="font-family: Courier New, Courier, mono;">                           String topicName,</span> <br /><span style="font-family: Courier New, Courier, mono;">                           MessageListener listener) {</span> <br /><span style="font-family: Courier New, Courier, mono;"><br /></span><span style="font-family: Courier New, Courier, mono;">       // Get references to topic connection factory </span><br /><span style="font-family: Courier New, Courier, mono;">       // and topic.</span> <span style="font-family: Courier New, Courier, mono;">\<br />       _tc = null;</span> <br /><span style="font-family: Courier New, Courier, mono;">       TopicConnectionFactory tcf = null;</span> <br /><span style="font-family: Courier New, Courier, mono;">       Topic topic = null;</span> <br /><br /><span style="font-family: Courier New, Courier, mono;">       try {</span> <br /><span style="font-family: Courier New, Courier, mono;">          InitialContext ic = new InitialContext();</span> <br /><span style="font-family: Courier New, Courier, mono;">          tcf = (TopicConnectionFactory)</span> <br /><span style="font-family: Courier New, Courier, mono;">             ic.lookup(tcfName);</span> <br /><span style="font-family: Courier New, Courier, mono;">          topic = (Topic) ic.lookup(topicName);</span> <br /><span style="font-family: Courier New, Courier, mono;">       } catch (NamingException e) {</span> <br /><span style="font-family: Courier New, Courier, mono;">          System.err.println(e.toString());</span> <br /><span style="font-family: Courier New, Courier, mono;">          e.printStackTrace(System.err);</span> <br /><span style="font-family: Courier New, Courier, mono;">       }</span> </p>
+<p><span style="font-family: Courier New, Courier, mono;">       try {</span> <br /><span style="font-family: Courier New, Courier, mono;">          // Create a connection and so on</span> </p>
+<p><span style="font-family: Courier New, Courier, mono;">          // Subscribe self to topic--messages will be<br /></span><span style="font-family: Courier New, Courier, mono;">          // delivered to this.onMessage()<br /></span><span style="font-family: Courier New, Courier, mono;">          _tc = tcf.createTopicConnection();<br /></span><span style="font-family: Courier New, Courier, mono;">          TopicSession ts = <br /><br /></span><span style="font-family: Courier New, Courier, mono;">             _tc.createTopicSession(<br /></span><span style="font-family: Courier New, Courier, mono;">               false, Session.AUTO_ACKNOWLEDGE);<br /></span><span style="font-family: Courier New, Courier, mono;">          TopicSubscriber tsub = <br /><br /></span><span style="font-family: Courier New, Courier, mono;">           ts.createSubscriber(topic);<br /></span><span style="font-family: Courier New, Courier, mono;">          tsub.setMessageListener(listener);<br /></span><span style="font-family: Courier New, Courier, mono;">       } catch (JMSException e) {<br /></span><span style="font-family: Courier New, Courier, mono;">          System.err.println(e.toString());<br /><br /></span><span style="font-family: Courier New, Courier, mono;">          e.printStackTrace(System.err);<br /></span><span style="font-family: Courier New, Courier, mono;">          close();<br /></span><span style="font-family: Courier New, Courier, mono;">       }<br /></span><span style="font-family: Courier New, Courier, mono;">    }</span></p>
+</ul>
+<p>SubscriptionHelper类的大部分等同于发布者代码。它使用JNDI API来获得对Topic 和TopicConnectionFactory的引用，并创建TopicConnection和TopicSession对象。但是该类不是创建一个TopicPublisher，而是创建一个TopicSubscriber，并将TopicSubscriber的消息侦听器设置为已经传递进来的MessageListener。从此以后，每当该Topic接收到一条消息，该消息就会被递送到MessageListener的onMessage方法。因为这种方式中使用了一个回调，因此该例子演示了异步消息接收。</p>
+<p>2．Receiving Messages </p>
+<p>接收消息惟一的要求是类实现接口javax.jms.MessageListener。WeatherReceiver类本身是一个MessageListener。MessageListener接口只有一个方法：onMessage。WeatherReceiver的onMessage方法出现在下面：</p>
+<ol type="1">   
+<p>public class WeatherReceiver implements <br />       MessageListener {<br />       // Print a weather message when it is received <br />       public void onMessage(Message message) { <br />          try { <br />              if (message instanceof TextMessage) { <br />                 TextMessage m = (TextMessage) message; <br />                 System.out.println( <br />                    "--- Received weather report"); <br />                 System.out.println(m.getText()); <br />                 System.out.println("----------"); <br />              } else { <br />                 System.out.println( <br />                    "Received message of type " + <br />                     message.getClass().getName()); <br />              } <br />         } catch (JMSException e) { <br />            System.err.println(e.toString()); <br />            e.printStackTrace(System.err); <br />         } <br />      } <br />      ... <br />      public static void main(String[] args) { <br />         if (args.length != 2) { <br />            System.out.println( <br />               "Usage: WeatherReceiver " + <br />               "topicConnectionFactorName topicName"); <br />            System.exit(1); <br />         } </p>
+<p><br />        // Create a receiver, then set it up to listen <br />       // for messages on the topic. Then wait for <br />        // messages and print them as they come in. <br />        WeatherReceiver wr = new WeatherReceiver(); <br />        SubscriptionHelper sh = <br />           new SubscriptionHelper(args[0], args[1], wr); <br />    <br />       // Wait for publications... <br />        System.out.println( <br />          "Waiting for publications to topic " + <br />          args[1]); <br />        sh.waitForMessages(); <br />     } </p>
+</ol>
+<p>WeatherReceiver的主方法创建一个WeatherReceiver实例和一个SubscriptionHelper实例。它向SubscriptionHelper传递应用将会使用的WeatherReceiver、Topic名称和TopicConnectionFactory（这些参数在命令行指定）。SubscriptionHelper实例创建预订。然后主方法将WeatherReceiver注册为来自Topic的消息的消费者。</p>
+<p>onMessage方法只是在适当的地方将接收到的Messages转化为类TextMessage，并输出接收到的XML文档。</p>
+<p>注意，在Web层使用JMS侦听器是一个坏主意。实际上，J2EE 1.3参考实现不允许这样做。服务器端JMS侦听器在EJB层被适当模型化为消息驱动Bean。</p>
+<h4><strong>部署</strong><strong>Web</strong><strong>应用</strong></h4>
+<p>有了JMS，发布/订阅式消息发送的代码就很容易。但是，部署描述文件提出了一个需要解决的问题。PublishWeatherServlet是一个使用JNDI API查找外部组件的Web组件。Web组件使用编码名称查找外部资源（比如Topics和TopicConnectionFactories）。部署描述文件必须将这些编码名称定义为资源引用或资源环境引用。下面从Web应用的部署描述文件web.xml抽取出的代码定义了servlet使用的编码名称（该代码出现在web.xml中的&lt;welcome-file-list&gt;之后）：</p>
+<p>   &lt;!-- JM<span style="font-family: Courier New, Courier, mono;">S topics and connection factories used --&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">  &lt;resource-env-ref&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">    &lt;resource-env-ref-name&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">      jms/Topic<br /></span><span style="font-family: Courier New, Courier, mono;">    &lt;/resource-env-ref-name&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">    &lt;resource-env-ref-type&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">      javax.jms.Topic<br /></span><span style="font-family: Courier New, Courier, mono;">    &lt;/resource-env-ref-type&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">  &lt;/resource-env-ref&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">  &lt;resource-ref&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">    &lt;res-ref-name&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">      jms/TopicConnectionFactory</span></p>
+<p><span style="font-family: Courier New, Courier, mono;">     &lt;/res-ref-name&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">    &lt;res-type&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">      javax.jms.TopicConnectionFactory<br /></span><span style="font-family: Courier New, Courier, mono;">    &lt;/res-type&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">    &lt;res-auth&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">      Container<br /></span><span style="font-family: Courier New, Courier, mono;">    &lt;/res-auth&gt;<br /></span><span style="font-family: Courier New, Courier, mono;">  &lt;/resource-r</span>ef&gt;</p>
+<p>resource-env-ref块定义名称“jms/Topic”的类型为javax.jms.Topic。字符串“jms/Topic”是用于查找Topic ("java:comp/env/jms/Topic")的字符串，其中“java:comp/env/”部分删除了。产品的部署工具允许应用部署人员将这一名称映射到环境中的一个Topic。</p>
+<p>在J2EE参考实现中，这一映射已经预先配置在文件META-INF/sun-j2ee-ri.xml中的Web档案中。该文件是Web应用的运行时部署描述文件。部署描述文件在名称和内容方面都是特定于提供商的。</p>
+<p>resource-ref块定义了TopicConnectionFactory的名称、类型和授权模式。通常，部署人员会使用部署工具将编码名称jms/TopicConnectionFactory与平台中的TopicConnectionFactory相关联。J2EE参考实现预配置了在JNDI中命名空间中叫做jms/TopicConnectionFactory的TopicConnectionFactory。</p>
+  </div>
+
+  
+  <div class="attachments">
+    
+      
+        <ul style="display:none;">
+          <li><a href="http://dl.javaeye.com/upload/attachment/80003/baa94587-2cb2-38ca-8516-c7bbc5893857.gif" target="_blank"><img src='http://dl.javaeye.com/upload/attachment/80003/baa94587-2cb2-38ca-8516-c7bbc5893857-thumb.gif' class='magplus' title='点击查看原始大小图片' /></a></li>
+          
+          <li>大小: 12.1 KB</li>
+        </ul>
+      
+    
+      
+        <ul style="display:none;">
+          <li><a href="http://dl.javaeye.com/upload/attachment/80005/9ab919eb-17b8-3690-86df-a24c90300643.gif" target="_blank"><img src='http://dl.javaeye.com/upload/attachment/80005/9ab919eb-17b8-3690-86df-a24c90300643-thumb.gif' class='magplus' title='点击查看原始大小图片' /></a></li>
+          
+          <li>大小: 7.7 KB</li>
+        </ul>
+      
+    
+      
+        <ul style="display:none;">
+          <li><a href="http://dl.javaeye.com/upload/attachment/80009/4d66c2fb-f1c5-3d11-9334-7c367f31ed27.jpg" target="_blank"><img src='http://dl.javaeye.com/upload/attachment/80009/4d66c2fb-f1c5-3d11-9334-7c367f31ed27-thumb.jpg' class='magplus' title='点击查看原始大小图片' /></a></li>
+          
+          <li>大小: 23.4 KB</li>
+        </ul>
+      
+    
+    
+      <ul>
+        <li><a href="#" onclick="$$('div.attachments ul').invoke('show');$(this).up(1).hide();return false;">查看图片附件</a></li>
+      </ul>
+    
+  </div>
+
+
+  <div>
+      <script type="text/javascript">
+      alimama_pid="mm_12122471_0_0&eventid=101146"; 
+      alimama_titlecolor="0000FF"; 
+      alimama_descolor ="000000"; 
+      alimama_bgcolor="FFFFFF"; 
+      alimama_bordercolor="E6E6E6"; 
+      alimama_linkcolor="008000"; 
+      alimama_bottomcolor="FFFFFF"; 
+      alimama_anglesize="0"; 
+      alimama_bgpic="0"; 
+      alimama_icon="0"; 
+      alimama_sizecode="14"; 
+      alimama_width=468; 
+      alimama_height=60; 
+      alimama_type=2; 
+      </script>
+      <script src="http://a.alimama.cn/inf.js" type=text/javascript>
+      </script>  
+    </div>
+  
+  
+
+  <div class="blog_nav">
+    <div class="pre_next">
+      <a href="/blog/341083" class="next" title="Jmerter">Jmerter</a>
+      |
+      <a href="/blog/340964" class="pre" title="基于JMS的数据汇集系统的研究与实现">基于JMS的数据汇集系统的研究与实现</a>
+    </div>
+  </div>
+
+  <div class="blog_bottom">
+    <ul>
+      <li>16:20</li>
+      <li>浏览 (1104)</li>
+            <li><a href="#comments">评论</a> (0)</li>
+      <li>分类: <a href="/category/57069">jms</a></li>
+      
+      
+        <li><a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=%E5%88%A9%E7%94%A8JMS+Topic%E5%8F%91%E5%B8%83%2F%E8%AE%A2%E9%98%85%E6%B6%88%E6%81%AF+&amp;user_favorite%5Burl%5D=http%3A%2F%2Fdolphin-ygj.javaeye.com%2Fblog%2F341053' target='_blank' class='favorite' onclick="$$('.favorite_form_spinner')[0].show();new Ajax.Request('http://dolphin-ygj.javaeye.com/links/new_xhr?user_favorite%5Btitle%5D=%E5%88%A9%E7%94%A8JMS+Topic%E5%8F%91%E5%B8%83%2F%E8%AE%A2%E9%98%85%E6%B6%88%E6%81%AF+&amp;user_favorite%5Burl%5D=http%3A%2F%2Fdolphin-ygj.javaeye.com%2Fblog%2F341053', {method: 'get', onSuccess: function(response){$(document.getElementsByTagName('body')[0]).insert({bottom:response.responseText});$$('.favorite_form_spinner')[0].hide();}});return false;">收藏</a><img alt="Spinner" class="favorite_form_spinner" src="http://www.javaeye.com/images/spinner.gif?1230301943" style="vertical-align:bottom;margin-left:7px;display:none;" /></li>
+        
+      
+      
+      <li class='last'><a href="http://www.javaeye.com/wiki/topic/341053" target="_blank" class="more">相关推荐</a></li>
+    </ul>
+  </div>
+
+  <div class="blog_comment">
+    <h5>评论</h5>
+    <a id="comments" name="comments"></a>
+    
+    
+    
+  </div>
+
+  <div class="blog_comment">
+    <h5>发表评论</h5>
+          
+      
+        <form action="/blog/341053" id="comment_form" method="post" onsubmit="return false;">          
+
+
+  <input type="hidden" id="editor_bbcode_flag"/>
+
+
+
+<div id="editor_main"><textarea class="validate-richeditor bad-words min-length-5" cols="40" id="editor_body" name="comment[body]" rows="20" style="width: 500px; height: 350px;"></textarea></div>
+
+
+<script type="text/javascript">
+  var editor = new Control.TextArea.Editor("editor_body", "bbcode", false);
+</script>
+          <p style="text-align:right;padding-right:30px;">(快捷键 Alt+S / Ctrl+Enter) <input class="submit" id="quick_reply_button" name="commit" type="submit" value="提交" /></p>
+        </form>
+        <script type="text/javascript">
+          new HotKey("s",function() {$('quick_reply_button').click();},{altKey: true, ctrlKey: false});
+          new HotKey(new Number(13),function() {$('quick_reply_button').click();},{altKey: false, ctrlKey: true});
+
+          new Validation("comment_form", {immediate: false, onFormValidate: function(result, form){
+    
+            if(result) {
+              new Ajax.Request('/blog/create_comment/341053', {
+                onFailure:function(response){
+                  $('comments').insert({after:response.responseText})
+                  form.spinner.hide();
+                  Element.scrollTo($('comments'));
+                },
+                onSuccess:function(response){
+                  Element.scrollTo($('comments'));
+                  $('comments').insert({after:response.responseText})
+                  $('editor_body').value = "";
+                  form.spinner.hide();
+                }, parameters:Form.serialize(form)
+              });
+            }
+    
+        }});
+        </script>
+      
+      </div>
+</div>
+
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  fix_image_size($$('div.blog_content img'), 700);
+  function quote_comment(id) {
+    new Ajax.Request('/editor/quote', {
+      parameters: {'id':id, 'type':'Post'},
+      onSuccess:function(response){editor.bbcode_editor.textarea.insertAfterSelection(response.responseText);}
+    });
+  }
+</script>
+
+
+
+        </div>
+
+        <div id="local">
+          <div class="local_top"></div>
+          <div id="blog_owner">
+            <div id="blog_owner_logo"><a href='http://dolphin-ygj.javaeye.com'><img alt="dolphin_ygj的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/168161/31b39372-02cc-33bf-a85a-564beec2000b.jpg?1258195531" title="dolphin_ygj的博客: dolphin_ygj" /></a></div>
+            <div id="blog_owner_name">dolphin_ygj</div>
+          </div>
+          <div id="blog_actions">
+            <ul>
+              <li>浏览: 195336 次</li>
+              <li>性别: <img alt="Icon_minigender_1" src="http://www.javaeye.com/images/icon_minigender_1.gif?1192779195" title="男" /></li>
+              <li>来自: 上海</li>
+              <li><img src='/images/status/offline.gif'/></li>
+              <li>
+                <a href="/blog/profile" class="profile">详细资料</a>
+                <a href="/blog/guest_book" class="guest_book">留言簿</a>
+              </li>
+              
+                <li>
+                  <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=dolphin_ygj" class="message" title="发送站内短信">发短消息</a>
+                  
+                    <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=dolphin_ygj" class="subscription" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;">关注</a>
+                  
+                </li>
+              
+            </ul>
+            <h5>搜索本博客</h5>
+            <form action="/blog/search" method="get">              <input class="text" id="query" name="query" style="margin-left: 10px;width: 110px;" type="text" />
+              <input class="submit" type="submit" value="搜索" />
+            </form>          </div>
+          
+            <div id="user_visits" class="clearfix">
+              <h5>最近访客 <span style='font-weight:normal;font-size:12px;padding-left:30px;'><a href="/blog/user_visits">&gt;&gt;更多访客</a></span></h5>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://bibye-domain.javaeye.com' target='_blank'><img alt="bibiye的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="bibiye的博客: bibiye" /></a></div>
+                  <div class="left"><a href='http://bibye-domain.javaeye.com' target='_blank'>bibiye</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://wulin2008.javaeye.com' target='_blank'><img alt="wulin2008的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="wulin2008的博客: " /></a></div>
+                  <div class="left"><a href='http://wulin2008.javaeye.com' target='_blank'>wulin2008</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://jkltyy.javaeye.com' target='_blank'><img alt="jkltyy的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="jkltyy的博客: " /></a></div>
+                  <div class="left"><a href='http://jkltyy.javaeye.com' target='_blank'>jkltyy</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://tsxm.javaeye.com' target='_blank'><img alt="tsxm的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="tsxm的博客: " /></a></div>
+                  <div class="left"><a href='http://tsxm.javaeye.com' target='_blank'>tsxm</a></div>
+                </div>
+              
+            </div>
+          
+                      <div id="blog_menu">
+              <h5>博客分类</h5>
+              <ul>
+                <li><a href="/">全部博客 (353)</a></li>
+                
+                  <li><a href="/category/11710">java综合 (33)</a></li>
+                
+                  <li><a href="/category/55130">项目管理 (11)</a></li>
+                
+                  <li><a href="/category/11825">工作流 (6)</a></li>
+                
+                  <li><a href="/category/11709">spring (11)</a></li>
+                
+                  <li><a href="/category/11707">hibenate (16)</a></li>
+                
+                  <li><a href="/category/11708">struts (0)</a></li>
+                
+                  <li><a href="/category/11713">javascript,html,css,ajax,jquery (11)</a></li>
+                
+                  <li><a href="/category/12579">IDE (9)</a></li>
+                
+                  <li><a href="/category/11711">生活 (0)</a></li>
+                
+                  <li><a href="/category/11712">工作 (0)</a></li>
+                
+                  <li><a href="/category/11714">杂记 (1)</a></li>
+                
+                  <li><a href="/category/52874">数据库 (97)</a></li>
+                
+                  <li><a href="/category/52982">服务器 (5)</a></li>
+                
+                  <li><a href="/category/52990">可视编辑 (0)</a></li>
+                
+                  <li><a href="/category/54609">freemarker (6)</a></li>
+                
+                  <li><a href="/category/55784">操作系统　windows (12)</a></li>
+                
+                  <li><a href="/category/55920">web页面 (7)</a></li>
+                
+                  <li><a href="/category/57069">jms (16)</a></li>
+                
+                  <li><a href="/category/57070">调优 (4)</a></li>
+                
+                  <li><a href="/category/57196">测试和bug管理 (2)</a></li>
+                
+                  <li><a href="/category/57837">原理 (1)</a></li>
+                
+                  <li><a href="/category/57861">項目-atf (21)</a></li>
+                
+                  <li><a href="/category/58172">安全 (3)</a></li>
+                
+                  <li><a href="/category/58461">xml (4)</a></li>
+                
+                  <li><a href="/category/58869">操作系统　liunx (18)</a></li>
+                
+                  <li><a href="/category/60259">网络 (22)</a></li>
+                
+                  <li><a href="/category/60644">office (11)</a></li>
+                
+                  <li><a href="/category/62839">设计 (2)</a></li>
+                
+                  <li><a href="/category/62877">软件 (1)</a></li>
+                
+                  <li><a href="/category/67112">数据库 mysql (6)</a></li>
+                
+                  <li><a href="/category/68369">胖客户端-flex (1)</a></li>
+                
+                  <li><a href="/category/68904">正则 (9)</a></li>
+                
+                  <li><a href="/category/68918">oracle- liunx  (3)</a></li>
+                
+                  <li><a href="/category/68927">sql2000 (2)</a></li>
+                
+                  <li><a href="/category/69600">模式 (1)</a></li>
+                
+                  <li><a href="/category/78565">虚拟机 (1)</a></li>
+                
+                  <li><a href="/category/81068">jstl (2)</a></li>
+                
+                  <li><a href="/category/86159">版本控制 打包工具 (0)</a></li>
+                
+                  <li><a href="/category/88758">AOP (1)</a></li>
+                
+                  <li><a href="/category/96587">demo (1)</a></li>
+                
+                  <li><a href="/category/103906">小软件 (2)</a></li>
+                
+              </ul>
+            </div>
+            
+            
+              <div id="guest_books">
+                <h5>我的留言簿 <span style='font-weight:normal;font-size:12px;padding-left:20px;'><a href="/blog/guest_book">&gt;&gt;更多留言</a></span></h5>
+                <ul>
+                  
+                    <li>
+                      你好。我现在也在使用jms。在struts2框架里使用。当我把&lt;script ...<br/>
+                      -- by <a href="/blog/guest_book#24977">hufangxian</a>
+                    </li>
+                  
+                    <li>
+                      你好   怎么匹配  &lt;content contentid=&quot;10 ...<br/>
+                      -- by <a href="/blog/guest_book#19029">zhuhailantian</a>
+                    </li>
+                  
+                    <li>
+                      你好！看了你一个帖子，关于jakarta 正则表达式的，我有个有点类似的问题， ...<br/>
+                      -- by <a href="/blog/guest_book#13189">hillshills</a>
+                    </li>
+                  
+                </ul>
+              </div>
+            
+            <div id="blog_others">
+              <h5>其他分类</h5>
+              <ul>
+                <li><a href="/blog/favorite">我的收藏</a> (21)</li>
+                                                <li><a href="/blog/topic">我的论坛主题贴</a> (13)</li>
+                <li><a href="/blog/post">我的所有论坛贴</a> (26)</li>
+                <li><a href="/blog/article">我的精华良好贴</a> (1)</li>
+                              </ul>
+            </div>
+            
+            <div id="recent_groups">
+              <h5>最近加入圈子</h5>
+              <ul>
+                
+                  <li><a href="http://FreeMarker.group.javaeye.com">FreeMarker</a></li>
+                
+                  <li><a href="http://hibernate.group.javaeye.com">Hibernate</a></li>
+                
+              </ul>
+            </div>
+            
+                          <div id="month_blogs">
+                <h5>存档</h5>
+                <ul>
+                  
+                    <li><a href="/blog/monthblog/2010-07">2010-07</a> (1)</li>
+                  
+                    <li><a href="/blog/monthblog/2010-06">2010-06</a> (6)</li>
+                  
+                    <li><a href="/blog/monthblog/2010-05">2010-05</a> (5)</li>
+                  
+                  <li><a href="/blog/monthblog_more">更多存档...</a></li>
+                </ul>
+              </div>
+                        <div id="comments_top">
+              <h5>评论排行榜</h5>
+              <ul>
+                
+                  <li><a href="/blog/517190" title="项目管理课程 ">项目管理课程 </a></li>
+                
+                  <li><a href="/blog/508194" title="ConcurrentHashMap之实现细节">ConcurrentHashMap之实现细节</a></li>
+                
+                  <li><a href="/blog/508198" title="Map 四种同步方式的性能比较">Map 四种同步方式的性能比较</a></li>
+                
+                  <li><a href="/blog/508585" title="Hibernate的拦截器和监听器">Hibernate的拦截器和监听器</a></li>
+                
+                  <li><a href="/blog/539379" title="spring rmi 小例子">spring rmi 小例子</a></li>
+                
+              </ul>
+            </div>
+            <div id="rss">
+              <ul>
+                <li><a href="/rss" target="_blank"><img alt="Rss" src="http://www.javaeye.com/images/rss.png?1195448807" /></a></li>
+                <li><a href="http://fusion.google.com/add?feedurl=http://dolphin-ygj.javaeye.com/rss" target="_blank"><img alt="Rss_google" src="http://www.javaeye.com/images/rss_google.gif?1197872161" /></a></li>
+              </ul>
+            </div>
+            <div class="local_bottom"></div>
+          
+        </div>
+      </div>
+
+      <div id="footer" class="clearfix">
+        <div id="copyright">
+          <hr/>
+          声明：JavaEye文章版权属于作者，受法律保护。没有作者书面许可不得转载。若作者同意转载，必须以超链接形式标明文章原始出处和作者。<br />
+          &copy; 2003-2010 JavaEye.com.   All rights reserved. 上海炯耐计算机软件有限公司 [ 沪ICP备05023328号 ]
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.javaeye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&logged_in=yes" + "' width='0' height='0' />");
+</script>
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-9070269-1");
+pageTracker._trackPageview();
+</script>
+      
+  </body>
+</html>
