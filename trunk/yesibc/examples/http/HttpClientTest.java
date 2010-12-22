@@ -61,7 +61,6 @@ import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
 import org.apache.http.util.EntityUtils;
 
-import com.yesibc.core.components.http.HttpClientHolder;
 import com.yesibc.core.components.http.Httpclient4Util;
 import com.yesibc.core.exception.ApplicationException;
 
