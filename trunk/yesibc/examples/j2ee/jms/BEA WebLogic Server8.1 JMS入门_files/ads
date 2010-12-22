@@ -1,0 +1,28 @@
+{
+
+var google_ads = new Array();
+var google_ad;
+var google_radlinks = new Array();
+var google_radlink;
+var google_info = new Object();
+google_ad = new Object(); 
+google_ad.n = 1; 
+google_ad.type = "image"; 
+google_ad.bidtype = "CPC"; 
+google_ad.targeting_type = "site"; 
+google_ad.url = "http://googleads.g.doubleclick.net/aclk?sa=l&amp;ai=B9fzr8GoRTebACYi7kAXU77CTAaupquUBi9ighBqTi5qYDKCdVBABGAEg7-yKBDgAUPe1i_7-_____wFgndHUgbAFoAGF4PbpA7IBDnd3dy4zNjBkb2MuY29tugEKMzAweDI1MF9qc8gBAtoBO2h0dHA6Ly93d3cuMzYwZG9jLmNvbS9jb250ZW50LzA2LzA4MjQvMTYvMTExMzZfMTg5OTAyLnNodG1sgAIBqQJvTj2lDimEPsACAcgC29yXGKgDAegD3AXoAwXoA6sH9QMAAAAE&amp;num=1&amp;sig=AGiWqtzEgTfpZK2VAA3nMPHfRgi9FO91fw&amp;client=ca-pub-6625678643128649&amp;adurl=http://www.eondi.com/topic/cs_2/cs_2.aspx%3Futm_source%3Dgoogle%26utm_medium%3Dcpc%26utm_campaign%3Dshengdanhuodong"; 
+google_ad.visible_url = "www.eondi.com"; 
+google_ad.image_url = "http://static.googleadsserving.cn/pagead/imgad?id=COSc5bSEmaOVPBCsAhjvATII-h65tghH0QI"; 
+google_ad.image_width = "300"; 
+google_ad.image_height = "239"; 
+google_ads[0] = google_ad; 
+google_info.feedback_url = "http://www.google.com/url?ct\x3dabg\x26q\x3dhttps://www.google.com/adsense/support/bin/request.py%3Fcontact%3Dabg_afc%26url%3Dhttp://www.360doc.com/content/06/0824/16/11136_189902.shtml%26hl%3Dzh-CN%26client%3Dca-pub-6625678643128649%26adU%3Dwww.eondi.com%26adT%3DImageAd%26gl%3DCN\x26usg\x3dAFQjCNFSZQBcdK02XmmpzeMfiY9EZRd8Jg";
+var google_attribution_text = "Google 提供的广告";
+var google_is_rtl = false;
+if (window.google_ad_request_done) {
+google_ad_request_done(google_ads);
+}
+if (window.google_radlink_request_done) {
+google_radlink_request_done(google_radlinks);
+}
+}
