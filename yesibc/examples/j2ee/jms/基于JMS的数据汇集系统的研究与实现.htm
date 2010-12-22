@@ -1,0 +1,526 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>基于JMS的数据汇集系统的研究与实现 - dolphin_ygj - JavaEye技术网站</title>
+    <meta name="description" content="摘要 在深入研究JMS异步消息处理机制的基础上，利用JMS为分布在不同系统中的气象数据的汇集提供了一个可行的方案，解开了应用程序间的耦合，并增强了应用程序的可扩展性和可靠性。　　关键词 消息、JMS、点对点、发布/订阅、数据汇集、气象　　现如今，越来越多的企业、单位面临着各种各样的数据集成和系统整合，CORBA、DCOM、RMI等RPC中间件技术也应运而生，但由于采用RPC同步处理技术，在性能、健壮 ..." />
+    <meta name="keywords" content="  基于JMS的数据汇集系统的研究与实现" />
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="search" type="application/opensearchdescription+xml" href="/open_search.xml" title="JavaEye" />
+    <link href="/rss" rel="alternate" title="dolphin_ygj" type="application/rss+xml" />
+    <link href="http://www.javaeye.com/stylesheets/blog.css?1286934641" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://www.javaeye.com/stylesheets/themes/blog/green.css?1260254891" media="screen" rel="stylesheet" type="text/css" />
+    <script src="http://www.javaeye.com/javascripts/application.js?1285465576" type="text/javascript"></script>
+      
+  <link href="http://www.javaeye.com/javascripts/syntaxhighlighter/SyntaxHighlighter.css?1268040798" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/syntaxhighlighter/shCoreCommon.js?1238329845" type="text/javascript"></script>
+<script src="http://www.javaeye.com/javascripts/hotkey.js?1238403289" type="text/javascript"></script>
+  <style>
+    div#main {background-color: transparent; border: 0; padding: 0px; width: 740px;}
+  </style>
+  <link href="http://www.javaeye.com/javascripts/editor/css/ui.css?1222156967" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/editor/compress.js?1265622452" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="blog_site_nav">
+  <a href="http://www.javaeye.com/" class="homepage">首页</a>
+  <a href="http://www.javaeye.com/news">新闻</a>
+  <a href="http://www.javaeye.com/forums">论坛</a>
+  <a href="http://www.javaeye.com/ask">问答</a>
+  <a href="http://www.javaeye.com/blogs">博客</a>
+  <a href="http://www.javaeye.com/job">招聘</a>
+  <a href="#" onclick="return false;" id="msna"><u>更多</u> <small>▼</small></a>
+  <div class="quick_menu" style="display:none;">
+    <a href="http://www.javaeye.com/wiki">专栏</a>
+    <!--<a href="http://www.javaeye.com/articles">文摘</a>//-->
+    <a href="http://www.javaeye.com/groups">圈子</a>
+    <a href="http://www.javaeye.com/search">搜索</a>
+  </div>
+</div>
+      <div id="user_nav">
+      <a href="http://bibye-domain.javaeye.com" title="查看我的博客首页" class="welcome">欢迎bibiye</a>
+    
+      <a href="http://app.javaeye.com/messages" title="发送站内短信">收件箱</a>
+    
+    
+      <a href="http://app.javaeye.com" title="我的应用首页">我的应用</a>
+    
+    <div class="quick_menu" style="display:none;">
+      <a href="http://app.javaeye.com/feed" title="我关注的好友动态消息">我的关注</a>
+      <a href="http://app.javaeye.com/feed/my" title="我参与的话题更新的消息">我的参与</a>
+      <a href="http://app.javaeye.com/chat" title="用闲聊发表简短的话题">我的闲聊</a>
+      <a href="http://app.javaeye.com/mygroup" title="我加入的圈子最新话题">我的圈子</a>
+      <a href="http://app.javaeye.com/links" title="我收藏的网络资源链接">我的收藏</a>
+      <a href="http://app.javaeye.com/myresume" title="我的个人简历">我的简历</a>
+    </div>
+        <a href="http://bibye-domain.javaeye.com/admin" title="管理我的博客">我的博客</a>
+    <a href="http://app.javaeye.com/profile" title="修改我的个人设置">设置</a>
+    <a href="/logout" class="nobg" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'put'); f.appendChild(m);f.submit();return false;">退出</a>
+  </div>
+    </div>
+
+    <div id="page">
+      <div id="branding" class="clearfix">
+        <div id="blog_name"><h1><a href="/">dolphin_ygj</a></h1></div>
+        <div id="blog_preview">
+          
+        </div>
+        <div id="blog_domain">永久域名 <a href="/">http://dolphin-ygj.javaeye.com</a></div>
+      </div>
+      
+      
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+          
+
+
+<div class="blog_main"> 
+  <div class="blog_nav">
+    
+    <div class="pre_next">
+      <a href="/blog/341053" class="next" title="利用JMS Topic发布/订阅消息 ">利用JMS Topic发布/订阅消息 </a>
+      |
+      <a href="/blog/340949" class="pre" title="JMS概念和基于weblogic下的JMS配置和客户端调用收藏">JMS概念和基于weblogic下的JMS配置和客户 ...</a>
+    </div>
+  </div>
+  <div class="blog_title">
+    <div class="date"><span class='year'>2009</span><span class='sep_year'>-</span><span class='month'>03</span><span class='sep_month'>-</span><span class='day'>01</span></div>
+    <h3><a href="/blog/340964">基于JMS的数据汇集系统的研究与实现</a></h3>
+                    
+  </div>
+
+  <div class="blog_content">
+    <p><strong>摘要 </strong>在深入研究JMS异步消息处理机制的基础上，利用JMS为分布在不同系统中的气象数据的汇集提供了一个可行的方案，解开了应用程序间的耦合，并增强了应用程序的可扩展性和可靠性。<br /><br /><strong>　　关键词 </strong>消息、JMS、点对点、发布/订阅、数据汇集、气象<br /><br />　　现如今，越来越多的企业、单位面临着各种各样的数据集成和系统整合，CORBA、DCOM、RMI等RPC中间件技术也应运而生，但由于采用RPC同步处理技术，在性能、健壮性、可扩展性上都存在着诸多缺点。而基于消息的异步处理模型采用非阻塞的调用特性，发送者将消息发送给消息服务器，消息服务器在合适的时候再将消息转发给接收者；发送和接收是异步的，发送者无需等待，二者的生命周期也可以不必相同，而且发送者可以将消息间接传给多个接收者，大大提高了程序的性能、可扩展性及健壮性，这使得异步处理模型在分布式应用上比起同步处理模型更具有吸引力。<br /><br />　　本文详细介绍了Java中的异步处理机制――基于JMS的异步消息处理技术，并结合实例讨论了基于JMS的气象系统数据汇集系统的设计与实现。<br /><br />　　<strong>Java消息服务－JMS </strong><br /><br />　　JMS是由包括Sun Microsystems和IBM等在内的几个公司合作设计的一个面向消息的中间件（MOM）API。JMS定义了Java 中访问消息中间件的接口，但JMS 只是接口，并没有给予实现，实现JMS 接口的消息中间件称为JMS提供者（JMS Provider）。JMS的目的是应用程序能在异步情况下可靠地传输和接受消息。从编程的角度来看，JMS可以被当作一个容器管理的资源，与JDBC连接类似。正如你可以通过JDBC去访问许多不同的关系数据库一样，你可以通过JMS访问独立于厂商的消息服务系统。<br /><br />　　JMS主要包括三个部分――JMS提供者（JMS Provider）、消息发送者（Message Producer）和消息接收者（Message Consumer）。简单的说，JMS提供者是指实现JMS API接口的消息系统，是消息的中转站；消息发送者是指消息的创造和发送者，是消息的发源地；消息接收者是指接收消息的应用程序，是消息最终的目的地。<br /><br />　　JMS消息是异步处理的，消息发送者可以发送一个消息而无须等待响应。消息发送者将消息发送到一条虚拟的通道(主题或队列)上，消息接收者则订阅或是监听该通道。一条消息可能最终转发给一个或多个消息接收者，这些接收者都无需对消息发送者做出回应。<br /><br />　　<strong>1、JMS消息的组成 </strong><br /><br />　　在J2EE1.4后，JMS API不再区分在点对点域和发布/订阅域中创建的消息。JMS消息由以下三部分组成（如图1.1所示）： <br /><br />　　消息头（header）――JMS消息头包含了许多字段，它们是消息发送后由JMS提供者或消息发送者产生，用来表示消息、设置优先权和失效时间等等，并且为消息确定路由。<br /><br />　　属性（property）――由消息发送者产生，用来添加删除消息头以外的附加信息。<br /><br />　　消息体（body）――由消息发送者产生，JMS中定义了5种消息体：ByteMessage、MapMessage、ObjectMessage、StreamMessage和TextMessage。<br /><br /><img src="/upload/attachment/79930/ce5fd403-3d63-3174-84ba-efebd5332aaf.bmp" border="0" alt="1" style="border: 0px;" /><br /><br />　　<strong>2、JMS消息传递模式 </strong><br /><br />　　JMS支持两种消息传递模式――点对点模式（P2P）和发布/订阅模式（Publish/Subscribe）。这两种都是人们熟知的push模式，消息的发送者是活动的发起人，而接收者则是被动的接收消息。在JMS中，这些消息传递模式被称为消息域（message domain）。<br /><br />　　2.1 JMS点对点消息域<br /><br />　　在点对点模式中，发送者和接收者对消息传送的目的地址达成一致，即所谓的队列（queue）。消息队列位于JMS提供者中，消息发送者向一个消息队列发送消息，消息接收者可以在消息发送后的任何时刻从这个队列中（被动地）接收消息，在接收者确认之前消息一直保存在消息队列中直到过期。点对点模式的结构图如图1.2所示：<br /><br />　　JMS点对点消息域具有以下特点：<br /><br />　　·每条消息能而且只能被一个接收者接收。<br /><br />　　·每条消息或者被接收者从队列中取走，或者被 JMS提供者在超时的情况下删除。<br /><br />　　·消息产生的时候接收者不一定要存在，接收者可以在消息产生后的任何时间里取走消息。<br /><br />　　·接收者不能请求一个消息。<br /><br />　　·接收者必须在收到消息后发出确认信息。<br /><br /><img src="/upload/attachment/79932/fc282e79-a094-3ad1-98ed-43aa5802f990.bmp" border="0" alt="2" style="border: 0;" /><br /><br />　　2.2 JMS发布/订阅消息域 <br /><br />　　在发布/订阅模式下，发送者被称为发布者（publisher），一个消息可已有很多接收者，这些接收者被称为订阅者（subscriber）。发布/订阅模式采用与点对点模式完全不同的消息发送模式。在发布/订阅模式下，发布者给一个主题（topic）发送消息，多个订阅者在订阅的时候可以订阅他们感兴趣的主题。一个主题可以被多个订阅者订阅，一个订阅者也可以订阅多个主题。一个主题的消息只被发给该主题的所有订阅者。订阅者只能接收它订阅的主题中的消息，并且，在默认情况下，订阅者在消息发送的时候必须是活动的，并随时准备接收消息，否则它将错过该消息。为了避免这种时间依赖性JMS API允许订阅者创建持久订阅。发布/订阅模式的结构图如图1.3所示：<br /><br />　　JMS发布/订阅消息域具有以下特点：<br /><br />　　·每一条消息由一个发布者创建而由0个或多个订阅者接收它。<br /><br />　　·消息立刻被分发给现有的订阅者。<br /><br />　　·订阅者必须在消息发送的时候存在以接收消息。<br /><br />　　·持久订阅允许订阅者接收它处于非活动状态时由发布者向主题发送的消息。<br /><br />　　·订阅者必须在接收到消息后发出确认信息。<br /><br /><img src="/upload/attachment/79934/b8b8ef98-cd75-312e-a5e2-d949ad7bbc0f.bmp" border="0" alt="3" style="border: 0;" /></p>
+<p>　　 </p>
+<p><strong>系统的设计与实现 </strong><br /><br />　　目前，基层气象台站的每个分系统都是独立的，各自的数据都保存在本机上，彼此互不联系，而汇集系统就是为了把分散在每个系统上的数据汇集到一个统一的数据库中。为了实现这个目的可以有多种方法。<br /><br />　　（1）由各个分系统解析本机的数据，然后直接向数据库中写记录，但是这样势必对统一数据库的安全性造成影响，而且各分系统的计算机莨莠不齐，老旧的机器能不能提供更多的资源也是一个问题；<br /><br />　　（2）由服务器上的一个程序统一从各个系统上获取数据，然后写入数据库，但是这样该服务器程序与各个分系统便形成了紧耦合，一旦分系统发生变化，或者要扩展一个分系统便要重新更改程序代码，使得整个系统的稳定性和可扩展性受到很大影响；<br /><br />　　而JMS消息机制的异步传输模型恰好能完美的解决以上两种方法存在的问题。<br /><br />　　<strong>1、系统的设计</strong><br /><br />　　基于JMS的气象数据汇集系统由五个模块组成：代理模块、消息发送模块（MessageSender）、消息接收模块（MessageReceiver）、数据格式转换模块（DataFormatConverser）和统一数据库访问接口（UDAI）。系统结构图如下图所示： </p>
+<p> </p>
+<p><img src="/upload/attachment/79936/5f361b0d-5841-3b9d-8608-f3f801768671.gif" alt="" /></p>
+<p> </p>
+<p>基于JMS的气象数据汇集系统结构图<br /><br />　　（1）代理模块<br /><br />　　代理模块是运行于分系统上的Java程序，它只有两个功能：监测到有新数据到，立即将数据文件复制到服务器上的文件缓冲区，然后调用消息发送模块，并将数据文件的文件名，文件大小，生成时间，业务属性等信息传递给消息发送模块。由于代理程序不需要解析数据文件，也不需要写数据库，降低了对系统资源的消耗，即使在比较老旧的机器上运行也不会出现问题。而且一旦消息发送成功，后面的工作便与分系统无关，这样也就解除了分系统和服务器之间的耦合。<br /><br />　　（2）消息发送模块<br /><br />　　消息发送模块作为一个会话Bean部署在服务器上，它的功能主要是：将代理模块传来的数据文件的文件名，文件大小，生成时间，业务属性等信息组装成消息，然后发送到与其业务属性相对应的消息队列中（每一类业务属性对应一个消息队列）。消息发送模块运行与服务器上的Bean容器中，不占用分系统资源，减小了分系统上的资源开销；而且该模块被部署为一个Bean，方便了以后分系统的扩展和变化。<br /><br />　　（3）消息接收模块<br /><br />　　消息接收模块是一个运行于服务器端的JMS客户端，每一个消息队列都对应一个消息接收模块。消息接收模块通过注册一个MessageListener接口，监听消息队列上的消息；接收到消息后便调用数据格式转换模块，将消息内容和数据文件在文件缓冲区的绝对地址作为参数传给数据格式转换模块。之所以为每一个消息队列对应一个消息接收模块，是考虑到以后系统的扩展，如果要增加一个队列，只需增加一个接收模块，并不影响原来系统的正常运行。 </p>
+<p class="Kde588"> </p>
+<p><br /><br />　　（4）数据格式转换模块<br /><br />　　数据格式转换模块的主要功能是：解析数据文件并按照一定的格式生成标准的XML文档供统一数据库访问接口使用。<br /><br />　　（5）统一数据库访问接口<br /><br />　　统一数据库访问接口提供一个统一的数据库写入接口，不管以后系统如何变化，只要生成标准的XML文档便可以使用此接口来访问数据库。<br /><br />　　系统中真正与JMS相关的模块是消息发送模块和消息接收模块，由于每一类业务属性对应一个消息队列，每一个消息队列对应一个接收模块，所以选择PTP的传递模式作为系统的消息传递模式。<br /><br /><strong>　　2、系统的实现</strong><br /><br />　　（1）建立消息队列<br /><br />　　系统使用JBoss作为J2EE服务器，通过编辑配置文件jbossMQ-destinations-service.xml来定义应用所需的消息队列地址信息。其部分代码如下：<br /><br />＜mbean code="org.jboss.mq.server.jmx.Queue" name="jboss.mq.destination:service=Queue,name=RadarQueue"＞<br />＜depends optional-attribute-name="DestinationManager"＞<br />jboss.mq:service=DestinationManager＜/depends＞ </p>
+<p><br />＜depends optional-attribute-name="SecurityManager"＞<br />jboss.mq:service=SecurityManager＜/depends＞<br />＜attribute name="SecurityConf"＞<br />＜security＞<br />＜role name="guest" read="true" write="true"/＞<br />＜role name="publisher" read="true" write="true" create="false"/＞<br />＜role name="noacc" read="false" write="false" create="false"/＞<br />＜/security＞</p>
+<p>＜/attribute＞<br />＜/mbean＞ <br />　　（2）消息发送模块的实现<br /><br />　　MessageSender SessionBean的功能是构造消息并向指定的消息队列发送消息，其部分代码如下：<br /><br />//构造TEXT消息<br /><br />message.setText(dataInfo);//设置消息体<br /><br />//发送消息<br /><br />Context context = new InitiaContext();//获取上下文环境<br />ConnectionFactory connectionFactory = new (ConnectionFactory)context.lookup(“java:comp/env/JNDIConnectionFactory”);<br /><br />Connection connection = connectionFactory.createConnection();<br />Session session =connection.createSession(false,AUTO_ACKNOWLEDGE);<br />Destination messageQueue = (Destination)context.lookup(“java:comp/env/ RadarQueue”);<br />MessageProducer producer = session.createProducer(messageQueue); <br />producer.send(message);<br />…… <br />　　（3）消息接收模块的实现<br /><br />　　消息接收模块通过注册MessageListener接口来监听消息队列，实现其onMessage()方法处理消息。其部分代码如下：<br /><br />Public class MessageReceiver implements MessageListener{<br />……<br />public void onMessage(Message message){<br />……<br />dataInfo = ((TextMessage)message).getText();//获得数据文件信息<br />……<br />//调用数据格式转换模块<br />……<br />} <br />　　<strong>结束语 </strong><br /><br />　　本系统应用JMS异步消息作为分系统与服务器的关联机制，分系统只需要通过消息向服务器提交任务，之后便不需要关心数据如何处理，何时处理，彻底解开了分系统与服务其的耦合，即保证了数据库的安全可靠，也减少了分系统的资源消耗。而且系统的各个模块都是相对独立，对于今后的变化和进一步的扩展提供了更大的空间。 </p>
+<p> </p>
+<p> </p>
+<p> </p>
+  </div>
+
+  
+  <div class="attachments">
+    
+      
+        <ul style="display:none;">
+          <li><a href="http://dl.javaeye.com/upload/attachment/79930/ce5fd403-3d63-3174-84ba-efebd5332aaf.bmp" target="_blank"><img src='http://dl.javaeye.com/upload/attachment/79930/ce5fd403-3d63-3174-84ba-efebd5332aaf-thumb.bmp' class='magplus' title='点击查看原始大小图片' /></a></li>
+          
+          <li>大小: 26.2 KB</li>
+        </ul>
+      
+    
+      
+        <ul style="display:none;">
+          <li><a href="http://dl.javaeye.com/upload/attachment/79932/fc282e79-a094-3ad1-98ed-43aa5802f990.bmp" target="_blank"><img src='http://dl.javaeye.com/upload/attachment/79932/fc282e79-a094-3ad1-98ed-43aa5802f990-thumb.bmp' class='magplus' title='点击查看原始大小图片' /></a></li>
+          
+          <li>大小: 24.2 KB</li>
+        </ul>
+      
+    
+      
+        <ul style="display:none;">
+          <li><a href="http://dl.javaeye.com/upload/attachment/79934/b8b8ef98-cd75-312e-a5e2-d949ad7bbc0f.bmp" target="_blank"><img src='http://dl.javaeye.com/upload/attachment/79934/b8b8ef98-cd75-312e-a5e2-d949ad7bbc0f-thumb.bmp' class='magplus' title='点击查看原始大小图片' /></a></li>
+          
+          <li>大小: 20.6 KB</li>
+        </ul>
+      
+    
+      
+        <ul style="display:none;">
+          <li><a href="http://dl.javaeye.com/upload/attachment/79936/5f361b0d-5841-3b9d-8608-f3f801768671.gif" target="_blank"><img src='http://dl.javaeye.com/upload/attachment/79936/5f361b0d-5841-3b9d-8608-f3f801768671-thumb.gif' class='magplus' title='点击查看原始大小图片' /></a></li>
+          
+          <li>大小: 10.6 KB</li>
+        </ul>
+      
+    
+    
+      <ul>
+        <li><a href="#" onclick="$$('div.attachments ul').invoke('show');$(this).up(1).hide();return false;">查看图片附件</a></li>
+      </ul>
+    
+  </div>
+
+
+  <div>
+      <script type="text/javascript">
+      alimama_pid="mm_12122471_0_0&eventid=101146"; 
+      alimama_titlecolor="0000FF"; 
+      alimama_descolor ="000000"; 
+      alimama_bgcolor="FFFFFF"; 
+      alimama_bordercolor="E6E6E6"; 
+      alimama_linkcolor="008000"; 
+      alimama_bottomcolor="FFFFFF"; 
+      alimama_anglesize="0"; 
+      alimama_bgpic="0"; 
+      alimama_icon="0"; 
+      alimama_sizecode="14"; 
+      alimama_width=468; 
+      alimama_height=60; 
+      alimama_type=2; 
+      </script>
+      <script src="http://a.alimama.cn/inf.js" type=text/javascript>
+      </script>  
+    </div>
+  
+  
+
+  <div class="blog_nav">
+    <div class="pre_next">
+      <a href="/blog/341053" class="next" title="利用JMS Topic发布/订阅消息 ">利用JMS Topic发布/订阅消息 </a>
+      |
+      <a href="/blog/340949" class="pre" title="JMS概念和基于weblogic下的JMS配置和客户端调用收藏">JMS概念和基于weblogic下的JMS配置和客户 ...</a>
+    </div>
+  </div>
+
+  <div class="blog_bottom">
+    <ul>
+      <li>12:46</li>
+      <li>浏览 (231)</li>
+            <li><a href="#comments">评论</a> (0)</li>
+      <li>分类: <a href="/category/57069">jms</a></li>
+      
+      
+        <li><a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=%E5%9F%BA%E4%BA%8EJMS%E7%9A%84%E6%95%B0%E6%8D%AE%E6%B1%87%E9%9B%86%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A0%94%E7%A9%B6%E4%B8%8E%E5%AE%9E%E7%8E%B0&amp;user_favorite%5Burl%5D=http%3A%2F%2Fdolphin-ygj.javaeye.com%2Fblog%2F340964' target='_blank' class='favorite' onclick="$$('.favorite_form_spinner')[0].show();new Ajax.Request('http://dolphin-ygj.javaeye.com/links/new_xhr?user_favorite%5Btitle%5D=%E5%9F%BA%E4%BA%8EJMS%E7%9A%84%E6%95%B0%E6%8D%AE%E6%B1%87%E9%9B%86%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%A0%94%E7%A9%B6%E4%B8%8E%E5%AE%9E%E7%8E%B0&amp;user_favorite%5Burl%5D=http%3A%2F%2Fdolphin-ygj.javaeye.com%2Fblog%2F340964', {method: 'get', onSuccess: function(response){$(document.getElementsByTagName('body')[0]).insert({bottom:response.responseText});$$('.favorite_form_spinner')[0].hide();}});return false;">收藏</a><img alt="Spinner" class="favorite_form_spinner" src="http://www.javaeye.com/images/spinner.gif?1230301943" style="vertical-align:bottom;margin-left:7px;display:none;" /></li>
+        
+      
+      
+      <li class='last'><a href="http://www.javaeye.com/wiki/topic/340964" target="_blank" class="more">相关推荐</a></li>
+    </ul>
+  </div>
+
+  <div class="blog_comment">
+    <h5>评论</h5>
+    <a id="comments" name="comments"></a>
+    
+    
+    
+  </div>
+
+  <div class="blog_comment">
+    <h5>发表评论</h5>
+          
+      
+        <form action="/blog/340964" id="comment_form" method="post" onsubmit="return false;">          
+
+
+  <input type="hidden" id="editor_bbcode_flag"/>
+
+
+
+<div id="editor_main"><textarea class="validate-richeditor bad-words min-length-5" cols="40" id="editor_body" name="comment[body]" rows="20" style="width: 500px; height: 350px;"></textarea></div>
+
+
+<script type="text/javascript">
+  var editor = new Control.TextArea.Editor("editor_body", "bbcode", false);
+</script>
+          <p style="text-align:right;padding-right:30px;">(快捷键 Alt+S / Ctrl+Enter) <input class="submit" id="quick_reply_button" name="commit" type="submit" value="提交" /></p>
+        </form>
+        <script type="text/javascript">
+          new HotKey("s",function() {$('quick_reply_button').click();},{altKey: true, ctrlKey: false});
+          new HotKey(new Number(13),function() {$('quick_reply_button').click();},{altKey: false, ctrlKey: true});
+
+          new Validation("comment_form", {immediate: false, onFormValidate: function(result, form){
+    
+            if(result) {
+              new Ajax.Request('/blog/create_comment/340964', {
+                onFailure:function(response){
+                  $('comments').insert({after:response.responseText})
+                  form.spinner.hide();
+                  Element.scrollTo($('comments'));
+                },
+                onSuccess:function(response){
+                  Element.scrollTo($('comments'));
+                  $('comments').insert({after:response.responseText})
+                  $('editor_body').value = "";
+                  form.spinner.hide();
+                }, parameters:Form.serialize(form)
+              });
+            }
+    
+        }});
+        </script>
+      
+      </div>
+</div>
+
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  fix_image_size($$('div.blog_content img'), 700);
+  function quote_comment(id) {
+    new Ajax.Request('/editor/quote', {
+      parameters: {'id':id, 'type':'Post'},
+      onSuccess:function(response){editor.bbcode_editor.textarea.insertAfterSelection(response.responseText);}
+    });
+  }
+</script>
+
+
+
+        </div>
+
+        <div id="local">
+          <div class="local_top"></div>
+          <div id="blog_owner">
+            <div id="blog_owner_logo"><a href='http://dolphin-ygj.javaeye.com'><img alt="dolphin_ygj的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/168161/31b39372-02cc-33bf-a85a-564beec2000b.jpg?1258195531" title="dolphin_ygj的博客: dolphin_ygj" /></a></div>
+            <div id="blog_owner_name">dolphin_ygj</div>
+          </div>
+          <div id="blog_actions">
+            <ul>
+              <li>浏览: 195339 次</li>
+              <li>性别: <img alt="Icon_minigender_1" src="http://www.javaeye.com/images/icon_minigender_1.gif?1192779195" title="男" /></li>
+              <li>来自: 上海</li>
+              <li><img src='/images/status/offline.gif'/></li>
+              <li>
+                <a href="/blog/profile" class="profile">详细资料</a>
+                <a href="/blog/guest_book" class="guest_book">留言簿</a>
+              </li>
+              
+                <li>
+                  <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=dolphin_ygj" class="message" title="发送站内短信">发短消息</a>
+                  
+                    <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=dolphin_ygj" class="subscription" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;">关注</a>
+                  
+                </li>
+              
+            </ul>
+            <h5>搜索本博客</h5>
+            <form action="/blog/search" method="get">              <input class="text" id="query" name="query" style="margin-left: 10px;width: 110px;" type="text" />
+              <input class="submit" type="submit" value="搜索" />
+            </form>          </div>
+          
+            <div id="user_visits" class="clearfix">
+              <h5>最近访客 <span style='font-weight:normal;font-size:12px;padding-left:30px;'><a href="/blog/user_visits">&gt;&gt;更多访客</a></span></h5>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://bibye-domain.javaeye.com' target='_blank'><img alt="bibiye的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="bibiye的博客: bibiye" /></a></div>
+                  <div class="left"><a href='http://bibye-domain.javaeye.com' target='_blank'>bibiye</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://stevenszhou.javaeye.com' target='_blank'><img alt="stevenszhou的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="stevenszhou的博客: " /></a></div>
+                  <div class="left"><a href='http://stevenszhou.javaeye.com' target='_blank'>stevenszhou</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://wulin2008.javaeye.com' target='_blank'><img alt="wulin2008的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="wulin2008的博客: " /></a></div>
+                  <div class="left"><a href='http://wulin2008.javaeye.com' target='_blank'>wulin2008</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://jkltyy.javaeye.com' target='_blank'><img alt="jkltyy的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="jkltyy的博客: " /></a></div>
+                  <div class="left"><a href='http://jkltyy.javaeye.com' target='_blank'>jkltyy</a></div>
+                </div>
+              
+            </div>
+          
+                      <div id="blog_menu">
+              <h5>博客分类</h5>
+              <ul>
+                <li><a href="/">全部博客 (353)</a></li>
+                
+                  <li><a href="/category/11710">java综合 (33)</a></li>
+                
+                  <li><a href="/category/55130">项目管理 (11)</a></li>
+                
+                  <li><a href="/category/11825">工作流 (6)</a></li>
+                
+                  <li><a href="/category/11709">spring (11)</a></li>
+                
+                  <li><a href="/category/11707">hibenate (16)</a></li>
+                
+                  <li><a href="/category/11708">struts (0)</a></li>
+                
+                  <li><a href="/category/11713">javascript,html,css,ajax,jquery (11)</a></li>
+                
+                  <li><a href="/category/12579">IDE (9)</a></li>
+                
+                  <li><a href="/category/11711">生活 (0)</a></li>
+                
+                  <li><a href="/category/11712">工作 (0)</a></li>
+                
+                  <li><a href="/category/11714">杂记 (1)</a></li>
+                
+                  <li><a href="/category/52874">数据库 (97)</a></li>
+                
+                  <li><a href="/category/52982">服务器 (5)</a></li>
+                
+                  <li><a href="/category/52990">可视编辑 (0)</a></li>
+                
+                  <li><a href="/category/54609">freemarker (6)</a></li>
+                
+                  <li><a href="/category/55784">操作系统　windows (12)</a></li>
+                
+                  <li><a href="/category/55920">web页面 (7)</a></li>
+                
+                  <li><a href="/category/57069">jms (16)</a></li>
+                
+                  <li><a href="/category/57070">调优 (4)</a></li>
+                
+                  <li><a href="/category/57196">测试和bug管理 (2)</a></li>
+                
+                  <li><a href="/category/57837">原理 (1)</a></li>
+                
+                  <li><a href="/category/57861">項目-atf (21)</a></li>
+                
+                  <li><a href="/category/58172">安全 (3)</a></li>
+                
+                  <li><a href="/category/58461">xml (4)</a></li>
+                
+                  <li><a href="/category/58869">操作系统　liunx (18)</a></li>
+                
+                  <li><a href="/category/60259">网络 (22)</a></li>
+                
+                  <li><a href="/category/60644">office (11)</a></li>
+                
+                  <li><a href="/category/62839">设计 (2)</a></li>
+                
+                  <li><a href="/category/62877">软件 (1)</a></li>
+                
+                  <li><a href="/category/67112">数据库 mysql (6)</a></li>
+                
+                  <li><a href="/category/68369">胖客户端-flex (1)</a></li>
+                
+                  <li><a href="/category/68904">正则 (9)</a></li>
+                
+                  <li><a href="/category/68918">oracle- liunx  (3)</a></li>
+                
+                  <li><a href="/category/68927">sql2000 (2)</a></li>
+                
+                  <li><a href="/category/69600">模式 (1)</a></li>
+                
+                  <li><a href="/category/78565">虚拟机 (1)</a></li>
+                
+                  <li><a href="/category/81068">jstl (2)</a></li>
+                
+                  <li><a href="/category/86159">版本控制 打包工具 (0)</a></li>
+                
+                  <li><a href="/category/88758">AOP (1)</a></li>
+                
+                  <li><a href="/category/96587">demo (1)</a></li>
+                
+                  <li><a href="/category/103906">小软件 (2)</a></li>
+                
+              </ul>
+            </div>
+            
+            
+              <div id="guest_books">
+                <h5>我的留言簿 <span style='font-weight:normal;font-size:12px;padding-left:20px;'><a href="/blog/guest_book">&gt;&gt;更多留言</a></span></h5>
+                <ul>
+                  
+                    <li>
+                      你好。我现在也在使用jms。在struts2框架里使用。当我把&lt;script ...<br/>
+                      -- by <a href="/blog/guest_book#24977">hufangxian</a>
+                    </li>
+                  
+                    <li>
+                      你好   怎么匹配  &lt;content contentid=&quot;10 ...<br/>
+                      -- by <a href="/blog/guest_book#19029">zhuhailantian</a>
+                    </li>
+                  
+                    <li>
+                      你好！看了你一个帖子，关于jakarta 正则表达式的，我有个有点类似的问题， ...<br/>
+                      -- by <a href="/blog/guest_book#13189">hillshills</a>
+                    </li>
+                  
+                </ul>
+              </div>
+            
+            <div id="blog_others">
+              <h5>其他分类</h5>
+              <ul>
+                <li><a href="/blog/favorite">我的收藏</a> (21)</li>
+                                                <li><a href="/blog/topic">我的论坛主题贴</a> (13)</li>
+                <li><a href="/blog/post">我的所有论坛贴</a> (26)</li>
+                <li><a href="/blog/article">我的精华良好贴</a> (1)</li>
+                              </ul>
+            </div>
+            
+            <div id="recent_groups">
+              <h5>最近加入圈子</h5>
+              <ul>
+                
+                  <li><a href="http://FreeMarker.group.javaeye.com">FreeMarker</a></li>
+                
+                  <li><a href="http://hibernate.group.javaeye.com">Hibernate</a></li>
+                
+              </ul>
+            </div>
+            
+                          <div id="month_blogs">
+                <h5>存档</h5>
+                <ul>
+                  
+                    <li><a href="/blog/monthblog/2010-07">2010-07</a> (1)</li>
+                  
+                    <li><a href="/blog/monthblog/2010-06">2010-06</a> (6)</li>
+                  
+                    <li><a href="/blog/monthblog/2010-05">2010-05</a> (5)</li>
+                  
+                  <li><a href="/blog/monthblog_more">更多存档...</a></li>
+                </ul>
+              </div>
+                        <div id="comments_top">
+              <h5>评论排行榜</h5>
+              <ul>
+                
+                  <li><a href="/blog/517190" title="项目管理课程 ">项目管理课程 </a></li>
+                
+                  <li><a href="/blog/508194" title="ConcurrentHashMap之实现细节">ConcurrentHashMap之实现细节</a></li>
+                
+                  <li><a href="/blog/508198" title="Map 四种同步方式的性能比较">Map 四种同步方式的性能比较</a></li>
+                
+                  <li><a href="/blog/508585" title="Hibernate的拦截器和监听器">Hibernate的拦截器和监听器</a></li>
+                
+                  <li><a href="/blog/539379" title="spring rmi 小例子">spring rmi 小例子</a></li>
+                
+              </ul>
+            </div>
+            <div id="rss">
+              <ul>
+                <li><a href="/rss" target="_blank"><img alt="Rss" src="http://www.javaeye.com/images/rss.png?1195448807" /></a></li>
+                <li><a href="http://fusion.google.com/add?feedurl=http://dolphin-ygj.javaeye.com/rss" target="_blank"><img alt="Rss_google" src="http://www.javaeye.com/images/rss_google.gif?1197872161" /></a></li>
+              </ul>
+            </div>
+            <div class="local_bottom"></div>
+          
+        </div>
+      </div>
+
+      <div id="footer" class="clearfix">
+        <div id="copyright">
+          <hr/>
+          声明：JavaEye文章版权属于作者，受法律保护。没有作者书面许可不得转载。若作者同意转载，必须以超链接形式标明文章原始出处和作者。<br />
+          &copy; 2003-2010 JavaEye.com.   All rights reserved. 上海炯耐计算机软件有限公司 [ 沪ICP备05023328号 ]
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.javaeye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&logged_in=yes" + "' width='0' height='0' />");
+</script>
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-9070269-1");
+pageTracker._trackPageview();
+</script>
+      
+  </body>
+</html>

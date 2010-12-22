@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+<!-- 
+定义了普通的activemq的connectionFactory
+定义了Spring的共享一个Connection, 缓存Session,Producer的CachingConnectionFactory, 
+默认仅Cache一个Session.
+定义了只有一个消费者的notifyQueue 与 订阅-发布模式有多个消费者的notifyTopic.
+
+  消息发送者
+定义了Spring的JMSTemplate，默认为PERSISTENT，优先级为4，无过期时间
+综合考虑性能与扩展性，一般都是使用MapMessage，使用JMSTemplate的convertAndSend()简单发送。
+
+  消息消费者
+消息消费者，一般使用Spring的MDP(Message Driven POJO)异步接收的模式，而不使用JMSTemplate主动同步接收。
+在xml中定义MessageContainer与MessageListener接受者。
+Topic单线程的接收
+Queue则可以定义并发接收，默认为非Durable接收者。
+确认模式默认为AUTO，即在onMessage()之前返回Ack，onMessage()中发生任何意外都不会触发Broker的重发.
+
+五种确认模式说明:
+a)AUTO_ACKNOWLEDGE：自动确认模式。一旦接收方应用程序的方法调用从处理消息处返回，会话对象就会确认消息的接收。
+b)CLIENT_ACKNOWLEDGE：客户端确认模式。会话对象依赖于应用程序对被接收的消息调用一个acknowledge()方法。
+一旦这个方法被调用，会话会确认最后一次确认之后所有接收到的消息。这种模式允许应用程序以一个调用来接收，
+处理并确认一批消息。注意：在管理控制台中，如果连接工厂的Acknowledge Policy（确认方针）属性被设置为
+"Previous"（提前），但是你希望为一个给定的会话确认所有接收到的消息，那么就用最后一条消息来调用acknowledge()方法。
+c)DUPS_OK_ACKNOWLEDGE：允许副本的确认模式。一旦接收方应用程序的方法调用从处理消息处返回，
+会话对象就会确认消息的接收；而且允许重复确认。在需要考虑资源使用时，这种模式非常有效。
+注意：如果你的应用程序无法处理重复的消息的话，你应该避免使用这种模式。如果发送消息的初始化尝试失败，
+那么重复的消息可以被重新发送。
+d)NO_ACKNOWLEDGE：不确认模式。不确认收到的消息是需要的。消息发送给一个NO_ACKNOWLEDGE 会话后，
+它们会被WebLogic 服务器立即删除。在这种模式下，将无法重新获得已接收的消息，而且可能导致下面的结果：
+1. 消息可能丢失；和（或者）另一种情况：2. 如果发送消息的初始化尝试失败，会出现重复消息被发送的情况。 
+e)MULTICAST_NO_ACKNOWLEDGE：IP组播下的不确认模式，同样无需确认。
+发送给一个MULTICAST_NO_ACKNOWLEDGE会话的消息， 会共享之前所述的NO_ACKNOWLEDGE 确认模式一样的特征。
+这种模式支持希望通过IP 组播方式进行消息通信的应用程序，而且无需依赖会话确认提供的服务质量。
+注意：如果你的应用程序无法处理消息的丢失或者重复，那么你应该避免使用这种模式。
+如果发送消息的初始化尝试失败的话，重复的消息可能会被再次发送。 
+注：在上表的5 种确认模式中，AUTO_ACKNOWLEDGE ，DUPS_OK_ACKNOWLEDGE 和 CLIENT_ACKNOWLEDGE 
+是JMS 规范定义的，NO_ACKNOWLEDGE 和MULTICAST_NO_ACKNOWLEDGE是WebLogic JMS 提供的。
+ -->
+
+	<description>JMS简单应用配置</description>
+
+	<!-- ActiveMQ 连接工厂 -->
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${jms.broker_url}" />
+	</bean>
+
+	<!-- Spring Caching 连接工厂 -->
+	<bean id="cachingConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+		<property name="targetConnectionFactory" ref="connectionFactory" />
+		<property name="sessionCacheSize" value="10" />
+	</bean>
+
+	<!-- Queue定义 -->
+	<bean id="notifyQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="q.notify" />
+	</bean>
+
+	<!-- Topic定义 -->
+	<bean id="notifyTopic" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg value="t.notify" />
+	</bean>
+
+	<!-- Spring JMS Template -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="cachingConnectionFactory" />
+	</bean>
+
+	<!-- 使用Spring JmsTemplate的消息生产者 -->
+	<bean id="notifyMessageProducer" class="org.springside.examples.showcase.jms.simple.NotifyMessageProducer">
+		<property name="jmsTemplate" ref="jmsTemplate" />
+		<property name="notifyQueue" ref="notifyQueue" />
+		<property name="notifyTopic" ref="notifyTopic" />
+	</bean>
+
+	<!-- 异步接收Queue消息Container -->
+	<bean id="queueContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="destination" ref="notifyQueue" />
+		<property name="messageListener" ref="notifyMessageListener" />
+		<property name="concurrentConsumers" value="10" />
+	</bean>
+
+	<!-- 异步接收Topic消息Container -->
+	<bean id="topicContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="destination" ref="notifyTopic" />
+		<property name="messageListener" ref="notifyMessageListener" />
+	</bean>
+
+	<!-- 异步接收消息处理类 -->
+	<bean id="notifyMessageListener" class="org.springside.examples.showcase.jms.simple.NotifyMessageListener" />
+</beans>
