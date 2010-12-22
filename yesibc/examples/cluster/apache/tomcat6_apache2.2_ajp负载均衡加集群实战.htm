@@ -1,0 +1,376 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>tomcat6_apache2.2_ajp负载均衡加集群实战  - 菜菜 - JavaEye技术网站</title>
+    <meta name="description" content="声明：以下文档均属于网上转载，且未实践过 环境： -------------------------------------------- 一台apache2.2服务器,三台tomcat服务器： apache2.2服务器 1.ip:192.168.1.20 2.只装apache软件:httpd-2.2.6.tar.bz2 安装路径:/usr/local/apache2 tomcat服务器：均配置相同 ..." />
+    <meta name="keywords" content="  tomcat6_apache2.2_ajp负载均衡加集群实战 " />
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="search" type="application/opensearchdescription+xml" href="/open_search.xml" title="JavaEye" />
+    <link href="/rss" rel="alternate" title="菜菜" type="application/rss+xml" />
+    <link href="http://www.javaeye.com/stylesheets/blog.css?1292940776" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://www.javaeye.com/stylesheets/themes/blog/green.css?1260254891" media="screen" rel="stylesheet" type="text/css" />
+    <script src="http://js.javaeye.com/javascripts/application.js?1285465576" type="text/javascript"></script>
+      
+  <link href="http://www.javaeye.com/javascripts/syntaxhighlighter/SyntaxHighlighter.css?1268040798" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/syntaxhighlighter/shCoreCommon.js?1238329845" type="text/javascript"></script>
+<script src="http://www.javaeye.com/javascripts/hotkey.js?1238403289" type="text/javascript"></script>
+  <style>
+    div#main {background-color: transparent; border: 0; padding: 0px; width: 740px;}
+  </style>
+  <link href="http://www.javaeye.com/javascripts/editor/css/ui.css?1222156967" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/editor/compress.js?1265622452" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="blog_site_nav">
+  <a href="http://www.javaeye.com/" class="homepage">首页</a>
+  <a href="http://www.javaeye.com/news">新闻</a>
+  <a href="http://www.javaeye.com/forums">论坛</a>
+  <a href="http://www.javaeye.com/ask">问答</a>
+  <a href="http://www.javaeye.com/blogs">博客</a>
+  <a href="http://www.javaeye.com/job">招聘</a>
+  <a href="#" onclick="return false;" id="msna"><u>更多</u> <small>▼</small></a>
+  <div class="quick_menu" style="display:none;">
+    <a href="http://www.javaeye.com/wiki">专栏</a>
+    <!--<a href="http://www.javaeye.com/articles">文摘</a>//-->
+    <a href="http://www.javaeye.com/groups">圈子</a>
+    <a href="http://www.javaeye.com/search">搜索</a>
+  </div>
+</div>
+      <div id="user_nav">
+      <a href="http://bibye-domain.javaeye.com" title="查看我的博客首页" class="welcome">欢迎bibiye</a>
+    
+      <a href="http://app.javaeye.com/messages" title="发送站内短信">收件箱</a>
+    
+    
+      <a href="http://app.javaeye.com" title="我的应用首页">我的应用</a>
+    
+    <div class="quick_menu" style="display:none;">
+      <a href="http://app.javaeye.com/feed" title="我关注的好友动态消息">我的关注</a>
+      <a href="http://app.javaeye.com/feed/my" title="我参与的话题更新的消息">我的参与</a>
+      <a href="http://app.javaeye.com/chat" title="用闲聊发表简短的话题">我的闲聊</a>
+      <a href="http://app.javaeye.com/mygroup" title="我加入的圈子最新话题">我的圈子</a>
+      <a href="http://app.javaeye.com/links" title="我收藏的网络资源链接">我的收藏</a>
+      <a href="http://app.javaeye.com/myresume" title="我的个人简历">我的简历</a>
+    </div>
+        <a href="http://bibye-domain.javaeye.com/admin" title="管理我的博客">我的博客</a>
+    <a href="http://app.javaeye.com/profile" title="修改我的个人设置">设置</a>
+    <a href="/logout" class="nobg" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'put'); f.appendChild(m);f.submit();return false;">退出</a>
+  </div>
+    </div>
+
+    <div id="page">
+      <div id="branding" class="clearfix">
+        <div id="blog_name"><h1><a href="/">菜菜</a></h1></div>
+        <div id="blog_preview">
+          
+        </div>
+        <div id="blog_domain">永久域名 <a href="/">http://ry-china.javaeye.com</a></div>
+      </div>
+      
+      
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+          
+
+
+<div class="blog_main"> 
+  <div class="blog_nav">
+    
+    <div class="pre_next">
+      <a href="/blog/382135" class="next" title="IE和火狐在js使用上的注意点">IE和火狐在js使用上的注意点</a>
+      |
+      <a href="/blog/378942" class="pre" title="关于filter中获取远程请求地址的的方法">关于filter中获取远程请求地址的的方法</a>
+    </div>
+  </div>
+  <div class="blog_title">
+    <div class="date"><span class='year'>2009</span><span class='sep_year'>-</span><span class='month'>05</span><span class='sep_month'>-</span><span class='day'>06</span></div>
+    <h3><a href="/blog/379944">tomcat6_apache2.2_ajp负载均衡加集群实战 </a></h3>
+                    
+  </div>
+
+  <div class="blog_content">
+    <strong>声明：以下文档均属于网上转载，且未实践过</strong><br /><br />环境：<br />--------------------------------------------<br />一台apache2.2服务器,三台tomcat服务器：<br /><br />apache2.2服务器<br />1.ip:192.168.1.20<br />2.只装apache软件:httpd-2.2.6.tar.bz2<br />安装路径:/usr/local/apache2<br /><br />tomcat服务器：均配置相同的应用。<br />1.集群名：balancer://tomcatcluster<br />2.三台集群服务器ip：<br />IP_1:192.168.1.31<br />IP_2:192.168.1.32<br />IP_3:192.168.1.33<br />3.测试应用程序test文件夹放在tomcat6的webapps目录下<br /><br />操作系统均为：centos 4.5_x86<br />jre：1.6：jdk-6u1-linux-i586-rpm.bin<br />tomcat6.0:编译好的二进制软件包apache-tomcat-6.0.13.tar.gz<br />tomcat6.0 安装路径：/usr/local/tomcat6<br /><br />oralce的jdbc:class12.jar<br /><br />软件包存放的路径：/home/xiutuo/software/<br />java安装路径：/usr/java/jdk1.6.0_01<br />使用普通用户：xiutuo来启动tomcat6<br />tomcat6开机自动启动脚本:/etc/init.d/tomcat<br /><br />下载路径：<br />http://java.sun.com/javase/downloads/index.jsp<br />+++++++++++++++++++++++++++++++++++++++++++++++++++++++++<br /><br />一：前言：<br /><br />1.apache对tomcat集群支持有俩种方式：<br /><br />a.通过apache2.1之后版本后内置的proxy_ajp。<br />b.对于apache2.1之版本则通过tomcat的jk2.0.4的mod_jk2.so：<br />（该版本已经停止开发）<br />将解压缩后的目录中的modules目录中的mod_jk2.so<br />文件复制到apache的安装目录下的modules目录中。<br />********************<br />俩种方式比较：<br />proxy_ajp配置较简单,主要表现在proxy_ajp目前只支持配置到目录,<br />还不支持对文件名称的pattern模式匹配<br />（即还不能定义到只对jsp文件起作用）。<br /><br />而jk2则可配置性强，但已经停止开发<br />********************<br /><br />官方对ajp和jk2说明：<br />JK2 has been put in maintainer mode and no further development will take place.<br />The reason for shutting down JK2 development was the lack of developers interest.<br />Other reason was lack of users interest in adopting JK2,<br />caused by configuration complexity when compared to JK.<br /><br />The latest official JK2 release is 2.0.4.<br /><br />JK2 will have it's successor within core Apache2.1/2.2 distribution.<br />We have developed new proxy_ajp that is an addition to the mod_proxy<br />and uses Tomcat's AJP protocol stack. It is developped in httpd-2.1<br />and integrated in it. We have also developed a new proxy_balancer<br />module for load balancing http and ajp protocol stacks.<br /><br />JK will be fully supported for all other web servers.<br />The next JK release is planned for the end of November.<br />Lots of code from JK2 has been ported to JK<br /><br />2.tomcat集群方式：<br />a.DeltaManager<br />--现在采用的该方式：内部机器集群少采用<br />b.BackupManager<br />********************<br />两种集群方式官方说明：<br />using the DeltaManager to replicate session deltas.<br />By all-to-all we mean that the session gets replicated to<br />all the other nodes in the cluster. This works great for smaller cluster<br />but we don't recommend it for larger clusters(a lot of tomcat nodes).<br />Also when using the delta manager it will replicate to all nodes,<br />even nodes that don't have the application deployed.<br /><br />To get around this problem, you'll want to use the BackupManager.<br />This manager only replicates the session data to one backup node,<br />and only to nodes that have the application deployed.Downside of<br />the BackupManager: not quite as battle tested as the delta manager.<br />********************<br /><br />3.负载均衡(load-balance)定义：<br />在服务器端短时间内获得大量的请求,单一服务器无法在一个较短的时间内响应这些请求,<br />此时服务器需要一个机制,请求按照多个服务器不同的负载能力,把这些请求合理的分配。<br /><br />4.集群(cluster)：<br />在多个服务器之间共享用户信息,资源等。<br /><br />tomcat6_apache2.2负载均衡加集群：高可用性至高体现。<br />现在的带集群功能相关软件oracle10g，mysql5，tomcat等。<br /><br />二：软件安装<br /><br />1.apache服务器安装：<br />这里主要介绍apache2的源码安装<br /># cd /home/xiutuo/software/<br /># tar -zvxf httpd-2.2.6.tar.gz<br /># cd httpd-2.2.6<br /># mkdir -p /usr/local/apache2<br /># ./configure \<br />--prefix=/usr/local/apache2 \<br />--enable-modules=so \<br />--enable-mods-shared=all \<br />--enable-proxy \<br />--enable-proxy-connect \<br />--enable-proxy-ftp \<br />--enable-proxy-http \<br />--enable-proxy-ajp \<br />--enable-proxy-balancer<br /><br />注释：这里测试用，编译了所有可用模块，并激活了tomcat集群需要的<br />enable-proxy，enable-proxy-http，enable-proxy-connect，enable-proxy-ajp<br />和enable-proxy-balancer，其中proxy-ajp和proxy-balancer必须依赖proxy，<br />如果是自定义的编译除了以上几个必须的模块外，mod_status也要编译进去，切记。<br />enable-proxy-ftp可以不编译。<br /># make<br /># make install<br /><br />2. 三台tomcat服务器安装<br /><br />主要介绍jdk1.6u1和tomcat6的安装，三台机器重复此工作就可以了，<br />当然记得ip一定要设置正确。<br /><br />jdk1.6安装<br />-------------------------------<br />a.卸载系统自带jdk<br /># rpm -e j2sdk-1.4.1-fcs<br /><br />b.安装新jdk<br /># cd /home/xiutuo/software<br />进入软件包存放目录<br /><br /># chmod a+x jdk-6u1-linux-i586-rpm.bin<br />使它有执行权限<br /><br /># ./jdk-6u1-linux-i586-rpm.bin<br />多敲几个空格，然后看到[yes]的时候输入yes，回车<br />然后在当前目录下就生成了jdk-6u1-linux-i586-rpm<br /><br /># rpm -ivh jdk-6u1-linux-i586-rpm<br /><br />c.设置环境变量<br />仅设置某个用户而不是所有用户可以修改~/.cshrc,~/.bash_profile文件,<br />追加下面一段,如果为所有用户以及以后添加的用户都加上环境变量的话,<br />追加/etc/profie文件.<br />***主意不要在profile和~/.cshrc或~/.bash_profile中重复追加**<br /><br />这里：<br /># vi /etc/profile<br />//java<br />//如果你安装的j2sdk的路径不一样,请自行修改<br /><br />JAVA_HOME=/usr/java/jdk1.6.0_01<br />export JAVA_HOME<br />CLASSPATH=/usr/java/jdk1.6.0_01/lib:/usr/java/jdk1.6.0_01/jre/lib<br />export CLASSPATH<br />PATH=$PATH:$JAVA_HOME/bin:$JAVA_HOME/jre/bin<br />export PATH<br />JRE=/usr/java/jdk1.6.0_01/jre<br />export JRE<br /><br />d：立即生效<br />//如果你修改的是/etc/profile<br /># source /etc/profile<br />//如果你修改的是~/.cshrc<br /># source ~/.cshrc<br />//如果你修改的是~/.bash_profile<br /># source ~/.bash_profile<br /><br />e：测试成功否<br /># java -version<br />Java(TM) SE Runtime Environment (build 1.6.0_01-b06)<br />Java HotSpot(TM) Client VM (build 1.6.0_01-b06, mixed mode, sharing)<br />看到这个消息，就ok啦<br />----------------------------------------------<br /><br />tomcat6安装<br />tomcat6更详细的安装请看blog上tomcat文章<br />----------------------------------------------<br />a.安装tomcat，<br /># cd /home/xiutuo/software //进入软件包存放目录<br /># tar -zvxf apache-tomcat-6.0.13.tar.gz //解压<br /># mv apache-tomcat-6.0.13 /usr/local/tomcat6 //安装<br /><br /># cd /usr/local/tomcat6/bin/ //进入安装目录<br /># tar -zvxf jsvc.tar.gz //解压<br /># cd jsvc-src //进入jsvc-src目录<br /># autoconf<br /># ./configure --with-java=/usr/java/jdk1.6.0_01<br /># configure时切记加java的jdk路径，否则无法使用普通用户开机自动启动tomcat<br /><br /># make //编译生成jsvc文件<br /># cp jsvc .. //拷贝jsvc到上级目录<br /># cd .. //回到上级目录<br /><br /><br /># cd /usr/local/tomcat6/<br /><br />//运行下面的命令可以使tomcat以daemon方式运行<br /># ./bin/jsvc -cp ./bin/bootstrap.jar \<br />-outfile ./logs/catalina.out \<br />-errfile ./logs/catalina.err \<br />org.apache.catalina.startup.Bootstrap<br /><br />b.配置oralce的jdbc<br />//拷贝oracle的jdbc到/usr/local/tomcat6/lib目录下<br /># cp /home/software/class12.jar ./lib/<br /><br />c.配置tomcat用户<br /># cd /usr/local/tomcat6/conf<br /># vi tomcat-users.xml<br />内容如下：<br />&lt;?xml version='1.0' encoding='utf-8'?&gt;<br />&lt;tomcat-users&gt;<br />&lt;role rolename="tomcat"/&gt;<br />&lt;role rolename="role1"/&gt;<br />&lt;role rolename="manager"/&gt;<br />&lt;role rolename="admin"/&gt;<br />&lt;user username="tomcat" password="tomcat" roles="tomcat"/&gt;<br />&lt;user username="role1" password="tomcat" roles="role1"/&gt;<br />&lt;user username="both" password="tomcat" roles="tomcat,role1"/&gt;<br />&lt;user username="admin" password="admin" roles="admin,manager"/&gt;<br />&lt;/tomcat-users&gt;<br />请修改tomcat里所有定义用户的密码：即修改password为自己想要的值。<br /><br />d.把应用程序文件夹test放到webapps下<br /><br />3.tomcat负载均衡和集群配置<br />参考官方配置文档：<br />http://tomcat.apache.org/tomcat-6.0-doc/cluster-howto.html<br />http://tomcat.apache.org/tomcat-6.0-doc/balancer-howto.html<br /><br />a.tomcat6配置文件server.xml和应用程序的web.xml<br /><br />**开放负载均衡,默认使用ajp协议时使用8009端口（使用http协议时为8080端口）<br />**修改tomcat 的 conf/server.xml 的&lt;Engine&gt;(使用ajp协议时配置)<br />把<br />&lt;!-- You should set jvmRoute to support load-balancing via AJP ie :<br />&lt;Engine name="Standalone" defaultHost="localhost" jvmRoute="jvm1"&gt;<br />--&gt;<br />&lt;Engine name="Catalina" defaultHost="localhost"&gt;<br />改成<br /><br />&lt;!-- You should set jvmRoute to support load-balancing via AJP ie :<br />--&gt;<br />&lt;Engine name="Standalone" defaultHost="localhost" jvmRoute="tomcat1"&gt;<br />&lt;!--<br />&lt;Engine name="Catalina" defaultHost="localhost"&gt;<br />--&gt;<br />说明：<br />第一台tomcat就把jvmRoute="tomcat1"<br />第二台tomcat就把jvmRoute="tomcat2"<br />第三台tomcat就把jvmRoute="tomcat3"<br /><br /><br />**开放集群<br />**修改tomcat 的 conf/server.xml (使用ajp协议时配置)<br />在&lt;Engine&gt; 后面或者 &lt;Host&gt;后面简单的加上<br />&lt;Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/&gt;<br />也可以加上更详细参数的集群配置内容（这是官方默认，请自行修改相关参数）：<br /><br />&lt;Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"<br />channelSendOptions="8"&gt;<br /><br />&lt;Manager className="org.apache.catalina.ha.session.DeltaManager"<br />expireSessionsOnShutdown="false"<br />notifyListenersOnReplication="true"/&gt;<br /><br />&lt;Channel className="org.apache.catalina.tribes.group.GroupChannel"&gt;<br />&lt;Membership className="org.apache.catalina.tribes.membership.McastService"<br />address="228.0.0.4"<br />port="45564"<br />frequency="500"<br />dropTime="3000"/&gt;<br />&lt;Receiver className="org.apache.catalina.tribes.transport.nio.NioReceiver"<br />address="auto"<br />port="4000"<br />autoBind="100"<br />selectorTimeout="5000"<br />maxThreads="6"/&gt;<br /><br />&lt;Sender className="org.apache.catalina.tribes.transport.ReplicationTransmitter"&gt;<br />&lt;Transport className="org.apache.catalina.tribes.transport.nio.PooledParallelSender"/&gt;<br />&lt;/Sender&gt;<br />&lt;Interceptor className="org.apache.catalina.tribes.group.interceptors.TcpFailureDetector"/&gt;<br />&lt;Interceptor className="org.apache.catalina.tribes.group.interceptors.MessageDispatch15Interceptor"/&gt;<br />&lt;/Channel&gt;<br /><br />&lt;Valve className="org.apache.catalina.ha.tcp.ReplicationValve"<br />filter=""/&gt;<br />&lt;Valve className="org.apache.catalina.ha.session.JvmRouteBinderValve"/&gt;<br /><br />&lt;Deployer className="org.apache.catalina.ha.deploy.FarmWarDeployer"<br />tempDir="/tmp/war-temp/"<br />deployDir="/tmp/war-deploy/"<br />watchDir="/tmp/war-listen/"<br />watchEnabled="false"/&gt;<br /><br />&lt;ClusterListener className="org.apache.catalina.ha.session.JvmRouteSessionIDBinderListener"/&gt;<br />&lt;ClusterListener className="org.apache.catalina.ha.session.ClusterSessionListener"/&gt;<br />&lt;/Cluster&gt;<br /><br />***配置应用的web.xml<br />***在每个webapps应用中,修改配置文件web.xml文件 添加元素&lt;distributable/&gt;<br />在web.xml文件中&lt;web-app&gt;元素下增加以下内容：<br />&lt;!--此应用将与群集服务器复制Session--&gt;<br />&lt;distributable/&gt;<br />具体修改如下:<br />修改前:<br />&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;<br />&lt;web-app xmlns="http://java.sun.com/xml/ns/javaee"<br />xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"<br />version="2.5"&gt;<br />&lt;/web-app&gt;<br />修改后:<br />&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;<br />&lt;web-app xmlns="http://java.sun.com/xml/ns/javaee"<br />xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"<br />version="2.5"&gt;<br />&lt;!--此应用将与群集服务器复制Session--&gt;<br />&lt;distributable/&gt;<br />&lt;/web-app&gt;<br /><br />4.配置apache的ajp负载均衡功能,这里请务必启用反向代理。<br />******************************<br />至于其中的原理请参考官方文档说明。<br /><br />正向代理的典型用途是为在防火墙内的局域网客户端提供访问Internet的途径。<br />正向代理还可以使用缓冲特性(由mod_cache提供)减少网络使用率。<br /><br />反向代理的典型用途是将防火墙后面的服务器提供给Internet用户访问。<br />反向代理还可以为后端的多台服务器提供负载平衡，或为后端较慢的服务器提供缓冲服务。<br />另外，还可以启用高级URL策略和管理技术，从而使处于不同web服务器系统的web页面同时<br />存在于同一个URL空间下。<br />*****************************<br /><br />参考文档：<br />tomcat6官方文档<br />http://tomcat.apache.org/tomcat-6.0-doc/balancer-howto.html<br />apache中文版本<br />http://man.chinaunix.net/newsoft/ApacheMenual_CN_2.2new/mod/mod_proxy.html<br />http://man.chinaunix.net/newsoft/ApacheMenual_CN_2.2new/mod/mod_proxy_balancer.html<br />apache官方英文版本<br />http://httpd.apache.org/docs/2.2/mod/mod_proxy.html<br />http://httpd.apache.org/docs/2.2/mod/mod_proxy_balancer.html<br /><br />***配置apache<br />***修改/usr/local/apache2/conf/httpd.conf文件<br /><br />确保将以下Module的注释去掉<br />LoadModule proxy_module modules/mod_proxy.so<br />LoadModule proxy_connect_module modules/mod_proxy_connect.so<br />LoadModule proxy_ftp_module modules/mod_proxy_ftp.so<br />LoadModule proxy_http_module modules/mod_proxy_http.so<br />LoadModule proxy_ajp_module modules/mod_proxy_ajp.so<br />LoadModule proxy_balancer_module modules/mod_proxy_balancer.so<br />LoadModule status_module modules/mod_status.so<br /><br />并在最后面,增加<br />&lt;Location /server-status&gt;<br />SetHandler server-status<br />Order Deny,Allow<br />Deny from all<br />Allow from all<br />&lt;/Location&gt;<br />&lt;Location /balancer-manager&gt;<br />SetHandler balancer-manager<br />Order Deny,Allow<br />Deny from all<br />Allow from all<br />&lt;/Location&gt;<br />ProxyRequests Off<br />ProxyPass /test balancer://tomcatcluster/ stickysession=jsessionid nofailover=On<br /><br />&lt;Proxy balancer://tomcatcluster&gt;<br />BalancerMember ajp://192.168.1.30:8009 loadfactor=1<br />BalancerMember ajp://192.168.1.31:8009 loadfactor=2<br />BalancerMember ajp://192.168.1.32:8009 loadfactor=3<br />&lt;/Proxy&gt;<br />注释：<br />ProxyRequests Off 表示启用反向代理。<br />ProxyPass为代理转发的Url,即将所有访问/的请求转发到<br />群集balancer://tomcatcluster，这里为/test即将所有访问/的请求转发到群集balancer://tomcatcluster的/test目录<br /><br />BalancerMember为群集的成员,<br />即群集服务器1或2或3,负载均衡服务器会根据均衡规则来将请求转发给BalancerMember。<br /><br />配置好后,启动Apahce服务器,访问localhost就会看到群集服务器中应用返回的结果。<br /><br />访问http://192.168.1.20/balancer-manager,显示负载均衡有关信息<br /><br /><br />5.调试负载均衡集群系统<br /><br />调试前务必：<br />先开启三台tomcat6服务器的tomcat服务！<br />再开启apache服务器的apache服务，切记！<br /><br />a.开启tomcat服务<br /># cd /usr/local/tomcat6/bin<br /># ./shutdown.sh //停止tomcat<br /># ./start.sh //启动tomcat<br /><br />查看tomcat的进程：<br /># ps -e | grep java<br />出现了java这个进程的话，说明你的tomcat起来了。<br /><br />b.开启apache服务<br /># cd /usr/local/apache2/bin<br /># ./apachectl configtest<br />//命令检查一下配置是否有误,显示Syntax OK,说明配置正确<br /># ./apachectl stop //停止apache<br /># ./apachectl start //启动apache<br /><br />6.检验是否负载均衡集群系统成功<br /><br />访问apache服务器的web服务<br />http://192.168.1.20/balancer-manager<br />如果显示负载均衡有关信息则说明成功了。<br />接着可以访问http://192.168.1.20/test即访问到了tomcat的test应用 
+  </div>
+
+  
+
+  <script type="text/javascript"><!--
+google_ad_client = "pub-1076724771190722";
+/* JE个人博客468x60 */
+google_ad_slot = "5506163105";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+  
+  
+
+  <div class="blog_nav">
+    <div class="pre_next">
+      <a href="/blog/382135" class="next" title="IE和火狐在js使用上的注意点">IE和火狐在js使用上的注意点</a>
+      |
+      <a href="/blog/378942" class="pre" title="关于filter中获取远程请求地址的的方法">关于filter中获取远程请求地址的的方法</a>
+    </div>
+  </div>
+
+  <div class="blog_bottom">
+    <ul>
+      <li>09:30</li>
+      <li>浏览 (233)</li>
+            <li><a href="#comments">评论</a> (0)</li>
+      <li>分类: <a href="/category/64739">tomcat</a></li>
+      
+      
+        <li><a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=tomcat6_apache2.2_ajp%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%8A%A0%E9%9B%86%E7%BE%A4%E5%AE%9E%E6%88%98+&amp;user_favorite%5Burl%5D=http%3A%2F%2Fry-china.javaeye.com%2Fblog%2F379944' target='_blank' class='favorite' onclick="$$('.favorite_form_spinner')[0].show();new Ajax.Request('http://ry-china.javaeye.com/links/new_xhr?user_favorite%5Btitle%5D=tomcat6_apache2.2_ajp%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%8A%A0%E9%9B%86%E7%BE%A4%E5%AE%9E%E6%88%98+&amp;user_favorite%5Burl%5D=http%3A%2F%2Fry-china.javaeye.com%2Fblog%2F379944', {method: 'get', onSuccess: function(response){$(document.getElementsByTagName('body')[0]).insert({bottom:response.responseText});$$('.favorite_form_spinner')[0].hide();}});return false;">收藏</a><img alt="Spinner" class="favorite_form_spinner" src="http://www.javaeye.com/images/spinner.gif?1230301943" style="vertical-align:bottom;margin-left:7px;display:none;" /></li>
+        
+      
+      
+      <li class='last'><a href="http://www.javaeye.com/wiki/topic/379944" target="_blank" class="more">相关推荐</a></li>
+    </ul>
+  </div>
+
+  <div class="blog_comment">
+    <h5>评论</h5>
+    <a id="comments" name="comments"></a>
+    
+    
+    
+  </div>
+
+  <div class="blog_comment">
+    <h5>发表评论</h5>
+          
+      
+        <form action="/blog/379944" id="comment_form" method="post" onsubmit="return false;">          
+
+
+  <input type="hidden" id="editor_bbcode_flag"/>
+
+
+
+<div id="editor_main"><textarea class="validate-richeditor bad-words min-length-5" cols="40" id="editor_body" name="comment[body]" rows="20" style="width: 500px; height: 350px;"></textarea></div>
+
+
+<script type="text/javascript">
+  var editor = new Control.TextArea.Editor("editor_body", "bbcode", false);
+</script>
+          <p style="text-align:right;padding-right:30px;">(快捷键 Alt+S / Ctrl+Enter) <input class="submit" id="quick_reply_button" name="commit" type="submit" value="提交" /></p>
+        </form>
+        <script type="text/javascript">
+          new HotKey("s",function() {$('quick_reply_button').click();},{altKey: true, ctrlKey: false});
+          new HotKey(new Number(13),function() {$('quick_reply_button').click();},{altKey: false, ctrlKey: true});
+
+          new Validation("comment_form", {immediate: false, onFormValidate: function(result, form){
+    
+            if(result) {
+              new Ajax.Request('/blog/create_comment/379944', {
+                onFailure:function(response){
+                  $('comments').insert({after:response.responseText})
+                  form.spinner.hide();
+                  Element.scrollTo($('comments'));
+                },
+                onSuccess:function(response){
+                  Element.scrollTo($('comments'));
+                  $('comments').insert({after:response.responseText})
+                  $('editor_body').value = "";
+                  form.spinner.hide();
+                }, parameters:Form.serialize(form)
+              });
+            }
+    
+        }});
+        </script>
+      
+      </div>
+</div>
+
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  fix_image_size($$('div.blog_content img'), 700);
+  function quote_comment(id) {
+    new Ajax.Request('/editor/quote', {
+      parameters: {'id':id, 'type':'Post'},
+      onSuccess:function(response){editor.bbcode_editor.textarea.insertAfterSelection(response.responseText);}
+    });
+  }
+</script>
+
+
+
+        </div>
+
+        <div id="local">
+          <div class="local_top"></div>
+          <div id="blog_owner">
+            <div id="blog_owner_logo"><a href='http://ry-china.javaeye.com'><img alt="ry.china的博客" class="logo" src="http://www.javaeye.com/images/user-logo.gif?1194185304" title="ry.china的博客: 菜菜" /></a></div>
+            <div id="blog_owner_name">ry.china</div>
+          </div>
+          <div id="blog_actions">
+            <ul>
+              <li>浏览: 28145 次</li>
+              <li>性别: <img alt="Icon_minigender_1" src="http://www.javaeye.com/images/icon_minigender_1.gif?1192779195" title="男" /></li>
+              <li>来自: 重庆</li>
+              <li><img src='/images/status/offline.gif'/></li>
+              <li>
+                <a href="/blog/profile" class="profile">详细资料</a>
+                <a href="/blog/guest_book" class="guest_book">留言簿</a>
+              </li>
+              
+                <li>
+                  <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=ry.china" class="message" title="发送站内短信">发短消息</a>
+                  
+                    <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=ry.china" class="subscription" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;">关注</a>
+                  
+                </li>
+              
+            </ul>
+            <h5>搜索本博客</h5>
+            <form action="/blog/search" method="get">              <input class="text" id="query" name="query" style="margin-left: 10px;width: 110px;" type="text" />
+              <input class="submit" type="submit" value="搜索" />
+            </form>          </div>
+          
+            <div id="user_visits" class="clearfix">
+              <h5>最近访客 <span style='font-weight:normal;font-size:12px;padding-left:30px;'><a href="/blog/user_visits">&gt;&gt;更多访客</a></span></h5>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://bibye-domain.javaeye.com' target='_blank'><img alt="bibiye的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="bibiye的博客: bibiye" /></a></div>
+                  <div class="left"><a href='http://bibye-domain.javaeye.com' target='_blank'>bibiye</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://mwxdi.javaeye.com' target='_blank'><img alt="mwxdi的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="mwxdi的博客: " /></a></div>
+                  <div class="left"><a href='http://mwxdi.javaeye.com' target='_blank'>mwxdi</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://muerzi.javaeye.com' target='_blank'><img alt="muerzi的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="muerzi的博客: muerzi" /></a></div>
+                  <div class="left"><a href='http://muerzi.javaeye.com' target='_blank'>muerzi</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://asterman.javaeye.com' target='_blank'><img alt="asterman的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="asterman的博客: " /></a></div>
+                  <div class="left"><a href='http://asterman.javaeye.com' target='_blank'>asterman</a></div>
+                </div>
+              
+            </div>
+          
+                      <div id="blog_menu">
+              <h5>博客分类</h5>
+              <ul>
+                <li><a href="/">全部博客 (46)</a></li>
+                
+                  <li><a href="/category/64737">java (27)</a></li>
+                
+                  <li><a href="/category/64738">javascript (7)</a></li>
+                
+                  <li><a href="/category/64739">tomcat (3)</a></li>
+                
+                  <li><a href="/category/69358">数据库 (3)</a></li>
+                
+                  <li><a href="/category/69604">服务器 (1)</a></li>
+                
+                  <li><a href="/category/112480">.net (1)</a></li>
+                
+                  <li><a href="/category/118126">其他 (1)</a></li>
+                
+              </ul>
+            </div>
+            
+            
+              <div id="guest_books">
+                <h5>我的留言簿 <span style='font-weight:normal;font-size:12px;padding-left:20px;'><a href="/blog/guest_book">&gt;&gt;更多留言</a></span></h5>
+                <ul>
+                  
+                    <li>
+                      有问题啊，楼主仔细检查下生成的树。我只给了3个节点，为什么页面会显示十几个呢。估计 ...<br/>
+                      -- by <a href="/blog/guest_book#27448">jiny_tianxia</a>
+                    </li>
+                  
+                </ul>
+              </div>
+            
+            <div id="blog_others">
+              <h5>其他分类</h5>
+              <ul>
+                <li><a href="/blog/favorite">我的收藏</a> (100)</li>
+                                                <li><a href="/blog/topic">我的论坛主题贴</a> (2)</li>
+                <li><a href="/blog/post">我的所有论坛贴</a> (14)</li>
+                <li><a href="/blog/article">我的精华良好贴</a> (0)</li>
+                              </ul>
+            </div>
+            
+            <div id="recent_groups">
+              <h5>最近加入圈子</h5>
+              <ul>
+                
+                  <li><a href="http://JSFgroup.group.javaeye.com">JSF</a></li>
+                
+                  <li><a href="http://osworkflow.group.javaeye.com">osworkflow</a></li>
+                
+              </ul>
+            </div>
+            
+                          <div id="month_blogs">
+                <h5>存档</h5>
+                <ul>
+                  
+                    <li><a href="/blog/monthblog/2010-12">2010-12</a> (3)</li>
+                  
+                    <li><a href="/blog/monthblog/2010-08">2010-08</a> (1)</li>
+                  
+                    <li><a href="/blog/monthblog/2010-07">2010-07</a> (1)</li>
+                  
+                  <li><a href="/blog/monthblog_more">更多存档...</a></li>
+                </ul>
+              </div>
+                        <div id="comments_top">
+              <h5>评论排行榜</h5>
+              <ul>
+                
+                  <li><a href="/blog/838470" title="spring2.5 mvc common-validator 集成应用">spring2.5 mvc common-validator 集成应用</a></li>
+                
+                  <li><a href="/blog/833393" title="调整 JVM 开关以提高性能">调整 JVM 开关以提高性能</a></li>
+                
+                  <li><a href="/blog/706954" title="CGlib简单介绍">CGlib简单介绍</a></li>
+                
+                  <li><a href="/blog/571329" title="window下备份mysql数据的命令">window下备份mysql数据的命令</a></li>
+                
+                  <li><a href="/blog/731884" title="人脸识别资料（转）">人脸识别资料（转）</a></li>
+                
+              </ul>
+            </div>
+            <div id="rss">
+              <ul>
+                <li><a href="/rss" target="_blank"><img alt="Rss" src="http://www.javaeye.com/images/rss.png?1195448807" /></a></li>
+                <li><a href="http://fusion.google.com/add?feedurl=http://ry-china.javaeye.com/rss" target="_blank"><img alt="Rss_google" src="http://www.javaeye.com/images/rss_google.gif?1197872161" /></a></li>
+              </ul>
+            </div>
+            <div class="local_bottom"></div>
+          
+        </div>
+      </div>
+
+      <div id="footer" class="clearfix">
+        <div id="copyright">
+          <hr/>
+          声明：JavaEye文章版权属于作者，受法律保护。没有作者书面许可不得转载。若作者同意转载，必须以超链接形式标明文章原始出处和作者。<br />
+          &copy; 2003-2010 JavaEye.com.   All rights reserved. 上海炯耐计算机软件有限公司 [ 沪ICP备05023328号 ]
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.javaeye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&logged_in=yes" + "' width='0' height='0' />");
+</script>
+    
+  </body>
+</html>

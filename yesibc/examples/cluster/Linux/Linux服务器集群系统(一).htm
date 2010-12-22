@@ -1,0 +1,758 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0061)http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Linux服务器集群系统(一)</title>
+<meta http-equiv="PICS-Label" content="(PICS-1.1 &quot;http://www.icra.org/ratingsv02.html&quot; l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) &quot;http://www.rsac.org/ratingsv01.html&quot; l gen true r (n 0 s 0 v 0 l 0) &quot;http://www.classify.org/safesurf/&quot; l gen true r (SS~~000 1))">
+<link rel="schema.DC" href="http://purl.org/DC/elements/1.0/">
+<link rel="SHORTCUT ICON" href="http://www.ibm.com/favicon.ico">
+  <meta name="Owner" content="dw@cn.ibm.com">
+  <meta name="DC.Language" scheme="rfc1766" content="zh-CN">
+  <meta name="IBM.Country" content="CN">
+<meta name="Security" content="Public">
+<meta name="IBM.SpecialPurpose" content="SP001">
+<meta name="IBM.PageAttributes" content="sid=1003">
+<meta name="Source" content="v16 Template Generator">
+<meta name="Robots" content="index,follow">
+<meta name="Abstract" content="本文介绍了Linux服务器集群系统――LVS（Linux Virtual Server）项目的产生背景和目标，并描述了LVS服务器集群框架及目前提供的软件，列举LVS集群系统的特点和一些实际应用，最后，本文谈论了LVS项目的开发进展和开发感触。">
+<meta name="Description" content="本文介绍了Linux服务器集群系统――LVS（Linux Virtual Server）项目的产生背景和目标，并描述了LVS服务器集群框架及目前提供的软件，列举LVS集群系统的特点和一些实际应用，最后，本文谈论了LVS项目的开发进展和开发感触。">
+<meta name="Keywords" content="lvs, 集群, 章文嵩,linux tutorials, linux training, linux standards, linux code, linux resources, linux programming, open source standards, linux how to,, tttlca">
+<meta name="DC.Date" scheme="iso8601" content="2002-04-10">
+<meta name="DC.Type" scheme="IBM_ContentClassTaxonomy" content="CT316">
+<meta name="DC.Subject" scheme="IBM_SubjectTaxonomy" content="SWGC0">
+<meta scheme="IBM_WTMCategory" name="IBM.WTMCategory" content="SOFDCLNXCN">
+<meta name="DC.Rights" content="© Copyright IBM Corporation 2002">
+<meta name="IBM.Effective" scheme="W3CDTF" content="2002-04-10">
+<meta name="title" content="Linux服务器集群系统(一)">
+
+<!-- HEADER_SCRIPTS_AND_CSS_INCLUDE -->
+<link href="./Linux服务器集群系统(一)_files/all.css" media="all" rel="stylesheet" title="www" type="text/css">
+<link href="./Linux服务器集群系统(一)_files/screen.css" media="screen,projection" rel="stylesheet" title="www" type="text/css">
+<link href="./Linux服务器集群系统(一)_files/screen-uas.css" media="screen,projection" rel="stylesheet" title="www" type="text/css">
+<link href="./Linux服务器集群系统(一)_files/screen-fonts.css" media="screen,projection" rel="stylesheet" title="www" type="text/css">
+<link href="./Linux服务器集群系统(一)_files/handheld.css" media="handheld" rel="stylesheet" title="www" type="text/css">
+<link href="./Linux服务器集群系统(一)_files/print.css" media="print" rel="stylesheet" title="www" type="text/css">
+<!-- dW-specific CSS -->
+<link href="./Linux服务器集群系统(一)_files/dw-screen.css" media="screen,projection" rel="stylesheet" title="www" type="text/css">
+<link href="./Linux服务器集群系统(一)_files/dw-local-site.css" media="screen,projection" rel="stylesheet" title="www" type="text/css">
+<link href="./Linux服务器集群系统(一)_files/jquery.cluetip.css" media="screen,projection" rel="stylesheet" title="www" type="text/css">
+
+<script src="./Linux服务器集群系统(一)_files/ibmcommon.js" type="text/javascript">//</script><link rel="search" type="application/opensearchdescription+xml" href="http://www.ibm.com/search/opensearch/description.xml" title="IBM Search">
+<script src="./Linux服务器集群系统(一)_files/dynamicnav.js" type="text/javascript">//</script>
+<!-- Pull-down script --> 
+<script type="text/javascript" src="./Linux服务器集群系统(一)_files/dropdown.js">//</script>
+<!-- dW functional JS -->
+<script language="JavaScript" src="./Linux服务器集群系统(一)_files/urltactic.js" type="text/javascript"></script>
+<!-- Rating_START -->
+
+<script language="JavaScript" type="text/javascript">
+  // <![CDATA[
+
+ dwr = {};
+  dwr.clickhere = '点击评分';
+  dwr.stars = '星';
+  dwr.star = '星'; 
+  dwr.avgRatingOf = '平均分';
+  dwr.youRated = '您的评分是';
+  dwr.avgRating = '平均分';
+  dwr.basedOnVote = '共 {1} 个评分'; // {1} to be substitue by code
+  dwr.basedOnVotes = '共 {1} 个评分';
+  dwr.leftParen = '（'; 
+  dwr.rightParen = ' ）'; 
+  dwr.space = ' '; 
+  dwr.yourRating = '您的评分';
+
+// ]]>
+</script>
+
+
+<script language="JavaScript" src="./Linux服务器集群系统(一)_files/artrating.js" type="text/javascript"></script>
+<style type="text/css">
+.metavalue {
+  display: none;
+}
+</style>
+<!-- Rating_END --><!-- RESERVED_HEADER_INCLUDE -->
+<script language="javascript" src="./Linux服务器集群系统(一)_files/ajax1.js" type="text/javascript"></script>
+<script language="javascript" src="./Linux服务器集群系统(一)_files/search_counter-maverick.js" type="text/javascript"></script>
+<script language="javascript" src="./Linux服务器集群系统(一)_files/request_referer_capture-maverick.js" type="text/javascript"></script>
+<script language="JavaScript" type="text/javascript">
+ <!--
+ setDefaultQuery('defaultHere');
+ //-->
+</script>
+<script language="JavaScript" type="text/javascript">
+ <!--
+ function openNewWindow(url,tar,arg){window.open(url,tar,arg);}
+ //-->
+</script>
+  <!-- Include file support -->
+  <script language="JavaScript" type="text/javascript">
+    (function($) {
+    jQuery.extend({
+    getInc: function(u,d){
+    if(u==null)return;
+    jQuery.ajax({
+    type: "GET",
+    url: u,
+    dataType: "text",
+    success: function(t) {
+    jQuery(d).html(t);
+    ibmCommon.initShowHide(jQuery(d).children()[0]);	
+    },
+    async: true
+    });
+    }
+    });
+    })(jQuery);
+  </script>
+<script id="flashdetect" type="text/javascript" src="./Linux服务器集群系统(一)_files/flash-detect.js" charset="UTF-8"></script><script id="mhMenu" type="text/javascript" src="./Linux服务器集群系统(一)_files/cnzh-utf8.js" charset="UTF-8"></script><script id="dynavEA" type="text/javascript" src="./Linux服务器集群系统(一)_files/Controller" charset="UTF-8"></script><script id="wiBundle" type="text/javascript" src="./Linux服务器集群系统(一)_files/Controller(1)" charset="UTF-8"></script></head>
+
+<body id="ibm-com">
+<div id="ibm-top" class="ibm-landing-page">
+
+<!-- MASTHEAD_BEGIN -->
+<div class="ibm-access"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#main">跳转到主要内容</a></div><div id="ibm-masthead"><div id="ibm-logo"><a href="http://www.ibm.com/cn/zh/"><img width="110" src="./Linux服务器集群系统(一)_files/ibm-logo.gif" height="50" alt="IBM®"></a></div><ul id="ibm-geo"><li class="ibm-first" id="ibm-country">中国</li><li id="ibm-change-country">[ <a href="http://www.ibm.com/developerworks/cn/country/">选择</a> ]</li></ul><form id="ibm-search-form" action="http://www.ibm.com/developerworks/search/searchResults.jsp" method="get" name="form1"><input type="hidden" name="searchType" value="1"><input type="hidden" name="searchSite" value="dWChina"><input type="hidden" name="pageLang" value="zh"><input type="hidden" name="langEncoding" value="UTF8"><p><span id="ibm-search-scope"><label for="sn"><img src="./Linux服务器集群系统(一)_files/c.gif" width="1" height="1" alt="Search in:"></label><select class="input-local" name="searchScope" id="sn" size="1"><option value="dW" selected="selected">dW 全部内容</option><option value="dW">--------------</option><option value="aixunix">&nbsp;&nbsp;AIX and UNIX</option><option value="dmdd">&nbsp;&nbsp;Info Mgmt</option><option value="lotusdd">&nbsp;&nbsp;Lotus</option><option value="rdd">&nbsp;&nbsp;Rational</option><option value="wsdd">&nbsp;&nbsp;WebSphere</option><option value="dW">--------------</option><option value="javaZ">&nbsp;&nbsp;Java technology</option><option value="linuxZ">&nbsp;&nbsp;Linux</option><option value="opensrcZ">&nbsp;&nbsp;Open source</option><option value="webservZ">&nbsp;&nbsp;SOA &amp; Web services</option><option value="webarchZ">&nbsp;&nbsp;Web dev</option><option value="xmlZ">&nbsp;&nbsp;XML</option><option value="dW">--------------</option><option value="all">IBM 全部内容</option></select></span><label for="q"><img alt="搜索:" height="1" width="1" src="./Linux服务器集群系统(一)_files/c.gif"></label><input type="text" name="query" maxlength="100" id="q"><input type="submit" id="ibm-search" class="ibm-btn-search" name="Search" value="搜索"></p></form><div id="ibm-site-name"><!-- IBM site name container --></div><div id="ibm-universal-nav"><ul><li class="ibm-first" id="ibm-unav-home"><a href="http://www.ibm.com/cn/zh/">首页</a></li><li id="ibm-unav-solutions"><a href="http://www.ibm.com/solutions/cn/zh/" class=" ibm-unav-has-child">解决方案</a><div class="ibm-unav-menu" id="gi-3ccf7511"><span class="ibm-unav-menu-ehb" id="gi-3ccf7511-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li class=" ibm-place-holder"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" class=" ibm-unav-menu-has-child" id="gi-c9a71481-trigger">按行业分类</a><div class="ibm-unav-menu ibm-place-holder" id="gi-c9a71481"><span class="ibm-unav-menu-ehb" id="gi-c9a71481-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/cn/industry/finance/solution/">金融业</a></li><li><a href="http://www.ibm.com/cn/industry/finance/solution/banking.shtml">银行业</a></li><li><a href="http://www.ibm.com/cn/industry/finance/solution/insurance.shtml">保险业</a></li><li><a href="http://www.ibm.com/smb/cn/industries/retail/index.shtml?ca=masterhead&me=cndotcom">零售业</a></li><li><a href="http://www.ibm.com/smb/cn/industries/manufacture/index.shtml?ca=masterhead&me=cndotcom">制造业</a></li><li><a href="http://www.ibm.com/cn/smb/industries/manu/food_sub.shtml?ca=masterhead&me=cndotcom">日常消费品</a></li><li><a href="http://www.ibm.com/cn/smb/industries/manu/tobacco_sub.shtml?ca=masterhead&me=cndotcom">饮料烟草</a></li><li><a href="http://www.ibm.com/cn/industry/distribution/solution/">流通业</a></li><li><a href="http://www.ibm.com/cn/industry/industrial/solution/solu_commu.shtml">电子行业</a></li><li><a href="http://www.ibm.com/cn/industry/telecom/solution/">电信业</a></li><li><a href="http://www.ibm.com/cn/smb/industries/media/index.shtml?ca=masterhead&me=cndotcom">媒体与娱乐业</a></li><li><a href="http://www.ibm.com/cn/industry/distribution/solution/transport.shtml">交通运输业</a></li><li><a href="http://www.ibm.com/cn/industry/industrial/solution/solu_aero.shtml">航空航天造船业</a></li><li><a href="http://www.ibm.com/cn/industry/industrial/solution/solu_auto.shtml">汽车制造业</a></li><li><a href="http://www.ibm.com/cn/industry/industrial/solution/solu_petro.shtml">石油石化业</a></li><li><a href="http://www.ibm.com/cn/public/offertogov/h/">政府与公众事业</a></li><li><a href="http://www.ibm.com/cn/industry/education/solution/">教育</a></li><li><a href="http://www.ibm.com/cn/public/healthcare/solutions/">医疗与生命科学</a></li></ul></div></li><li class=" ibm-place-holder"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" class=" ibm-unav-menu-has-child" id="gi-c7ccf3e5-trigger">按业务需求分类</a><div class="ibm-unav-menu ibm-place-holder" id="gi-c7ccf3e5"><span class="ibm-unav-menu-ehb" id="gi-c7ccf3e5-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/smb/cn/business/infrastructure/index.shtml?ca=masterhead&me=cndotcom">IT 基础架构解决方案</a></li><li><a href="http://www.ibm.com/cn/smb/solutions/bi/index.shtml?ca=masterhead&me=cndotcom">商务智能（BI）</a></li><li><a href="http://www.ibm.com/cn/express/business/scm/index.shtml?ca=masterhead&me=cndotcom">供应链管理（SCM）</a></li><li><a href="http://www.ibm.com/cn/express/business/erp/index.shtml?ca=masterhead&me=cndotcom">企业资源规划（ERP）</a></li><li><a href="http://www.ibm.com/cn/smb/solutions/crm/index.shtml?ca=masterhead&me=cndotcom">客户关系管理（CRM）</a></li><li><a href="http://www.ibm.com/cn/smb/solutions/plm/index.shtml?ca=masterhead&me=cndotcom">产品生命周期管理（PLM）</a></li><li><a href="http://www.ibm.com/cn/express/business/oa/index.shtml?ca=masterhead&me=cndotcom">办公自动化(OA)</a></li><li><a href="http://www.ibm.com/cn/express/business/eam/index.shtml?ca=masterhead&me=cndotcom">企业资产管理(EAM)</a></li><li><a href="http://www.ibm.com/software/cn/db2/content-management/industry-solutions/">内容管理</a></li><li><a href="http://www.ibm.com/cn/software/solution/info_conformity.html">信息集成</a></li></ul></div></li><li class=" ibm-place-holder"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" class=" ibm-unav-menu-has-child" id="gi-246c39dd-trigger">按顶级业务合作伙伴分类</a><div class="ibm-unav-menu ibm-place-holder" id="gi-246c39dd"><span class="ibm-unav-menu-ehb" id="gi-246c39dd-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/cn/services/hotsale/cisco/index.shtml">IBM 和 Cisco</a></li><li><a href="http://www.ibm.com/cn/services/bcs/alliance/oracle/index.shtml">IBM 与 Oracle</a></li><li><a href="http://www.ibm.com/cn/services/bcs/alliance/sap/index.shtml">IBM 与 SAP</a></li></ul></div></li><li><a href="http://www.ibm.com/cn/services/bcs/">业务咨询</a></li><li><a href="http://www.ibm.com/systems/cn/dihub/index.shtml">IBM 动态架构</a></li><li><a href="http://www.ibm.com/software/cn/smartwork/">IBM智慧运作</a></li><li><a href="http://www.ibm.com/software/cn/nihub/">IBM新锐洞察</a></li><li><a href="http://www.ibm.com/software/cn/spsm/">IBM智慧产品与服务</a></li><li><a href="http://www.ibm.com/software/cn/soa/launch/index.html">面向服务架构 (SOA)</a></li><li><a href="http://www.ibm.com/cn/financing/index.shtml">融资租赁</a></li><li><a href="http://www.ibm.com/smb/cn/business/index.shtml?ca=masterhead&me=cndotcom">面向中型企业及机构的解决方案</a></li><li><a href="http://www.ibm.com/software/cn/solution/">软件行业解决方案</a></li><li><a href="http://www.ibm.com/city/cn/index.shtml?re=masthead">IBM 区域解决方案</a></li><li><a href="http://www.ibm.com/cn/services/bcs/">更多业务解决方案</a></li></ul></div></li><li id="ibm-unav-services"><a href="http://www.ibm.com/technologyservices/cn/zh/" class=" ibm-unav-has-child">服务</a><div class="ibm-unav-menu" id="gi-21017bbe"><span class="ibm-unav-menu-ehb" id="gi-21017bbe-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li class=" ibm-place-holder"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" class=" ibm-unav-menu-has-child" id="gi-2df5a520-trigger">按服务项目分类</a><div class="ibm-unav-menu ibm-place-holder" id="gi-2df5a520"><span class="ibm-unav-menu-ehb" id="gi-2df5a520-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www-31.ibm.com/cn/services/managedservices/">弹性运维服务</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/itservice/bcrs/c1000411">业务连续与灾难恢复服务</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/itservice/imc/c1025977">企业终端用户服务</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/itservice/gn/c1000412">网络服务</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/itservice/igs/c1025997">IT 策略与基础架构服务</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/itservice/its/c1000418">维护与技术支持服务</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/itservice/igs/c1025998">中间件服务</a></li><li><a href="http://www.ibm.com/services/cn/gts/outsourcing.html">外包服务</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/itservice/so/c1000405">企业 IT 安全服务</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/itservice/igs/c1025999">服务器服务</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/itservice/igs/c1026000">数据中心及智能化集成服务</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/itservice/its/c1000416">数据与存储服务</a></li></ul></div></li><li class=" ibm-place-holder"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" class=" ibm-unav-menu-has-child" id="gi-bc1b939f-trigger">按业务类型分类</a><div class="ibm-unav-menu ibm-place-holder" id="gi-bc1b939f"><span class="ibm-unav-menu-ehb" id="gi-bc1b939f-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/services/cn/index.wss/businesstopic/igs/a1024566">竞争策略</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/businesstopic/igs/a1024555">营运/委外</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/businesstopic/igs/a1024567">顾客服务及忠诚度</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/businesstopic/igs/a1024553">通路策略实施</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/businesstopic/igs/a1024556">IT 最适化</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/businesstopic/igs/a1024568">全新的工作环境</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/businesstopic/igs/a1024557">灵活可靠的基础建设</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/businesstopic/igs/a1024554">安全和防御</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/businesstopic/igs/a1024569">价值链效益</a></li></ul></div></li><li class=" ibm-place-holder"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" class=" ibm-unav-menu-has-child" id="gi-70ff7daa-trigger">按行业分类</a><div class="ibm-unav-menu ibm-place-holder" id="gi-70ff7daa"><span class="ibm-unav-menu-ehb" id="gi-70ff7daa-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024588">跨行业</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024537">金融业</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024548">银行业</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024546">保险业</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024547">零售业</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024540">消费品</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024545">批发业</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024550">电子业</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024543">电信业</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024538">媒体与娱乐</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024541">旅游和运输业</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024542">汽车行业</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024552">石油石化行业</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024549">政府部门</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024644">能源与公用事业</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024544">教育业</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024536">医疗保健</a></li><li><a href="http://www.ibm.com/services/cn/index.wss/industry/igs/a1024539">生命科学</a></li></ul></div></li><li><a href="http://www.ibm.com/training/cn/">培训服务</a></li><li><a href="http://www.ibm.com/cn/software/service/">软件服务</a></li><li><a href="http://www.ibm.com/cn/express/products/igs/?ca=masterhead&me=cndotcom">面向中型企业及机构的服务</a></li><li><a href="http://www.ibm.com/services/cn/index.wss">更多服务</a></li></ul></div></li>
+<li id="ibm-unav-products"><a href="http://www.ibm.com/products/cn/zh/" class=" ibm-unav-has-child">产品</a><div class="ibm-unav-menu" id="gi-32b3ec93"><span class="ibm-unav-menu-ehb" id="gi-32b3ec93-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/cn/shop/special.shtml">特惠产品和方案</a></li><li class=" ibm-place-holder"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" class=" ibm-unav-menu-has-child" id="gi-bb298bbb-trigger">软件</a><div class="ibm-unav-menu ibm-place-holder" id="gi-bb298bbb"><span class="ibm-unav-menu-ehb" id="gi-bb298bbb-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/cn/software/">所有软件</a></li><li><a href="http://www.ibm.com/software/products/cn/zh">产品目录</a></li><li><a href="http://www.ibm.com/cn/software/db2/">Information Management 信息管理软件</a></li><li><a href="http://www.ibm.com/cn/software/lotus/">Lotus 协作办公软件</a></li><li><a href="http://www.ibm.com/cn/software/rational/">Rational 开发软件</a></li><li><a href="http://www.ibm.com/cn/software/tivoli/">Tivoli 服务管理软件</a></li><li><a href="http://www.ibm.com/cn/software/websphere/">WebSphere 应用系统和整合软件</a></li><li><a href="http://www.ibm.com/cn/software/zseries/">System z 服务器软件</a></li></ul></div></li><li class=" ibm-place-holder"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" class=" ibm-unav-menu-has-child" id="gi-f06a5831-trigger">Systems 与服务器</a><div class="ibm-unav-menu ibm-place-holder" id="gi-f06a5831"><span class="ibm-unav-menu-ehb" id="gi-f06a5831-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/systems/cn/">所有 IBM Systems 和服务器</a></li><li><a href="http://www.ibm.com/systems/cn/power/index.shtml">Power Systems</a></li><li><a href="http://www.ibm.com/cn/systems/i/index.shtml">System i （i系列）服务器</a></li><li><a href="http://www.ibm.com/cn/systems/p/">System p （p系列）服务器</a></li><li><a href="http://www.ibm.com/cn/systems/x/">System x （x系列）服务器</a></li><li><a href="http://www.ibm.com/cn/systems/z/">System z （z系列）服务器</a></li><li><a href="http://www.ibm.com/cn/systems/bladecenter/">BladeCenter 刀片服务器</a></li><li><a href="http://www.ibm.com/cn/openpower">OpenPower 服务器</a></li><li><a href="http://www.ibm.com/cn/servers/eserver/xseries/l1350.shtml">群集服务器</a></li><li><a href="http://www.ibm.com/cn/systems/unix/">UNIX 服务器</a></li><li><a href="http://www.ibm.com/cn/servers/eserver/linux/index.shtml">Linux 服务器</a></li><li><a href="http://www.ibm.com/cn/systems/power/index.shtml">POWER 处理器的服务器</a></li><li><a href="http://www.ibm.com/cn/servers/jump_intel.shtml">基于英特尔架构的服务器</a></li></ul></div></li><li class=" ibm-place-holder"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" class=" ibm-unav-menu-has-child" id="gi-a50d6fe7-trigger">存储产品</a><div class="ibm-unav-menu ibm-place-holder" id="gi-a50d6fe7"><span class="ibm-unav-menu-ehb" id="gi-a50d6fe7-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/storage/cn/">所有存储产品</a></li><li><a href="http://www.ibm.com/storage/cn/disk/">磁盘存储系统</a></li><li><a href="http://www.ibm.com/storage/cn/tape/">磁带存储系统</a></li><li><a href="http://www.ibm.com/storage/cn/san/">存储区域网络</a></li><li><a href="http://www.ibm.com/storage/cn/nas/">网络连接存储</a></li><li><a href="http://www.ibm.com/storage/cn/software/">存储软件</a></li><li><a href="http://www.ibm.com/storage/cn/product/index.shtml">存储产品排序（A - Z）</a></li></ul></div></li><li><a href="http://www.ibm.com/services/cn/index.wss/offerfamily/igs/c1025846">网络安全</a></li><li><a href="http://www.ibm.com/cn/products/pos/">零售终端</a></li><li><a href="http://www.infoprintsolutionscompany.com/internet/wwsites.nsf/vwWebPublished/mainT1_cn">打印机 (InfoPrint)</a></li><li><a href="http://www.ibm.com/cn/financing/icpe/">IBM 官方认证再制造设备</a></li><li><a href="http://www.ibm.com/cn/servers/eserver/xseries/options.shtml">选件</a></li><li><a href="http://www.ibm.com/cn/promotion/esg/xseries/">中低端产品特惠商城</a></li><li><a href="http://www.ibm.com/cn/express/products/hardware/index.shtml?ca=masterhead&me=cndotcom">面向中型企业及机构的特惠产品</a></li></ul></div></li>
+<li id="ibm-unav-support"><a href="http://www.ibm.com/support/cn/zh/" class=" ibm-unav-has-child">支持与下载</a><div class="ibm-unav-menu" id="gi-89f3d77e"><span class="ibm-unav-menu-ehb" id="gi-89f3d77e-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li class=" ibm-place-holder"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" class=" ibm-unav-menu-has-child" id="gi-a1c6ff51-trigger">下载</a><div class="ibm-unav-menu ibm-place-holder" id="gi-a1c6ff51"><span class="ibm-unav-menu-ehb" id="gi-a1c6ff51-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/cn/support/download/download.shtml">驱动程序和软件下载</a></li></ul></div></li><li><a href="http://www.ibm.com/support/troubleshooting/cn/">故障诊断与排除</a></li><li><a href="http://www.ibm.com/support/advsrch.wss?rs=0&loc=zh_CN">搜索</a></li><li class=" ibm-place-holder"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" class=" ibm-unav-menu-has-child" id="gi-807b827-trigger">按产品查看</a><div class="ibm-unav-menu ibm-place-holder" id="gi-807b827"><span class="ibm-unav-menu-ehb" id="gi-807b827-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/cn/support/productsupport/sw_support.shtml">软件产品</a></li><li><a href="http://www.ibm.com/cn/support/productsupport/eserver.shtml">服务器</a></li><li><a href="http://www.ibm.com/cn/support/productsupport/storage_support.shtml">存储产品</a></li><li><a href="http://www.ibm.com/cn/support/productsupport/print_support.shtml">打印机 (InfoPrint)</a></li></ul></div></li><li><a href="http://www.ibm.com/cn/support/mysupport/">个性化支持</a></li><li><a href="http://www.ibm.com/support/publications/cn/index.html">产品资料中心</a></li><li class=" ibm-place-holder"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" class=" ibm-unav-menu-has-child" id="gi-9621def6-trigger">电子化工具</a><div class="ibm-unav-menu ibm-place-holder" id="gi-9621def6"><span class="ibm-unav-menu-ehb" id="gi-9621def6-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/support/electronic/uprtransition.wss?category=2&locale=zh_CN">提交服务请求</a></li><li><a href="https://www.ibm.com/support/electronic/portal/!ut/p/kcxml/04_Sj9SPykssy0xPLMnMz0vM0Y_QjzKLt4y3dAXJgFku-pHIIgbxjnABX4_83FT9IKBEpDlQxCVQPyonNT0xuVI_WN9bP0C_IDc0otzb0REAowWZNg!!/delta/base64xml/L2dJQSEvUUt3QS80SVVFLzZfOV85RQ!!?category=4&locale=zh_CN">专项服务</a></li></ul></div></li><li><a href="http://www.ibm.com/cn/support/viewdoc/knowledgebase">技术知识库</a></li><li><a href="http://www.ibm.com/support/operations/cn">在线客户支持</a></li><li><a href="http://www.ibm.com/support/warranties/cn/">保修、许可和维护</a></li></ul></div></li>
+<li id="ibm-unav-myibm"><a href="http://www.ibm.com/account/cn/zh/" class=" ibm-unav-has-child">个性化服务</a><div class="ibm-unav-menu" id="gi-28102fef"><span class="ibm-unav-menu-ehb" id="gi-28102fef-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/account/myaccounts/cn/zh/">我的账户</a></li><li class=" ibm-myinterest"><a href="http://www.ibm.com/account/myibm/myinterestView.do?cc=cn&lc=zh" id="gi-c340b0b9-trigger">我的收藏夹</a><div class="ibm-unav-menu ibm-myinterest" id="gi-c340b0b9"><span class="ibm-unav-menu-ehb" id="gi-c340b0b9-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul></ul></div></li><li><a href="http://www.ibm.com/account/myibm/profile.do?cc=cn&lc=zh">我的概要信息</a></li><li class=" ibm-place-holder"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" class=" ibm-unav-menu-has-child" id="gi-2bd999d7-trigger">客户支持</a><div class="ibm-unav-menu ibm-place-holder" id="gi-2bd999d7"><span class="ibm-unav-menu-ehb" id="gi-2bd999d7-ehb"><img alt="" src="./Linux服务器集群系统(一)_files/c(1).gif"></span><a class="ibm-access"></a><ul><li><a href="http://www.ibm.com/support/operations/cn/zh/contracts">合同</a></li><li><a href="http://www.ibm.com/support/operations/cn/zh/orderdelivery">订单与发货</a></li><li><a href="http://www.ibm.com/support/operations/cn/zh/inventory">库存与维护</a></li><li><a href="http://www.ibm.com/support/operations/cn/zh/invoicespayments">发票与付款</a></li><li><a href="http://www.ibm.com/support/operations/cn">更多客户支持</a></li></ul></div></li><li><a href="http://www.ibm.com/account/cn/zh/">了解更多</a></li></ul></div></li>
+</ul>
+</div>
+
+</div>
+
+<!-- MASTHEAD_END -->
+
+<div id="ibm-pcon">
+
+<!-- CONTENT_BEGIN -->
+<div id="ibm-content">
+
+<!-- Navigation_Trail_BEGIN -->
+<!-- &nbsp; -->
+      <div id="ibm-content-head"><ul id="ibm-navigation-trail"><li class="ibm-first"><a href="http://www.ibm.com/developerworks/cn/">developerWorks 中国</a></li><li><a href="http://www.ibm.com/developerworks/cn/linux/">Linux</a></li><li><a href="http://www.ibm.com/developerworks/cn/views/linux/libraryview.jsp">文档库</a></li></ul></div>
+<!-- Navigation_Trail_END -->
+
+<!-- dW_Summary Area_START -->
+<div id="dw-summary-article">
+
+<div class="dw-content-head">
+<h1>Linux服务器集群系统(一)</h1><p><em>LVS项目介绍</em></p>
+</div>
+
+<div class="ibm-container-body ibm-two-column">
+
+<div class="ibm-column ibm-first">
+<div class="author"><a class="dwauthor" rel="#authortip1" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#author1">章文嵩博士</a> (<a href="mailto:wensong@linux-vs.org?subject=Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%9B%86%E7%BE%A4%E7%B3%BB%E7%BB%9F(%E4%B8%80)&cc=wensong@linux-vs.org">wensong@linux-vs.org</a>),  </div><div id="authortip1" class="dwauthor-onload-state ibm-no-print" style="display: none; ">章文嵩博士，开放源码及Linux内核的开发者，著名的Linux集群项目－－LVS(Linux Virtual
+Server)的创始人和主要开发人员。他目前工作于国家并行与分布式处理重点实验室，主要从事集群技术、操作系统、对象存储与数据库的研究。他一直在自由软件的开发上花费大量时间，并以此为乐。</div>
+<p></p>
+  <p><b>简介：</b>&nbsp;本文介绍了Linux服务器集群系统――LVS（Linux Virtual Server）项目的产生背景和目标，并描述了LVS服务器集群框架及目前提供的软件，列举LVS集群系统的特点和一些实际应用，最后，本文谈论了LVS项目的开发进展和开发感触。</p>
+
+  <!-- <p class="ibm-no-print"><div id="dw-tag-this" class="ibm-no-print"></div><div id="interestShow" class="ibm-no-print"></div></p> -->
+<div id="dw-tag-content" class="ibm-no-print"></div><div id="dw-moretags-access" class="ibm-access"></div>
+<p class="ibm-no-print"></p><div id="dw-tag-this" class="ibm-no-print"><a class="ibm-external-link" onclick="jQuery.launchTagThisWindow(); return false;" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#">标记本文！</a></div><div id="interestShow" class="ibm-no-print"></div><p></p>
+</div>
+
+<div class="ibm-column ibm-second">
+
+<p class="leading"><b>发布日期：</b>&nbsp;2002 年 4 月 10 日
+  
+<br><b>级别：</b>&nbsp;初级
+    
+
+<br><b>访问情况</b>&nbsp;1540 次浏览
+<br><b>建议:</b>&nbsp;<span id="nCmts">0&nbsp;(<a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#icomments">添加评论</a>)</span>
+<!-- Rating_Area_Begin -->
+<!-- Ensure that div id is based on input id and ends with -widget -->	
+<input id="art-rating" name="ratinga" type="hidden" value="3"></p><div id="art-rating-widget"><a href="javascript:void(0);"><img alt="1 star" title="点击评分 1 星" height="20" src="./Linux服务器集群系统(一)_files/avg-star-on.gif" width="20"></a><a href="javascript:void(0);"><img alt="2 stars" title="点击评分 2 星" height="20" src="./Linux服务器集群系统(一)_files/avg-star-on.gif" width="20"></a><a href="javascript:void(0);"><img alt="3 stars" title="点击评分 3 星" height="20" src="./Linux服务器集群系统(一)_files/avg-star-on.gif" width="20"></a><a href="javascript:void(0);"><img alt="4 stars" title="点击评分 4 星" height="20" src="./Linux服务器集群系统(一)_files/star-off.gif" width="20"></a><a href="javascript:void(0);"><img alt="5 stars" title="点击评分 5 星" height="20" src="./Linux服务器集群系统(一)_files/star-off.gif" width="20"></a><span id="rateTxt">  平均分 （共 3 个评分 ）</span></div>
+<script language="JavaScript" type="text/javascript">
+// <![CDATA[
+ //  widget div id and article id as args
+   window.artRating.init('art-rating-widget');
+// ]]>
+</script>
+<!-- Rating_Area_End -->
+<p></p>
+</div>
+
+</div>
+</div>
+<!-- dW_Summary_Area_END -->
+
+<!-- CONTENT_BODY -->
+<div id="ibm-content-body">
+
+<!-- MAIN_COLUMN_BEGIN -->
+<div id="ibm-content-main">
+
+<!-- Related_Searches_Area_And_Overlays_Begin -->
+
+<!-- MAIN_COLUMN_CONTAINER_BEGIN -->
+<div class="ibm-container">
+
+<!-- MAIN_COLUMN_CONTENT_BEGIN -->
+<p><a name="1"><span class="atitle">背景</span></a></p>
+      
+      <p>
+当今计算机技术已进入以网络为中心的计算时期。由于客户/服务器模型的简单性、易管理性和易维护性，客户/服务器计算模式在网上被大量采用。在九十年代中期，万维网（World
+Wide
+Web）的出现以其简单操作方式将图文并茂的网上信息带给普通大众，Web也正在从一种内容发送机制成为一种服务平台，大量的服务和应用（如新闻服务、网上银行、电子商务等）都是围绕着Web进行。这促进Internet用户剧烈增长和Internet流量爆炸式地增长，图1显示了1995至2000年与Internet连接主机数的变化情况[1]，可见增长趋势较以往更迅猛。</p>
+      
+        <br><a name="N10041"><b>图1：1995至2000年Internet主机数的变化</b></a><br>
+        <img alt="" height="291" src="./Linux服务器集群系统(一)_files/1.jpg" width="398">
+      <br>
+      <p>
+Internet的飞速发展给网络带宽和服务器带来巨大的挑战。从网络技术的发展来看，网络带宽的增长远高于处理器速度和内存访问速度的增长，如100M
+Ethernet、ATM、Gigabit Ethernet等不断地涌现，10Gigabit
+Ethernet即将就绪，在主干网上密集波分复用（DWDM）将成为宽带IP的主流技术[2,3]，Lucent已经推出在一根光纤跑800Gigabit的WaveStar?
+OLS 800G产品[4]。所以，我们深信越来越多的瓶颈会出现在服务器端。很多研究显示Gigabit
+Ethernet在服务器上很难使得其吞吐率达到1Gb/s的原因是协议栈（TCP/IP）和操作系统的低效，以及处理器的低效，这需要对协议的处理方法、操作系统的调度和IO的处理作更深入的研究。在高速网络上，重新设计单台服务器上的网络服务程序也是个重要课题。</p>
+      <p>
+比较热门的站点会吸引前所未有的访问流量，例如根据Yahoo的新闻发布，Yahoo已经每天发送6.25亿页面[5]。一些网络服务也收到巨额的流量，如American
+Online的Web
+Cache系统每天处理50.2亿个用户访问Web的请求，每个请求的平均响应长度为5.5Kbytes。与此同时，很多网络服务因为访问次数爆炸式地增长而不堪重负，不能及时处理用户的请求，导致用户进行长时间的等待，大大降低了服务质量。如何建立可伸缩的网络服务来满足不断增长的负载需求已成为迫在眉睫的问题。</p>
+      <p>
+大部分网站都需要提供每天24小时、每星期7天的服务，对电子商务等网站尤为突出，任何服务中断和关键性的数据丢失都会造成直接的商业损失。例如，根据Dell的新闻发布[6]，Dell现在每天在网站上的交易收入为一千四百万美元，一个小时的服务中断都会造成平均五十八万美元的损失。所以，这对网络服务的可靠性提出了越来越高的要求。</p>
+      <p>
+现在Web服务中越来越多地使用CGI、动态主页等CPU密集型应用，这对服务器的性能有较高要求。未来的网络服务会提供更丰富的内容、更好的交互性、更高的安全性等，需要服务器具有更强的CPU和I/O处理能力。例如，通过HTTPS（Secure
+HTTP）取一个静态页面需要的处理性能比通过HTTP的高一个数量级，HTTPS正在被电子商务站点广为使用。所以，网络流量并不能说明全部问题，要考虑到应用本身的发展也需要越来越强的处理性能。</p>
+      <p>因此，对用硬件和软件方法实现高可伸缩、高可用网络服务的需求不断增长，这种需求可以归结以下几点：</p>
+      <ul>
+        <li>可伸缩性（Scalability），当服务的负载增长时，系统能被扩展来满足需求，且不降低服务质量。</li>
+        <li>高可用性（Availability），尽管部分硬件和软件会发生故障，整个系统的服务必须是每天24小时每星期7天可用的。</li>
+        <li>可管理性（Manageability），整个系统可能在物理上很大，但应该容易管理。</li>
+        <li>价格有效性（Cost-effectiveness），整个系统实现是经济的、易支付的。</li>
+      </ul>
+      <div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><p><a name="2"><span class="atitle">服务器集群系统</span></a></p>
+      
+      <p>对称多处理（Symmetric
+Multi-Processor，简称SMP）是由多个对称的处理器、和通过总线共享的内存和I/O部件所组成的计算机系统。SMP是一种低并行度的结构，是我们通常所说的"紧耦合多处理系统"，它的可扩展能力有限，但SMP的优点是单一系统映像（Single
+System Image），有共享的内存和I/O，易编程。</p>
+      <p>
+由于SMP的可扩展能力有限，SMP服务器显然不能满足高可伸缩、高可用网络服务中的负载处理能力不断增长需求。随着负载不断增长，会导致服务器不断地升级。这种服务器升级有下列不足：一是升级过程繁琐，机器切换会使服务暂时中断，并造成原有计算资源的浪费；二是越往高端的服务器，所花费的代价越大；三是SMP服务器是单一故障点（Single
+Point of Failure），一旦该服务器或应用软件失效，会导致整个服务的中断。</p>
+      <p>
+通过高性能网络或局域网互联的服务器集群正成为实现高可伸缩的、高可用网络服务的有效结构。这种松耦合结构的服务器集群系统有下列优点：</p>
+      <ul>
+        <li>
+          <p>性能
+            <br>
+网络服务的工作负载通常是大量相互独立的任务，通过一组服务器分而治之，可以获得很高的整体性能。
+          </p>
+        </li>
+        <li>
+          <p>性能/价格比
+            <br>
+组成集群系统的PC服务器或RISC服务器和标准网络设备因为大规模生产降低成本，价格低，具有最高的性能/价格比。若整体性能随着结点数的增长而接近线性增加，该系统的性能/价格比接近于PC服务器。所以，这种松耦合结构比紧耦合的多处理器系统具有更好的性能/价格比。
+          </p>
+        </li>
+        <li>
+          <p>可伸缩性
+            <br>
+集群系统中的结点数目可以增长到几千个，乃至上万个，其伸缩性远超过单台超级计算机。
+          </p>
+        </li>
+        <li>
+          <p>高可用性
+            <br>
+在硬件和软件上都有冗余，通过检测软硬件的故障，将故障屏蔽，由存活结点提供服务，可实现高可用性。
+          </p>
+        </li>
+      </ul>
+      <p>当然，用服务器集群系统实现可伸缩网络服务也存在很多挑战性的工作：</p>
+      <ul>
+        <li>
+          <p>透明性（Transparency）
+            <br>
+如何高效地使得由多个独立计算机组成的松藕合的集群系统构成一个虚拟服务器；客户端应用程序与集群系统交互时，就像与一台高性能、高可用的服务器交互一样，客户端无须作任何修改。部分服务器的切入和切出不会中断服务，这对用户也是透明的。
+          </p>
+        </li>
+        <li>
+          <p>性能（Performance）
+            <br>
+性能要接近线性加速，这需要设计很好的软硬件的体系结构，消除系统可能存在的瓶颈。将负载较均衡地调度到各台服务器上。
+          </p>
+        </li>
+        <li>
+          <p>高可用性（Availability）
+            <br>
+需要设计和实现很好的系统资源和故障的监测和处理系统。当发现一个模块失败时，要这模块上提供的服务迁移到其他模块上。在理想状况下，这种迁移是即时的、自动的。
+          </p>
+        </li>
+        <li>
+          <p>可管理性（Manageability）
+            <br>
+要使集群系统变得易管理，就像管理一个单一映像系统一样。在理想状况下，软硬件模块的插入能做到即插即用（Plug &amp;
+Play）。
+          </p>
+        </li>
+        <li>
+          <p>可编程性（Programmability）
+            <br>
+在集群系统上，容易开发应用程序。
+          </p>
+        </li>
+      </ul>
+      <div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><p><a name="3"><span class="atitle">Linux Virtual Server项目</span></a></p>
+      
+      <p>
+针对高可伸缩、高可用网络服务的需求，我们给出了基于IP层和基于内容请求分发的负载平衡调度解决方法，并在Linux内核中实现了这些方法，将一组服务器构成一个实现可伸缩的、高可用网络服务的虚拟服务器。</p>
+      <p>
+虚拟服务器的体系结构如图2所示，一组服务器通过高速的局域网或者地理分布的广域网相互连接，在它们的前端有一个负载调度器（Load
+Balancer）。负载调度器能无缝地将网络请求调度到真实服务器上，从而使得服务器集群的结构对客户是透明的，客户访问集群系统提供的网络服务就像访问一台高性能、高可用的服务器一样。客户程序不受服务器集群的影响不需作任何修改。系统的伸缩性通过在服务机群中透明地加入和删除一个节点来达到，通过检测节点或服务进程故障和正确地重置系统达到高可用性。由于我们的负载调度技术是在Linux内核中实现的，我们称之为Linux虚拟服务器（Linux
+Virtual Server）。</p>
+      
+        <br><a name="N100DE"><b>图2：虚拟服务器的结构</b></a><br>
+        <img alt="" height="374" src="./Linux服务器集群系统(一)_files/2.jpg" width="420">
+      <br>
+      <p>在1998年5月，我成立了Linux Virtual Server的自由软件项目，进行Linux服务器集群的开发工作。同时，Linux Virtual
+Server项目是国内最早出现的自由软件项目之一。</p>
+      <p>Linux Virtual Server项目的目标
+：使用集群技术和Linux操作系统实现一个高性能、高可用的服务器，它具有很好的可伸缩性（Scalability）、可靠性（Reliability）和可管理性（Manageability）。</p>
+      <p>目前，LVS项目已提供了一个实现可伸缩网络服务的Linux Virtual
+Server框架，如图3所示。在LVS框架中，提供了含有三种IP负载均衡技术的IP虚拟服务器软件IPVS、基于内容请求分发的内核Layer-7交换机KTCPVS和集群管理软件。可以利用LVS框架实现高可伸缩的、高可用的Web、Cache、Mail和Media等网络服务；在此基础上，可以开发支持庞大用户数的、高可伸缩的、高可用的电子商务应用。</p>
+      
+        <br><a name="N100F6"><b>图3：Linux虚拟服务器框架</b></a><br>
+        <img alt="" height="293" src="./Linux服务器集群系统(一)_files/3.gif" width="260">
+      <br>
+      <p><a name="N10103"><span class="smalltitle">3.1 IP虚拟服务器软件IPVS</span></a></p>
+      
+      <p>在调度器的实现技术中，IP负载均衡技术是效率最高的。在已有的IP负载均衡技术中有通过网络地址转换（Network Address
+Translation）将一组服务器构成一个高性能的、高可用的虚拟服务器，我们称之为VS/NAT技术（Virtual Server via Network Address
+Translation），大多数商品化的IP负载均衡调度器产品都是使用此方法，如Cisco的LocalDirector、F5的Big/IP和Alteon的ACEDirector。在分析VS/NAT的缺点和网络服务的非对称性的基础上，我们提出通过IP隧道实现虚拟服务器的方法VS/TUN（Virtual
+Server via IP Tunneling），和通过直接路由实现虚拟服务器的方法VS/DR（Virtual Server via Direct
+Routing），它们可以极大地提高系统的伸缩性。所以，IPVS软件实现了这三种IP负载均衡技术，它们的大致原理如下（我们将在其他章节对其工作原理进行详细描述），</p>
+      <ol>
+        <li>
+          <p>
+            <strong>Virtual Server via Network Address Translation（VS/NAT）</strong>
+            <br>
+通过网络地址转换，调度器重写请求报文的目标地址，根据预设的调度算法，将请求分派给后端的真实服务器；真实服务器的响应报文通过调度器时，报文的源地址被重写，再返回给客户，完成整个负载调度过程。
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>Virtual Server via IP Tunneling（VS/TUN）</strong>
+            <br>
+采用NAT技术时，由于请求和响应报文都必须经过调度器地址重写，当客户请求越来越多时，调度器的处理能力将成为瓶颈。为了解决这个问题，调度器把请求报文通过IP隧道转发至真实服务器，而真实服务器将响应直接返回给客户，所以调度器只处理请求报文。由于一般网络服务应答比请求报文大许多，采用VS/TUN技术后，集群系统的最大吞吐量可以提高10倍。
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>Virtual Server via Direct Routing（VS/DR）</strong>
+            <br>
+VS/DR通过改写请求报文的MAC地址，将请求发送到真实服务器，而真实服务器将响应直接返回给客户。同VS/TUN技术一样，VS/DR技术可极大地提高集群系统的伸缩性。这种方法没有IP隧道的开销，对集群中的真实服务器也没有必须支持IP隧道协议的要求，但是要求调度器与真实服务器都有一块网卡连在同一物理网段上。
+          </p>
+        </li>
+      </ol>
+      <p>针对不同的网络服务需求和服务器配置，IPVS调度器实现了如下八种负载调度算法：</p>
+      <ol>
+        <li>
+          <p>
+            <strong>轮叫（Round Robin）</strong>
+            <br>
+调度器通过"轮叫"调度算法将外部请求按顺序轮流分配到集群中的真实服务器上，它均等地对待每一台服务器，而不管服务器上实际的连接数和系统负载。
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>加权轮叫（Weighted Round Robin）</strong>
+            <br>
+调度器通过"加权轮叫"调度算法根据真实服务器的不同处理能力来调度访问请求。这样可以保证处理能力强的服务器处理更多的访问流量。调度器可以自动问询真实服务器的负载情况，并动态地调整其权值。
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>最少链接（Least Connections）</strong>
+            <br>
+调度器通过"最少连接"调度算法动态地将网络请求调度到已建立的链接数最少的服务器上。如果集群系统的真实服务器具有相近的系统性能，采用"最小连接"调度算法可以较好地均衡负载。
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>加权最少链接（Weighted Least Connections）</strong>
+            <br>
+在集群系统中的服务器性能差异较大的情况下，调度器采用"加权最少链接"调度算法优化负载均衡性能，具有较高权值的服务器将承受较大比例的活动连接负载。调度器可以自动问询真实服务器的负载情况，并动态地调整其权值。
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>基于局部性的最少链接（Locality-Based Least Connections）</strong>
+            <br>
+"基于局部性的最少链接"
+调度算法是针对目标IP地址的负载均衡，目前主要用于Cache集群系统。该算法根据请求的目标IP地址找出该目标IP地址最近使用的服务器，若该服务器是可用的且没有超载，将请求发送到该服务器；若服务器不存在，或者该服务器超载且有服务器处于一半的工作负载，则用"最少链接"的原则选出一个可用的服务器，将请求发送到该服务器。
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>带复制的基于局部性最少链接（Locality-Based Least Connections with Replication）</strong>
+"带复制的基于局部性最少链接"调度算法也是针对目标IP地址的负载均衡，目前主要用于Cache集群系统。它与LBLC算法的不同之处是它要维护从一个目标IP地址到一组服务器的映射，而LBLC算法维护从一个目标IP地址到一台服务器的映射。该算法根据请求的目标IP地址找出该目标IP地址对应的服务器组，按"最小连接"原则从服务器组中选出一台服务器，若服务器没有超载，将请求发送到该服务器，若服务器超载；则按"最小连接"原则从这个集群中选出一台服务器，将该服务器加入到服务器组中，将请求发送到该服务器。同时，当该服务器组有一段时间没有被修改，将最忙的服务器从服务器组中删除，以降低复制的程度。
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>目标地址散列（Destination Hashing）</strong>
+            <br>
+"目标地址散列"调度算法根据请求的目标IP地址，作为散列键（Hash
+Key）从静态分配的散列表找出对应的服务器，若该服务器是可用的且未超载，将请求发送到该服务器，否则返回空。
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>源地址散列（Source Hashing）</strong>
+            <br>
+"源地址散列"调度算法根据请求的源IP地址，作为散列键（Hash
+Key）从静态分配的散列表找出对应的服务器，若该服务器是可用的且未超载，将请求发送到该服务器，否则返回空。
+          </p>
+        </li>
+      </ol>
+      <p><a name="N1018E"><span class="smalltitle">3.2 内核Layer-7交换机KTCPVS</span></a></p>
+      
+      <p>
+在基于IP负载调度技术中，当一个TCP连接的初始SYN报文到达时，调度器就选择一台服务器，将报文转发给它。此后通过查发报文的IP和TCP报文头地址，保证此连接的后继报文被转发到该服务器。这样，IPVS无法检查到请求的内容再选择服务器，这就要求后端服务器组提供相同的服务，不管请求被发送到哪一台服务器，返回结果都是一样的。但是，在有些应用中后端服务器功能不一，有的提供HTML文档，有的提供图片，有的提供CGI，这就需要基于内容的调度(Content-Based
+Scheduling)。</p>
+      <p>由于用户空间TCP
+Gateway的开销太大，我们提出在操作系统的内核中实现Layer-7交换方法，来避免用户空间与核心空间的切换和内存复制的开销。在Linux操作系统的内核中，我们实现了Layer-7交换，称之为KTCPVS（Kernel
+TCP Virtual
+Server）。目前，KTCPVS已经能对HTTP请求进行基于内容的调度，但它还不很成熟，在其调度算法和各种协议的功能支持等方面，有大量的工作需要做。</p>
+      <p>虽然应用层交换处理复杂，它的伸缩性有限，但应用层交换带来以下好处：</p>
+      <ul>
+        <li>相同页面的请求被发送到同一服务器，可以提高单台服务器的Cache命中率。</li>
+        <li>
+一些研究[5]表明WEB访问流中存在局部性。Layer-7交换可以充分利用访问的局部性，将相同类型的请求发送到同一台服务器，使得每台服务器收到的请求具有更好的相似性，可进一步提高单台服务器的Cache命中率。</li>
+        <li>后端服务器可运行不同类型的服务，如文档服务，图片服务，CGI服务和数据库服务等。</li>
+      </ul>
+      <div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><p><a name="4"><span class="atitle">LVS集群的特点</span></a></p>
+      
+      <p>LVS集群的特点可以归结如下：</p>
+      <ol>
+        <li>
+          <p>
+            <strong>功能</strong>
+            <br>
+有实现三种IP负载均衡技术和八种连接调度算法的IPVS软件。在IPVS内部实现上，采用了高效的Hash函数和垃圾回收机制，能正确处理所调度报文相关的ICMP消息（有些商品化的系统反而不能）。虚拟服务的设置数目没有限制，每个虚拟服务有自己的服务器集。它支持持久的虚拟服务（如HTTP
+Cookie和HTTPS等需要该功能的支持），并提供详尽的统计数据，如连接的处理速率和报文的流量等。针对大规模拒绝服务（Deny of
+Service）攻击，实现了三种防卫策略。
+            <br>
+有基于内容请求分发的应用层交换软件KTCPVS，它也是在Linux内核中实现。有相关的集群管理软件对资源进行监测，能及时将故障屏蔽，实现系统的高可用性。主、从调度器能周期性地进行状态同步，从而实现更高的可用性。
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>适用性</strong>
+            <br>
+后端服务器可运行任何支持TCP/IP的操作系统，包括Linux，各种Unix（如FreeBSD、Sun Solaris、HP Unix等），Mac/OS和Windows
+NT/2000等。
+            <br>
+负载调度器能够支持绝大多数的TCP和UDP协议：
+          </p>
+          <p></p><table border="1" class="ibm-data-table" width="70%"><tbody><tr><td>协议</td><td>内 容</td></tr><tr><td>TCP</td><td>HTTP，FTP，PROXY，SMTP，POP3，IMAP4，DNS，LDAP，HTTPS，SSMTP等</td></tr><tr><td>UDP</td><td>DNS，NTP，ICP，视频、音频流播放协议等</td></tr></tbody></table><p></p><p>
+无需对客户机和服务器作任何修改，可适用大多数Internet服务。
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>性能</strong>
+            <br>
+LVS服务器集群系统具有良好的伸缩性，可支持几百万个并发连接。配置100M网卡，采用VS/TUN或VS/DR调度技术，集群系统的吞吐量可高达1Gbits/s；如配置千兆网卡，则系统的最大吞吐量可接近10Gbits/s。
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>可靠性</strong>
+            <br>
+LVS服务器集群软件已经在很多大型的、关键性的站点得到很好的应用，所以它的可靠性在真实应用得到很好的证实。有很多调度器运行一年多，未作一次重启动。
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>软件许可证</strong>
+            <br>
+LVS集群软件是按GPL（GNU Public
+License）许可证发行的自由软件，这意味着你可以得到软件的源代码，有权对其进行修改，但必须保证你的修改也是以GPL方式发行。
+          </p>
+        </li>
+      </ol>
+      <div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><p><a name="5"><span class="atitle">LVS集群的应用</span></a></p>
+      
+      <p>
+LVS项目从成立到现在为止，受到不少关注，LVS集群系统已被应用于很多重负载的站点，就我所知该系统已在美、英、德、澳等国的几十个站点上正式使用。</p>
+      <p>
+我们没有上百台机器和高速的网络来实际测试LVS的终极性能，所以举LVS的应用实例来说明LVS的高性能和稳定性。我们所知的一些大型LVS应用实例如下：</p>
+      <ul>
+        <li>
+          <p>英国国家JANET Cache Service（wwwcache.ja.net）是为英国150所以上的大学提供Web
+Cache服务。他们用28个结点的LVS集群代替了原有现50多台相互独立的Cache服务器，用他们的话说现在速度就跟夏天一样，因为夏天是放假期间没有很多人使用网络。</p>
+        </li>
+        <li>
+          <p>Linux的门户站点（www.linux.com）用LVS将很多台VA Linux SMP服务器组成高性能的WEB服务，已使用将近一年。</p>
+        </li>
+        <li>
+          <p>SourceForge（sourceforge.net）是在全球范围内为开发源码项目提供WEB、FTP、Mailing
+List和CVS等服务，他们也使用LVS将负载调度到十几台机器上。</p>
+        </li>
+        <li>
+          <p>世界上最大的PC制造商之一采用了两个LVS集群系统，一个在美洲，一个在欧洲，用于网上直销系统。</p>
+        </li>
+        <li>
+          <p>
+以RealPlayer提供音频视频服务而闻名的Real公司（www.real.com）使用由20台服务器组成的LVS集群，为其全球用户提供音频视频服务。在2000年3月时，整个集群系统已收到平均每秒20,000个连接的请求流。</p>
+        </li>
+        <li>
+          <p>
+NetWalk（www.netwalk.com）用多台服务器构造LVS系统，提供1024个虚拟服务，其中本项目的一个美国镜像站点（www.us.linuxvirtualserver.org）。</p>
+        </li>
+        <li>
+          <p>
+RedHat（www.redhat.com）从其6.1发行版起已包含LVS代码，他们开发了一个LVS集群管理工具叫Piranha，用于控制LVS集群，并提供了一个图形化的配置界面。</p>
+        </li>
+        <li>
+          <p>VA Linux（www.valinux.com）向客户提供基于LVS的服务器集群系统，并且提供相关的服务和支持。</p>
+        </li>
+        <li>
+          <p>TurboLinux的"世界一流Linux集群产品"TurboCluster实际上是基于LVS的想法和代码的，只是他们在新闻发布和产品演示时忘了致谢
+。</p>
+        </li>
+        <li>
+          <p>红旗Linux和中软都提供基于LVS的集群解决方案，并在2000年9月召开的Linux World China 2000上展示。</p>
+        </li>
+      </ul>
+      <p>在这里，再引用两位LVS用户的评论，来进一步说明LVS的性能和可靠性。
+        <br>
+"We tried virtually all of the commercial load balancers, LVS beats them all for reliability, cost, manageability,
+you-name-it"
+        <br>
+Jerry Glomph Black, Director, Internet &amp; Technical Operations, Real Networks, Seattle Washington, USA
+        <br>
+        <a href="http://marc.theaimsgroup.com/?1=linux-virtual-server&m=95385809030794&w=2">http://marc.theaimsgroup.com/?1=linux-virtual-server&amp;m=95385809030794&amp;w=2</a>
+        <br>
+"I can say without a doubt that lvs toasts F5/BigIP solutions, at least in our real world implementations. I wouldn't
+trade a good lvs box for a Cisco Local Director either"
+        <br>
+Drew Streib, Information Architect, VA Linux Systems, USA
+        <br>
+        <a href="http://marc.theaimsgroup.com/?1=linux-virtual-server&m=95385694529750&w=2">http://marc.theaimsgroup.com/?1=linux-virtual-server&amp;m=95385694529750&amp;w=2</a>
+      </p>
+      <div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><p><a name="6"><span class="atitle">LVS项目的开发进展与感触</span></a></p>
+      
+      <p>LVS项目于1998年5月在网站上发布IPVS第一个版本源程序，一直得到了来自 Internet
+的用户和开发者的鼓励和支持。应该说，刚开始发布的程序是非常简单的，由于用户的使用、反馈和期望，让我觉得这项工作的价值，并不断地化时间对该软件添加新功能和完善，其中也得到其他开发者的帮助，所以该软件逐渐发展成为功能较齐全、有用的系统，这远远超出我当初成立项目时的想象。在这里，我要感谢Julian
+Anastasov提供了很多系统的Bug fixes和改进，Joseph Mack博士编写了LVS
+HOWTO文档；还感谢一些厂商赞助我开发（如硬件设备等），和赞助我多次出国作相关的技术报告。</p>
+      <p>目前，正在进行的 LVS项目开发工作包括：</p>
+      <ul>
+        <li>
+          <p>扩充IPVS对其他传输协议的支持，如AH（Authentication Header）和ESP（Encapsulating Security Payload
+）等，这样IPVS调度器将实现IPSec的服务器集群。</p>
+        </li>
+        <li>
+          <p>提供一个统一的、功能较完善、更灵活的LVS集群管理软件。</p>
+        </li>
+        <li>
+          <p>扩充和改进KTCPVS的调度算法和多种协议的支持，使之功能较完备和系统更稳定。</p>
+        </li>
+        <li>
+          <p>在TCP粘合（TCP Splicing）和TCP转移（TCP Handoff）等方面，做一些尝试性工作，进一步改进LVS集群中的应用层调度。</p>
+        </li>
+      </ul>
+      <p>
+最后，我谈一下自己多年来做自由软件开发的几点感触。一是通过自由软件方式可以使得软件具有顽强的生命力；我以前也做过几个独立的系统，如在SUN上用Common
+Lisp开发的知识库系统和基于C++的对象数据库系统，有些地方也是做得非常漂亮的（如元级反射机制和对象的关系处理），但因为种种原因这些软件没有以开放源码方式发布，现在它们在我导师的软件仓库里已无人问津，我也已经忘记里面的实现细节；而LVS项目是我做着玩的，一开始只是个很简单的程序，通过自由软件的发布和开发，它发展成一个有用的、功能较齐全的软件，体现了自由软件的强大生命力。二是通过自由软件的集市开发，可以使得初始的想法不断地深入，可以学到很多东西。三是做自由软件后时间会更有效率，由于用户的反馈和期待，会自觉不断地改进和完善系统，于是没有时间去玩游戏和网上聊天。四是做自由软件会使得你有一点点成就感，每当收到用户的致谢和想到你的软件在实际系统中运行，会有一点满足。所以，行动起来吧，花一些时间做自由软件，你会有意想不到的收获。</p>
+      <div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><p><a name="7"><span class="atitle">LVS项目的网络资源</span></a></p>
+      
+      <p>如果你对LVS项目感兴趣，请访问Linux Vritual Server项目的主页（
+        <a href="http://www.linuxvirtualserver.org/">http://www.LinuxVirtualServer.org/</a>或者
+        <a href="http://www.linux-vs.org/">http://www.linux-vs.org/</a>），你可以获得最新的 LVS
+源代码和有关运行软件，及最新的文档资料。
+        <br>
+如果你在使用LVS 的过程中遇到困难，请订阅我们的邮件列表
+        <a href="mailto:lvs-users@LinuxVirtualServer.org">lvs-users@LinuxVirtualServer.org</a>，提问、解答或者发表你的高见。
+      </p>
+    <!-- CMA ID: 21783 --> <!-- Site ID: 10 --> <!-- XSLT stylesheet used to transform this file:  dw-article-6.0-beta.xsl -->
+<br>
+<p><a name="resources"><span class="atitle">参考资料 </span></a></p>
+      <p>[1] Information Navigators, Internet Growth Charts,
+        <a href="http://navigators.com/stats.html">http://navigators.com/stats.html</a>
+      </p>
+      
+      <p>[3] Lucent Technologies. Web ProForum tutorial: DWDM. October 1999,
+        <a href="http://www.webproforum.com/acrobat/dwdm.pdf">http://www.webproforum.com/acrobat/dwdm.pdf</a>
+      </p>
+      <p>[4] Lucent Technologies. Lucent Technologies announces record-breaking 320-channel optical networking system. April
+2000, 
+        <a href="http://www.lucent.com/press-/0400/000417.nsb.html">http://www.lucent.com/press-/0400/000417.nsb.html</a>
+      </p>
+      <p>[5] Yahoo! Inc., The Yahoo! Directory and Web Services,
+        <a href="http://www.yahoo.com/">http://www.yahoo.com/</a>
+      </p>
+      <p>[6] Dell Inc.
+        <a href="http://www.dell.com/">http://www.dell.com/</a>
+      </p>
+<p><a name="author"><span class="atitle">关于作者</span></a></p><div class="ibm-container ibm-portrait-module ibm-alternate-two"><div class="ibm-container-body"><p><a name="author1"> </a>章文嵩博士，开放源码及Linux内核的开发者，著名的Linux集群项目－－LVS(Linux Virtual
+Server)的创始人和主要开发人员。他目前工作于国家并行与分布式处理重点实验室，主要从事集群技术、操作系统、对象存储与数据库的研究。他一直在自由软件的开发上花费大量时间，并以此为乐。</p></div></div>
+<!-- MAIN_COLUMN_CONTENT_END -->
+
+  <!-- INLINE_COMMENTS_START -->
+  <p class="ibm-no-print"><span class="atitle"><a name="icomments">建议</a></span></p>
+  <div id="dw-icomments-container" class="ibm-no-print">
+    <div class="ibm-alternate-rule"><hr></div>
+    <div class="ibm-alternate-rule"><hr></div>
+    <!-- Comment_Script -->
+    
+    <a id="comments" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/comments"></a>
+    <script language="JavaScript" type="text/javascript">
+      // <![CDATA[
+dwc = {};
+dwc.cmts = '条评论';
+dwc.signIn = '登录';
+dwc.addCmts = '添加评论';
+dwc.addCmt = '添加评论';
+dwc.viewOrAddCmts = '查看或添加评论';
+dwc.reportInapprCont = '举报不良信息';
+dwc.reportInapprContLink = 'http://www.ibm.com/developerworks/forums/forum.jspa?forumID=1834';
+dwc.postingCmt = '正在发布评论……';
+dwc.noCmt = '快来添加第一条评论';
+dwc.netwkErr = '在检索评论时出错，请稍后刷新。';
+dwc.addACmt = '添加评论';
+dwc.instructCmt = '标有星号（<span class="ibm-required">*</span>）的是必填项目。';
+dwc.cmt = '评论：';
+dwc.btnPost = '发布';
+dwc.btnPostAnon = '匿名发布';
+dwc.btnClrCmt = '清除评论';
+dwc.btnCancel = '取消';
+dwc.showRecent = '显示最新的 {1} 条评论'; // {1} is the count to be substituted
+dwc.showNext = '显示后 {1} 条评论'; // {1} is the count to be substituted
+dwc.showAllCmts = '显示所有评论';
+dwc.enterCmt = '请输入评论内容。';
+dwc.loginErr = '暂时无法验证您的登录状态，请稍后再试。';
+dwc.postErr = '暂时无法发布您的评论，请稍后再试。';
+dwc.postBy = '由 <b>{1}</b>  于 {2} '; // {1} is the author to be substituted; {2} is the date
+dwc.siteId = 10;
+dwc.lang = 'zh_CN';
+// ]]>
+    </script>
+    <script language="JavaScript" src="./Linux服务器集群系统(一)_files/insertcomment.js" type="text/javascript">//</script>
+    <div id="threadShow"><div id="cmtTog" style=""><p><span id="numCmts">0</span>&nbsp;条评论 <span class="dw-bar">|</span> <a class="loginLk" style="display: none; " href="http://www.ibm.com/developerworks/dwwi/DWAuthRouter?m=loginpage&lang=zh_CN&d=http%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fcluster%2Flvs%2Fpart1%2F%23icomments">登录</a><a id="addCmtLk" class="dw-icomment-link">添加评论</a><a class="dw-icomment-report" href="http://www.ibm.com/developerworks/forums/forum.jspa?forumID=1834">举报不良信息</a></p><div class="ibm-alternate-rule"><hr></div><div id="commentForm" style="display: none; "><div class="ibm-container"><h2>添加评论</h2><div class="ibm-container-body"><p>标有星号（<span class="ibm-required">*</span>）的是必填项目。</p><span id="infoCmt"></span><div class="ibm-rule"><hr></div><form method="post" action="" class="ibm-column-form" enctype="multipart/form-data" focus="name" name="form"><p><label for="newCmt">评论：<span class="ibm-required">*</span></label><br><textarea name="newCmt" id="newCmt" cols="120" rows="4"></textarea></p><div class="ibm-alternate-rule"><hr></div><p class="ibm-buttons-row"><input value="发布" type="button" name="postCmt" class="ibm-btn-arrow-sec" id="postCmt"><span class="ibm-sep">&nbsp;</span><input value="清除评论" type="button" name="clearCmt" class="ibm-btn-cancel-sec" id="clearCmt"><span class="ibm-sep">&nbsp;</span><input value="取消" type="button" name="cancelCmt" class="ibm-btn-cancel-sec" id="cancelCmt"></p></form></div></div></div><div id="cmtSect"><div class="comment"><div class="dw-icomment-container"><table class="dw-icomment-body" cellpadding="0" cellspacing="0" width="100%"><tbody><tr><td><p>快来添加第一条评论</p></td></tr></tbody></table></div></div></div><div id="paging"><p><a id="lastCmts" class="dw-icomment-link" style="display: none; ">显示最新的 5 条评论</a><span id="cmtDivider" style="display: none; "> <span class="dw-bar">|</span> </span><a id="nextCmts" class="dw-icomment-link" style="display: none; ">显示后 5 条评论</a><span id="cmtDivider2" style="display: none; "> <span class="dw-bar">|</span> </span><a id="viewAllCmts" class="dw-icomment-link" style="display: none; ">显示所有评论</a></p></div><p><a class="loginLk" style="display: none; " href="http://www.ibm.com/developerworks/dwwi/DWAuthRouter?m=loginpage&lang=zh_CN&d=http%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fcluster%2Flvs%2Fpart1%2F%23icomments">登录</a><a id="addCmtLk2" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#icomments">添加评论</a></p><div class="ibm-alternate-rule"><hr></div><div class="ibm-alternate-rule"><hr></div></div></div>
+    <script language="JavaScript" type="text/javascript">
+      // <![CDATA[
+jQuery('threadShow').insertComment('95%',5,'nCmts','icomments');
+// ]]>
+    </script>
+  </div>
+  <!-- INLINE_COMMENTS_END -->
+  
+
+  <p class="ibm-ind-link ibm-back-to-top"><a class="ibm-anchor-up-link" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#ibm-pcon">回页首</a></p>
+  <p><a href="http://www.ibm.com/developerworks/cn/ibm/trademarks/">商标</a> &nbsp;|&nbsp; <a href="http://www.ibm.com/developerworks/cn/mydw_terms/">My developerWorks 使用条款与条件</a></p>
+
+<!-- Overlays -->
+<!-- lk - pull in overlays from ww when required on cn -->
+  </div>
+<!-- MAIN_COLUMN_CONTAINER_END -->
+
+<!-- Rating_Meta_BEGIN -->
+<!--Rating_Meta_BEGIN--><div class="metavalue">static.content.url=http://www.ibm.com/developerworks/js/artrating/</div><div class="metavalue">SITE_ID=10</div><div class="metavalue">Zone=Linux</div><div class="metavalue">ArticleID=21783</div><div class="metavalue">ArticleTitle=Linux服务器集群系统(一)</div><div class="metavalue">publish-date=04102002</div><div class="metavalue">author1-email=wensong@linux-vs.org</div><div class="metavalue">author1-email-cc=wensong@linux-vs.org</div><script language="javascript" type="text/javascript">document.write('<div class="metavalue">url='+location.href.replace('<', '%3C')+'</div>');</script><div class="metavalue">url=http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/</div><!--Rating_Meta_END-->
+<!-- Rating_Meta_END -->
+
+</div>
+<!-- MAIN_COLUMN_END-->
+
+<!-- RIGHT_COLUMN_BEGIN -->
+<div id="ibm-content-sidebar">
+
+<!-- RIGHT_COLUMN_CONTENT_BEGIN --> 
+<div class="ibm-container"><h2>内容</h2><div class="ibm-container-body"><img alt="" height="1" width="1" src="./Linux服务器集群系统(一)_files/c(1).gif"><ul class="ibm-bullet-list"><li><a class="ibm-feature-link" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#1">背景</a></li><li><a class="ibm-feature-link" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#2">服务器集群系统</a></li><li><a class="ibm-feature-link" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#3">Linux Virtual Server项目</a></li><li><a class="ibm-feature-link" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#4">LVS集群的特点</a></li><li><a class="ibm-feature-link" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#5">LVS集群的应用</a></li><li><a class="ibm-feature-link" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#6">LVS项目的开发进展与感触</a></li><li><a class="ibm-feature-link" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#7">LVS项目的网络资源</a></li><li><a class="ibm-feature-link" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#resources">参考资料 </a></li><li><a class="ibm-feature-link" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#author">关于作者</a></li><li><a class="ibm-feature-link" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#icomments">建议</a></li></ul></div></div>
+
+ 
+
+<!-- Tagging_Start -->
+<div id="dw-tag-cloud-container" class="ibm-container dw-hidetag"><h2>标签</h2>
+<div id="dw-tag-help"><a class="dwauthor" rel="#tagtip" id="dwtagtip"><img alt="Help" height="16" width="16" align="top" src="./Linux服务器集群系统(一)_files/help_icon.gif"></a></div>
+<div id="tagtip" class="dwauthor-onload-state ibm-no-print" style="display: none; ">使用 <strong>搜索</strong> 文本框在 My developerWorks 中查找包含该标签的所有内容。<p>使用 <strong>滑动条</strong> 调节标签的数量。</p><p><strong>热门标签</strong> 显示了特定专区最受欢迎的标签（例如 Java technology，Linux，WebSphere）。</p><p><strong>我的标签&lt; /strong&gt; 显示了特定专区您标记的标签（例如 Java technology，Linux，WebSphere）。</strong></p></div><strong>
+<div class="ibm-access">使用搜索文本框在 My developerWorks 中查找包含该标签的所有内容。<em>热门标签</em> 显示了特定专区最受欢迎的标签（例如 Java technology，Linux，WebSphere）。<em>我的标签</em> 显示了特定专区您标记的标签（例如 Java technology，Linux，WebSphere）。</div>
+<div class="ibm-container-body">
+<div class="dw-tag-search"><form action="http://www.ibm.com/developerworks/mydeveloperworks/bookmarks/html" method="get" id="actualtagform" onsubmit="popupform(this, &#39;join&#39;)">
+<p><label for="tagfield"><strong>搜索所有标签</strong></label>
+<input type="hidden" name="lang" value="zh">
+<input id="tagfield" name="tag" type="text" maxlength="20" size="17">&nbsp;<input src="./Linux服务器集群系统(一)_files/short-btn.gif" type="image" class="ibm-btn-view" alt="submit search" title="提交搜索" value="Search"></p></form></div>
+<div class="ibm-rule"><hr></div>
+<div id="dw-tag-select">
+<div id="dw-tag-select-popular"><p><strong>热门文章标签</strong>&nbsp;|&nbsp;<br><a id="a-my" href="javascript:;">我的文章标签</a><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#dw-tag-access" class="ibm-access">跳转到标签列表</a></p></div>
+<div id="dw-tag-select-my" class="dw-hidetag"><p><a id="a-popular" href="javascript:;">热门文章标签</a>&nbsp;|&nbsp;<br><strong>我的文章标签</strong></p><a href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#dw-tag-access" class="ibm-access">跳转到标签列表</a></div>
+<div id="dw-tag-cloud"></div>  
+</div>   
+</div>
+</strong></div><strong>
+<!-- Tagging_End -->
+
+<!-- Dig_Deeper -->
+
+<!-- High_Visibility_Offer -->
+
+<!-- Special_Offers -->
+
+<!-- RIGHT_COLUMN_CONTENT_END -->
+
+</strong></div><strong>
+<!-- RIGHT_COLUMN_END -->
+
+<!-- CONTENT_BODY_END -->
+</strong></div><strong>
+
+</strong></div><strong>
+<!-- CONTENT_END -->
+
+ <!-- END_IBM-PCON -->
+</strong></div><strong>
+
+<!-- FOOTER_BEGIN -->
+<div id="ibm-page-tools">
+<!-- IBM page tools container -->
+</div>
+<div id="ibm-footer">
+<ul>
+<li class="ibm-first"><a href="http://www.ibm.com/ibm/cn/zh/">关于IBM</a></li>
+<li><a href="http://www.ibm.com/privacy/cn/zh/">隐私条约</a></li>
+<li><a href="http://www.ibm.com/contact/cn/zh/">联系IBM</a></li>
+<li><a href="http://www.ibm.com/legal/cn/zh/">使用条款</a></li>
+<li><a href="http://www.ibm.com/ibm/syndication/cn/zh/">IBM RSS 可定制阅读服务</a></li><li><a href="http://www.ibm.com/employment/cn/">求才启事</a></li></ul>
+<div id="ibm-social-tools"><ul><li><a class="ibm-share-print" title="打印本页面" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" rel="print"></a></li><li><a class="ibm-share-email" title="用电子邮件发送本页面" href="http://www.ibm.com/developerworks/cn/linux/cluster/lvs/part1/#" rel="email"></a></li></ul></div></div>
+<!-- FOOTER_END -->
+
+ <!-- END_IBM-TOP -->
+</strong><div id="ibm-overlay-top"></div></div><strong>
+ 
+ <!-- SCRIPTS_INCLUDE_BEGIN -->
+<!-- JQuery start -->
+<script type="text/javascript" language="JavaScript" src="./Linux服务器集群系统(一)_files/jquery.dimensions-1.2.js"></script>
+<script type="text/javascript" language="JavaScript" src="./Linux服务器集群系统(一)_files/jquery.hoverIntent.minified.js"></script>
+<script type="text/javascript" language="JavaScript" src="./Linux服务器集群系统(一)_files/jquery.cluetip.js"></script>
+<script type="text/javascript" language="JavaScript">
+	jQuery.noConflict();     
+	// Put all your code in your document ready area
+	jQuery(document).ready(function(jQuery) {
+	// Do jQuery stuff using jQuery 
+	jQuery('a.dwauthor').cluetip({
+		local: true,
+		showTitle: false,
+		positionBy: 'bottomTop',
+		sticky: true,	
+		mouseOutClose: true,
+		closeText: '<img src="//dw1.s81c.com/developerworks/js/jquery/cluetip98/i/x.gif" alt="Close" />',
+		arrows: false,
+		dropShadow: true,
+		cluetipClass: 'dwbasic'
+		});   	
+	});
+ </script>
+ <!-- JQuery end --><!-- BEGIN: Use this section to set page specific variables for the Unica Page Tag -->
+<script language="JavaScript">var NTPT_PGEXTRA="ibmSkillLevel=1&ibmAdoptPhase=667&ibmRole=710";</script>
+<!--END --><!-- SCRIPTS_INCLUDE_END -->
+
+<div id="ibm-metrics">
+<script src="./Linux服务器集群系统(一)_files/stats.js" type="text/javascript">//</script>
+</div>
+
+
+
+</strong><div id="cluetip-waitimage" style="position: absolute; z-index: 95; display: none; "></div><div id="cluetip" style="display: none; position: absolute; z-index: 96; "><div style="z-index: 95; opacity: 0.1; top: 1px; left: 1px; position: absolute; background-color: rgb(0, 0, 0); "></div><div style="z-index: 94; opacity: 0.1; top: 2px; left: 2px; position: absolute; background-color: rgb(0, 0, 0); "></div><div style="z-index: 93; opacity: 0.1; top: 3px; left: 3px; position: absolute; background-color: rgb(0, 0, 0); "></div><div style="z-index: 92; opacity: 0.1; top: 4px; left: 4px; position: absolute; background-color: rgb(0, 0, 0); "></div><div style="z-index: 91; opacity: 0.1; top: 5px; left: 5px; position: absolute; background-color: rgb(0, 0, 0); "></div><div style="z-index: 90; opacity: 0.1; top: 6px; left: 6px; position: absolute; background-color: rgb(0, 0, 0); "></div><div id="cluetip-outer" style="position: relative; z-index: 97; "><h3 id="cluetip-title"></h3><div id="cluetip-inner"></div></div><div id="cluetip-extra"></div><div id="cluetip-arrows" class="cluetip-arrows" style="z-index: 97; "></div></div></body></html>
