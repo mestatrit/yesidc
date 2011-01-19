@@ -1,0 +1,42 @@
+Here is script that I’ve created to make a logical backup of the entire database every day
+
+######################### START OF SCRIPT #########################
+
+#!/bin/bash
+#Backup script by Cédric Sougné.
+ORACLE_BASE=/opt/oracle
+ORACLE_HOME=$ORACLE_BASE/product/db10g
+ORACLE_SID=<yoursid>
+PATH=$PATH:$HOME/bin:$ORACLE_HOME/bin
+export ORACLE_BASE ORACLE_HOME PATH ORACLE_SID
+
+ADMIN_EMAIL= »<yourdbamail> »
+LOGFILE=$ORACLE_BASE/admin/$ORACLE_SID/backup_logs/expdp-`date +%d%m%y%H%M%S`.log
+
+EXPORT_PATH=/opt/oracle/export_backup
+DMP_FILE= »expdp-`date + »%d%m%Y_%H%M%S »`.dmp »
+LOG_FILE= »expdp-`date + »%d%m%Y_%H%M%S »`.log »
+
+echo « Starting … » > $LOGFILE
+expdp \’sys/<yousyspassword> as sysdba\’ FULL=y DIRECTORY=EXPORT_BACKUP_DIR DUMPFILE=$DMP_FILE LOGFILE=$LOG_FILE
+#expdp mrmrs/mrmrs TABLES=resident,sejour DIRECTORY=EXPORT_BACKUP_DIR DUMPFILE=$DMP_FILE LOGFILE=$LOG_FILE
+cat $EXPORT_PATH/$LOG_FILE >> $LOGFILE
+echo « Backup Completed. » >> $LOGFILE
+
+echo « gzipping … » >> $LOGFILE
+gzip $EXPORT_PATH/$DMP_FILE >> $LOGFILE
+echo « gzipping Completed. » >> $LOGFILE
+
+echo « Deleting old files » >> $LOGFILE
+find $EXPORT_PATH -type f -mtime +31 | xargs rm >> $LOGFILE
+echo « Delete Completed » >> $LOGFILE
+
+cat $LOGFILE | mail -s « expdp-`date + »%d%m%Y_%T »` » $ADMIN_EMAIL
+
+######################### END OF SCRIPT #########################
+
+here is for the cron tab:
+
+00 22 * * * /opt/oracle/admin/acisora1/scripts/export_backup.sh >> /dev/null
+
+the script will be executed avery at 10 pm

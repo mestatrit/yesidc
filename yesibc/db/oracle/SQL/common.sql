@@ -322,7 +322,8 @@ AND S.KSUSEPRO = P.ADDR -- AND SUBSTR(G.K2GTITID_ORA, 1, 35) = 'XREP.1e55ca62.77
 ORDER BY WAITING, STATUS       
 
 25.导出所有的包
-set serveroutput on;
+set serveroutput on size 1000000;
+--exec dbms_output.enable(999999999999999999999);
 set heading off;
 set pagesize 0;
 set feedback off;
@@ -346,3 +347,33 @@ end;
 spool off;
 @srcipt.sql
 exit;
+
+26.导出表结构
+set serveroutput on;
+set long 999999;
+set feedback off;
+spool temp.sql;
+SELECT DBMS_METADATA.GET_DDL('TABLE',table_name)  FROM USER_TABLES;
+spool off;
+
+
+27.查看表所占用的空间大小
+1)查看表所占空间
+SELECT   TABLESPACE_NAME,TO_CHAR(SUM(BYTES)/(1024*1024),'999G999D999')   CNT_MB   
+  FROM   DBA_EXTENTS   
+  WHERE   OWNER='&OWNER'   AND   SEGMENT_NAME='&TABLE_NAME'   AND   SEGMENT_TYPE   LIKE   'TABLE%'   
+  GROUP   BY   TABLESPACE_NAME;   
+2)/*---------------------------------------------------------------------------------------*/  
+有两种含义的表大小。一种是分配给一个表的物理空间数量，而不管空间是否被使用。可以这样查询获得字节数：
+select segment_name, bytes 
+from user_segments 
+where segment_type = 'TABLE'; 
+或者
+   Select Segment_Name,Sum(bytes)/1024/1024 From User_Extents Group By Segment_Name
+另一种表实际使用的空间。这样查询：
+analyze table emp compute statistics; 
+select num_rows * avg_row_len 
+from user_tables 
+where table_name = 'EMP';
+查看每个表空间的大小
+Select Tablespace_Name,Sum(bytes)/1024/1024 From Dba_Segments Group By Tablespace_Name 
