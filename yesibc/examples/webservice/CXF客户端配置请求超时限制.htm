@@ -1,0 +1,488 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">  
+  <head>    
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />    
+    <title>CXF客户端配置请求超时限制 - AJava     
+    </title>    
+    <meta name="keywords" content="CXF客户端,请求超时限制" />    
+    <meta name="description" content="在使用WebService时，我们通常都会在客户端中设置请求超时的限制，以避免长时间的去连接不可用的服务器。在CXF的环境下，客户端可通过两个属性配置超时限制： ConnectionTimeout - WebService以TCP连接为基础,这个属性可以理解为TCP握手时的时间设置,超过设" />
+    <link rel="stylesheet" type="text/css" href="/templets/style/ajava.css">
+<script language="javascript" type="text/javascript" src="/include/dedeajax2.js"></script>
+<script src="/plus/count.php?aid=16514&mid=1" language="javascript"></script>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+var replyid='';
+function submitComment(){
+	if(document.getElementById('msg').value!=''){
+		var taget_obj = document.getElementById('NewComment');
+		var h=taget_obj.innerHTML;
+		var myajax = new DedeAjax(taget_obj,true,false,'','','');
+		if(replyid!=''){//回复
+			myajax.SendPost2("/plus/feedback.php?action=send&comtype=reply&fid="+replyid+"&isconfirm=yes&msg="+document.getElementById('msg').value);
+		}else{//发表
+			myajax.SendPost2("/plus/feedback.php?action=send&comtype=comments&aid=16514&isconfirm=yes&msg="+document.getElementById('msg').value);
+		}
+	  DedeXHTTP = null;
+	  if(document.getElementById('NewComment').innerHTML=='成功'){
+		loadNewComment();
+		document.getElementById('tishi').innerHTML='<span class=GreenColor>您的评论已经发表，感谢您的参与。</span>';
+	  }else{
+		document.getElementById('tishi').innerHTML='<span class=RedColor>'+taget_obj.innerHTML+'</span>';
+		taget_obj.innerHTML=h;
+	  }
+	}else{
+		alert("评论内容不能为空！");
+	}
+}
+function cancelReply(){
+	replyid='';
+	document.getElementById('tishi').innerHTML='请不要发表和本页内容无关的言论。';
+}
+function reply(id){
+	replyid=id;
+	var replyUser=document.getElementById('user'+replyid).innerHTML;
+	document.getElementById('tishi').innerHTML='<span class=GreenColor>你正在回复<b>'+replyUser+'</b>的评论。</span><a href="###" onclick="cancelReply()"><u>取消回复</u></a>';
+	document.getElementById('msg').focus();
+}
+function loadNewComment(){
+	var taget_obj = document.getElementById('NewComment');
+	var myajax = new DedeAjax(taget_obj,false,false,'','','');
+	myajax.SendPost2("/plus/feedback_js.php?aid=16514");
+	DedeXHTTP = null;
+}
+function postBadGood(ftype,fid)
+	{
+		var taget_obj = document.getElementById(ftype+fid);
+		var saveid = GetCookie('badgoodid');
+		if(saveid != null)
+		{
+			 var saveids = saveid.split(',');
+			 var hasid = false;
+			 saveid = '';
+			 j = 1;
+			 for(i=saveids.length-1;i>=0;i--)
+			 {
+			 	  if(saveids[i]==fid && hasid) continue;
+			 	  else {
+			 	  	if(saveids[i]==fid && !hasid) hasid = true;
+			 	  	saveid += (saveid=='' ? saveids[i] : ','+saveids[i]);
+			 	  	j++;
+			 	  	if(j==10 && hasid) break;
+			 	  	if(j==9 && !hasid) break;
+			 	  }
+			 }
+	     if(hasid) { alert('您刚才已表决过了喔！'); return false;}
+	     else saveid += ','+fid;
+			 SetCookie('badgoodid',saveid,1);
+		}
+		else
+		{
+			SetCookie('badgoodid',fid,1);
+		}
+		//document.write("feedback.php?action="+ftype+"&fid="+fid);
+		//return;
+	  myajax = new DedeAjax(taget_obj,false,false,'','','');
+	  myajax.SendGet2("/plus/feedback.php?aid="+fid+"&action="+ftype+"&fid="+fid);
+	  DedeXHTTP = null;
+	}
+//-->
+</SCRIPT>  
+  </head>  
+  <body><!--导航布局-->
+<div class='BodyDiv'>	
+  <div class='LogoDiv'>		
+    <div class='logo'>
+      <a href='http://ajava.org'>
+        <img src='/templets/images/logo.gif'  alt='AJava' /></a>
+    </div>		
+    <div class='text'>一个Java门户!
+    </div>	
+  </div>	
+  <div class='MenuDiv'>		
+    <div class='menu'>					
+      <div class='text'>
+        <a href='/book'>文档书籍</a>&nbsp;&nbsp;|
+      </div>		
+    </div>		
+    <div class='menu'>					
+      <div class='text'>
+        <a href='/tool'>软件工具</a>&nbsp;&nbsp;|
+      </div>		
+    </div>		
+    <div class='menu'>				
+      <div class='text'>
+        <a href='/online'>在线文档</a>&nbsp;&nbsp;|
+      </div>		
+    </div>		
+    <div class='menu'>					
+      <div class='text'>
+        <a href='/course'>技术教程</a>&nbsp;&nbsp;|
+      </div>		
+    </div>		
+    <div class='menu'>				
+      <div class='text'>
+        <a href='/hot'>开发热点</a>&nbsp;&nbsp;|
+      </div>		
+    </div>		
+    <div class='menu'>					
+      <div class='text'>
+        <a href='/video'>视频教程</a>&nbsp;&nbsp;&nbsp;
+      </div>		
+    </div>		
+    <div class='menu'>					
+      <div class='text'>
+        <a href='/code'>源码实例</a>&nbsp;&nbsp;|
+      </div>		
+    </div>		
+    <div class='menu'>						
+      <div class='text'>
+        <a href='/readbook'>我爱读书</a>&nbsp;&nbsp;|
+      </div>		
+    </div>		
+    <div class='menu'>					
+      <div class='text'>
+        <a href='/opens'>开源技术</a>&nbsp;&nbsp;|
+      </div>		
+    </div>	
+	<div class='menu'>					
+      <div class='text'>
+        <a href='/exep'>错误处理</a>&nbsp;&nbsp;|
+      </div>		
+    </div>	
+	<div class='menu'>					
+      <div class='text'>
+        <a href='/qzzp'>求职招聘</a>&nbsp;&nbsp;|
+      </div>		
+    </div>	
+    <div class='menu'>				
+      <div class='text'>
+		<a href='http://ask.ajava.org'>技术论坛</a>&nbsp;&nbsp;&nbsp;
+      </div>		
+    </div>	
+
+  </div>
+
+  <div class='MenuDiv2'>
+ 
+  </div>
+
+</div>
+
+<div class='BodyDiv'><div class='a1'><script language="javascript" type="text/javascript" src="/ad/A1.js"></script></div><div class='a2'><script language="javascript" type="text/javascript" src="/ad/A2.js"></script></div><div class='a3'><script language="javascript" type="text/javascript" src="/ad/A3.js"></script></div></div>
+</div>
+<div class='Space'>
+</div>     
+    <div class='BodyDiv Left'><strong>当前位置:</strong> <a href='http://ajava.org/'>AJava主页</a> > <a href='/course/index.html'>技术教程</a> > <a href='/course/open/index.html'>开源技术</a> >      
+    </div>    
+    <div class='Space'>    
+    </div>    
+    <div class='BodyDiv'>	<div class='LeftDiv'>	   
+  <dl>		     
+    <dt>资源搜索     
+    </dt>		     
+    <dd class='Center'>      
+      <form action="/plus/search.php" name="formsearch" target="_blank">		         
+        <input type="hidden" name="kwtype" value="1"/>		         
+        <input name="keyword" id="keyword" type="text" size='18'/>		         
+        <input type="hidden" name="searchtype" id="searchtype" value="titlekeyword">		         
+        <input type="submit" value="搜索一下" />		       
+      </form>		     
+    </dd>	   
+  </dl>  
+  <dl><script language="javascript" type="text/javascript" src="/ad/A_Member.js"></script>		
+  </dl>
+  <dl><script language="javascript" type="text/javascript" src="/ad/A5.js"></script>		         
+  </dl>	   
+  <dl>				     
+    <dt>技术交流QQ群-欢迎你加入     
+    </dt>				<script language="javascript" type="text/javascript" src="/ad/QQ.js"></script> 		   
+  </dl>		   
+  <dl>				     
+    <dt>技术交流MSN群-欢迎你加入     
+    </dt>				<script language="javascript" type="text/javascript" src="/ad/MSN.js"></script> 		   
+  </dl>	   
+  <dl>		     
+    <dt>栏目分类     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/jsp/index.html'>JSP/Servlet</a>		     
+    </dt>		<dt class='leftdt2'> <a href='/course/open/index.html'>>&nbsp;开源技术</a> </dt> 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/java/index.html'>Java基础</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/tool/index.html'>软件工具</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/gui/index.html'>图形相关</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/server/index.html'>服务器</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/net/index.html'>网络编程</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/j2me/index.html'>手机编程</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/mysql/index.html'>MYSQL</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/mssql/index.html'>MSSQL</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/oracle/index.html'>Oracle</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/database/index.html'>数据库</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/kfmoshi/index.html'>开发模式</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/design/index.html'>设计模式</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/safe/index.html'>安全管理</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/xml/index.html'>XML</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/html/index.html'>HTML</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/css/index.html'>CSS</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/javascript/index.html'>JavaScript</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/ajax/index.html'>AJAX</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/javarzks/index.html'>Java认证考试</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/SOA/index.html'>SOA/ESB/JMS</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/uml/index.html'>UML</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/manage/index.html'>项目管理</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/ejb/index.html'>EJB</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/test/index.html'>软件测试</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/flex/index.html'>Flex</a>		     
+    </dt>		 		     
+    <dt  class='leftdt'>			       
+      <a href='/course/other/index.html'>其他</a>		     
+    </dt>		 	   
+  </dl>	   
+  <dl>		     
+    <dt>本类排行     
+    </dt>		<dd class='OneRow'>			       
+      <a href="/course/open/12486.html" title='图解SSH框架配置步骤'>图解SSH框架配置步骤</a>		     
+    </dd>
+<dd class='OneRow'>			       
+      <a href="/course/open/9131.html" title='Gwt-ext的简介、安装、开发和部署'>Gwt-ext的简介、安装、开发和部署</a>		     
+    </dd>
+<dd class='OneRow'>			       
+      <a href="/course/open/17811.html" title='jbpm 4.3 与 spring 集成 '>jbpm 4.3 与 spring 集成 </a>		     
+    </dd>
+<dd class='OneRow'>			       
+      <a href="/course/open/13846.html" title='struts 标签logic:iterate用法详解'>struts 标签logic:iterate用法详解</a>		     
+    </dd>
+<dd class='OneRow'>			       
+      <a href="/course/open/14248.html" title='eclipse中开发android例子'>eclipse中开发android例子</a>		     
+    </dd>
+<dd class='OneRow'>			       
+      <a href="/course/open/16827.html" title='Struts2使用之Action注解配置'>Struts2使用之Action注解配置</a>		     
+    </dd>
+<dd class='OneRow'>			       
+      <a href="/course/open/17076.html" title='struts2标签库struts-tags.tld的使用'>struts2标签库struts-tags.tld的使用</a>		     
+    </dd>
+<dd class='OneRow'>			       
+      <a href="/course/open/17629.html" title='HibernateDaoSupport类的使用'>HibernateDaoSupport类的使用</a>		     
+    </dd>
+<dd class='OneRow'>			       
+      <a href="/course/open/15990.html" title='log4j.xml配置方法详解'>log4j.xml配置方法详解</a>		     
+    </dd>
+<dd class='OneRow'>			       
+      <a href="/course/open/12481.html" title='HQL查询及语法'>HQL查询及语法</a>		     
+    </dd>
+ 	   
+  </dl>	   
+  <dl>		     
+    <dt>本类推荐     
+    </dt>		</a>    
+    </dd>	   
+  </dl>
+</div>	 	       
+      <div class='RightDiv'>	         
+        <div class='AdjustableDiv'>		           
+          <dl>			             
+            <dt class='Center'>CXF客户端配置请求超时限制             
+            </dt>			             
+            <dd class='Center'>              
+              <div class='Space'>时间：2009-10-26 23:07&#160;&#160;&#160;&#160;来源：未知&#160;&#160;&#160;&#160;作者：Chris.Cui               
+              </div>            
+            </dd>			             
+            <dd><div class='SC'>
+
+<a href="JavaScript:d=document;t=d.selection?(d.selection.type!='None'?d.selection.createRange().text:''):(d.getSelection?d.getSelection():'');void(saveit=window.open('http://wz.csdn.net/storeit.aspx?t='+escape(d.title)+'&u='+escape(d.location.href)+'&c='+escape(t),'saveit','scrollbars=no,width=590,height=300,left=75,top=20,status=no,resizable=yes'));saveit.focus();" ><font color='crimson'>CSDN</font></a>
+
+<a href=javascript:window.external.AddFavorite(location.href+'#sc','★'+document.title)><font color='blue'>IE</font></a>
+
+<a href="javascript:window.open('http://shuqian.qq.com/post?from=3&title='+encodeURIComponent(document.title)+'&uri='+encodeURIComponent(document.location.href)+'&jumpback=2&noui=1','favit','width=930,height=470,left=50,top=50,toolbar=no,menubar=no,location=no,scrollbars=yes,status=yes,resizable=yes');void(0)" ><font color='darkorange'>QQ</font></a>
+
+<a href="javascript:window.open('http://cang.baidu.com/do/add?it='+encodeURIComponent(document.title.substring(0,76))+'&iu='+encodeURIComponent(location.href)+'&fr=ien#nw=1','_blank','scrollbars=no,width=600,height=450,left=75,top=20,status=no,resizable=yes'); void 0" ><font color='mediumblue'>百度</font></a>
+
+<a href="javascript:q=(document.location.href);void(open('http://www.digbuzz.com/submit.php?url='+encodeURIComponent(q),'',''));"><font color='mediumpurple'>我挖</font></a>
+
+<a href="javascript:window.open('http://www.google.com/bookmarks/mark?op=add&bkmk='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title));void(0)"><font color='darkblue'>Google</font></a>
+
+<a href="javascript:d=document;t=d.selection?(d.selection.type!='None'?d.selection.createRange().text:''):(d.getSelection?d.getSelection():'');void(keyit=window.open('http://my.poco.cn/fav/storeIt.php?t='+escape(d.title)+'&u='+escape(d.location.href)+'&c='+escape(t)+'&img=http://www.h-strong.com/blog/logo.gif','keyit','scrollbars=no,width=475,height=575,status=no,resizable=yes'));keyit.focus();" title="POCO网摘"><font color='yellowgreen'>POCO</font></a>
+
+<a href="javascript:window.open('http://myweb2.search.yahoo.com/myresults/bookmarklet?u='+encodeURIComponent(location.href)+'&t='+encodeURIComponent(document.title));void(0)" title="Yahoo书签"><font color='red'>Yahoo</font></a>
+
+<a href="javascript:d=document;t=d.selection?(d.selection.type!='None'?d.selection.createRange().text:''):(d.getSelection?d.getSelection():'');void(vivi=window.open('http://vivi.sina.com.cn/collect/icollect.php?pid=28&title='+escape(d.title)+'&url='+escape(d.location.href)+'&desc='+escape(t),'vivi','scrollbars=no,width=480,height=480,left=75,top=20,status=no,resizable=yes'));vivi.focus();" title="新浪ViVi"><font color='orangered'>新浪</font></a>
+
+<a href="javascript:d=document;t=d.selection?(d.selection.type!='None'?d.selection.createRange().text:''):(d.getSelection?d.getSelection():'');void(keyit=window.open('http://www.365key.com/storeit.aspx?t='+escape(d.title)+'&u='+escape(d.location.href)+'&c='+escape(t),'keyit','scrollbars=no,width=475,height=575,left=75,top=20,status=no,resizable=yes'));keyit.focus();" title="365Key网摘"><font color='chartreuse'>365Key</font></a>
+
+<a href="javascript:d=document;t=d.selection?(d.selection.type!='None'?d.selection.createRange().text:''):(d.getSelection?d.getSelection():'');void(yesky=window.open('http://hot.yesky.com/dp.aspx?t='+escape(d.title)+'&u='+escape(d.location.href)+'&c='+escape(t)+'&st=2','yesky','scrollbars=no,width=400,height=480,left=75,top=20,status=no,resizable=yes'));yesky.focus();" title="天极网摘"><font color='goldenrod'>天极</font></a>
+
+<A href="javascript:t=document.title;u=location.href;e=document.selection?(document.selection.type!='None'?document.selection.createRange().text:''):(document.getSelection?document.getSelection():'');void(open('http://bookmark.hexun.com/post.aspx?title='+escape(t)+'&url='+escape(u)+'&excerpt='+escape(e),'HexunBookmark','scrollbars=no,width=600,height=450,left=80,top=80,status=no,resizable=yes'));" title="和讯网摘"><font color='cornflowerblue'>和讯</font></A>
+
+<a href="javascript:d=document;t=d.selection?(d.selection.type!='None'?d.selection.createRange().text:''):(d.getSelection?d.getSelection():'');void(blog=window.open('http://www5.bolaa.com/CommendBlog/SmallLogin.aspx?title='+escape(d.title)+'&newspath='+escape(d.location.href)+'&subtitle='+escape(t),'bolaa','width=400px,height=400px'));blog.focus();"><font color='lightsteelblue'>博拉</font></a>
+
+<a href="javascript:d=document;t=d.selection?(d.selection.type!='None'?d.selection.createRange().text:''):(d.getSelection?d.getSelection():'');void(live=window.open('https://favorites.live.com/quickadd.aspx?marklet=1&mkt=en-us&url='+escape(d.location.href)+'&title='+escape(d.title)+'&top=1','live','scrollbars=no,status=no,resizable=yes'));live.focus();"><font color='limegreen'>Live</font></a>
+
+<a title="推荐到diglog" href="javascript://" onclick="javascript:d=document;t=d.selection?(d.selection.type!='None'?d.selection.createRange().text:''):(d.getSelection?d.getSelection():'');void(keyit=window.open('http://www.diglog.com/submit.aspx?title='+escape(d.title)+'&url='+escape(d.location.href)+'&description='+escape(t),'keyit','resizable,location,menubar,toolbar,scrollbars,status'));keyit.focus();"><font color='indianred'>奇客</font></a>
+
+<a href="javascript:window.open('http://www.xianguo.com/service/submitfav/?link='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title));void(0)"><font color='yellowgreen'>鲜果</font></a>
+
+<a target="_blank" href="http://www.shouker.com/" onClick="javascript:var js=document.createElement('script');if(typeof(js)!='object')js=document.standardCreateElement('script');js.type='text/javascript';js.src='http://www.shouker.com/js/capageb.js';document.getElementsByTagName('html')[0].appendChild(js);return false;"><font color='firebrick'>收客</font></a>
+
+<a href="javascript:var d=document,w=window,f='http://fanfou.com/share',l=d.location,e=encodeURIComponent,p='?u='+e(l.href)+'&t='+e(d.title)+'&d='+e(w.getSelection?w.getSelection().toString():d.getSelection?d.getSelection():d.selection.createRange().text)+'&s=bm';a=function(){if(!w.open(f+'r'+p,'sharer','toolbar=0,status=0,resizable=0,width=600,height=400'))l.href=f+'.new'+p};if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else{a()}void(0)"><font color='darksalmon'>饭否</font></a>
+
+<a href="javascript:var d=document,w=window,f='http://jiwai.de/wo/share/s',l=d.location,e=encodeURIComponent,p='?u='+e(l.href)+'&t='+e(d.title)+'&d='+e(w.getSelection?w.getSelection().toString():d.getSelection?d.getSelection():d.selection.createRange().text);a=function(){if(!w.open(f+p,'sharer','toolbar=0,status=0,resizable=0,width=540,height=310'))l.href=f+'.new'+p};if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else{a()}void(0)"><font color='dodgerblue'>叽歪</font></a>
+
+<a href="javascript:q=(document.location.href);void(open('http://www.waakee.com/submit.php?url='+encodeURIComponent(q),'',''));"><font color='slateblue'>挖客</font></a>
+
+</div>             
+            </dd>			             
+            <dd>              
+              <div class='Description'>核心提示：在使用WebService时，我们通常都会在客户端中设置请求超时的限制，以避免长时间的去连接不可用的服务器。在CXF的环境下，客户端可通过两个属性配置超时限制： ConnectionTimeout - WebService以TCP连接为基础,这个属性可以理解为TCP握手时的时间设置,超过设               
+              </div>            
+            </dd>			             
+            <dd class='ArticleContent'>&nbsp; 在使用WebService时，我们通常都会在客户端中设置请求超时的限制，以避免长时间的去连接不可用的服务器。在CXF的环境下，客户端可通过两个属性配置超时限制：<br />
+<ul>
+    <li>ConnectionTimeout - WebService以TCP连接为基础,这个属性可以理解为TCP握手时的时间设置,超过设置的时间就认为是连接超时.以毫秒为单位,默认是30000毫秒,即30秒。 </li>
+</ul>
+<ul>
+    <li>ReceiveTimeout - 这个属性是发送WebService的请求后等待响应的时间,超过设置的时长就认为是响应超时.以毫秒为单位,默认是60000毫秒,即60秒. </li>
+</ul>
+&nbsp;&nbsp; 这里可通过两种方式对客户端进行配置：<br />&nbsp;&nbsp; 一、在spring的配置文件中进行设置。<br />
+<div>
+<div class="dp-highlighter">
+<div class="bar"></div>
+<ol class="dp-xml">
+    <li class="alt"><span><span class="tag">&lt;?</span><span class="tag-name">xml</span><span>&nbsp;</span><span class="attribute">version</span><span>=</span><span class="attribute-value">&quot;1.0&quot;</span><span>&nbsp;</span><span class="attribute">encoding</span><span>=</span><span class="attribute-value">&quot;UTF-8&quot;</span><span class="tag">?&gt;</span><span>&nbsp;&nbsp; &nbsp;&nbsp;</span></span></li>
+    <li class=""><span>&nbsp;&nbsp;&nbsp;</span><span class="tag">&lt;</span><span class="tag-name">beans</span><span>&nbsp;</span><span class="attribute">xmlns</span><span>=</span><span class="attribute-value">&quot;http://www.springframework.org/schema/beans&quot;</span><span>&nbsp;&nbsp; &nbsp;&nbsp;</span></li>
+    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="attribute">xmlns:xsi</span><span>=</span><span class="attribute-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span>&nbsp;&nbsp; &nbsp;&nbsp;</span></li>
+    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="attribute">xmlns:jee</span><span>=</span><span class="attribute-value">&quot;http://www.springframework.org/schema/jee&quot;</span><span>&nbsp;&nbsp; &nbsp;&nbsp;</span></li>
+    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="attribute">xmlns:jaxws</span><span>=</span><span class="attribute-value">&quot;http://cxf.apache.org/jaxws&quot;</span><span>&nbsp;&nbsp; &nbsp;&nbsp;</span></li>
+    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="attribute">xmlns:http-conf</span><span>=</span><span class="attribute-value">&quot;http://cxf.apache.org/transports/http/configuration&quot;</span><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;</span></li>
+    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="attribute">xsi:schemaLocation</span><span>=&quot;http://www.springframework.org/schema/beans&nbsp; &nbsp;&nbsp;</span></li>
+    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://www.springframework.org/schema/beans/spring-beans-2.0.xsd&nbsp;&nbsp; &nbsp;&nbsp;</span></li>
+    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://www.springframework.org/schema/jee&nbsp; &nbsp;&nbsp;</span></li>
+    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://www.springframework.org/schema/jee/spring-jee-2.0.xsd&nbsp;&nbsp; &nbsp;&nbsp;</span></li>
+    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://cxf.apache.org/jaxws&nbsp;http://cxf.apache.org/schemas/jaxws.xsd&nbsp;&nbsp; &nbsp;&nbsp;</span></li>
+    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://cxf.apache.org/transports/http/configuration&nbsp; &nbsp;&nbsp;</span></li>
+    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://cxf.apache.org/schemas/configuration/http-conf.xsd&nbsp;&quot;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp; &nbsp;&nbsp;</span></li>
+    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="tag">&lt;</span><span class="tag-name">http-conf:conduit</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&quot;{WSDL&nbsp;Namespace}portName.http-conduit&quot;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;</span></li>
+    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="tag">&lt;</span><span class="tag-name">http-conf:client</span><span>&nbsp;</span><span class="attribute">ConnectionTimeout</span><span>=</span><span class="attribute-value">&quot;10000&quot;</span><span>&nbsp;</span><span class="attribute">ReceiveTimeout</span><span>=</span><span class="attribute-value">&quot;20000&quot;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp; &nbsp;&nbsp;</span></li>
+    <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="tag">&lt;/</span><span class="tag-name">http-conf:conduit</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;</span></li>
+    <li class="alt"><span>&nbsp;&nbsp;&nbsp;</span><span class="tag">&lt;/</span><span class="tag-name">beans</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<link href="/include/FCKeditor/editor/plugins/highlighter/dp.SyntaxHighlighter/Styles/SyntaxHighlighter.css" type="text/css" rel="stylesheet" /></div>
+&nbsp;&nbsp; 这里需要注意的有几个地方: &nbsp;<br />&nbsp;&nbsp; 1、需要指定http-conf名称空间：xmlns:http-conf=http://cxf.apache.org/transports/http/configuration。<br />&nbsp;&nbsp; 2、指定模式位置: http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd。<br />&nbsp;&nbsp; 3、http-conf:conduit中的name属性,指定设置生效的服务。name属性由service的namespace、WSDL中的port name和&quot;.http-conduit&quot;组成，如{http://apache.org/hello_world}HelloWorld.http-conduit。如果将name属性设置为&ldquo;*.http-conduit&rdquo;，则会对所有服务生效。<br />&nbsp; &nbsp;<br />&nbsp;&nbsp; 二、通过java代码进行设置。<br />
+<div>
+<div class="dp-highlighter">
+<div class="bar"></div>
+<ol class="dp-j">
+    <li class="alt"><span><span>Client&nbsp;client&nbsp;=&nbsp;ClientProxy.getClient(port); &nbsp;&nbsp;</span></span></li>
+    <li class=""><span>HTTPConduit&nbsp;http&nbsp;=&nbsp;(HTTPConduit)&nbsp;client.getConduit(); &nbsp;&nbsp;</span></li>
+    <li class="alt"><span>HTTPClientPolicy&nbsp;httpClientPolicy&nbsp;=&nbsp;</span><span class="keyword">new</span><span>&nbsp;HTTPClientPolicy(); &nbsp;&nbsp;</span></li>
+    <li class=""><span>httpClientPolicy.setConnectionTimeout(</span><span class="number">36000</span><span>); &nbsp;&nbsp;</span></li>
+    <li class="alt"><span>httpClientPolicy.setAllowChunking(</span><span class="keyword">false</span><span>); &nbsp;&nbsp;</span></li>
+    <li class=""><span>httpClientPolicy.setReceiveTimeout(</span><span class="number">32000</span><span>); &nbsp;&nbsp;</span></li>
+    <li class="alt"><span>http.setClient(httpClientPolicy);&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+</div>
+另外，WSDL中的endpoint的地址不一定是有效的，为避免客户端请求使用该地址，我们在请求前应通过以下方式强行设置为可用的服务地址。<br />&nbsp; ((BindingProvider) port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,serviceUrl);<script language="javascript" type="text/javascript" src="/ad/A8.js"></script>             
+            </dd>                   
+            <dd> 
+              <div class='related'>看过此文的读者还看过：                 
+                <br/>			<a href='/course/open/16514.html'>CXF客户端配置请求超时限制</a>                 
+                <br/>
+               
+              </div>            
+            </dd>         			             
+            <dd id='powered'>            
+            </dd>       		           
+          </dl>	               		 		           
+          <dl>                 
+            <dd class='GreenColor'>上一篇：<a href='/course/open/16272.html'>spring tx:advice 和 aop:config 配置事务</a>              
+            </dd>                 
+            <dd class='GreenColor'>下一篇：<a href='/course/open/16568.html'>Wicket更改资源定位器 </a>              
+            </dd>                  
+          </dl>     	 		           
+          <dl>			             
+            <dt>最新评论             
+            </dt>			             
+            <dd class='Content' id='NewComment'>看完了本页，要不要发表一下你的高论？ 			             
+            </dd>			             
+            <dd>请自觉遵守互联网相关的政策法规，严禁发布色情、暴力、反动的言论。             
+            </dd>			             
+            <dd id='tishi'>请不要发表和本页内容无关的言论。             
+            </dd>			             
+            <dd>
+<textarea cols="60" id="msg" name="msg" rows="5" ></textarea>              
+              <button type="button" onClick='submitComment()'>发表评论               
+              </button>			             
+            </dd>		           
+          </dl>		         
+        </div>	       
+      </div>    
+    </div>
+<SCRIPT LANGUAGE="JavaScript">
+	var source='未知';var writer='Chris.Cui';var powered='';
+	if(source=='AJava.org'){powered+='<img src="/images/ajava.gif"/>';};
+	if(writer=='道长A'){powered+='<img src="/images/dza.gif"/>';};
+	if(writer=='mark'){powered+='<img src="/images/mark.gif"/>';};
+	if(powered!=''){powered+='&#160;&#160;转载请以连接方式注明来自AJava.org';};
+	if(powered==''){powered='本文内容搜集于互联网，如有侵犯你的权利，请来信告知。';};
+	document.getElementById('powered').innerHTML=powered;
+	loadNewComment();
+</SCRIPT><div class='BottomDiv'>
+	<A HREF="http://ajava.org/we/667.html">联系我们</A> 如果你喜欢本站，请告诉你的朋友，或在你的博客上连接AJava，非常感谢！ <br>
+	Copyright &copy; 2004-2009 AJava.org 版权所有 粤ICP备08114841号
+</div>
+<div class='NoneDiv'>
+<script language="javascript" src="http://js.users.51.la/2456804.js"></script>
+<script language="JavaScript" src="http://s68.cnzz.com/stat.php?id=1212066&web_id=1212066"></script>
+</div>
+    
+  </body>
+</html>
