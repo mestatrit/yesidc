@@ -111,3 +111,60 @@ echo Long, long ago | cut -f 2,3 -d " "则输出" Long, ago"（截取以空格�
 
 #scp
 scp -r ./agence uat4@10.164.146.23:/app/apache/uat4/cat01/webapps 
+
+#变量
+表示方法  描述     
+$n  $1 表示第一个参数，$2 表示第二个参数 ...     
+$#  命令行参数的个数     
+$0  当前程序的名称     
+$?  前一个命令或函数的返回码     
+$*  以"参数1 参数2 ... " 形式保存所有参数     
+$@  以"参数1" "参数2" ... 形式保存所有参数     
+$$  本程序的(进程ID号)PID     
+$!  上一个命令的PID   
+
+#Unix操作系统下文件存取权限的修改
+　　无论是Linux或者Unix，二者中档案存取权限分为三级: 档案拥有者、群组、其他。利用 chmod 可以控制档案如何被他人所存取，并且也可以通过chmod命令来修改文件的存取权限，chmod具体命令的格式如下：
+　　格式1: chmod symbolic_mode file…
+　　格式2: chmod absolute_mode file…
+　　格式1：符号模式(symbolic_mode), 符号模式的命令格式如下：
+　　chmod [who] op permision file…
+　　who项表示用户类型，它的内容为以下一项或多项:
+　　u 文件属主(user --- owner)
+　　g 用户组(group)
+　　o 其他人(other)
+　　a 所有人(all)
+　　op项表示动作:
+　　+ 表示要加上permission指定的权利
+　　- 表示要取消permission指定的权利
+　　permission项为存取权限，它的内容为以下一项或多项：
+　　r 表示可读
+　　w 表示可写
+　　x 表示可执行
+　　例子：
+　　chmod u+w test report 属主对test和report文件“可写”
+　　chmod u-x abc.c 属主对abc.c文件不可执行
+　　chmod u+rwx myfile1 属主对myfile1“可读、可写、可执行”
+　　chmod ugo+rwx myfile2 任何人都对myfile1“可读、可写、可执行”
+　　格式2：绝对模式(absolute_mode), 符号模式的命令格式如下：
+　　chmod xyz file…
+　　x、y、z分别是0-7的数字，分别表示属主、用户组、其他人对该文件的存取权限。x、y、z的取值公式均为：
+　　a*4 + b*2 + c
+　　其中，
+　　a=1分别表示可读，a=0表示不可读;
+　　b=1分别表示可写，b=0表示不可写;
+　　c=1分别表示可执行，c=0表示不可执行;
+　　例子：
+　　chmod 751 ncp 属主对ncp拥有“可读、可写、可执行”的全部权利;组内成员对ncp只有“可读、可执行”的权利;其他用户对ncp只有“可执行”的权利。
+
+		set uid权限(SUID)：只能用在二进制文件(binary file)上，用在目录上无效，表示程序在执行的过程中能够暂时拥有该文件所有者的权限。
+		添加set uid权限的命令： chmod u+s 文件名
+		set gid权限(SGID)：当二进制件(binary file)被设置了此权限，则无论使用者是谁，在执行该文件时，他的有效群组将变为该文件的群组所有人。当目录被设置了此权限，就表明该目录下所创建的文件都是为目录所属组。
+		添加set gid权限的命令 ： chmod g+s 目录名
+		Sticky Bit权限(t权限)：目前只针对目录有效，对文件已经没效果了。它对目录的作用是：在具有SBit的目录下，使用者如果在该目录下具有w以及x的权限，则他在该目录下所创建的文件或目录，就只有他与root用户才有权力删除。即：在这样的权限内容下，任何人都可以在这样的目录下新增或修改文件，但只有该文件/目录创建者和root用户能够删除自己的目录或文件。换句话说，当甲这个用户对于A目录下是拥有group或other的项目，并且拥有w的权限，这表示甲对该目录内任何人建立的目录或文件进行“删除、更名以及搬移”等动作。但如果在A目录上设置了Sticky bit的权限时，则甲只能针对自己建立的文件或目录进行删除、更名、移动等操作。
+		添加t权限的命令： chmod o+t 目录名
+		我们都知道用数字来更改权限，且这些数字形态方式为三个数字的组合，如果在这三个数字前再加上一个数字的话，最前面的数字就代表上面的这几种属性了。
+		注： 4为SUID、 2为SGID、 1为Sticky bit。
+		例如：chmod 4755 testfile  (-rwsr-xr-x)
+		chmod 6755 testfile  (-rwsr-sr-x)
+		chmod 1755 testfile  (-rwxr-xr-t)
