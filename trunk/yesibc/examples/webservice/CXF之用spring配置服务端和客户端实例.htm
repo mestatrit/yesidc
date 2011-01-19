@@ -1,0 +1,476 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>CXF之用spring配置服务端和客户端实例（转) - My study notes - JavaEye技术网站</title>
+    <meta name="description" content="转自 http://blog.csdn.net/fhd001  &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;  &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;  	xmlns:xsi=&quot;http://www.w3 ..." />
+    <meta name="keywords" content=" Java综合 CXF之用spring配置服务端和客户端实例（转)" />
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="search" type="application/opensearchdescription+xml" href="/open_search.xml" title="JavaEye" />
+    <link href="/rss" rel="alternate" title="My study notes" type="application/rss+xml" />
+    <link href="http://www.javaeye.com/stylesheets/blog.css?1293432647" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://www.javaeye.com/stylesheets/themes/blog/white.css?1293003884" media="screen" rel="stylesheet" type="text/css" />
+    <script src="http://js.javaeye.com/javascripts/application.js?1293003884" type="text/javascript"></script>
+      
+  <link href="http://www.javaeye.com/javascripts/syntaxhighlighter/SyntaxHighlighter.css?1293003884" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/syntaxhighlighter/shCoreCommon.js?1293003884" type="text/javascript"></script>
+<script src="http://www.javaeye.com/javascripts/hotkey.js?1293003884" type="text/javascript"></script>
+  <style>
+    div#main {background-color: transparent; border: 0; padding: 0px; width: 740px;}
+  </style>
+  <link href="http://www.javaeye.com/javascripts/editor/css/ui.css?1293003884" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/editor/compress.js?1293003884" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="blog_site_nav">
+  <a href="http://www.javaeye.com/" class="homepage">首页</a>
+  <a href="http://www.javaeye.com/news">新闻</a>
+  <a href="http://www.javaeye.com/forums">论坛</a>
+  <a href="http://www.javaeye.com/ask">问答</a>
+  <a href="http://www.javaeye.com/blogs">博客</a>
+  <a href="http://www.javaeye.com/job">招聘</a>
+  <a href="#" onclick="return false;" id="msna"><u>更多</u> <small>▼</small></a>
+  <div class="quick_menu" style="display:none;">
+    <a href="http://www.javaeye.com/wiki">专栏</a>
+    <!--<a href="http://www.javaeye.com/articles">文摘</a>//-->
+    <a href="http://www.javaeye.com/groups">圈子</a>
+    <a href="http://www.javaeye.com/search">搜索</a>
+  </div>
+</div>
+      <div id="user_nav">
+      <a href="http://bibye-domain.javaeye.com" title="查看我的博客首页" class="welcome">欢迎bibiye</a>
+    
+      <a href="http://app.javaeye.com/messages" title="你有新的站内短信"><img alt="Newpm" src="http://www.javaeye.com/images/newpm.gif?1293003884" />收件箱(2)</a>
+    
+    
+      <a href="http://app.javaeye.com" title="我的应用首页">我的应用</a>
+    
+    <div class="quick_menu" style="display:none;">
+      <a href="http://app.javaeye.com/feed" title="我关注的好友动态消息">我的关注</a>
+      <a href="http://app.javaeye.com/feed/my" title="我参与的话题更新的消息">我的参与</a>
+      <a href="http://app.javaeye.com/chat" title="用闲聊发表简短的话题">我的闲聊</a>
+      <a href="http://app.javaeye.com/mygroup" title="我加入的圈子最新话题">我的圈子</a>
+      <a href="http://app.javaeye.com/links" title="我收藏的网络资源链接">我的收藏</a>
+      <a href="http://app.javaeye.com/myresume" title="我的个人简历">我的简历</a>
+    </div>
+        <a href="http://bibye-domain.javaeye.com/admin" title="管理我的博客">我的博客</a>
+    <a href="http://app.javaeye.com/profile" title="修改我的个人设置">设置</a>
+    <a href="/logout" class="nobg" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'put'); f.appendChild(m);f.submit();return false;">退出</a>
+  </div>
+    </div>
+
+    <div id="page">
+      <div id="branding" class="clearfix">
+        <div id="blog_name"><h1><a href="/">My study notes</a></h1></div>
+        <div id="blog_preview">
+          
+        </div>
+        <div id="blog_domain">永久域名 <a href="/">http://calvinliu.javaeye.com</a></div>
+      </div>
+      
+      
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+          
+
+
+<div class="blog_main"> 
+  <div class="blog_nav">
+    
+    <div class="pre_next">
+      <a href="/blog/802389" class="next" title="hibernate之优化抓取(优化指导方针---n+1查询问题)(转)">hibernate之优化抓取(优化指导方针---n+1 ...</a>
+      |
+      <a href="/blog/802350" class="pre" title="CXF之JAX-WS Provider and CXF之JAX-WS Dispatch API （转)">CXF之JAX-WS Provider and CXF之JAX-WS D ...</a>
+    </div>
+  </div>
+  <div class="blog_title">
+    <div class="date"><span class='year'>2010</span><span class='sep_year'>-</span><span class='month'>11</span><span class='sep_month'>-</span><span class='day'>04</span></div>
+    <h3><a href="/blog/802364">CXF之用spring配置服务端和客户端实例（转)</a></h3>
+                <strong>文章分类:<a href="http://www.javaeye.com/blogs/category/java" style="text-decoration:none;padding-right:10px;">Java编程</a></strong>    
+  </div>
+
+  <div class="blog_content">
+    <p>转自 http://blog.csdn.net/fhd001</p>
+<pre name="code" class="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd"&gt;
+	&lt;import resource="classpath:META-INF/cxf/cxf.xml" /&gt;
+	&lt;import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" /&gt;
+	&lt;import resource="classpath:META-INF/cxf/cxf-servlet.xml" /&gt;
+	&lt;!-- 第一种方式 --&gt;
+	&lt;!-- &lt;jaxws:endpoint id="helloWorld" implementor="cxf.server.HelloWorldImpl" address="/HelloWorld" /&gt; --&gt;
+	
+	&lt;!-- 第二种方式 --&gt;
+	&lt;!-- 
+	&lt;bean id="helloWorldImpl" class="cxf.server.HelloWorldImpl"/&gt;
+	&lt;jaxws:endpoint id="helloWorld" implementor="#helloWorldImpl" address="/HelloWorld"/&gt;
+	 --&gt;
+	 
+	&lt;!-- 第三种方式 --&gt;
+	&lt;jaxws:server id="helloWorld" serviceClass="cxf.server.HelloWorld" address="/HelloWorld"&gt;
+		&lt;jaxws:serviceBean&gt;
+			&lt;bean class="cxf.server.HelloWorldImpl"/&gt;
+		&lt;/jaxws:serviceBean&gt;
+	&lt;/jaxws:server&gt;
+	
+&lt;/beans&gt;
+</pre>
+<p> 这是一个加入了interceptor或feature功能的配置实例。</p>
+<pre name="code" class="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd"&gt;
+	&lt;import resource="classpath:META-INF/cxf/cxf.xml" /&gt;
+	&lt;import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" /&gt;
+	&lt;import resource="classpath:META-INF/cxf/cxf-servlet.xml" /&gt;
+	&lt;!-- 
+		endpointName 属性 就是 wsdl:port的name属性，serviceName属性就是wsdl:service的name属性 ,
+		其实可以在java代码中用注解进行配置
+	--&gt;
+	&lt;jaxws:endpoint 	id="helloWorld" 
+						implementor="cxf.server.HelloWorldImpl"
+						address="/HelloWorld"
+						endpointName="e:HelloWorldEP"
+						serviceName="s:HelloWorldSV"  
+						xmlns:e="http://service.jaxws.cxf.apache.org/endpoint"
+						xmlns:s="http://service.jaxws.cxf.apache.org/service"&gt;
+				
+			&lt;jaxws:inInterceptors&gt;
+				&lt;bean class="org.apache.cxf.interceptor.LoggingInInterceptor"/&gt;
+			&lt;/jaxws:inInterceptors&gt;
+			
+			&lt;jaxws:outInterceptors&gt;
+				&lt;bean class="org.apache.cxf.interceptor.LoggingOutInterceptor"/&gt;
+			&lt;/jaxws:outInterceptors&gt;
+			
+			&lt;!--
+			&lt;jaxws:features&gt;
+				&lt;bean class="org.apache.cxf.feature.LoggingFeature"/&gt;
+			&lt;/jaxws:features&gt;
+			--&gt;
+			
+	&lt;/jaxws:endpoint&gt;
+	
+&lt;/beans&gt;
+</pre>
+<p> 这是一个比较简单的CXF客户端配置，后面还有复杂一些的。</p>
+<pre name="code" class="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd"&gt;
+	&lt;!-- 第一种方式 --&gt;
+	&lt;!--
+	&lt;bean id="client" class="cxf.server.HelloWorld" factory-bean="clientFactory" factory-method="create" /&gt;
+	&lt;bean id="clientFactory" class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean"&gt;
+		&lt;property name="serviceClass" value="cxf.server.HelloWorld" /&gt;
+		&lt;property name="address" value="http://localhost:8085/java_first_spring_support1/service/HelloWorld" /&gt;
+	&lt;/bean&gt;
+	--&gt;
+	
+	&lt;!-- 第二种方式 --&gt;
+	&lt;jaxws:client id="client"
+		address="http://localhost:8085/java_first_spring_support1/service/HelloWorld"
+		serviceClass="cxf.server.HelloWorld" /&gt;
+		
+&lt;/beans&gt;
+</pre>
+<p> </p>
+  </div>
+
+  
+
+  <script type="text/javascript"><!--
+google_ad_client = "pub-1076724771190722";
+/* JE个人博客468x60 */
+google_ad_slot = "5506163105";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+  
+  
+
+  <div class="blog_nav">
+    <div class="pre_next">
+      <a href="/blog/802389" class="next" title="hibernate之优化抓取(优化指导方针---n+1查询问题)(转)">hibernate之优化抓取(优化指导方针---n+1 ...</a>
+      |
+      <a href="/blog/802350" class="pre" title="CXF之JAX-WS Provider and CXF之JAX-WS Dispatch API （转)">CXF之JAX-WS Provider and CXF之JAX-WS D ...</a>
+    </div>
+  </div>
+
+  <div class="blog_bottom">
+    <ul>
+      <li>09:18</li>
+      <li>浏览 (86)</li>
+            <li><a href="#comments">评论</a> (0)</li>
+      <li>分类: <a href="/category/130407">CXF</a></li>
+      
+      
+        <li><a href='http://app.javaeye.com/links?user_favorite%5Btitle%5D=CXF%E4%B9%8B%E7%94%A8spring%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%9E%E4%BE%8B%EF%BC%88%E8%BD%AC%29&amp;user_favorite%5Burl%5D=http%3A%2F%2Fcalvinliu.javaeye.com%2Fblog%2F802364' target='_blank' class='favorite' onclick="$$('.favorite_form_spinner')[0].show();new Ajax.Request('http://calvinliu.javaeye.com/links/new_xhr?user_favorite%5Btitle%5D=CXF%E4%B9%8B%E7%94%A8spring%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%9E%E4%BE%8B%EF%BC%88%E8%BD%AC%29&amp;user_favorite%5Burl%5D=http%3A%2F%2Fcalvinliu.javaeye.com%2Fblog%2F802364', {method: 'get', onSuccess: function(response){$(document.getElementsByTagName('body')[0]).insert({bottom:response.responseText});$$('.favorite_form_spinner')[0].hide();}});return false;">收藏</a><img alt="Spinner" class="favorite_form_spinner" src="http://www.javaeye.com/images/spinner.gif?1293003884" style="vertical-align:bottom;margin-left:7px;display:none;" /></li>
+        
+      
+      
+      <li class='last'><a href="http://www.javaeye.com/wiki/topic/802364" target="_blank" class="more">相关推荐</a></li>
+    </ul>
+  </div>
+
+  <div class="blog_comment">
+    <h5>评论</h5>
+    <a id="comments" name="comments"></a>
+    
+    
+    
+  </div>
+
+  <div class="blog_comment">
+    <h5>发表评论</h5>
+          
+      
+        <form action="/blog/802364" id="comment_form" method="post" onsubmit="return false;">          
+
+
+  <input type="hidden" id="editor_bbcode_flag"/>
+
+
+
+<div id="editor_main"><textarea class="validate-richeditor bad-words min-length-5" cols="40" id="editor_body" name="comment[body]" rows="20" style="width: 500px; height: 350px;"></textarea></div>
+
+
+<script type="text/javascript">
+  var editor = new Control.TextArea.Editor("editor_body", "bbcode", false);
+</script>
+          <p style="text-align:right;padding-right:30px;">(快捷键 Alt+S / Ctrl+Enter) <input class="submit" id="quick_reply_button" name="commit" type="submit" value="提交" /></p>
+        </form>
+        <script type="text/javascript">
+          new HotKey("s",function() {$('quick_reply_button').click();},{altKey: true, ctrlKey: false});
+          new HotKey(new Number(13),function() {$('quick_reply_button').click();},{altKey: false, ctrlKey: true});
+
+          new Validation("comment_form", {immediate: false, onFormValidate: function(result, form){
+    
+            if(result) {
+              new Ajax.Request('/blog/create_comment/802364', {
+                onFailure:function(response){
+                  $('comments').insert({after:response.responseText})
+                  form.spinner.hide();
+                  Element.scrollTo($('comments'));
+                },
+                onSuccess:function(response){
+                  Element.scrollTo($('comments'));
+                  $('comments').insert({after:response.responseText})
+                  $('editor_body').value = "";
+                  form.spinner.hide();
+                }, parameters:Form.serialize(form)
+              });
+            }
+    
+        }});
+        </script>
+      
+      </div>
+</div>
+
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  fix_image_size($$('div.blog_content img'), 700);
+  function quote_comment(id) {
+    new Ajax.Request('/editor/quote', {
+      parameters: {'id':id, 'type':'Post'},
+      onSuccess:function(response){editor.bbcode_editor.textarea.insertAfterSelection(response.responseText);}
+    });
+  }
+</script>
+
+
+
+        </div>
+
+        <div id="local">
+          <div class="local_top"></div>
+          <div id="blog_owner">
+            <div id="blog_owner_logo"><a href='http://calvinliu.javaeye.com'><img alt="calvinlyc的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/333760/5f63103d-3ddb-39af-8e9f-b6fe4ab6b8ac.jpg?1287474810" title="calvinlyc的博客: My study notes" /></a></div>
+            <div id="blog_owner_name">calvinlyc</div>
+          </div>
+          <div id="blog_actions">
+            <ul>
+              <li>浏览: 3148 次</li>
+              <li>性别: <img alt="Icon_minigender_1" src="http://www.javaeye.com/images/icon_minigender_1.gif?1293003884" title="男" /></li>
+              <li>来自: 奥克兰</li>
+              <li><img src='/images/status/offline.gif'/></li>
+              <li>
+                <a href="/blog/profile" class="profile">详细资料</a>
+                <a href="/blog/guest_book" class="guest_book">留言簿</a>
+              </li>
+              
+                <li>
+                  <a href="http://app.javaeye.com/messages/new?message%5Breceiver_name%5D=calvinlyc" class="message" title="发送站内短信">发短消息</a>
+                  
+                    <a href="http://app.javaeye.com/feed?subscription%5Bsubscribed_user_name%5D=calvinlyc" class="subscription" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;">关注</a>
+                  
+                </li>
+              
+            </ul>
+            <h5>搜索本博客</h5>
+            <form action="/blog/search" method="get">              <input class="text" id="query" name="query" style="margin-left: 10px;width: 110px;" type="text" />
+              <input class="submit" type="submit" value="搜索" />
+            </form>          </div>
+          
+            <div id="user_visits" class="clearfix">
+              <h5>最近访客 <span style='font-weight:normal;font-size:12px;padding-left:30px;'><a href="/blog/user_visits">&gt;&gt;更多访客</a></span></h5>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://bibye-domain.javaeye.com' target='_blank'><img alt="bibiye的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1293003884" title="bibiye的博客: bibiye" /></a></div>
+                  <div class="left"><a href='http://bibye-domain.javaeye.com' target='_blank'>bibiye</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://wudiju.javaeye.com' target='_blank'><img alt="wudiju的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/245497/5344a1ab-9874-3dde-9fb6-8e349d0c26e0-thumb.jpg?1273195295" title="wudiju的博客: Just be myself" /></a></div>
+                  <div class="left"><a href='http://wudiju.javaeye.com' target='_blank'>wudiju</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://athrunwang.javaeye.com' target='_blank'><img alt="athrunwang的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1293003884" title="athrunwang的博客: " /></a></div>
+                  <div class="left"><a href='http://athrunwang.javaeye.com' target='_blank'>athrunwang</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://myloverjay.javaeye.com' target='_blank'><img alt="myloverjay的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/295981/eb982fd0-4a87-37a4-a25c-12e07d0509bc-thumb.jpg?1282275334" title="myloverjay的博客: " /></a></div>
+                  <div class="left"><a href='http://myloverjay.javaeye.com' target='_blank'>myloverjay</a></div>
+                </div>
+              
+            </div>
+          
+                      <div id="blog_menu">
+              <h5>博客分类</h5>
+              <ul>
+                <li><a href="/">全部博客 (63)</a></li>
+                
+                  <li><a href="/category/107587">Java (11)</a></li>
+                
+                  <li><a href="/category/120204">Groovy on Grails (1)</a></li>
+                
+                  <li><a href="/category/107710">Spring (7)</a></li>
+                
+                  <li><a href="/category/110725">Hibernate (4)</a></li>
+                
+                  <li><a href="/category/110549">Maven (1)</a></li>
+                
+                  <li><a href="/category/107586">Linux (3)</a></li>
+                
+                  <li><a href="/category/107588">Python (1)</a></li>
+                
+                  <li><a href="/category/110590">Front-end (1)</a></li>
+                
+                  <li><a href="/category/117146">Network (6)</a></li>
+                
+                  <li><a href="/category/121379">Log4j (3)</a></li>
+                
+                  <li><a href="/category/124728">Web service (8)</a></li>
+                
+                  <li><a href="/category/125643">Server (2)</a></li>
+                
+                  <li><a href="/category/128019">JMS (11)</a></li>
+                
+                  <li><a href="/category/130407">CXF (4)</a></li>
+                
+              </ul>
+            </div>
+            
+            
+            <div id="blog_others">
+              <h5>其他分类</h5>
+              <ul>
+                <li><a href="/blog/favorite">我的收藏</a> (3)</li>
+                                                <li><a href="/blog/topic">我的论坛主题贴</a> (2)</li>
+                <li><a href="/blog/post">我的所有论坛贴</a> (21)</li>
+                <li><a href="/blog/article">我的精华良好贴</a> (0)</li>
+                              </ul>
+            </div>
+            
+            <div id="recent_groups">
+              <h5>最近加入圈子</h5>
+              <ul>
+                
+                  <li><a href="http://tales.group.javaeye.com">八婆们的八卦堡^_^</a></li>
+                
+                  <li><a href="http://jms.group.javaeye.com">JMS</a></li>
+                
+                  <li><a href="http://Spring.group.javaeye.com">Spring之旅</a></li>
+                
+                  <li><a href="http://hibernate.group.javaeye.com">Hibernate</a></li>
+                
+              </ul>
+            </div>
+            
+                          <div id="month_blogs">
+                <h5>存档</h5>
+                <ul>
+                  
+                    <li><a href="/blog/monthblog/2010-12">2010-12</a> (2)</li>
+                  
+                    <li><a href="/blog/monthblog/2010-11">2010-11</a> (4)</li>
+                  
+                    <li><a href="/blog/monthblog/2010-10">2010-10</a> (19)</li>
+                  
+                  <li><a href="/blog/monthblog_more">更多存档...</a></li>
+                </ul>
+              </div>
+                        <div id="comments_top">
+              <h5>评论排行榜</h5>
+              <ul>
+                
+                  <li><a href="/blog/797187" title="10 个最酷的 Linux 单行命令(转)">10 个最酷的 Linux 单行命令(转)</a></li>
+                
+                  <li><a href="/blog/725774" title="Dealing with DNS Leaks(转)">Dealing with DNS Leaks(转)</a></li>
+                
+                  <li><a href="/blog/668943" title="Virtualenv 簡單入門(转)">Virtualenv 簡單入門(转)</a></li>
+                
+                  <li><a href="/blog/744475" title="Simplified Spring Security with Grails(转)">Simplified Spring Security with Grails( ...</a></li>
+                
+                  <li><a href="/blog/746779" title="Linux常用命令和Linux服务器配置(转）">Linux常用命令和Linux服务器配置(转）</a></li>
+                
+              </ul>
+            </div>
+            <div id="rss">
+              <ul>
+                <li><a href="/rss" target="_blank"><img alt="Rss" src="http://www.javaeye.com/images/rss.png?1293003884" /></a></li>
+                <li><a href="http://fusion.google.com/add?feedurl=http://calvinliu.javaeye.com/rss" target="_blank"><img alt="Rss_google" src="http://www.javaeye.com/images/rss_google.gif?1293003884" /></a></li>
+              </ul>
+            </div>
+            <div class="local_bottom"></div>
+          
+        </div>
+      </div>
+
+      <div id="footer" class="clearfix">
+        <div id="copyright">
+          <hr/>
+          声明：JavaEye文章版权属于作者，受法律保护。没有作者书面许可不得转载。若作者同意转载，必须以超链接形式标明文章原始出处和作者。<br />
+          &copy; 2003-2010 JavaEye.com.   All rights reserved. 上海炯耐计算机软件有限公司 [ 沪ICP备05023328号 ]
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.javaeye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&logged_in=yes" + "' width='0' height='0' />");
+</script>
+    
+  </body>
+</html>
