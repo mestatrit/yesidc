@@ -38,6 +38,8 @@ find / -name access_log 2>/dev/null.txt (输出错误文件)
 
 压缩
 tar -cvf a.tar /usr/a
+jar cvfM css.jar *
+jar cvfm test.jar manifest.mf test
 解压
 tar -xvf a.tar /usr/a
 
@@ -168,3 +170,50 @@ $!  上一个命令的PID
 		例如：chmod 4755 testfile  (-rwsr-xr-x)
 		chmod 6755 testfile  (-rwsr-sr-x)
 		chmod 1755 testfile  (-rwxr-xr-t)
+
+#cat /etc/passwd 可以查看所有用户的列表		
+# useradd –d /usr/sam -m sam
+此命令创建了一个用户sam，其中-d和-m选项用来为登录名sam产生一个主目录/usr/sam（/usr为默认的用户主目录所在的父目录）。
+# useradd -s /bin/sh -g group –G adm,root gem
+此命令新建了一个用户gem，该用户的登录Shell是/bin/sh，
+它属于group用户组，同时又属于adm和root用户组，其中group用户组是其主组。
+增加用户账号就是在/etc/passwd文件中为新用户增加一条记录，同时更新其他系统文件如/etc/shadow, /etc/group等。
+# usermod -s /bin/ksh -d /home/z –g developer sam
+此命令将用户sam的登录Shell修改为ksh，主目录改为/home/z，用户组改为developer。
+# 例如，假设当前用户是sam，则下面的命令修改该用户自己的口令：
+$ passwd
+Old password:******
+New password:*******
+Re-enter new password:*******
+# passwd -d sam
+此命令将用户sam的口令删除，这样用户sam下一次登录时，系统就不再询问口令。
+# passwd -l sam
+passwd命令还可以用-l(lock)选项锁定某一用户，使其不能登录，例如：
+
+1、建用户：
+adduser phpq                             //新建phpq用户
+passwd phpq                               //给phpq用户设置密码
+2、建工作组
+groupadd test                          //新建test工作组
+3、新建用户同时增加工作组
+useradd -g test phpq                      //新建phpq用户并增加到test工作组
+注：：-g 所属组 -d 家目录 -s 所用的SHELL
+4、给已有的用户增加工作组
+usermod -G groupname username
+或者：gpasswd -a user group
+5、临时关闭：在/etc/shadow文件中属于该用户的行的第二个字段（密码）前面加上*就可以了。想恢复该用户，去掉*即可。
+或者使用如下命令关闭用户账号：
+passwd peter –l
+重新释放：
+passwd peter –u
+6、永久性删除用户账号
+userdel peter
+groupdel peter
+usermod –G peter peter   （强制删除该用户的主目录和主目录下的所有文件和子目录）
+7、从组中删除用户
+编辑/etc/group 找到GROUP1那一行，删除 A
+或者用命令
+gpasswd -d A GROUP
+8、显示用户信息
+id user
+cat /etc/passwd
