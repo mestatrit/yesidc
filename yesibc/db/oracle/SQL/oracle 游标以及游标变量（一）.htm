@@ -1,0 +1,366 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>oracle 游标以及游标变量（一） - jerry - JavaEye技术网站</title>
+    <meta name="description" content="ORACLE 游标 一. PL/SQL 是用游标来管理 SQL 的 SELECT 语句的 . 游标是为了处理这些语句而分配的一大块内存 . 它提供了对一个结果集进行逐行处理的能力 , 可看作是一种特殊的指针 . 它与某个查询结果集相关联 , 可以指向结果集的任意位置 , 以便对指定位置的数据进行处理 . 使用它可以在查询数据的同时对数据进行处理 . 二. 游标的分类 : 静态游标和动态游标    1 ..." />
+    <meta name="keywords" content="  oracle 游标以及游标变量（一）" />
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="search" type="application/opensearchdescription+xml" href="/open_search.xml" title="JavaEye" />
+    <link href="/rss" rel="alternate" title="jerry" type="application/rss+xml" />
+    <link href="http://www.javaeye.com/stylesheets/blog.css?1300891384" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://www.javaeye.com/stylesheets/themes/blog/blue.css?1299226978" media="screen" rel="stylesheet" type="text/css" />
+    <script src="http://js.javaeye.com/javascripts/application.js?1299226978" type="text/javascript"></script>
+      
+  <link href="http://www.javaeye.com/javascripts/syntaxhighlighter/SyntaxHighlighter.css?1299226978" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/syntaxhighlighter/shCoreCommon.js?1299226978" type="text/javascript"></script>
+<script src="http://www.javaeye.com/javascripts/hotkey.js?1299226978" type="text/javascript"></script>
+  <script src="http://www.javaeye.com/javascripts/code_favorites.js?1300153098" type="text/javascript"></script>
+  <style>
+    div#main {background-color: transparent; border: 0; padding: 0px; width: 740px;}
+  </style>
+  <link href="http://www.javaeye.com/javascripts/editor/css/ui.css?1299226978" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.javaeye.com/javascripts/editor/compress.js?1299226978" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="blog_site_nav">
+  <a href="http://www.javaeye.com/" class="homepage">首页</a>
+  <a href="http://www.javaeye.com/news">新闻</a>
+  <a href="http://www.javaeye.com/forums">论坛</a>
+  <a href="http://www.javaeye.com/ask">问答</a>
+  <a href="http://www.javaeye.com/blogs">博客</a>
+  <a href="http://www.javaeye.com/job">招聘</a>
+  <a href="#" onclick="return false;" id="msna"><u>更多</u> <small>▼</small></a>
+  <div class="quick_menu" style="display:none;">
+    <a href="http://www.javaeye.com/wiki">专栏</a>
+    <!--<a href="http://www.javaeye.com/articles">文摘</a>//-->
+    <a href="http://www.javaeye.com/groups">群组</a>
+    <a href="http://www.javaeye.com/search">搜索</a>
+  </div>
+</div>
+      <div id="user_nav">
+      <a href="/login" class="welcome" title="登录">您还未登录 !</a>
+    <a href="http://www.javaeye.com/all" style="color:red">我的应用</a>
+    <a href="/login">登录</a>
+    <a href="/signup" class="nobg">注册</a>
+  </div>
+    </div>
+
+    <div id="page">
+      <div id="branding" class="clearfix">
+        <div id="blog_name"><h1><a href="/">jerry</a></h1></div>
+        <div id="blog_preview">
+          
+        </div>
+        <div id="blog_domain">永久域名 <a href="/">http://zhanglei-javaeye.javaeye.com</a></div>
+      </div>
+      
+      
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+          
+
+
+<div class="blog_main"> 
+  <div class="blog_nav">
+    
+    <div class="pre_next">
+      <a href="/blog/443955" class="next" title="oracle备份策略 ">oracle备份策略 </a>
+      |
+      <a href="/blog/443940" class="pre" title="oracle 游标以及游标变量(二)">oracle 游标以及游标变量(二)</a>
+    </div>
+  </div>
+  <div class="blog_title">
+    <div class="date"><span class='year'>2009</span><span class='sep_year'>-</span><span class='month'>08</span><span class='sep_month'>-</span><span class='day'>10</span></div>
+    <h3><a href="/blog/443953">oracle 游标以及游标变量（一）</a></h3>
+                    
+  </div>
+
+  <div class="blog_content">
+    ORACLE 游标<br /><br />一. PL/SQL 是用游标来管理 SQL 的 SELECT 语句的 . 游标是为了处理这些语句而分配的一大块内存 . 它提供了对一个结果集进行逐行处理的能力 , 可看作是一种特殊的指针 . 它与某个查询结果集相关联 , 可以指向结果集的任意位置 , 以便对指定位置的数据进行处理 . 使用它可以在查询数据的同时对数据进行处理 .<br /><br />二. 游标的分类 : 静态游标和动态游标<br /><br />&nbsp;&nbsp; 1. 在说明游标分类之前, 先说明一下PL/SQL 的两个操作, 游标属性, 变量属性<br /><br />SET SERVEROUTPUT ON ;-- 此语句用于开启打印输出功能<br /><br />DMBS_OUTPUT.PUT_LINE();-- 打印输出并换行.<br /><br />%FOUND: 判断当前游标是否指向有效的一条行记录. 是则返回TRUE, 否则返回FALSE<br /><br />%NOTFOUND: 与%FOUND 恰好相反.<br /><br />%ISOPEN: 判断游标是否打开, 打开则返回TRUE, 否则返回FALSE.<br /><br />%ROWCOUNT: 判断当前游标在所指向的结果集中提取的行数. 并非所有总记录数<br /><br />%TYPE: 声明变量的类型与表中的某列的数据类型完全一致.%TYPE 声明有两个好处: 一是你不必知道某列的确切数据类型二是当某列的数据类型改变时不用修改变量的数据类型.<br /><br />%ROWTYPE: 声明变量的数据类型与表中的行记录数据类型一致. 对于自定义的记录, 则必须声明自己的域.<br /><br />2. 静态游标:<br /><br />静态游标又可以分为两类:<br /><br />1) 隐式游标<br /><br />隐式游标的特点:<br /><br />- 隐式游标是由PL/SQL 来管理的, 即不需要声明游标语句, 也不需要OPEN,FETCH,CLOSE 操作<br /><br />- 隐式游标中必须要有select cur_name into [ 变量名或其他数据类型]. 此句完成OPEN,FETCH,CLOSE 操作.<br /><br />- 隐式游标只能返回一行记录, 如果无符合条件的记录将会出现NO_DATA_FOUND 异常. 如果出现多条记录将出现TOO_MANY_ROWS 异常.<br /><br />- 隐式游标只能用SQL% 判断其游标属性<br /><br />- 对于任何位置使用SQL%ISOPEN 结果都是FALSE, 隐式游标由PL/SQL 管理<br /><br />- 对于在隐式游标位置前使用SQL%FOUND 或SQL%NOTFOUND, SQL%ROWCOUNT 结果值是NULL( 不确定值)<br /><br />示例表:<br /><br />表名:test<br /><br />字段名 <br />数据类型 <br />可否为空 <br /><br />id( 序号) <br />number <br />N <br /><br />name( 姓名) <br />varchar2(20) <br />N <br /><br />zym( 专业名) <br />varchar(40) <br />Y <br /><br />cj( 成绩) <br />number <br />Y <br /><br />logdate( 记录日期) <br />date <br />Y <br /><br /><br />EG1: 验证隐式游标的特性<br /><br />set serveroutput on;-- 开启输出<br /><br />declare<br /><br />no test.id%type;-- 声明变量no 的数据类型同test 表的id 列一致<br /><br />ename test.name%type;<br /><br />begin<br /><br />if sql%isopen then&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- 判断游标是否打开<br /><br />dbms_output.put_line(' cursor is openning');<br /><br />else<br /><br />dbms_output.put_line('cursor is closed');<br /><br />end if;<br /><br />if sql%notfound then – 判断游标是否指向有效的行<br /><br />dbms_output.put_line('no value');<br /><br />else<br /><br />dbms_output.put_line(no||' '||ename);<br /><br />end if;<br /><br />dbms_output.put_line(sql%rowcount);<br /><br />dbms_output.put_line('---------------');<br /><br />/** 去掉where 条件时, 将会出现too_many_rows 异常**/<br /><br />select id ,name into no ,ename from test where cj=90;-- 隐式游标必-- 须使用INTO<br /><br />dbms_output.put_line(sql%rowcount);<br /><br />if sql%isopen then<br /><br />dbms_output.put_line(' cursor is openning');<br /><br />else<br /><br />dbms_output.put_line('cursor is closed');<br /><br />end if;<br /><br />if sql%notfound then<br /><br />dbms_output.put_line('no value');<br /><br />else<br /><br />dbms_output.put_line(no||' '||ename);<br /><br />end if;<br /><br />exception<br /><br />when no_data_found then<br /><br />&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('no value');<br /><br />when too_many_rows then<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('too many rows');<br /><br />end;<br /><br />执行结果为:<br /><br />cursor is closed<br /><br />--------------------<br /><br />1<br /><br />cursor is closed<br /><br />1001 qbnajj<br /><br />去掉where 条件时的结果:<br /><br />cursor is closed<br /><br />--------------------<br /><br />too many rows<br /><br />EG2: 使用%ROWTYPE<br /><br />declare<br /><br />rowtype test%rowtype;<br /><br />begin<br /><br />select * into rowtype from test where cj=90;<br /><br />dbms_output.put_line(rowtype.name||' '||rowtype.cj);<br /><br />exception<br /><br />when no_data_found then<br /><br />&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('no value');<br /><br />when too_many_rows then<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('too many rows');<br /><br />end;<br /><br />执行结果:<br /><br />qbnajj 90<br /><br />EG3: 自定义RECORD 数据类型<br /><br />declare<br /><br />/** 自定义RECORD 数据类型<br /><br />语法为:<br /><br />TYPE type_name IS RECORD(cloumn1 datatpe,.....);<br /><br />**/<br /><br />type r_type is record(name test.name%type ,cj test.cj%type);<br /><br />re_type r_type;<br /><br />begin<br /><br />select name,cj into re_type from test where cj=90;<br /><br />dbms_output.put_line(re_type.name||' '||re_type.cj);<br /><br />exception<br /><br />when no_data_found then<br /><br />&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('no value');<br /><br />when too_many_rows then<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dbms_output.put_line('too many rows');<br /><br />end;<br /><br />/<br /><br />执行结果:<br /><br />qbnajj 90<br /><br />2) 显示游标<br /><br />声明语法:<br /><br />DECLARE<br /><br />CURSOR cur_name( 参数名 数据类型) is select_satatements ;-- 游标名后-- 可带参数<br /><br />BEGIN<br /><br />OPEN cur_name;<br /><br />FETCH cur_name into [ 变量或者其他数据类型];<br /><br />-- 可用循环语句迭代输出游标所指向的结果集.<br /><br />CLOSE cur_name;<br /><br />END;<br /><br />显示游标特性:<br /><br />- 显示游标由用户定义, 并由用户来管理游标, 可返回多行记录.<br /><br />- 通常使用显示游标需要遵守以下规则<br /><br />&nbsp;&nbsp; 声明游标 -&gt; 打开游标 -&gt; 读取数据 -&gt; 关闭游标<br /><br />&nbsp;&nbsp;&nbsp; 但由于FOR IN LOOP 语句包含OPEN,FETCH,CLOSE 操作所以不在此例.<br /><br />- 查看游标属性时, 使用cur_name%.<br /><br />EG:PL/SQL 演示<br /><br />declare<br /><br />no test.id%type;<br /><br />ename test.name%type;<br /><br />cjs test.cj%type;<br /><br />cursor test_cur is<br /><br />select id,name from test where cj&gt;=cjs;-- 可通过PL/SQL 绑定变量输-- 入值(&amp;cjs)<br /><br />begin<br /><br />cjs:=50;<br /><br />for t_cur in test_cur<br /><br />loop<br /><br />no:=t_cur.id;<br /><br />ename:=t_cur.name;<br /><br />dbms_output.put_line(no||' '||ename);<br /><br />end loop;<br /><br />end;<br /><br />执行结果:<br /><br />chenjunhua 80<br /><br />qbnajj 90<br /><br />cjh 52<br /><br />EG2: 利用带参数的存储过程演示<br /><br />create or replace procedure test_proce(cjs in test.cj%type)<br /><br />as<br /><br />no test.id%type;<br /><br />ename test.name%type;<br /><br />cursor test_cur is<br /><br />select id,name from test where cj&gt;=cjs;<br /><br />begin<br /><br />open test_cur;<br /><br />fetch test_cur into no,ename;<br /><br />while test_cur%found<br /><br />loop<br /><br />dbms_output.put_line(no||' '||ename);<br /><br />fetch test_cur into no,ename;-- 将游标指向下条记录, 否则为死循环.<br /><br />end loop;<br /><br />close test_cur;<br /><br />end test_proce;<br /><br />exec test_proce(50);<br /><br />执行结果:<br /><br />chenjunhua 80<br /><br />qbnajj 90<br /><br />cjh 52<br /><br />EG3: 带参数的游标与上面的类似<br /><br />2. 动态游标(REF CURSOR)<br /><br />首先 , 游标变量和游标是两个不同的概念 . 与游标相似 , 游标变量是指向多行查游标询的结果集的当前行 . 游标是静态的 , 游标变量是动态的 ,. 同时游标变量并不参与与特定的查询绑定 , 所以可以为任何兼容的查询打开游标变量 , 从而提高灵活性 . 而且 , 还可以将新的值赋予游标变量 , 将它作为参数传递给本地和存储过程 . 游标变量针对每个 PL/SQL 用户都是可用的 , 可以在客户端完全使用游标变量 .ORACLE 服务器同样包含 PL/SQL 引擎 , 可以将游标变量在应用和服务器之间进行传递 .<br /><br />1. 游标变量 : 声明游标实际上是创建一个指针 , 指针具有数据类型 REF X.REF 是 REFERENCE ,X 是表示类对象 . 因此 , 游标变量具有数据类型 REF CURSOR.<br /><br />注 : 游标总是指向相同的查询工作区 , 游标变量能够指向不同的工作区 , 因此游标和游标变量不能互操作 .<br /><br />3. 定义 REF CURSOR 类型 , 创建游标变量有两个步骤 :<br /><br />1) 定义 REF CURSOR 类型<br /><br />语法格式 :<br /><br />TYPE ref_type_name<br /><br />IS<br /><br />REF CURSOR [RETURN return_type]<br /><br />说明 :<br /><br />ref_type_name 是游标变量中使用的类型 ;return_type 必须是一个记录 (record) 或者数据库表中的一行 .(rowtype)<br /><br />下面定义 一个 REF CURSOR 类型游标<br /><br />DELARE<br /><br />&nbsp;&nbsp; TYPE xs_cur<br /><br />IS<br /><br />REF CURSOR RETURN xs%ROWTYPE;<br /><br />注意 :<br /><br />REF CURSOR 类型既可以是强类型 , 也可以是弱类型 , 区别是强类型有返回类型 , 弱类型没有 . 如下所示<br /><br />&nbsp;&nbsp; DECLARE<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TYPE xs_cur IS REF CURSOR RETURN xs%ROWTYPE;-- 强类型<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TYPE mycur IS REF CURSOR;-- 弱类型<br /><br />2) 声明这种类型的游标变量 : 一旦定义了 REF CURSOR 类型就可以在 PL/SQL 块或子程序中声明这个游标变量 . 如 :<br /><br />DECARE<br /><br />&nbsp;&nbsp; TYPE xs_cur REF CURSOR RETURN xs%ROWTYPE;<br /><br />&nbsp;&nbsp; xscur xs_cur;<br /><br />&nbsp;&nbsp; 当然 , 在 RETURN 子句中也可以定义自定义的 RECORD 类型 , 如 :<br /><br />&nbsp;&nbsp; DECLARE<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TYPE kc_cj IS RECORD<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; kch number (4),<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; kcm number(10),<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cj number(4,2)<br /><br />);<br /><br />TYPE kc_cjcur IS REF CURSOR RETURN kc_cj;<br /><br />此外 , 也可以声明游标变量作为函数和过程的参数 . 例如 :<br /><br />DECLARE<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TYPE xs_cur IS REF CURSOR RETURN xs%ROWTYPE;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PROCEDURE open_xs (xscur IN OUT xs_cur)IS<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ......................<br /><br />3. 控制游标变量<br /><br />使用游标变量时 , 要遵循以下步骤 :OPEN-FETCH-CLOSE<br /><br />OPEN 语句与多行查询的游标变量相关联 , 它执行查询 , 标志结果集<br /><br />语法格式 :<br /><br />OPEN {cursor_variable|:host_cursor_variable }FOR<br /><br />{<br /><br />select_statement|dynamic_string[USING bind_argument[,......]]<br /><br />}<br /><br />如 :<br /><br />IF NOT xscur%ISOPEN THEN<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OPEN xscur FOR SELECT * FROM xs;<br /><br />END IF ;<br /><br />游标变量同样可以使用游标属性 :%FOUND,%ISOPEN,%ROWTYPE<br /><br />在使用过程中 , 其他的 OPEN 语句可以为不同的查询打开相同的游标变量 . 因此 , 在重新打开之前 , 不要关闭游标变量 . 可以打开游标 , 并作为参数传递给存储过程 . 如 :<br /><br />CREATE PACKAGE xs_data AS<br /><br />...<br /><br />TYPE xs_cur IS REF CURSOR RETURN xs%ROWTYPE;<br /><br />RROCEDURE open_xs(xscur IN OUT xs_cur);<br /><br />END xs_data;<br /><br /> <br /><br />CREATE PACKAGE BODY xs_data AS<br /><br />...<br /><br />PROCEDURE open_xs(xscur IN OUT xs_cur)<br /><br />AS<br /><br />BEGIN<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OPEN xscur FOR SELECT * FROM xs;<br /><br />END open_xs;<br /><br />END xs_data;<br /><br />当声明一个游标变量作为打开游标变量子程序的参数时 , 必须定义 IN OUT 模式 . 也就是说 , 子程序可以将一个打开的游标变量传递给调用者<br /><br />
+  </div>
+
+  
+
+  <script type="text/javascript"><!--
+google_ad_client = "pub-1076724771190722";
+/* JE个人博客468x60 */
+google_ad_slot = "5506163105";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+  
+  
+
+  <div class="blog_nav">
+    <div class="pre_next">
+      <a href="/blog/443955" class="next" title="oracle备份策略 ">oracle备份策略 </a>
+      |
+      <a href="/blog/443940" class="pre" title="oracle 游标以及游标变量(二)">oracle 游标以及游标变量(二)</a>
+    </div>
+  </div>
+
+  <div class="blog_bottom">
+    <ul>
+      <li>17:17</li>
+      <li>浏览 (621)</li>
+            <li><a href="#comments">评论</a> (1)</li>
+      <li>分类: <a href="/category/74961">oracle</a></li>
+      
+      
+      
+      <li class='last'><a href="http://www.javaeye.com/wiki/topic/443953" target="_blank" class="more">相关推荐</a></li>
+    </ul>
+  </div>
+
+  <div class="blog_comment">
+    <h5>评论</h5>
+    <a id="comments" name="comments"></a>
+    <div id="bc1127359">
+  <div class="comment_title">
+    1 楼
+    <a href='http://pretty-moppet.javaeye.com' target='_blank'>pretty_moppet</a>
+    2009-08-12&nbsp;&nbsp;
+    <a href="#" onclick="quote_comment(1127359);return false;">引用</a>
+    
+  </div>
+  <div class="comment_content">很详细，谢谢！~</div>
+</div>
+
+    
+    
+  </div>
+
+  <div class="blog_comment">
+    <h5>发表评论</h5>
+          
+      
+        <form action="/blog/443953" id="comment_form" method="post" onsubmit="return false;">          
+
+
+  <input type="hidden" id="editor_bbcode_flag"/>
+
+
+
+<div id="editor_main"><textarea class="validate-richeditor bad-words min-length-5" cols="40" id="editor_body" name="comment[body]" rows="20" style="width: 500px; height: 350px;"></textarea></div>
+
+
+<script type="text/javascript">
+  var editor = new Control.TextArea.Editor("editor_body", "bbcode", false);
+</script>
+          <p style="text-align:right;padding-right:30px;">您还没有登录，请<a href='/login'>登录</a>后发表评论(快捷键 Alt+S / Ctrl+Enter) <input class="submit" id="quick_reply_button" name="commit" type="submit" value="提交" /></p>
+        </form>
+        <script type="text/javascript">
+          new HotKey("s",function() {$('quick_reply_button').click();},{altKey: true, ctrlKey: false});
+          new HotKey(new Number(13),function() {$('quick_reply_button').click();},{altKey: false, ctrlKey: true});
+
+          new Validation("comment_form", {immediate: false, onFormValidate: function(result, form){
+    
+            if(confirm('您需要登录以后才能执行这个操作，现在要登录吗？')) window.location.href = '/login';
+    
+        }});
+        </script>
+      
+      </div>
+</div>
+
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+  
+  $$('#main .blog_content pre[name=code]').each(function(pre, index){ // blog content
+    var post_id = 1124351;
+    var location = window.location;
+    source_url = location.protocol + "//" + location.host + location.pathname + location.search;
+    pre.writeAttribute('codeable_id', post_id);
+    pre.writeAttribute('codeable_type', "Post");
+    pre.writeAttribute('source_url', source_url);
+    pre.writeAttribute('pre_index', index);
+    pre.writeAttribute('title', 'oracle 游标以及游标变量（一）');
+  });
+  $$('#main .blog_comment > div').each(function(comment){// comment
+    var post_id = comment.id.substr(2);
+    $$("#"+comment.id+" pre[name=code]").each(function(pre, index){
+      var location = window.location;
+      source_url = location.protocol + "//" + location.host + location.pathname + location.search;
+      source_url += "#" + comment.id;
+      pre.writeAttribute('codeable_id', post_id);
+      pre.writeAttribute('codeable_type', "Post");
+      pre.writeAttribute('source_url', source_url);
+      pre.writeAttribute('pre_index', index);
+      pre.writeAttribute('title', 'oracle 游标以及游标变量（一）');
+    });
+  });
+  code_favorites_init();
+
+  fix_image_size($$('div.blog_content img'), 700);
+  function quote_comment(id) {
+    new Ajax.Request('/editor/quote', {
+      parameters: {'id':id, 'type':'Post'},
+      onSuccess:function(response){editor.bbcode_editor.textarea.insertAfterSelection(response.responseText);}
+    });
+  }
+</script>
+
+
+
+        </div>
+
+        <div id="local">
+          <div class="local_top"></div>
+          <div id="blog_owner">
+            <div id="blog_owner_logo"><a href='http://zhanglei-javaeye.javaeye.com'><img alt="zhanglei_2008的博客" class="logo" src="http://www.javaeye.com/images/user-logo.gif?1299226978" title="zhanglei_2008的博客: jerry" /></a></div>
+            <div id="blog_owner_name">zhanglei_2008</div>
+          </div>
+          <div id="blog_actions">
+            <ul>
+              <li>浏览: 7524 次</li>
+              <li>性别: <img alt="Icon_minigender_1" src="http://www.javaeye.com/images/icon_minigender_1.gif?1299226978" title="男" /></li>
+              <li>来自: 深圳</li>
+              <li><img src='/images/status/offline.gif'/></li>
+              <li>
+                <a href="/blog/profile" class="profile">详细资料</a>
+                <a href="/blog/guest_book" class="guest_book">留言簿</a>
+              </li>
+              
+            </ul>
+            <h5>搜索本博客</h5>
+            <form action="/blog/search" method="get">              <input class="text" id="query" name="query" style="margin-left: 10px;width: 110px;" type="text" />
+              <input class="submit" type="submit" value="搜索" />
+            </form>          </div>
+          
+            <div id="user_visits" class="clearfix">
+              <h5>最近访客 <span style='font-weight:normal;font-size:12px;padding-left:30px;'><a href="/blog/user_visits">&gt;&gt;更多访客</a></span></h5>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://cjnetwork.javaeye.com' target='_blank'><img alt="cjnetwork的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/344769/93b68533-2b61-30e9-8d7a-9e5204328932-thumb.jpg?1289193137" title="cjnetwork的博客: cjnetwork" /></a></div>
+                  <div class="left"><a href='http://cjnetwork.javaeye.com' target='_blank'>cjnetwork</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://std-11.javaeye.com' target='_blank'><img alt="std_11的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1299226978" title="std_11的博客: " /></a></div>
+                  <div class="left"><a href='http://std-11.javaeye.com' target='_blank'>std_11</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://vshpper.javaeye.com' target='_blank'><img alt="vshpper的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1299226978" title="vshpper的博客: " /></a></div>
+                  <div class="left"><a href='http://vshpper.javaeye.com' target='_blank'>vshpper</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href='http://java-laq.javaeye.com' target='_blank'><img alt="java_laq的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1299226978" title="java_laq的博客: java_laq" /></a></div>
+                  <div class="left"><a href='http://java-laq.javaeye.com' target='_blank'>java_laq</a></div>
+                </div>
+              
+            </div>
+          
+                      <div id="blog_menu">
+              <h5>博客分类</h5>
+              <ul>
+                <li><a href="/">全部博客 (16)</a></li>
+                
+                  <li><a href="/category/69259">apache-commons (1)</a></li>
+                
+                  <li><a href="/category/69260">struts2 (0)</a></li>
+                
+                  <li><a href="/category/69261">spring (0)</a></li>
+                
+                  <li><a href="/category/69262">hibernate (0)</a></li>
+                
+                  <li><a href="/category/74961">oracle (10)</a></li>
+                
+                  <li><a href="/category/69414">tomcat (3)</a></li>
+                
+                  <li><a href="/category/74962">eclipse (1)</a></li>
+                
+              </ul>
+            </div>
+            
+            
+            <div id="blog_others">
+              <h5>其他分类</h5>
+              <ul>
+                <li><a href="/blog/favorite">我的收藏</a> (532)</li>
+                <li><a href="/blog/code_favorite">我的代码</a> (0)</li>
+                                                <li><a href="/blog/topic">我的论坛主题帖</a> (0)</li>
+                <li><a href="/blog/post">我的所有论坛帖</a> (0)</li>
+                <li><a href="/blog/article">我的精华良好帖</a> (0)</li>
+                              </ul>
+            </div>
+            
+            <div id="recent_groups">
+              <h5>最近加入群组</h5>
+              <ul>
+                
+                  <li><a href="http://hibernate.group.javaeye.com">Hibernate</a></li>
+                
+                  <li><a href="http://dojo.group.javaeye.com">dojo</a></li>
+                
+                  <li><a href="http://jbpm.group.javaeye.com">JBPM @net</a></li>
+                
+                  <li><a href="http://struts2.group.javaeye.com">struts2</a></li>
+                
+                  <li><a href="http://ecside.group.javaeye.com">GT-Grid</a></li>
+                
+              </ul>
+            </div>
+            
+                          <div id="month_blogs">
+                <h5>存档</h5>
+                <ul>
+                  
+                    <li><a href="/blog/monthblog/2009-08">2009-08</a> (12)</li>
+                  
+                    <li><a href="/blog/monthblog/2009-06">2009-06</a> (4)</li>
+                  
+                  <li><a href="/blog/monthblog_more">更多存档...</a></li>
+                </ul>
+              </div>
+                        <div id="comments_top">
+              <h5>评论排行榜</h5>
+              <ul>
+                
+              </ul>
+            </div>
+            <div id="rss">
+              <ul>
+                <li><a href="/rss" target="_blank"><img alt="Rss" src="http://www.javaeye.com/images/rss.png?1299226978" /></a></li>
+                <li><a href="http://fusion.google.com/add?feedurl=http://zhanglei-javaeye.javaeye.com/rss" target="_blank"><img alt="Rss_google" src="http://www.javaeye.com/images/rss_google.gif?1299226978" /></a></li>
+              </ul>
+            </div>
+            <div class="local_bottom"></div>
+          
+        </div>
+      </div>
+
+      <div id="footer" class="clearfix">
+        <div id="copyright">
+          <hr/>
+          声明：JavaEye文章版权属于作者，受法律保护。没有作者书面许可不得转载。若作者同意转载，必须以超链接形式标明文章原始出处和作者。<br />
+          &copy; 2003-2011 JavaEye.com.   All rights reserved. 上海炯耐计算机软件有限公司 [ 沪ICP备05023328号 ]
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.javaeye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&user_id=-1' width='0' height='0' />");
+</script>
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-17926009-1");
+pageTracker._trackPageview();
+</script>
+      
+  </body>
+</html>

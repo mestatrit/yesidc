@@ -28,6 +28,7 @@ alter user cfccc default tablespace cfccc
 temporary tablespace temp;
 grant create session,connect,resource to cfccc;
 grant select, insert, update, delete on CHN_INST.APPLICATION_BASIC to CHN_NEWECREDIT;
+GRANT debug any procedure, debug connect session TO username;
 
 --5.表操作
 --5.0 不同表空间，进行复制表
@@ -253,7 +254,7 @@ CONNECT BY PRIOR id = code_type START WITH code='types';
  
 --23.DBLINK相关
 --在sys用户下，把CREATE PUBLIC DATABASE LINK，DROP PUBLIC DATABASE LINK权限授予给你的用户
-grant CREATE PUBLIC DATABASE LINK，DROP PUBLIC DATABASE LINK to scott;
+grant CREATE PUBLIC DATABASE LINK,DROP PUBLIC DATABASE LINK to scott;
 --则创建了一个以scott用户和北京数据库的链接beijing，我们查询北京的scott数据: 
 SQL>create public database link beijing connect to scott identified by tiger  
             using 'tobeijing';  
@@ -377,3 +378,45 @@ from user_tables
 where table_name = 'EMP';
 查看每个表空间的大小
 Select Tablespace_Name,Sum(bytes)/1024/1024 From Dba_Segments Group By Tablespace_Name 
+
+28.分隔字符串为数组
+set serveroutput on;
+  declare
+   l_input varchar2(4000) := '1,2,3';
+   l_count binary_integer;
+   l_array dbms_utility.lname_array;
+ begin
+   dbms_utility.comma_to_table
+   ( list   => regexp_replace(l_input,'(^|,)','\1x')
+   , tablen => l_count
+   , tab    => l_array
+   );
+   dbms_output.put_line(l_count);
+   for i in 1 .. l_count
+   loop
+     dbms_output.put_line
+     ( 'Element ' || to_char(i) ||
+       ' of array contains: ' ||
+       substr(l_array(i),2)
+     );
+   end loop;
+ end;
+  ------------
+
+CREATE OR REPLACE TYPE str_array AS TABLE OF VARCHAR2(10);  
+/  
+  
+CREATE OR REPLACE FUNCTION tf(stringin VARCHAR2) RETURN str_array PIPELINED IS  
+ i    PLS_INTEGER;  
+ str  VARCHAR2(100);  
+ tab  sys.dbms_utility.uncl_array;  
+BEGIN  
+  str := '"' || REPLACE(stringin, ',', '","') || '"';  
+  sys.dbms_utility.comma_to_table(str, i, tab);  
+  
+  FOR j IN 1 .. 5 LOOP  
+    PIPE ROW(TRANSLATE(tab(j),'A"','A'));  
+  END LOOP;  
+  RETURN;  
+END tf;  
+/  
