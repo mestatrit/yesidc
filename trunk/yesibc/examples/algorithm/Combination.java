@@ -5,10 +5,17 @@ import java.util.*;
 @SuppressWarnings({"rawtypes","unchecked"})
 public class Combination {
 	public static void main(String[] args) {
-		Vector testData = new Vector(Arrays.asList(1, 2, 3));
+		Vector testData = new Vector(Arrays.asList("a","b","c"));
 		Vector results = getAllCombinations(testData);
-		for (int i = 0; i < results.size(); i++)
+		for (int i = 0; i < results.size(); i++){
 			System.out.println(results.elementAt(i));
+			System.out.println((results.elementAt(i)).getClass());
+			Vector v1 = (Vector)results.elementAt(i);
+			for (int j = 0; j < v1.size(); j++){
+				System.out.println(v1.elementAt(j));
+				System.out.println((v1.elementAt(j)).getClass());
+			}		
+		}
 	}
 
 	public static Vector getAllCombinations(Vector data) {
