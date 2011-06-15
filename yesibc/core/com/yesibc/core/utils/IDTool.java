@@ -745,7 +745,7 @@ public class IDTool {
 		String s = "";
 		int j = 0;
 		for (int i = 0;; i++) {
-			s = getRandomPersonId(1967,1967);
+			s = getRandomPersonId(1946,1950);
 			if (s.indexOf("X") > -1 || s.indexOf("x") > -1) {
 				j++;
 				System.out.println(s);
