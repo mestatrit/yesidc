@@ -1,0 +1,403 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<link rel="stylesheet" href="../../templates/newgreen/index.css"></link>
+<link rel="alternate" type="application/rss+xml" title="ChinaUnix Blog RSS Feed" href="http://blog.chinaunix.net/u/rss.php?id=22677"></link>
+<meta name="keywords" content="oracle建立dblink步骤 - Oracle - benxiong">
+<meta name="description" content="中国最大的IT技术博客-ChinaUnix博客：oracle建立dblink步骤 - Oracle - benxiong">
+<title>oracle建立dblink步骤 - Oracle - benxiong</title>
+</head>
+<body leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 style="background:#FFFFFF;background-image:url()" align="center">
+
+<table border="0" cellspacing="0" cellpadding="0" background="/images/tophem1.gif" style="border-collapse: collapse;height:25" height="25" width="100%" align="center">
+<tr> <td id="tool-bar" align="left"  nowrap>
+&nbsp;
+<a href="http://blog.chinaunix.net/" target="_blank">博客首页</a>
+<a href="http://blog.chinaunix.net/register.php" target="_blank">注册</a>
+<a href="http://bbs.chinaunix.net/forumdisplay.php?fid=51" target="_blank">建议与交流</a> 
+<a href="http://blog.chinaunix.net/top/" target="_blank">排行榜</a>
+<a href="" target="_blank" onclick="NewWindows('http://www.cublog.cn/addlink.php?url='+location.href+'&title='+document.title);return false;">加入友情链接</a>
+
+</td><form id="loginForm" method="get" target="_blank" action="/search.php">
+<td align="right" nowrap>
+<img src="/u2/userstar.php?blogid=22677" id="starimg" border=0 alt="" width=55 height=12>
+<a href="/u2/star.php?blogid=22677" id="star" onclick="NewWindows(this.href);return false;" title="给此博客推荐值">推荐</a>
+<a href="/u2/complaint.php?blogid=22677" id="complaint" onclick="NewWindows(this.href);return false;" title="投诉此博客">投诉</a>
+
+ 搜索：<input type="text" name="q" size="20"> <input type="submit" value="搜索" class="button1"> <a href="/help/" >帮助</a></td>
+</form></tr>
+
+</table>
+<script language="javascript">
+<!--
+
+navHover = function() {
+var lis = document.getElementById("navmenu").getElementsByTagName("LI");
+for (var i=0; i<lis.length; i++) {
+lis[i].onmouseover=function() {
+this.className+=" iehover";
+}
+lis[i].onmouseout=function() {
+this.className=this.className.replace(new RegExp(" iehover\\b"), "");
+}
+}
+}
+
+function NewWindows(shref){
+var xx=(window.screen.width-450)/2;
+var yy=(window.screen.height-200)/2;
+pp=window.open(shref,"win","menubar=no,location=no,resizable=no,scrollbars=no,status=no,left="+xx+",top="+yy+",Width=450,Height=200");
+}
+function $(s){return document.getElementById(s);}
+//-->
+</script>
+<table border="0" cellspacing="0" cellpadding="0" height="143" style="border-collapse: collapse;background-image:url(http://www.cublog.cn/templates/newgreen/images/bg_top.gif);background-repeat: no-repeat" width="100%" bgcolor="#187218" align="center">
+<tr><td width="360"></td><td align="center" width="500" >
+
+<p style="line-height: 150%; margin: 5px">
+ <font style="font-size:14pt" color="#FFFFFF"><b>
+<p style="line-height: 150%; margin: 5px">
+ <font style="font-size:14px" 
+ 
+ color="#FFFFFF">
+ 
+<b>
+ 
+ 
+ 
+ benxiong 
+ 
+ 
+</b>
+ 
+ </font></p>
+ </b></font></p>
+
+</td><td width="360">
+人生有时候没有的选择!</td></tr>
+<tr><td colspan="3">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="980">
+<tr><td></td></tr>
+</table>
+</td></tr>
+</table>
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="100%" align="center" background="../../templates/green/images/bg_menu.gif" height="27" bgcolor="#FFFFFF">
+<tr><td width="30" align="center"><img src="../../templates/green/images/img_menu_left.gif" border="0" alt="" width="26" height="29" /></td><td width="200">
+<a href="http://benxiong.cublog.cn" class="list1" target="_blank">benxiong.cublog.cn</a>
+ 
+</td><td align="right" style="color:#2A5200" width="750">
+<ul id="navmenu"><li class="ul0"><a href="http://control.cublog.cn/" target="_blank" class="list1">管理博客</a> </li>
+
+<li class="ul0"><a href="http://control.cublog.cn/article_new.php" target="_blank" class="list1">发表文章</a></li>
+<li class="ul0"><a href="guestbook.html" class="list1">留言</a></li>
+<li class="ul0"><a href="links.html" class="list1">收藏夹</a>
+<ul class="ul1"><li><a href="links_13245.html"> · linux security<!-- a13245 --></a><!-- 13245 --></li>
+</ul>
+
+</li>
+<li class="ul0"><a href="group.html" class="list1">博客圈</a></li>
+<li class="ul0"><a href="music.html" class="list1">音乐</a>
+<!-- 0 -->
+</li>
+<li class="ul0"><a href="photo.html" class="list1">相册</a>
+<!-- 0 -->
+</li> 
+ 
+<li class="ul0"><a href="article.html" class="list1">文章</a>
+<ul class="ul1"><li><a href="article_114405.html"> · Cloud&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_114407.html"> · IaaS&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_114408.html"> · Nimbus<!-- a114408 --></a><!-- 114408 --></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="article_150341.html"> · Economy<!-- a150341 --></a><!-- 150341 --></li>
+<li><a href="article_115748.html"> · linux kernel<!-- a115748 --></a><!-- 115748 --></li>
+<li><a href="article_66736.html"> · linux operation<!-- a66736 --></a><!-- 66736 --></li>
+<li><a href="article_64749.html"> · linux server&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_94870.html"> · Cluster&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_114412.html"> · LVS<!-- a114412 --></a><!-- 114412 --></li>
+<li><a href="article_114411.html"> · Torque<!-- a114411 --></a><!-- 114411 --></li>
+</ul>
+</li>
+<li><a href="article_67359.html"> · DHCP<!-- a67359 --></a><!-- 67359 --></li>
+<li><a href="article_114413.html"> · DNS<!-- a114413 --></a><!-- 114413 --></li>
+<li><a href="article_94428.html"> · HTTP<!-- a94428 --></a><!-- 94428 --></li>
+<li><a href="article_67238.html"> · LDAP<!-- a67238 --></a><!-- 67238 --></li>
+<li><a href="article_70235.html"> · MediaWiki<!-- a70235 --></a><!-- 70235 --></li>
+<li><a href="article_67236.html"> · NIS <!-- a67236 --></a><!-- 67236 --></li>
+<li><a href="article_71511.html"> · SAMBA<!-- a71511 --></a><!-- 71511 --></li>
+<li><a href="article_98343.html"> · svn-cvs<!-- a98343 --></a><!-- 98343 --></li>
+</ul>
+</li>
+<li><a href="article_131570.html"> · Middleware&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_131571.html"> · Weblogic<!-- a131571 --></a><!-- 131571 --></li>
+</ul>
+</li>
+<li><a href="article_141672.html"> · Monitor&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_141673.html"> · Nagios<!-- a141673 --></a><!-- 141673 --></li>
+</ul>
+</li>
+<li><a href="article_71229.html"> · Program&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_71230.html"> · HTML<!-- a71230 --></a><!-- 71230 --></li>
+<li><a href="article_76352.html"> · Linux C/C++&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_144972.html"> · 工具及环境<!-- a144972 --></a><!-- 144972 --></li>
+</ul>
+</li>
+<li><a href="article_137014.html"> · Perl<!-- a137014 --></a><!-- 137014 --></li>
+<li><a href="article_89875.html"> · Shell<!-- a89875 --></a><!-- 89875 --></li>
+<li><a href="article_142575.html"> · VBS<!-- a142575 --></a><!-- 142575 --></li>
+<li><a href="article_139933.html"> · 批处理<!-- a139933 --></a><!-- 139933 --></li>
+</ul>
+</li>
+<li><a href="article_132136.html"> · Unix&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_132512.html"> · AIX<!-- a132512 --></a><!-- 132512 --></li>
+<li><a href="article_132137.html"> · HP-UX<!-- a132137 --></a><!-- 132137 --></li>
+</ul>
+</li>
+<li><a href="article_112077.html"> · Virtualization&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_112078.html"> · Xen<!-- a112078 --></a><!-- 112078 --></li>
+</ul>
+</li>
+<li><a href="article_65887.html"> · Network&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_77472.html"> · Router<!-- a77472 --></a><!-- 77472 --></li>
+<li><a href="article_65888.html"> · Switch<!-- a65888 --></a><!-- 65888 --></li>
+<li><a href="article_76843.html"> · Voice<!-- a76843 --></a><!-- 76843 --></li>
+<li><a href="article_76686.html"> · Wireless<!-- a76686 --></a><!-- 76686 --></li>
+</ul>
+</li>
+<li><a href="article_68165.html"> · Database&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_68166.html"> · MySQL<!-- a68166 --></a><!-- 68166 --></li>
+<li><a href="article_95337.html"> · Oracle<!-- a95337 --></a><!-- 95337 --></li>
+</ul>
+</li>
+<li><a href="article_67069.html"> · Windows <!-- a67069 --></a><!-- 67069 --></li>
+<li><a href="article_68130.html"> · Equipment&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_68131.html"> · Printer<!-- a68131 --></a><!-- 68131 --></li>
+<li><a href="article_74162.html"> · Storage&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_91804.html"> · Tivoli Storage Manager<!-- a91804 --></a><!-- 91804 --></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="article_68312.html"> · Others&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_150573.html"> · phone<!-- a150573 --></a><!-- 150573 --></li>
+</ul>
+</li>
+</ul>
+
+</li> 
+<li class="ul0"><a href="index.html" class="list1">首页</a></li>
+</ul>
+</td>
+<td width="10"></td>
+</tr>
+<tr><td colspan="4">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="980">
+<tr><td></td></tr>
+</table>
+</td></tr>
+</table>
+<script language="javascript">
+function $(s){return document.getElementById(s);}
+function ShowHideDiv(divid,iImg){
+if($(divid).style.display == "none"){
+iImg.src="../../templates/newgreen/images/dot2.gif";
+$(divid).style.display = "block";
+iImg.title="收起";
+}else{
+iImg.src="../../templates/newgreen/images/dot4.gif";
+$(divid).style.display = "none";
+iImg.title="展开";
+}
+}
+navHover();
+</script>
+<script language="javascript" src="http://stat.it168.com/pv.js"></script>
+<script>
+function sendPV(){
+    var pvTrack = new PvTrack();
+    pvTrack.type = 35; // 频道类别ID
+    pvTrack.channel = 189; // 频道ID
+   
+    pvTrack.pageType = 0;
+    pvTrack.track();
+}
+window.setTimeout("sendPV()", 0);
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-20237423-2']);
+  _gaq.push(['_setDomainName', '.chinaunix.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<div style='display:none'>
+<script type="text/javascript"> 
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F0ee5e8cdc4d43389b3d1bfd76e83216b' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
+<tr><td height="3"></td> </tr>
+</table>
+
+
+<br />
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="90%" align="center">
+<tr><td width="18" height="28"><img src="../../templates/newgreen/images/bg_art_left_top.gif" border="0" alt="" /></td><td background="../../templates/newgreen/images/bg_art_top.gif"><p style="line-height: 150%; margin: 5px"></p></td><td width="18" height="28"><img src="../../templates/newgreen/images/bg_art_right_top.gif" border="0" alt="" /></td></tr>
+<tr><td width="18"  background="../../templates/newgreen/images/bg_art_left.gif"></td><td bgcolor="#F5FDEE" align="center">
+<br />
+<font color="#295200" style="font-size:14pt"><b>oracle建立dblink步骤</b></font>
+
+<table border="1" cellspacing="1" cellpadding="0" style="border-collapse: collapse" bordercolor="#A5BD6B" width="100%">
+<tr><td align="center">
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;word-wrap:break-word;" width="100%">
+<tr><td align="center">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;word-wrap:break-word;"  width="100%">
+<tr><td >
+<div id="art"  style=" margin: 15px">
+<DIV>
+<P>物理上存放于网络的多个ORACLE数据库，逻辑上可以看成一个单一的大型数据库，用户可以通过网络对异地数据库中的数据进行存取，而服务器之间的协同处理对于工作站用户及应用程序而言是完全透明的，开发人员无需关心网络的链接细节、数据在网络节点中的具体分布情况和服务器间的协调工作过程。 </P>
+<P>数据库之间的链接建立在DATABASE LINK上。要创建一个DATABASE LINK，必须首先在建立链接的数据库上设置链接字符串，即配置一个远程数据库的本地网络服务名。 </P>
+<P>链接字符串的配置参见《客户端连接服务器》一节。 </P>
+<P><BR>数据库全局名称可以用以下命令查出：</P>
+<P>SELECT * FROM GLOBAL_NAME;</P>
+<P>修改可以用以下语句来修改参数值：</P>
+<P>ALTER SYSTEM SET GLOBAL_NAME=TRUE/FALSE;</P>
+<P>&lt;1&gt;、当数据库参数global_name=false时，就不要求数据库链接名称跟远端数据库名称一样。</P>
+<P>oracle数据库之间进行连接通讯。<BR>创建数据库链接的语法如下： <BR>CREATE [PUBLIC] DATABASE LINK link </P>
+<P>CONNECT TO username IDENTIFIED BY password </P>
+<P>USING ‘connectstring’ </P>
+<P>&nbsp;</P>
+<P>注意：创建数据库链接的帐号必须有CREATE DATABASE LINK或CREATE PUBLIC DATABASE LINK的系统权限，用来登录到远程数据库的帐号必须有CREATE SESSION权限。这两种权限都包含在CONNECT角色中（CREATE PUBLIC DATABASE LINK权限在DBA中）。 </P>
+<P>一个公用数据库链接对于数据库中的所有用户都是可用的，而一个私有链接仅对创建它的用户可用。由一个用户给另外一个用户授权私有数据库链接是不可能的，一个数据库链接要么是公用的，要么是私有的。 </P>
+<P>创建数据库链接时，还可以使用缺省登录方式，即不指定远程数据库的用户名和密码： </P>
+<P>create public database link zrhs_link </P>
+<P>using ‘zrhs’; </P>
+<P>在不指定用户名和口令的情况下，ORACLE使用当前的用户名和口令登录到远程数据库。 </P>
+<P>USING后面指定的是链接字符串，也就是远程数据库的网络服务名，这个服务名保存在本地TNSNAMES.ORA文件中，在该文件中定义了协议、主机名、端口和数据库名。 </P>
+<P>删除数据库链接的语句是： </P>
+<P>DROP [PUBLIC] DATABASE LINK zrhs_link </P>
+<P>数据库链接的引用 </P>
+<P>一般情况下引用数据库链接，可以直接将其放到调用的表名或视图名称后面，中间使用一个 @ 作为分割符： </P>
+<P>SELECT * FROM <A href="mailto:worker@zrhs_link"><FONT color=#800080>worker@zrhs_link</FONT></A>;</P>
+<P>对于经常使用的数据库链接，可以建立一个本地的同义词，方便使用： </P>
+<P>CREATE SYNONYM worker_syn FOR <A href="mailto:worker@zrhs_link"><FONT color=#800080>worker@zrhs_link</FONT></A>;</P>
+<P>还可以建立一个本地的远程视图，方便使用： </P>
+<P>CREATE VIEW worker AS SELECT * FROM <A href="mailto:worker@zrhs_link"><FONT color=#800080>worker@zrhs_link</FONT></A> where… ;</P>
+<P>现在本视图可与本地数据库中的任何其它视图一样对待，也可以授权给其它用户，访问此视图，但该用户必须有访问数据库链接的权限。 </P>
+<P>对于另外一种情况，所要访问的表不在数据库链接中指定的远程帐户下，但该帐户有访问该表的权限，那么我们在表名前要加上该表的用户名： </P>
+<P>SELECT * FROM <A href="mailto:camel.worker@zrhs_link"><FONT color=#3b5999>camel.worker@zrhs_link</FONT></A> ;</P>
+<P>&lt;2&gt;、当数据库参数global_name=true时，那就要求数据库链接名称跟远端数据库全局名称一样<BR></P>
+<P>数据库全局名称可以用以下命令查出</P>
+<P>SELECT * FROM GLOBAL_NAME;</P>
+<P><BR>创建dblink的语法：<BR>sql&gt;create database link 数据库链路名<BR>connect to 用户名 identified by 口令<BR>using '主机字符串名';<BR>如：<BR>sql&gt;create database link ora9i.us.oracle.com ### 这里的us.oracle.com为oracle默认域名 ###<BR>connect to scott identified by tiger<BR>using 'sun';</P>
+<P>1)dblink名必须与远程数据库的全局数据库名（global_name）相同；<BR>2)用户名，口令为远程数据库用户名，口令;<BR>3)主机字符串为本机tnsnames.ora中定义的串;<BR>4)两个同名的数据库间不得建立dblink;<BR>然后，你就可以通过dblink访问远程数据库了。<BR>如：<BR>sql&gt;select * from 表名@ora9i.us.oracle.com;<BR>还可以建立快照(snapshot)通过dblink实现远程数据自动传输。</P>
+<P>查看所有的数据库链接，进入系统管理员SQL&gt;操作符下，运行命令： <BR><BR>SQL&gt;select owner,object_name from dba_objects where object_type='DATABASE LINK';</P>
+<P><FONT color=#00ff40></FONT>&nbsp;</P>
+<P><FONT color=#00ff40>下面对第二种情况进行举例说明：</FONT></P>
+<P>北京的总部有一个集中的数据库，其SID是SIDBJ，用户名：userbj,密码：bj123,北京的IP地址是：192.168.1.101。<BR>在本地(新疆)的分公司也有一个数据库，其SID是SIDXJ，用户：userxj，密码：xj123，新疆的IP地址是：192.168.1.100。<BR>要将本地新疆的SIDXJ数据库中访问到北京的数据库SIDBJ中的数据。<BR>也就是说，在sidxj的数据库中，用户userxj(192.168.1.100)需要建立DBLINK，以userbj的用户身份访问sidBJ(192.168.1.101)中的数据。</P>
+<P>测试环境：两个数据库均建立在WINXP上，ORACLE的版本均为Oracle817<BR>建立环境时，要注意关闭两台计算机上的Windows的防火墙，否则，会出现能ping通，但Oracle连接不通的情况。</P>
+<P><SPAN style="BACKGROUND-COLOR: #ffff00">1、问：如何返回数据库的GLOBAL_NAME？</SPAN><BR>执行SELECT * FROM GLOBAL_NAME;<BR>北京的数据库的GLOBAL_NAME为SIDBJ.US.ORACLE.COM<BR>新疆的数据库的GLOBAL_NAME为SIDXJ</P>
+<P><SPAN style="BACKGROUND-COLOR: #ffff00">2、问：如何查看Global_name参数是true还是False?</SPAN><BR>答：执行：SQL&gt; show parameter global_name;<BR>执行的结果如下：<BR>NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TYPE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUE<BR>------------------------------------ ----------- ------------------------------<BR>global_names&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; boolean&nbsp;&nbsp;&nbsp;&nbsp; TRUE</P>
+<P>表示该参数是true.</P>
+<P>也可以通过查看v$option视图，如果其中Advanced replication为TRUE，则支持高级复制功能；否则不支持。<BR>执行语句为：select * from v$option;</P>
+<P><SPAN style="BACKGROUND-COLOR: #ffff00">3、问：如何检查Oracle的版本是否支持同步功能？</SPAN><BR>答：执行select * from v$option where PARAMETER='Advanced replication'语句，<BR>如何返回值为True，那么就是支持，否则就是不支持。在两个数据库中都是检查是否支持才行。</P>
+<P><BR><SPAN style="COLOR: #ff0000">建立步骤：</SPAN></P>
+<P>1、在本地建立一个Oracle的客户端连接tns_xj_to_bj，用于连接北京的数据库。<BR>2、新建一个连接tnsxj，用于连接本地的sidxj数据库，以tnsxj/userxj/xj123登录到PLSQL中。</P>
+<P>下面开始创建连接到北京的远程数据连接DBLink。<BR>create database link SIDBJ.US.ORACLE.COM connect to userbj identified by bj123 using 'tns_xj_to_bj'; <BR>其中：SIDBJ.US.ORACLE.COM是远程的数据库的global_name,userbj是连接SIDBJ的用户名，bj123是userbj的密码，<BR>tns_xj_to_bj是本地建立的连接到北京的数据库的服务名。</P>
+<P>3、测试连接是否成功：<BR>select * from dual@SIDBJ.US.ORACLE.COM <BR>如果返回结果如下则表示连接成功了。<BR>DUMMY<BR>-----<BR>X</P>
+<P>4、查询已经建立的远程连接名：<BR>SQL&gt; select owner,object_name from dba_objects where object_type='DATABASE LINK';</P>
+<P>OWNER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OBJECT_NAME<BR>------------------------------ --------------------------------------------------------------------------------<BR>SYSTEM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SIDBJ.US.ORACLE.COM<BR>USERXJ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DBLINK_XJ_TO_BJ<BR>USERXJ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SIDBJ</P>
+<P><BR>5、至此，在新疆的计算机上建立了一个DBLINK，用于连接到北京的数据库上，<BR>在北京的数据库中，建立一个表用于测试。<BR>create table USERBJ.BJ_TEST<BR>(<BR>STU_ID&nbsp;&nbsp; NUMBER,<BR>STU_NAME VARCHAR2(100)<BR>)<BR>在其中增加一条记录：<BR>insert into BJ_TEST (STU_ID, STU_NAME)<BR>values (1, '钟德荣');</P>
+<P><BR>在新疆的数据库中查询北京的数据库中表的信息：<BR>select * from bj_test@SIDBJ.US.ORACLE.COM<BR>查询结果：<BR>&nbsp;&nbsp;&nbsp; STU_ID STU_NAME<BR>---------- --------------------------------------------------------------------------------<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 钟德荣</P>
+<P>表示查询是正常的。<BR>说明：该查询是用</P>
+<P><BR>以上脚本全部通过测试。</P>
+<P>&nbsp;</P>
+<P>引自：</P>
+<P><A href="http://www.cnblogs.com/xinyuxin912/archive/2008/01/09/1032261.html">http://www.cnblogs.com/xinyuxin912/archive/2008/01/09/1032261.html</A></P>
+<P><A href="http://cheneyph.javaeye.com/blog/480462">http://cheneyph.javaeye.com/blog/480462</A></P>
+<P>&nbsp;</P></DIV>
+</div>
+</td></tr>
+</table>
+
+<p style="line-height: 150%; margin: 5px">
+ 
+ 
+</p>
+</td></tr>
+ 
+ 
+<tr><td height="25" align="center">
+<font color="#295200">发表于： 2011-01-10 ，修改于： 2011-01-10 10:03，已浏览105次，有评论2条</font>
+<a href="/u2/star.php?blogid=22677&artid=2470983" id="star" onclick="NewWindows(this.href);return false;" title="推荐这篇文章">推荐</a>
+<a href="/u2/complaint.php?blogid=22677&artid=2470983" id="complaint" onclick="NewWindows(this.href);return false;" title="投诉这篇文章">投诉</a>
+
+</td></tr>
+
+
+</table>
+
+
+</td></tr>
+</table>
+
+
+</td><td width="18" background="../../templates/newgreen/images/bg_art_right.gif"></td></tr>
+
+
+<tr><td width="18" height="28"><img src="../../templates/newgreen/images/bg_art_left_bottom.gif" border="0" alt="" /></td><td background="../../templates/newgreen/images/bg_art_bottom.gif"><p style="line-height: 150%; margin: 5px"></p></td><td width="18" height="28"><img src="../../templates/newgreen/images/bg_art_right_bottom.gif" border="0" alt="" /></td></tr>
+
+
+</table>
+<br />
+<table border="1" cellspacing="1" cellpadding="0" style="border-collapse: collapse" bordercolor="#A5BD6B" width="90%" align="center">
+<tr><td height="25" style="color:#295200" bgcolor="#EFF7DE"> <b>网友评论</b></td></tr>
+<tr><td height="1" bgcolor="#FFFFFF"></td></tr>
+<tr><td align="center" bgcolor="#F9F5E7">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;color:#295200;word-wrap:break-word;" width="100%" align="center">
+<tr><td width="60" valign="top"><b>内容：</b></td>
+<td width="580" valign="top">
+
+<pre style="line-height: 150%; margin: 0px;" wrap="break-word">
+很好的,&nbsp;收藏了<br />
+推荐一个博客，提供很多免费软件编程电子书下载：<br />
+http://free-ebooks.appspot.com</pre>
+</td>
+</tr>
+<tr height="25">
+<td colspan="2" style="color:#737373;font-size:8pt">
+free-ebooks.appspot.com评论于：2011-03-08 13:25:32  &#32;&#32; （111.193.195.★）
+</td></tr>
+
+<tr><td height="15" colspan="3"></td></tr>
+<tr><td colspan="3"><img src="../../templates/newgreen/images/middle_line.gif"  border="0" alt="" /></td></tr>
+<tr><td width="60" valign="top"><b>内容：</b></td>
+<td width="580" valign="top">
+
+<pre style="line-height: 150%; margin: 0px;" wrap="break-word">
+很好的,&nbsp;收藏了<br />
+推荐一个博客，提供很多免费软件编程电子书下载：<br />
+http://free-ebooks.appspot.com</pre>
+</td>
+</tr>
+<tr height="25">
+<td colspan="2" style="color:#737373;font-size:8pt">
+free-ebooks.appspot.com评论于：2011-03-08 13:25:54  &#32;&#32; （111.193.195.★）
+</td></tr>
+
+<tr><td height="15" colspan="3"></td></tr>
+<tr><td colspan="3"><img src="../../templates/newgreen/images/middle_line.gif"  border="0" alt="" /></td></tr>
+</table>
+</td></tr>
+</table>
+<br />
+
+
+<table border="1" cellspacing="1" cellpadding="0" style="border-collapse: collapse" bordercolor="#A5BD6B" width="90%" align="center">
+<tr><td height="25" style="color:#295200" bgcolor="#EFF7DE"> <b>发表评论</b></td></tr>
+<tr><td height="1" bgcolor="#FFFFFF"></td></tr>
+<tr><td align="center" bgcolor="#F9F5E7">
+ 
+<IFRAME NAME="comment" SRC="/comment/comment.php?bg=F9F5E7&ctype=0&iscomment=1&artid=2470983&blogid=22677" WIDTH="100%" HEIGHT="160" frameborder="0"></IFRAME>
+ 
+
+</td></tr>
+</table>
