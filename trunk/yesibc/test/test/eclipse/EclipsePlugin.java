@@ -91,9 +91,7 @@ public class EclipsePlugin {
 	}
 
 	public static void main(String[] args) {
-		new EclipsePlugin("D:/Java/eclipse-plugin/jad3.3/").print();
-		new EclipsePlugin("D:/Java/eclipse-plugin/toString").print();
-		new EclipsePlugin("D:/Java/eclipse-plugin/Implementors").print();
-		//new EclipsePlugin("D:/Java/eclipse-plugin/svn/eclipse/plugins").print();
+		//new EclipsePlugin("D:/Java/eclipse-plugin/jad3.3/").print();
+		new EclipsePlugin("D:/CVSRoot/Others/opensource/Jboss/Drools/Source/drools-5.1.1-eclipse-all/plugins").print();
 	}
 }
