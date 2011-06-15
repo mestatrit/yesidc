@@ -102,6 +102,9 @@ vi sshd_config
 目录：C:\jdk1.5\jre\lib\security
 命令：keytool -import -alias nciic2010 -keystore cacerts -file /app/apache/uat2/cat02/ncicc201004.cer -trustcacerts 
 密码：changeit
+keytool -delete -alias keyAlias -keystore keystore-name -storepass password
+keytool -list -keystore D:/keystore/test
+keytool -printcert -file D:/keystore/TC.cer 
 
 #CUT命令
 cut命令有5个参数，其中-c,-b,-f分别表示"character", "byte"以及"field"截取方式。当采用field模式截取时，需要用"-d"参数指定一个分隔符，分割符只能为单个字符。另外还有一个"- s"，suppress，表示如果行中没有给出的分割符则不输出该行（默认为如果没有分隔符则将该行原封不动输出）
@@ -217,3 +220,18 @@ gpasswd -d A GROUP
 8、显示用户信息
 id user
 cat /etc/passwd
+
+# chmod [-R] user mode filename
+[bady]# chmod u+w a+rx dir1 /* 对于目录1，设置任何使用者皆有读取和执行的权限，但只有所有者可作修改 */
+[bady]# chmod u+rwx go-rwx file1 /* 对于文件1，设定只有所有者有读，写，执行的权限 */
+[bady]# chmod u+x file2 /* 对于文件2，增加当前用户的可执行权限 */
+[bady]# chmod g+x file3 /* 对于文件3，增加工作组使用者可执行权限 */
+[bady]# chmod o-r file4 /* 对于文件4，删除其他用户读取权限 */
+[bady]# chmod 555 file5 /* 对于文件5，设置所有用户可读，可执行的权限 */
+/* 关于数字: 1 为执行权限，2 为写权限，4 为读权限；上面的第一个 5 为文件所有者的权限，即 1+4=5 权限为 rx ，后面的两个 5 依次为 组及其他用户的权限 */
+# chown [-R] user filename
+[bady]# chown user1 file1 /* 将文件 file1 改为用户 user1 所有 */
+[bady]# chown -R user1 dir1 /* 将目录 dir1 其子目录下的所有文件改为用户 user1 所有 */
+# chgrp [-R] groupname filename
+[bady]# chgrp vlsi file1 /* 将文件 file1 的工作组所有权改为 vlsi 工作组所有 */
+[bady]# chgrp -R vlsi file1 /* 将目录 dir1 及其子目录下的所有文件的工作组所有权改为 vlsi 工作组所有 *
