@@ -1,0 +1,9 @@
+1. MyEclipse设置JVM的参数：
+-vmargs -Xms128M -Xmx512M -XX:PermSize=64M -XX:MaxPermSize=128M
+-XX:PermSize设置非堆内存初始值，默认是物理内存的1/64；由XX:MaxPermSize设置最大非堆内存的大小，
+默认是物理内存的1/4。
+VM参数导致程序无法启动主要有以下几种原因：
+1) 参数中-Xms的值大于-Xmx，或者-XX:PermSize的值大于-XX:MaxPermSize；
+2) -Xmx的值和-XX:MaxPermSize的总和超过了JVM内存的最大限制，比如当前操作系统最大内存限制，
+或者实际的物理内存等等。说到实际物理内存这里需要说明一点的是，如果你的内存是1024MB，
+但实际系统中用到的并不可能是1024MB，因为有一部分被硬件占用了。

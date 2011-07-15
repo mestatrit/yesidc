@@ -1,0 +1,109 @@
+1.让Windows下的Tomcat将控制台信息记录到日志
+一、修改startup.bat中
+call "%EXECUTABLE%" start %CMD_LINE_ARGS% 为 call "%EXECUTABLE%" run %CMD_LINE_ARGS%
+二、修改catalina.bat中
+>> %CATALINA_BASE%\logs\catalina.out 加在 %CMD_LINE_ARGS% %ACTION% 后面
+
+================================================================
+a.查看jdk最大支持内存
+  client版本:java -Xmx2g –version
+  server不饿按版本: java -Xmx1456m -version
+b.jdk性能调优
+    jvm有server版和client版。client版本加载较快，server版加载慢但运行起来较快。 
+  在命令行 java -version 可以看到jvm配置的是哪个版本。 
+  通过jvm.cfg更改默认java.exe调用的jvm.dll。 
+  编辑%JAVA_HOME%jre/lib/i386/jvm.cfg 
+  把第二行的-server KNOWN 放到第一行， 
+c.设置tomcat自动启动
+1、cd 到tomcat的bin目录下 
+      C:\> cd tomcat/bin 
+2、运行命令service install, 就可以把tomcat注册成系统服务了 
+      c:\tomcat\bin> service install 
+      运行命令service uninstall，就可以删除服务。 
+      c:\tomcat\bin> service uninstall 
+  3、设置为开机自动启动，需修改bin目录下的service.bat文件。 
+      在倒数第三行左右的那句输出 
+           echo The service '%SERVICE_NAME%' has been installed. 
+      在这之前加一句 
+            sc config %SERVICE_NAME% start= auto 
+   备注： 
+      启动tomcat服务： c:\tomcat> net start tomcat6 
+      停止tomcat服务： c:\tomcat> net stop tomcat6 
+d.防止tomcat内存溢出
+  1.catalina里修改JAVA_OPTS='-Xms256m -Xmx512m'；
+    set JAVA_OPTS=-Xms512m -Xmx1024m -XX:PermSize=128M -XX:MaxPermSize=256m
+    rem --------------------------------------------------------------------------
+    rem Guess CATALINA_HOME if not defined
+  2.server.xml里修改connecter的配置参数，
+  3.修改JDK的版本为server版，即可。
+	  编辑%JAVA_HOME%jre/lib/i386/jvm.cfg 
+	  把-server KNOWN 放到第一行
+在myeclipse里面设置的内容：
+     -Xms256m -Xmx512m -Dcom.sun.management.jmxremote=true
+
+
+
+
+
+TOMCAT内存溢出 
+就在今天,我把数据库的数据读出来,放在LIST里,晕.具然出现TOMCAT内存益处,在网上查查看,看了一个方法,还可以,现在告诉大家, 
+   Tomcat默认可以使用的内存为128MB，在较大型的应用项目中，这点内存是不够的，轻微时，会使系统性能急剧下降，严重时,将导致系统无法运行，影响系统的稳定性。当内存不够用时，常见的问题就是报tomcat内存益处错误，从儿导致客户端包500错误的，如下：解决方法主要是加大TOMCAT可利用内存，并在程序当中加大内存使用。因此根据应用的需求，有必要调整JVM使用内存的大小。现在将手工修改tomcat内存的方法及注意事项列出，希望能对新人有所帮助。
+tomcat提供了两种安装模式，即免安装（*.zip）和安装（*.exe）方式。针对不同的安装方式下修改tomcat内存大小的方法几注意问题（windows环境）：
+ 方式1：当选择安装方式时，可以在安装tomcat的过程进行设置tomcat初始化内存的大小。但是假如说在安装时没有选择，或者应用改变了，需要增加tomcat内存时怎么半呢？此时，我们就要手工修改tomcat的一些文件了：
+ 看了很多网上的资料，都是说修改<CATALINA_HOME>\bin\catalina.bat文件的内容，即在里面增加一行代码：
+set JAVA_OPTS=-Xms512m -Xmx512m //表示初始化最小可用内存和最大可用内存都是512MB（修改相应值即可）
+ 
+ 如在catalina.bat的
+     rem ----- Execute The Requested Command
+     echo Using CATALINA_BASE:   %CATALINA_BASE%
+     echo Using CATALINA_HOME:   %CATALINA_HOME%
+     echo Using CATALINA_TMPDIR: %CATALINA_TMPDIR%
+     echo Using JAVA_HOME:       %JAVA_HOME%
+这一栏改为
+    rem ----- Execute The Requested Command
+    set JAVA_OPTS=-Xms512m -Xmx512m
+    echo Using CATALINA_BASE:   %CATALINA_BASE%
+    echo Using CATALINA_HOME:   %CATALINA_HOME%
+    echo Using CATALINA_TMPDIR: %CATALINA_TMPDIR%
+    echo Using JAVA_HOME:       %JAVA_HOME%
+就可以将JAVA虚拟机分配内存  508.0625MB的!
+但是很多人修改后，发现修改并没有起作用，即通过windows的服务启动tomcat时，实际的内存还是默认的，修改的设置并没有起作用；而通过<CATALINA_HOME>\bin\startup.bat 启动却是生效的。这是为什么呢？因为在安装过程中，JVM的初始化参数已经写在注册表中了，由于没有修改注册表中相关参数，所以以windows服务方式启动时，修改的并没有生效。而通过<CATALINA_HOME>\bin\startup.bat 启动直接是通过<CATALINA_HOME>\bin\catalina.bat文件中的配置的。你需要重新加载到系统服务中才生效，或者你手工在注册表中查找修改启动值，加载到服务中的时候参数已经配置好了，自己修改artup.bat不会改变注册表中的参数设置。
+ 
+解决方法：修改注册表中的参数，加入JVM初始化内存的参数：
+HKEY_LOCAL_MACHINE\SOFTWARE\Apache Software Foundation\Tomcat Service Manager\Tomcat5\Parameters\JavaOptions
+值为
+-Dcatalina.home="C:\ApacheGroup\Tomcat 5.0"
+-Djava.endorsed.dirs="C:\ApacheGroup\Tomcat 5.0\common\endorsed"
+-Xrs
+如加入 -Xms512m -Xmx800m
+ 
+方式2：针对免安装的用户，也可以通过将tomcat注册为windows的一个服务的方式来实现：‘
+我们可以对service.bat文件做一些其他修改，使tomcat更加能满足我们各种不同需求时的要求
+1. 如果让tomcat编译jsp文件，就在PR_CLASSPATH中加入J2SDK的tools.jar
+修改前：
+set PR_CLASSPATH=%CATALINA_HOME%\bin\bootstrap.jar
+修改后：
+set PR_CLASSPATH=%JAVA_HOME%\lib\tools.jar;%CATALINA_HOME%\bin\bootstrap.jar
+2.要使用一个特定的JVM，就要修改jvm的参数；要使注册的windows服务的启动方式为自动，增加--Startup Automatic，这个是比较常用的；要用定制的server.xml配置文件并且传递多个参数给StartClass，要修改StartParams的值，各个值之间用分号分隔：
+修改前：
+"%EXECUTABLE%" //IS//%SERVICE_NAME% --Jvm auto
+--StartClass org.apache.catalina.startup.Bootstrap --StopClass org.apache.catalina.startup.Bootstrap
+--StartParams start --StopParams stop
+修改后：
+"%EXECUTABLE%" //IS//%SERVICE_NAME% --Jvm "%JAVA_HOME%\jre\bin\server\jvm.dll"
+--StartClass org.apache.catalina.startup.Bootstrap --StopClass org.apache.catalina.startup.Bootstrap
+--StartParams "-config;%CUSTOM_SERVERXML_FILE%;-nonaming;start" --StopParams stop
+--Startup Automatic
+3. 指定最大和最小的内存限制，要增加jvm的初始参数
+修改前：
+"%EXECUTABLE%" //US//%SERVICE_NAME% --JvmOptions
+"-Dcatalina.base=%CATALINA_BASE%;-Dcatalina.home=%CATALINA_HOME%;-Djava.endorsed.dirs=%CATALINA_HOME%\common\endorsed"
+--StartMode jvm --StopMode jvm
+修改后：
+"%EXECUTABLE%" //US//%SERVICE_NAME% --JvmOptions
+"-Xms128M;-Xmx256M;-Dcatalina.base=%CATALINA_BASE%;-Dcatalina.home=%CATALINA_HOME%;-Djava.endorsed.dirs=%CATALINA_HOME%\common\endorsed"
+--StartMode jvm --StopMode jvm
+4.有时注册windows服务成功后，但是启动服务时显示“发生服务特定错误: 0.”
+就是因为jvm没有指定，修改Jvm auto为Jvm "%JAVA_HOME%\jre\bin\server\jvm.dll"后重新注册windows服务就可以启动了。
+
+     
