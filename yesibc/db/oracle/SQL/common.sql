@@ -334,19 +334,19 @@ set trimout on;
 set verify off;
 set termout off; 
 
-spool srcipt.sql
+spool C:/Users/it.dev/Desktop/Test/srcipt.sql
 declare
-   cursor cur is select distinct owner, name from all_source where type like 'PACKAGE%' and owner='CHN_DES_UAT4';
+   cursor cur is select distinct owner, name from all_source where type like 'PACKAGE%' and owner='DW';
 begin
    for rec in cur loop
        dbms_output.put_line('spool '||rec.name||'.sql');
-       dbms_output.put_line('select text from all_source where owner='||''''||rec.owner||''''||' and name='||''''||rec.name||''''||' and type like '||''''||'PACKAGE%'||''''||'and owner=''CHN_DES_UAT4'''||' order by type,line;');
+       dbms_output.put_line('select text from all_source where owner='||''''||rec.owner||''''||' and name='||''''||rec.name||''''||' and type like '||''''||'PACKAGE%'||''''||'and owner=''DW'''||' order by type,line;');
        dbms_output.put_line('spool off;');
    end loop;
 end;
 /
 spool off;
-@srcipt.sql
+@C:/Users/it.dev/Desktop/Test/srcipt.sql
 exit;
 
 26.导出表结构
@@ -420,3 +420,18 @@ BEGIN
   RETURN;  
 END tf;  
 /  
+
+29. 查询表中某一字段最大值所在行的数据 (第一比第二效率好得多)
+1) select a.app_id, a.seq, a.* 
+    from des_decisions_audit a
+where 
+(
+select count(*) from des_decisions_audit 
+where app_id=a.app_id
+        and app_id>a.app_id
+)<1
+
+2)select a.* from des_decisions_audit a,
+(select max(seq) seq_id,app_id from des_decisions_audit group by app_id,seq order by app_id,seq) b 
+where
+a.app_id=b.app_id and a.seq=b.seq_id; 
