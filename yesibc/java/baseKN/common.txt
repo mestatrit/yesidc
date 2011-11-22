@@ -7,3 +7,11 @@ VM参数导致程序无法启动主要有以下几种原因：
 2) -Xmx的值和-XX:MaxPermSize的总和超过了JVM内存的最大限制，比如当前操作系统最大内存限制，
 或者实际的物理内存等等。说到实际物理内存这里需要说明一点的是，如果你的内存是1024MB，
 但实际系统中用到的并不可能是1024MB，因为有一部分被硬件占用了。
+
+2.java 命令行引用jar包的方法
+javac -cp d:/javatest/dom4j.jar Dom4jDemo.java
+//这部分必须注意，d:/javatest 是Dom4jDemo.class所在的目录，运行时;d:/javatest 必须包括
+D:/javatest>java -classpath d:/javatest/dom4j.jar;d:/javatest/jaxen.jar;d:/javat
+est Dom4jDemo
+//如果像下面的写法则会提示未找到Dom4jDemo的main函数
+D:/javatest>java -classpath d:/javatest/dom4j.jar;d:/javatest/jaxen.jar Dom4jDemo
