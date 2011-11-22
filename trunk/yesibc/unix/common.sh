@@ -235,3 +235,25 @@ cat /etc/passwd
 # chgrp [-R] groupname filename
 [bady]# chgrp vlsi file1 /* 将文件 file1 的工作组所有权改为 vlsi 工作组所有 */
 [bady]# chgrp -R vlsi file1 /* 将目录 dir1 及其子目录下的所有文件的工作组所有权改为 vlsi 工作组所有 *
+
+9.FTP命令
+ prompt off关闭提示，-> mget *.* 取某一目录下所有文件．
+ 
+ 10. dos2unix build.xml 
+ 
+ 11.文件切割：
+a) 切中间的指定行（如1001行至2000行）:
+head -2000 inputfile | tail -1000 > outputfile 
+sed -n '1001,2000p' ur-file >newfile
+b)split -b 20m RevolutionOS.rmvb RevOS_part_
+c)split -l 100 test.txt 其实，如果不加任何参数，默认情况下是以1000行大小来分割的。 
+d)root@pps public_rw] cat RevOS_part_* > RevolutionOS_RSB.rmvb 
+这里不怕组装顺序错误，因为分割的时候是按字母顺序排下来的，cat也是按照字母顺序处理的，如果不放心，将组装后的文件哈希对比一下：
+ [root@pps public_rw]# md5sum RevolutionOS.rmvb
+ac7cce07f621b1ed6f692e6df0ac8c16  RevolutionOS.rmvb 
+[root@pps public_rw]# md5sum RevolutionOS_RSB.rmvb
+ac7cce07f621b1ed6f692e6df0ac8c16  RevolutionOS_RSB.rmvb
+
+12.查看所有用戶和組
+cat /etc/passwd
+cat /etc/group
