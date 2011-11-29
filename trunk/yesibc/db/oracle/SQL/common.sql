@@ -435,3 +435,80 @@ where app_id=a.app_id
 (select max(seq) seq_id,app_id from des_decisions_audit group by app_id,seq order by app_id,seq) b 
 where
 a.app_id=b.app_id and a.seq=b.seq_id; 
+
+/*oracle jobs 导出为执行脚本
+  就是把user_jobs或dba_jobs,导成DBMS_JOB.SUBMIT可以插入job的格式
+  其中user_jobs是当前用户的job,dba_jobs则是全部
+  下面只是随便整理了下，可以按照个人需要修改
+　设置　　file_dir  file_name　参数
+　导出文件内容如最后附所视
+　局限性　要设置utl_file_dir(alter system set utl_file_dir=) ，file_dir要包括在
+　文件生成在服务端
+　其实可以封装成过程，或把结果存入临时表，或dbms_output.put_line
+  edit by inreyou 14:41 2007-11-16
+*/
+/*oracle jobs 导出为执行脚本
+
+  就是把user_jobs或dba_jobs,导成DBMS_JOB.SUBMIT可以插入job的格式
+  其中user_jobs是当前用户的job,dba_jobs则是全部
+  下面只是随便整理了下，可以按照个人需要修改
+
+　设置　　file_dir  file_name　参数
+　导出文件内容如最后附所视
+
+　局限性　要设置utl_file_dir(alter system set utl_file_dir=) ，file_dir要包括在
+　文件生成在服务端
+
+　其实可以封装成过程，或把结果存入临时表，或dbms_output.put_line
+
+  edit by inreyou 14:41 2007-11-16
+*/
+
+Declare
+  f         utl_file.file_type;
+  jobn      integer;
+  s         varchar2(4000);
+  file_dir  varchar(100);--目录
+  file_name varchar(100);--文件名
+
+begin
+  file_dir  := 'DW_ETL';
+  file_name := 'utl_file1.sql';
+  f := utl_file.fopen(file_dir, file_name, 'w');
+  s := 'declare' || chr(13) || chr(10) || ' jobno number;' || chr(13) ||
+       chr(10) || 'snd varchar2(20);' || chr(13) || chr(10) || 'begin';
+  utl_file.put_line(f, s);
+  --if export all jobs change user_jobs to dba_jobs
+  for js in (select job, log_user, next_date, broken, interval, what
+               from user_jobs) loop
+    --dbms_job.user_export(y,s) 这种格式导出作业号插入不好处理
+    s := 'execute immediate ''select to_char(' || js.interval ||
+         ',''||chr(39)
+     ||''yyyy-mm-dd hh24:mi:ss''||chr(39)||'') from dual'' into snd;';
+  
+    s := S || chr(13) || chr(10) || 'DBMS_JOB.SUBMIT(jobno, ' || chr(39) ||
+         js.what || chr(39) || ',to_date(snd,' || chr(39) ||
+         'yyyy-mm-dd hh24:mi:ss' || chr(39) || ')' || ',' || chr(39) ||
+         js.interval || chr(39) || ');' || chr(13) || chr(10);
+    utl_file.put_line(f, s);
+  
+  --s:='dbms_job.run(jobno);';
+  --utl_file.put_line(f,s);
+  
+  end loop;
+  s := 'commit;' || chr(13) || chr(10) || 'end;';
+  utl_file.put_line(f, s);
+  utl_file.fclose(f);
+end;
+
+30.导出表。
+set pagesize 0;
+set long 90000; 
+set feedback off; 
+set echo off; 
+spool get_allddl.sql; 
+SELECT DBMS_METADATA.GET_DDL('TABLE',u.table_name) 
+FROM USER_TABLES u; 
+SELECT DBMS_METADATA.GET_DDL('INDEX',u.index_name) 
+FROM USER_INDEXES u; 
+spool off;
