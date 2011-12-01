@@ -512,3 +512,32 @@ FROM USER_TABLES u;
 SELECT DBMS_METADATA.GET_DDL('INDEX',u.index_name) 
 FROM USER_INDEXES u; 
 spool off;
+
+31.导出存储过程
+Declare
+  f         utl_file.file_type;
+  file_dir  varchar(100);--目录
+  file_name varchar(100);--文件名
+  vNames   varchar2(100);
+  vText   varchar2(2000);
+cursor oNames is select object_name from user_procedures;
+cursor oText is select text from user_source a where a.name = vNames order by a.line;
+
+begin
+  file_dir  := 'DW_ETL';
+  file_name := 'proc_txt.sql';
+  f := utl_file.fopen(file_dir, file_name, 'w');
+
+  for oNames in (select object_name from user_procedures) loop
+    
+       vNames := oNames.Object_Name;  
+       for oText in (select text from user_source a where a.name = vNames order by a.line) loop
+  
+            vText := oText.text;  
+
+            utl_file.put_line(f, vText);
+  
+        end loop;  
+  end loop;
+  utl_file.fclose(f);
+end;
