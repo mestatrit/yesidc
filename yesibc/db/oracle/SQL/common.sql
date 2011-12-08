@@ -541,3 +541,12 @@ begin
   end loop;
   utl_file.fclose(f);
 end;
+=================
+set pagesize 0;
+set long 90000; 
+set feedback off; 
+set echo off; 
+spool get_proc.sql; 
+select text from user_source a where a.name in (select object_name from user_procedures)
+order by a.name,a.line; 
+spool off;
