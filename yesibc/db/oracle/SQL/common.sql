@@ -447,22 +447,6 @@ a.app_id=b.app_id and a.seq=b.seq_id;
 　其实可以封装成过程，或把结果存入临时表，或dbms_output.put_line
   edit by inreyou 14:41 2007-11-16
 */
-/*oracle jobs 导出为执行脚本
-
-  就是把user_jobs或dba_jobs,导成DBMS_JOB.SUBMIT可以插入job的格式
-  其中user_jobs是当前用户的job,dba_jobs则是全部
-  下面只是随便整理了下，可以按照个人需要修改
-
-　设置　　file_dir  file_name　参数
-　导出文件内容如最后附所视
-
-　局限性　要设置utl_file_dir(alter system set utl_file_dir=) ，file_dir要包括在
-　文件生成在服务端
-
-　其实可以封装成过程，或把结果存入临时表，或dbms_output.put_line
-
-  edit by inreyou 14:41 2007-11-16
-*/
 
 Declare
   f         utl_file.file_type;
@@ -507,9 +491,9 @@ set long 90000;
 set feedback off; 
 set echo off; 
 spool get_allddl.sql; 
-SELECT DBMS_METADATA.GET_DDL('TABLE',u.table_name) 
+SELECT DBMS_METADATA.GET_DDL('TABLE',u.table_name) || ';'
 FROM USER_TABLES u; 
-SELECT DBMS_METADATA.GET_DDL('INDEX',u.index_name) 
+SELECT DBMS_METADATA.GET_DDL('INDEX',u.index_name) || ';'
 FROM USER_INDEXES u; 
 spool off;
 
@@ -550,3 +534,9 @@ spool get_proc.sql;
 select text from user_source a where a.name in (select object_name from user_procedures)
 order by a.name,a.line; 
 spool off;
+
+32.锁定
+通过select * from ta for update方法，
+可以将查询结果中的记录进行update锁定，及不允许其他进行对这些记录进行修改。
+我们还可以通过select * from a for update of a.a;（a表的a列）对记录中的某一列进行锁定。
+在做多线程同步时，可以通过select * form ta for update nowait的方法防止多个进程同时操作同一数据。
