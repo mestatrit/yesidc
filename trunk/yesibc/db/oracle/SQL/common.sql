@@ -540,3 +540,52 @@ spool off;
 可以将查询结果中的记录进行update锁定，及不允许其他进行对这些记录进行修改。
 我们还可以通过select * from a for update of a.a;（a表的a列）对记录中的某一列进行锁定。
 在做多线程同步时，可以通过select * form ta for update nowait的方法防止多个进程同时操作同一数据。
+
+33.集合ArrayList的应用
+  Function Getcsvfields(Data_Field_In In Varchar2,
+                        Delimiter     In Varchar2 := ',') Return Arraylist Is
+    Result_List Arraylist := Arraylist();
+    Data_Len    Integer;
+    Start_t     Integer := 1;
+    End_t       Integer := -1;
+  Begin
+    If Trim(Data_Field_In) Is Null Then
+      Return(Result_List);
+    End If;
+  
+    Data_Len := Length(Data_Field_In);
+  
+    While End_t <> 0 Loop
+      End_t := Instr(Data_Field_In, Delimiter, Start_t);
+      Result_List.Extend;
+      If End_t <> 0 Then
+        Result_List(Result_List.Last) := Replace(Replace(Replace(Substr(Data_Field_In,
+                                                                        Start_t,
+                                                                        End_t -
+                                                                        Start_t),
+                                                                 Temp,
+                                                                 ','),
+                                                         Chr(10),
+                                                         ''),
+                                                 Chr(13),
+                                                 '');
+      Elsif End_t = 0 Then
+        Result_List(Result_List.Last) := Replace(Replace(Replace(Substr(Data_Field_In,
+                                                                        Start_t,
+                                                                        Data_Len -
+                                                                        Start_t + 1),
+                                                                 Temp,
+                                                                 ','),
+                                                         Chr(10),
+                                                         ''),
+                                                 Chr(13),
+                                                 '');
+      End If;
+      Start_t := End_t + 1;
+    End Loop;
+  
+    Return(Result_List);
+  Exception
+    When Others Then
+      Return(Arraylist());
+  End;
