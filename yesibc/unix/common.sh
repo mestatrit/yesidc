@@ -257,3 +257,12 @@ ac7cce07f621b1ed6f692e6df0ac8c16  RevolutionOS_RSB.rmvb
 12.查看所有用戶和組
 cat /etc/passwd
 cat /etc/group
+
+13.过滤网址
+1000  cd /etc/squid
+ 1001  ls
+ 1002  ls -ltr
+ 1003  cp squid.conf squid.conf.20101102
+ 1004  vi squid.conf
+ 1008  ls /usr/sbin/squid
+/usr/sbin/squid -k reconfigure
