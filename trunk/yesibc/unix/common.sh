@@ -88,6 +88,7 @@ vmstat 1
 
 软链接/硬链接
 ln -s /tmp/less /usr/local/bin/less
+ln -s /export/home/cvsjvm/CFCCC/06_Source/ecredit ecredit_trunk
 
 大小写转换
 APP_NAME_TOMCAT=`echo $APP_NAME | sed  'y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/'`
@@ -266,3 +267,13 @@ cat /etc/group
  1004  vi squid.conf
  1008  ls /usr/sbin/squid
 /usr/sbin/squid -k reconfigure
+
+13.根据端口查找所对应的程序
+[root@localhost logs]# netstat -na|grep 3680
+tcp        0      0 :::3680                     :::*                        LISTEN      
+[root@localhost logs]# rpm -qa|grep lsof
+lsof-4.72-1.4
+[root@localhost logs]# /usr/sbin/lsof -i:3680
+COMMAND   PID USER   FD   TYPE   DEVICE SIZE NODE NAME
+java    21487 uat4   10u  IPv6 12747043       TCP *:3680 (LISTEN)
+[root@localhost logs]# ps -ef |grep 21487
