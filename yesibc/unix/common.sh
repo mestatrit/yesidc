@@ -277,3 +277,7 @@ lsof-4.72-1.4
 COMMAND   PID USER   FD   TYPE   DEVICE SIZE NODE NAME
 java    21487 uat4   10u  IPv6 12747043       TCP *:3680 (LISTEN)
 [root@localhost logs]# ps -ef |grep 21487
+
+14.crontab 命令
+export EDITOR=vi
+crontab -e
