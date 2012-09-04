@@ -730,10 +730,13 @@ public class FileUtils {
 	}
 
 	public static void main(String[] args) {
-		Vector<String> vs = FileUtils.checkFolder("H:/opensource/webrender/4.2/examples/", ".java");
-		for (String str : vs) {
-			System.out.println(str);
-		}
+		
+		System.out.println(readByRelativePath("/com/yesibc/core/thread/listen.xml","UTF-8"));
+		
+//		Vector<String> vs = FileUtils.checkFolder("H:/opensource/webrender/4.2/examples/", ".java");
+//		for (String str : vs) {
+//			System.out.println(str);
+//		}
 	}
 
 }
