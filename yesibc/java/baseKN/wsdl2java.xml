@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project name="cxf wsdl2java" basedir=".">  
+   <property name="cxf.home" location ="${basedir}/WebRoot/WEB-INF/"/>
+   <path id="cxf.classpath">
+      <fileset dir="${cxf.home}/lib">
+         <include name="*.jar"/>
+      </fileset>
+   </path>     
+   <target name="cxfWSDLToJava">
+      <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+         <arg value="-client"/>
+         <arg value="-d"/>
+         <arg value="src"/>
+         <arg value="http://localhost:9000/helloWorld?wsdl"/>
+         <classpath>
+            <path refid="cxf.classpath"/>
+         </classpath>
+      </java>
+   </target>
+</project>
+
+<!-- 
+在cmd命令行中输入wsdl2java如果显示其用法表示配置好了。
+输入：wsdl2java -d src - client http://localhost:9000/helloWorld?wsdl
+其作用上面的build.xml作用一样。
+附加：wsdl2java用法：
+wsdl2java -p com -d src -all  aa.wsdl
+-p  指定其wsdl的命名空间，也就是要生成代码的包名:
+-d  指定要产生代码所在目录
+-client 生成客户端测试web service的代码
+-server 生成服务器启动web  service的代码
+-impl 生成web service的实现代码
+-ant  生成build.xml文件
+-all 生成所有开始端点代码：types,service proxy,,service interface, server mainline, client mainline, implementation object, and an Ant build.xml file.
+详细用法见：http://cwiki.apache.org/CXF20DOC/wsdl-to-java.html
+ -->
