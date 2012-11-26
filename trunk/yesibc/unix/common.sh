@@ -1,7 +1,16 @@
 1.bash
+UNIX:
  /usr/ucb/ps -auxww|grep java
  ./artifactory.sh >> log2010-03-10.log &
  ./artifactory.sh > log2010-03-10.log &
+ 
+LINUX
+ps 获得PID
+进入proc文件系统里对应的目录：/proc/<PID>
+ls -l
+exe链接对应的就是可执行文件的全路经
+
+ps -eo user,pid,ppid,%cpu,%mem,vsz,rss,tty,stat,start,time,wchan,command --forest $* 
 
 2.#cvs相关
 chown -R jvm:jvm *
