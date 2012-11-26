@@ -29,11 +29,19 @@ temporary tablespace temp;
 grant create session,connect,resource to cfccc;
 grant select, insert, update, delete on CHN_INST.APPLICATION_BASIC to CHN_NEWECREDIT;
 GRANT debug any procedure, debug connect session TO username;
+--用户解锁
+alter user chn_inst_uat3 account unlock; 
+
 
 --5.表操作
 --5.0 不同表空间，进行复制表
 copy   from   bid/bid@orcl   to   sky/sky@orcl   append   menuinfo   using   select   *   from   menuinfo 
+增加字段:alter table   docdsp     add   dspcode   char(200)   
+删除字段:ALTER TABLE   table_NAME   DROP   COLUMN   column_NAME   
+修改字段类型:ALTER TABLE   table_name     ALTER   COLUMN   column_name   new_data_type   
+alter table   table_name   rename   column   old_col_name   to   new_col_name; 
 
+  
 -- 5.1 Create table
 create table CHN_INST.PLAN
 (
@@ -216,6 +224,9 @@ select * from dba_directories
   end PRO_TO_TXT;
   
 --16.oracle 打印  
+set serveroutput on size 10000000;
+
+dbms_output.enable(100000....);设置大点
 dbms_output.put_line('Output from PL/SQL...');
 
 ---17.查询结果输出
