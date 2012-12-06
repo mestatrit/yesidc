@@ -4,6 +4,8 @@ UNIX:
  ./artifactory.sh >> log2010-03-10.log &
  ./artifactory.sh > log2010-03-10.log &
  
+grep -v "#" /etc/squid/squid.conf|sort -u
+ 
 LINUX
 ps 获得PID
 进入proc文件系统里对应的目录：/proc/<PID>
@@ -290,3 +292,8 @@ java    21487 uat4   10u  IPv6 12747043       TCP *:3680 (LISTEN)
 14.crontab 命令
 export EDITOR=vi
 crontab -e
+
+15.mount命令
+mount -t cifs -o username=administrator //158.191.34.129/e$/DATA/shanghai_cfccc_dept n
+mount -t cifs -o username=administrator //158.191.34.129/e$/DATA/shanghai_cfccc_public p
+mount -t cifs -o username=administrator //158.191.34.129/e$/DATA/shanghai_cfccc_user/it.dev u
