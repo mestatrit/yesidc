@@ -21,7 +21,7 @@
 
 <!-- 
 在cmd命令行中输入wsdl2java如果显示其用法表示配置好了。
-输入：wsdl2java -d src - client http://localhost:9000/helloWorld?wsdl
+输入：D:/CVSRoot/Others/opensource/cxf/apache-cxf-2.1.4/bin/wsdl2java -d src -client CBSCurrYearAcctHisQry.wsdl
 其作用上面的build.xml作用一样。
 附加：wsdl2java用法：
 wsdl2java -p com -d src -all  aa.wsdl
