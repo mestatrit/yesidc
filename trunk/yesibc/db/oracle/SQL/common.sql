@@ -38,7 +38,7 @@ alter user chn_inst_uat3 account unlock;
 copy   from   bid/bid@orcl   to   sky/sky@orcl   append   menuinfo   using   select   *   from   menuinfo 
 增加字段:alter table   docdsp     add   dspcode   char(200)   
 删除字段:ALTER TABLE   table_NAME   DROP   COLUMN   column_NAME   
-修改字段类型:ALTER TABLE   table_name     ALTER   COLUMN   column_name   new_data_type   
+修改字段类型:ALTER TABLE   table_name    modify  column_name   new_data_type   
 alter table   table_name   rename   column   old_col_name   to   new_col_name; 
 
   
