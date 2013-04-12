@@ -1,8 +1,10 @@
 1.bash
 UNIX:
  /usr/ucb/ps -auxww|grep java
- ./artifactory.sh >> log2010-03-10.log &
- ./artifactory.sh > log2010-03-10.log &
+ ./artifactory.sh >> log2010-03-10.log & 内容添加到该文件。
+ ./artifactory.sh > log2010-03-10.log & 内容输出到该文件并覆盖原有内容。
+ 
+echo/cat/clear > log2010-03-10.log 清除文件内容。
  
 grep -v "#" /etc/squid/squid.conf|sort -u
  
