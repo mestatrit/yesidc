@@ -20,6 +20,10 @@ alter tablespace users add datafile '/opt/oracle/oradata/orcl/itc.dbf' size 25m;
 --修改表空间当前的数据文件
 alter database datafile '/opt/oracle/oradata/orcl/itc.dbf' resize 50m;
 
+---导出导入表
+exp base55/base55@hatest file=base55.dmp log=base55.log buffer=81920000 tables=CFG_DB_RELAT,CFG_DB_URL
+imp base123/base123@hatest file=base55.dmp    log=imp55.log fromuser=base55 touser=base123 buffer=81920000
+
 --4.用户权限
 select * from dba_users/all_users/user_users; 
 select * from tab/dba_tables/dba_objects/cat; 
