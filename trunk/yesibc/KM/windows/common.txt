@@ -1,0 +1,17 @@
+1.设置登录时间。
+net user syj /times:M-su,09:00-11:00,14:00-16:00,19:00-21:00   
+@echo off 
+at 11:00 shutdown.exe -s -t 30 
+at 16:00 shutdown.exe -s -t 30 
+at 21:00 shutdown.exe -s -t 30 
+
+2.创建快捷方式
+@echo off
+set "path=C:\BatMPlayer\BatMPlayer.bat"
+set "name=我的BatMPlayer"
+set m="%USERPROFILE%\桌面\%name%.url"
+echo [InternetShortcut] >>%m%
+echo URL="%path%" >>%m%
+echo IconIndex=10 >>%m%
+echo IconFile=C:\windows\system32\shell32.dll >>%m%
+pause
