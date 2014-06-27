@@ -2,8 +2,7 @@ package com.yesibc.core.env;
 
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-
-import sun.management.ManagementFactory;
+import java.lang.management.ManagementFactory;
 
 import com.sun.management.OperatingSystemMXBean;
 

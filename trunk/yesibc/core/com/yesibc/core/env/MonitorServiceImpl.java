@@ -1,13 +1,14 @@
 package com.yesibc.core.env;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-
-import sun.management.ManagementFactory;
+import java.lang.management.ManagementFactory;
+import java.util.StringTokenizer;
 
 import com.sun.management.OperatingSystemMXBean;
-import java.io.*;
-import java.util.StringTokenizer;
 
 /**
  * 
