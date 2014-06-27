@@ -1,12 +1,12 @@
 package com.yesibc.core.env;
 
 import java.lang.management.ClassLoadingMXBean;
+import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.lang.management.RuntimeMXBean;
 import java.math.BigDecimal;
 
-import sun.management.ManagementFactory;
 
 public class JVMMemory extends Thread {
 
