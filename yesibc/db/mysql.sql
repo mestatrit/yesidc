@@ -1,0 +1,1 @@
+mysqldump --force -h 172.16.1.34 -P3306 -uxedk -padmin  xedk>xedk.sql
