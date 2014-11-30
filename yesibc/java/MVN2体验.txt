@@ -157,3 +157,6 @@ mvn archetype:create -DgroupId=com.mycompany.app -DartifactId=my-app
 关于openfan项目的Maven操作请参看后续章节。
 1.3. 更多的Maven2的参考
     Maven 网站
+下载源代码 
+mvn dependency:sources
+mvn dependency:resolve -Dclassifier=javadoc
