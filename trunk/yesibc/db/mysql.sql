@@ -1,3 +1,11 @@
+String date = "2014-12-28 13:12:12";
+SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+//HH:mm:ss24小时制，hh:mm:ss12小时制
+java.util.Date dateStr = formatter.parse(date);
+java.sql.Date dateDB = new java.sql.Date(dateStr.getTime());		
+
+
+
 mysqldump --force -h 172.16.1.34 -P3306 -uxedk -padmin  xedk>xedk.sql
 
 1.mysql -h 10.164.147.4 -P 9999 -uroot -p981050
@@ -52,6 +60,16 @@ D:\DevTools\MySql\"MySQL Server 5.6"\bin\mysqldump beijing -uroot -p  t_game_sub
 mysql> UPDATE user SET Password=PASSWORD('newpassword') where USER='root';
 mysql> FLUSH PRIVILEGES;
 mysql> quit;
+
+首先，先建立一个用户lavasoft，密码为：123456
+grant all on *.* to lavasoft@'localhost' identified by '123456' with grant  option; 
+接下来就修改这个用户的密码为：leizhimin
+update user set password = password('leizhimin') where user = 'lavasoft' and host='localhost';
+flush privileges;
+
+create user 'acm'@'localhost' identified by 'acm12345';
+grant all privileges on *.* to acm@'localhost';
+
 b.使用新密码登录
 #mysql -u root -pnewpassword
 2.远程登录权限
